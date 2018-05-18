@@ -76,10 +76,51 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
         this.formSubmissionListener = new DefaultFormSubmissionListener();
     }
 
+    public ReplacedElement createReplacedElement(
+            LayoutContext context,
+            BlockBox box,
+            UserAgentCallback uac,
+            int cssWidth,
+            int cssHeight
+    )
+    {
+        Element e = box.getElement();
+        // https://stackoverflow.com/questions/4139786/what-does-it-mean-in-html-5-when-an-attribute-is-a-boolean-attribute
+        boolean requestFocus = e != null && e.hasAttribute("autofocus");
+        String tooltip = e != null && e.hasAttribute("title") ? e.getAttribute("title") : null;
+
+        ReplacedElement el = createReplacedElementImpl(context, box, uac, cssWidth, cssHeight);
+
+        if (el instanceof SwingReplacedElement)
+        {
+            SwingReplacedElement swingEl = (SwingReplacedElement) el;
+            JComponent jCom = swingEl.getJComponent();
+            if (jCom != null)
+            {
+                if (cssWidth > -1 || cssHeight > -1)
+                {
+                    int w = cssWidth > -1 ? cssWidth : jCom.getPreferredSize().width;
+                    int h = cssHeight > -1 ? cssHeight : jCom.getPreferredSize().height;
+                    jCom.setSize(w, h);
+                    swingEl.setIntrinsicSize(null);
+                }
+                if (requestFocus)
+                {
+                    SwingUtilities.invokeLater(() -> jCom.requestFocusInWindow());
+                }
+                if (tooltip != null)
+                {
+                    jCom.setToolTipText(tooltip);
+                }
+            }
+        }
+        return el;
+    }
+
     /**
      * {@inheritDoc}
      */
-    public ReplacedElement createReplacedElement(
+    private ReplacedElement createReplacedElementImpl(
             LayoutContext context,
             BlockBox box,
             UserAgentCallback uac,

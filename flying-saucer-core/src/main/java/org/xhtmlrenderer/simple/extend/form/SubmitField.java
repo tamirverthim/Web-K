@@ -37,7 +37,7 @@ class SubmitField extends AbstractButtonField {
     }
 
     public JComponent create() {
-        JButton button = new JButton();
+        JButton button = SwingComponentFactory.getInstance().createButton(this);
 
         String value;
         if (hasAttribute("value")) {
@@ -48,8 +48,6 @@ class SubmitField extends AbstractButtonField {
         } else {
             value = "Submit";
         }
-
-        applyComponentStyle(button);
 
         button.setText(value);
 

@@ -19,14 +19,11 @@
  */
 package org.xhtmlrenderer.simple.extend.form;
 
-import java.awt.Component;
-import java.awt.Font;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JList;
@@ -56,7 +53,6 @@ class SelectField extends FormField {
             JList select = new JList(optionList.toArray());
             applyComponentStyle(select);
 
-            select.setCellRenderer(new CellRenderer());
             select.addListSelectionListener(new HeadingItemListener());
 
             if (hasAttribute("multiple") && getAttribute("multiple").equalsIgnoreCase("true")) {
@@ -80,13 +76,8 @@ class SelectField extends FormField {
 
             return new JScrollPane(select);
         } else {
-            JComboBox select = new JComboBox(optionList.toArray());
-            applyComponentStyle(select);
-
-            select.setEditable(false);
-            select.setRenderer(new CellRenderer());
+            JComboBox select = SwingComponentFactory.getInstance().createComboBox(this, optionList);
             select.addItemListener(new HeadingItemListener());
-
             return select;
         }
     }
@@ -244,29 +235,6 @@ class SelectField extends FormField {
             for (int i = 0; i < getIndent(); i++)
                 txt = "    " + txt;
             return txt;
-        }
-    }
-    
-    /**
-     * Renderer for ordinary items and headings in a List.
-     */
-    private static class CellRenderer extends DefaultListCellRenderer {
-        public Component getListCellRendererComponent(JList list, Object value,
-                int index, boolean isSelected, boolean cellHasFocus) {
-            NameValuePair pair = (NameValuePair)value;
-            
-            if (pair!=null && pair.getValue()==null) {
-                // render as heading as such
-                super.getListCellRendererComponent(list, value, index, false, false);
-                Font fold = getFont();
-                Font fnew = new Font(fold.getName(), Font.BOLD | Font.ITALIC, fold.getSize());
-                setFont(fnew);
-            } else {
-                // other items as usuall
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            }
-            
-            return this;
         }
     }
     

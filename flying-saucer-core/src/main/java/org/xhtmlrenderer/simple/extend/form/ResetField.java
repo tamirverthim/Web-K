@@ -37,7 +37,7 @@ class ResetField extends AbstractButtonField {
     }
     
     public JComponent create() {
-        JButton button = new JButton();
+        JButton button = SwingComponentFactory.getInstance().createButton(this);
 
         String value;
         if (hasAttribute("value")) {
@@ -48,8 +48,6 @@ class ResetField extends AbstractButtonField {
         else {
             value = "Reset";
         }
-
-        applyComponentStyle(button);
 
         button.setText(value);
         

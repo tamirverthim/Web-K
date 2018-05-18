@@ -19,16 +19,13 @@
  */
 package org.xhtmlrenderer.simple.extend.form;
 
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.plaf.basic.BasicTextFieldUI;
-import javax.swing.plaf.basic.BasicTextUI;
+import javax.swing.JComponent;
+import javax.swing.JTextField;
 
 import org.w3c.dom.Element;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.css.style.FSDerivedValue;
-import org.xhtmlrenderer.css.style.derived.BorderPropertySet;
 import org.xhtmlrenderer.css.style.derived.LengthValue;
 import org.xhtmlrenderer.css.style.derived.RectPropertySet;
 import org.xhtmlrenderer.layout.LayoutContext;
@@ -36,15 +33,14 @@ import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.XhtmlForm;
 import org.xhtmlrenderer.util.GeneralUtil;
 
-import java.awt.*;
-
 class TextField extends InputField {
     public TextField(Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }
 
     public JComponent create() {
-        TextFieldJTextField textfield = new TextFieldJTextField();
+
+        JTextField textfield = SwingComponentFactory.getInstance().createTextField(this);
 
         if (hasAttribute("size")) {
             int size = GeneralUtil.parseIntRelaxed(getAttribute("size"));
@@ -76,13 +72,8 @@ class TextField extends InputField {
     }
 
     protected void applyComponentStyle(JComponent component) {
-        super.applyComponentStyle(component);
-
-        TextFieldJTextField field = (TextFieldJTextField)component;
 
         CalculatedStyle style = getBox().getStyle();
-        BorderPropertySet border = style.getBorder(null);
-        boolean disableOSBorder = (border.leftStyle() != null && border.rightStyle() != null || border.topStyle() != null || border.bottomStyle() != null);
 
         RectPropertySet padding = style.getCachedPadding();
 
@@ -96,18 +87,6 @@ class TextField extends InputField {
         int left = paddingLeft == null ? 3 : Math.max(3, paddingLeft.intValue());
         int bottom = paddingBottom == null ? 2 : Math.max(2, paddingBottom.intValue());
         int right = paddingRight == null ? 3 : Math.max(3, paddingRight.intValue());
-
-        //if a border is set or a background color is set, then use a special JButton with the BasicButtonUI.
-        if (disableOSBorder) {
-            //when background color is set, need to use the BasicButtonUI, certainly when using XP l&f
-            BasicTextUI ui = new BasicTextFieldUI();
-            field.setUI(ui);
-            Border fieldBorder = BorderFactory.createEmptyBorder(top, left, bottom, right);
-            field.setBorder(fieldBorder);
-        }
-        else {
-            field.setMargin(new Insets(top, left, bottom, right));
-        }
 
         padding.setRight(0);
         padding.setLeft(0);
@@ -125,35 +104,21 @@ class TextField extends InputField {
         }
     }
 
-
-    
     protected void applyOriginalState() {
         JTextField textfield = (JTextField) getComponent();
         
         textfield.setText(getOriginalState().getValue());
-        
+
         // Make sure we are showing the front of 'value' instead of the end.
         textfield.setCaretPosition(0);
     }
-    
+
     protected String[] getFieldValues() {
         JTextField textfield = (JTextField) getComponent();
-        
+
         return new String[] {
                 textfield.getText()
         };
-    }
-
-    private static class TextFieldJTextField extends JTextField {
-        //override getColumnWidth to base on 'o' instead of 'm'.  more like other browsers
-        int columnWidth = 0;
-        protected int getColumnWidth() {
-            if (columnWidth == 0) {
-                FontMetrics metrics = getFontMetrics(getFont());
-                columnWidth = metrics.charWidth('o');
-            }
-            return columnWidth;
-        }
     }
 
 }
