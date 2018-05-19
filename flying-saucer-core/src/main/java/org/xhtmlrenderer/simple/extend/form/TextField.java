@@ -23,102 +23,47 @@ import javax.swing.JComponent;
 import javax.swing.JTextField;
 
 import org.w3c.dom.Element;
-import org.xhtmlrenderer.css.constants.CSSName;
-import org.xhtmlrenderer.css.style.CalculatedStyle;
-import org.xhtmlrenderer.css.style.FSDerivedValue;
-import org.xhtmlrenderer.css.style.derived.LengthValue;
-import org.xhtmlrenderer.css.style.derived.RectPropertySet;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.XhtmlForm;
-import org.xhtmlrenderer.util.GeneralUtil;
+import org.xhtmlrenderer.util.XHTMLUtils;
 
-class TextField extends InputField {
-    public TextField(Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
+class TextField extends AbstractTextField {
+
+    public TextField(Element e, XhtmlForm form, LayoutContext context, BlockBox box)
+    {
         super(e, form, context, box);
     }
 
-    public JComponent create() {
-
+    public JComponent create()
+    {
         JTextField textfield = SwingComponentFactory.getInstance().createTextField(this);
+        textfield.setColumns(XHTMLUtils.getIntValue(getElement(), "size", 15));
 
-        if (hasAttribute("size")) {
-            int size = GeneralUtil.parseIntRelaxed(getAttribute("size"));
-            
-            // Size of 0 doesn't make any sense, so use default value
-            if (size == 0) {
-                textfield.setColumns(15);
-            } else {
-                textfield.setColumns(size);
-            }
-        } else {
-            textfield.setColumns(15);
-        }
+        XHTMLUtils.getOptionalIntValue(getElement(), "maxlength").ifPresent(m ->
+                textfield.setDocument(new SizeLimitedDocument(m)));
 
-        if (hasAttribute("maxlength")) {
-            textfield.setDocument(
-                    new SizeLimitedDocument(
-                            GeneralUtil.parseIntRelaxed(getAttribute("maxlength"))));
-        }
-
-        if (hasAttribute("readonly") &&
-                getAttribute("readonly").equalsIgnoreCase("readonly")) {
+        if (XHTMLUtils.isTrue(getElement(), "readonly"))
+        {
             textfield.setEditable(false);
         }
-
         applyComponentStyle(textfield);
-        
+
         return textfield;
     }
 
-    protected void applyComponentStyle(JComponent component) {
-
-        CalculatedStyle style = getBox().getStyle();
-
-        RectPropertySet padding = style.getCachedPadding();
-
-        Integer paddingTop = getLengthValue(style, CSSName.PADDING_TOP);
-        Integer paddingLeft = getLengthValue(style, CSSName.PADDING_LEFT);
-        Integer paddingBottom = getLengthValue(style, CSSName.PADDING_BOTTOM);
-        Integer paddingRight = getLengthValue(style, CSSName.PADDING_RIGHT);
-
-
-        int top = paddingTop == null ? 2 : Math.max(2, paddingTop.intValue());
-        int left = paddingLeft == null ? 3 : Math.max(3, paddingLeft.intValue());
-        int bottom = paddingBottom == null ? 2 : Math.max(2, paddingBottom.intValue());
-        int right = paddingRight == null ? 3 : Math.max(3, paddingRight.intValue());
-
-        padding.setRight(0);
-        padding.setLeft(0);
-        padding.setTop(0);
-        padding.setBottom(0);
-
-        FSDerivedValue widthValue = style.valueByName(CSSName.WIDTH);
-        if (widthValue instanceof LengthValue) {
-            intrinsicWidth = new Integer(getBox().getContentWidth() + left + right);
-        }
-
-        FSDerivedValue heightValue = style.valueByName(CSSName.HEIGHT);
-        if (heightValue instanceof LengthValue) {
-            intrinsicHeight = new Integer(getBox().getHeight() + top + bottom);
-        }
-    }
-
-    protected void applyOriginalState() {
+    protected void applyOriginalState()
+    {
         JTextField textfield = (JTextField) getComponent();
-        
         textfield.setText(getOriginalState().getValue());
-
         // Make sure we are showing the front of 'value' instead of the end.
         textfield.setCaretPosition(0);
     }
 
-    protected String[] getFieldValues() {
+    protected String[] getFieldValues()
+    {
         JTextField textfield = (JTextField) getComponent();
-
-        return new String[] {
-                textfield.getText()
-        };
+        return new String[] { textfield.getText() };
     }
 
 }

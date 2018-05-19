@@ -20,7 +20,6 @@
 package org.xhtmlrenderer.simple.extend.form;
 
 import javax.swing.JComponent;
-import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
 
 import org.w3c.dom.Element;
@@ -34,11 +33,8 @@ class RadioButtonField extends InputField {
     }
 
     public JComponent create() {
-        JToggleButton radio = new JRadioButton();
+        JToggleButton radio = SwingComponentFactory.getInstance().createRadioButton(this);
 
-        radio.setText("");
-        radio.setOpaque(false);
-        
         String groupName = null;
 
         if (hasAttribute("name")) {
