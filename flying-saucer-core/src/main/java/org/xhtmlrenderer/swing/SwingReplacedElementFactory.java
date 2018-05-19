@@ -31,6 +31,7 @@ import org.xhtmlrenderer.simple.extend.FormSubmissionListener;
 import org.xhtmlrenderer.simple.extend.XhtmlForm;
 import org.xhtmlrenderer.simple.extend.form.FormField;
 import org.xhtmlrenderer.util.ImageUtil;
+import org.xhtmlrenderer.util.XHTMLUtils;
 import org.xhtmlrenderer.util.XRLog;
 import org.xhtmlrenderer.resource.ImageResource;
 
@@ -84,16 +85,15 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
             int cssHeight
     )
     {
-        Element e = box.getElement();
-        // https://stackoverflow.com/questions/4139786/what-does-it-mean-in-html-5-when-an-attribute-is-a-boolean-attribute
-        boolean requestFocus = e != null && e.hasAttribute("autofocus");
-        String tooltip = e != null && e.hasAttribute("title") ? e.getAttribute("title") : null;
+        Element el = box.getElement();
+        boolean requestFocus = el != null && XHTMLUtils.isTrue(el, "autofocus");
+        String tooltip = el != null ? XHTMLUtils.getOptionalStringValue(el, "title").orElse(null) : null;
 
-        ReplacedElement el = createReplacedElementImpl(context, box, uac, cssWidth, cssHeight);
+        ReplacedElement replacedEl = createReplacedElementImpl(context, box, uac, cssWidth, cssHeight);
 
-        if (el instanceof SwingReplacedElement)
+        if (replacedEl instanceof SwingReplacedElement)
         {
-            SwingReplacedElement swingEl = (SwingReplacedElement) el;
+            SwingReplacedElement swingEl = (SwingReplacedElement) replacedEl;
             JComponent jCom = swingEl.getJComponent();
             if (jCom != null)
             {
@@ -114,7 +114,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
                 }
             }
         }
-        return el;
+        return replacedEl;
     }
 
     /**

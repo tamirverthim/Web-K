@@ -1,6 +1,7 @@
 package org.xhtmlrenderer.util;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.OptionalInt;
 
 import org.w3c.dom.Element;
@@ -28,6 +29,8 @@ public class XHTMLUtils
 
 	/**
 	 * Returns value of XHTML boolean attribute (e.g. multiple="multiple" ).
+	 *
+	 * https://www.stevefenton.co.uk/2011/04/html-and-xhtml-boolean-attributes/
 	 */
 	public static boolean isTrue(Element el, String attr)
 	{
@@ -62,6 +65,19 @@ public class XHTMLUtils
 			val = GeneralUtil.parseIntRelaxed(el.getAttribute(attr));
 		}
 		return val > 0 ? OptionalInt.of(val) : OptionalInt.empty();
+	}
+
+	public static Optional<String> getOptionalStringValue(Element el, String attr)
+	{
+		Objects.requireNonNull(el);
+		Objects.requireNonNull(attr);
+
+		String val = el.getAttribute(attr);
+		if (val != null && val.length() > 0)
+		{
+			return Optional.of(val);
+		}
+		return Optional.empty();
 	}
 
 }
