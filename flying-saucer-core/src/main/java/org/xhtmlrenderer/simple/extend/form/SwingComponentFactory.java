@@ -40,4 +40,6 @@ public abstract class SwingComponentFactory
 	public abstract JCheckBox createCheckBox(FormField field);
 
 	public abstract JRadioButton createRadioButton(FormField field);
+
+	public abstract FileInputComponent createFileInputComponent(FormField field);
 }

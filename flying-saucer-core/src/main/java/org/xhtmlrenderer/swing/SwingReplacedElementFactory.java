@@ -86,9 +86,6 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
     )
     {
         Element el = box.getElement();
-        boolean requestFocus = el != null && XHTMLUtils.isTrue(el, "autofocus");
-        String tooltip = el != null ? XHTMLUtils.getOptionalStringValue(el, "title").orElse(null) : null;
-
         ReplacedElement replacedEl = createReplacedElementImpl(context, box, uac, cssWidth, cssHeight);
 
         if (replacedEl instanceof SwingReplacedElement)
@@ -104,13 +101,19 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
                     jCom.setSize(w, h);
                     swingEl.setIntrinsicSize(null);
                 }
-                if (requestFocus)
+
+                if (el != null)
                 {
-                    SwingUtilities.invokeLater(() -> jCom.requestFocusInWindow());
-                }
-                if (tooltip != null)
-                {
-                    jCom.setToolTipText(tooltip);
+                    if (XHTMLUtils.isTrue(el, "disabled"))
+                    {
+                        jCom.setEnabled(false);
+                    }
+                    else if (XHTMLUtils.isTrue(el, "autofocus"))
+                    {
+                        SwingUtilities.invokeLater(() -> jCom.requestFocusInWindow());
+                    }
+
+                    XHTMLUtils.getOptionalStringValue(el, "title").ifPresent(t -> jCom.setToolTipText(t));
                 }
             }
         }
