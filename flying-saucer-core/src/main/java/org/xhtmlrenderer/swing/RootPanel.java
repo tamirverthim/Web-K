@@ -484,6 +484,7 @@ public class RootPanel extends JPanel implements Scrollable, UserInterface, FSCa
             try {
                 list.documentLoaded();
             } catch (Exception e) {
+                e.printStackTrace();
                 XRLog.load(Level.WARNING, "Document listener threw an exception; continuing processing", e);
             }
         }

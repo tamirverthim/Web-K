@@ -18,8 +18,11 @@
 
 
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 import org.xhtmlrenderer.event.DefaultDocumentListener;
 import org.xhtmlrenderer.extend.UserAgentCallback;
+import org.xhtmlrenderer.js.JS;
+import org.xhtmlrenderer.js.JsDocument;
 import org.xhtmlrenderer.resource.XMLResource;
 import org.xhtmlrenderer.simple.FSScrollPane;
 import org.xhtmlrenderer.simple.XHTMLPanel;
@@ -28,8 +31,10 @@ import org.xhtmlrenderer.swing.ImageResourceLoader;
 import org.xhtmlrenderer.swing.SwingReplacedElementFactory;
 import org.xhtmlrenderer.util.GeneralUtil;
 
+import javax.script.ScriptException;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.StringReader;
 import java.net.MalformedURLException;
@@ -47,6 +52,7 @@ public class BrowsePanel {
     private XHTMLPanel panel;
     private JFrame frame;
     private UserAgentCallback uac;
+    private JS js;
 
     public static void main(String[] args) throws Exception {
         try {
@@ -57,7 +63,7 @@ public class BrowsePanel {
     }
 
     private void run(String[] args) {
-        loadAndCheckArgs(args);
+        //loadAndCheckArgs(args);
 
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -74,7 +80,16 @@ public class BrowsePanel {
 
                 frame = new JFrame("Flying Saucer");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.getContentPane().add(scroll);
+                frame.getContentPane().add(scroll, BorderLayout.CENTER);
+                final JTextField address = new JTextField();
+                address.addActionListener(new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        BrowsePanel.this.uri = address.getText();
+                        launchLoad();
+                    }
+                });
+                frame.getContentPane().add(address, BorderLayout.NORTH);
                 frame.pack();
                 frame.setSize(1024, 768);
                 frame.setVisible(true);
@@ -102,8 +117,16 @@ public class BrowsePanel {
             }
 
             public void documentLoaded() {
-                panel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-                frame.setTitle(panel.getDocumentTitle());
+                // if document changed internally - js is already initialized
+                if(js == null) {
+                    panel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                    frame.setTitle(panel.getDocumentTitle());
+                    js = new JS(panel);
+                    NodeList scripts = panel.getDocument().getElementsByTagName("script");
+                    for (int i = 0; i < scripts.getLength(); i++) {
+                        js.eval(scripts.item(i).getTextContent());
+                    }
+                }
             }
 
             public void onLayoutException(Throwable t) {
