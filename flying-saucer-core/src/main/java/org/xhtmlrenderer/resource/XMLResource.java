@@ -19,11 +19,10 @@
  */
 package org.xhtmlrenderer.resource;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
+import java.io.*;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
+import java.nio.charset.Charset;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.logging.Level;
@@ -35,9 +34,10 @@ import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMResult;
-import javax.xml.transform.sax.SAXSource;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.input.ReaderInputStream;
+import org.jsoup.Jsoup;
 import org.w3c.dom.Document;
 import org.xhtmlrenderer.util.Configuration;
 import org.xhtmlrenderer.util.XRLog;
@@ -76,21 +76,45 @@ public class XMLResource extends AbstractResource {
         super(source);
     }
 
+    // region draft
+    
+    private static org.jsoup.nodes.Document getJsoup(InputStream stream){
+        try {
+            String source = IOUtils.toString(stream, "UTF-8");
+            org.jsoup.nodes.Document doc = Jsoup.parse(source);
+            doc.outputSettings().syntax(org.jsoup.nodes.Document.OutputSettings.Syntax.xml);
+            return doc;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    private static org.jsoup.nodes.Document getJsoup(InputSource source){
+        return getJsoup(source.getByteStream());
+    }
+    
+    
+    private static org.jsoup.nodes.Document getJsoup(Reader reader){
+        return getJsoup(new ReaderInputStream(reader, Charset.forName("UTF-8")));
+    }
+    
+    // endregion
+    
     public static XMLResource load(InputStream stream) {
-        return XML_RESOURCE_BUILDER.createXMLResource(new XMLResource(stream));
+        return XML_RESOURCE_BUILDER.createXMLResource(getJsoup(stream));
     }
 
     public static XMLResource load(InputSource source) {
-        return XML_RESOURCE_BUILDER.createXMLResource(new XMLResource(source));
+        return XML_RESOURCE_BUILDER.createXMLResource(getJsoup(source));
     }
 
     public static XMLResource load(Reader reader) {
-        return XML_RESOURCE_BUILDER.createXMLResource(new XMLResource(new InputSource(reader)));
+        return XML_RESOURCE_BUILDER.createXMLResource(getJsoup(reader));
     }
 
-    public static XMLResource load(Source source) {
-        return XML_RESOURCE_BUILDER.createXMLResource(source);
-    }
+//    public static XMLResource load(Source source) {
+//        return XML_RESOURCE_BUILDER.createXMLResource(getJsoup(source));
+//    }
 
     public Document getDocument() {
         return document;
@@ -172,28 +196,28 @@ public class XMLResource extends AbstractResource {
         private final XMLReaderPool parserPool = new XMLReaderPool();
         private final IdentityTransformerPool traxPool = new IdentityTransformerPool();
 
-        XMLResource createXMLResource(XMLResource target) {
+        XMLResource createXMLResource(XMLResource target, org.jsoup.nodes.Document jsoup) {
             Document document;
 
             long st = System.currentTimeMillis();
             XMLReader xmlReader = parserPool.get();
             try {
-                document = transform(new SAXSource(xmlReader, target.getResourceInputSource()));
+                document = transform(jsoup);
             } finally {
                 parserPool.release(xmlReader);
             }
 
             long end = System.currentTimeMillis();
 
-            target.setElapsedLoadTime(end - st);
+//            target.setElapsedLoadTime(end - st);
 
-            XRLog.load("Loaded document in ~" + target.getElapsedLoadTime() + "ms");
+//            XRLog.load("Loaded document in ~" + target.getElapsedLoadTime() + "ms");
 
             target.setDocument(document);
             return target;
         }
 
-        public XMLResource createXMLResource(Source source) {
+        public XMLResource createXMLResource(org.jsoup.nodes.Document source) {
             Document document;
 
             long st = System.currentTimeMillis();
@@ -213,17 +237,8 @@ public class XMLResource extends AbstractResource {
             return target;
         }
 
-        private Document transform(Source source) {
-            DOMResult result = new DOMResult();
-            Transformer idTransform = traxPool.get();
-            try {
-                idTransform.transform(source, result);
-            } catch (Exception ex) {
-                throw new XRRuntimeException("Can't load the XML resource (using TrAX transformer). " + ex.getMessage(), ex);
-            } finally {
-                traxPool.release(idTransform);
-            }
-            return (Document) result.getNode();
+        private Document transform(org.jsoup.nodes.Document source) {
+            return DOMBuilder.jsoup2DOM(source);
         }
 
     } // class XMLResourceBuilder
