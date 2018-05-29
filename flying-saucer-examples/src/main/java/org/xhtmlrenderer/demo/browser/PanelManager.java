@@ -124,6 +124,7 @@ public class PanelManager extends DelegatingUserAgent {
         InputStream inputStream = null;
         try {
             uc = new URL(uri).openConnection();
+            uc.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)");
             uc.connect();
             String contentType = uc.getContentType();
             //Maybe should popup a choice when content/unknown!

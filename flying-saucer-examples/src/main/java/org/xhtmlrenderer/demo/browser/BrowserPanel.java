@@ -21,6 +21,7 @@ package org.xhtmlrenderer.demo.browser;
 
 import org.w3c.dom.Document;
 import org.xhtmlrenderer.event.DocumentListener;
+import org.xhtmlrenderer.js.JS;
 import org.xhtmlrenderer.layout.SharedContext;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 import org.xhtmlrenderer.pdf.PDFCreationListener;
@@ -125,6 +126,7 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 	private PanelManager manager;
 	JButton goToPage;
 	public JToolBar toolbar;
+	private JS js;
 
 	/**
 	 * Constructor for the BrowserPanel object
@@ -189,6 +191,8 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 
 		setLayout(new BorderLayout());
 		this.add(scroll, BorderLayout.CENTER);
+		
+		js = new JS(view);
 	}
 
 	private void initToolbar() {

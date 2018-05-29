@@ -94,6 +94,8 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
 
         if (context.getNamespaceHandler().isImageElement(e)) {
             return replaceImage(uac, context, e, cssWidth, cssHeight);
+        } else if(e.getTagName().equals("canvas")){
+            return new CanvasReplacedElement();
         } else {
             //form components
             Element parentForm = getParentForm(e, context);

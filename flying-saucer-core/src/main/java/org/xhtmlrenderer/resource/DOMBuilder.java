@@ -23,6 +23,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.jsoup.nodes.DataNode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -112,11 +113,16 @@ public final class DOMBuilder {
                 createDOM(n, _e, doc,ns);
             }
 
+            // todo check CDATA support
         } else if (node instanceof org.jsoup.nodes.TextNode) {
 
             org.jsoup.nodes.TextNode t = ((org.jsoup.nodes.TextNode) node);
             if (!(out instanceof Document)) {
                 out.appendChild(doc.createTextNode(t.text()));
+            }
+        } else if (node instanceof  DataNode) {
+            if (!(out instanceof Document)) {
+                out.appendChild(doc.createTextNode(((DataNode) node).getWholeData()));
             }
         }
     }
