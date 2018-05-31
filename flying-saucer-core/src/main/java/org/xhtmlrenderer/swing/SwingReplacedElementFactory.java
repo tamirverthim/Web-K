@@ -24,6 +24,7 @@ import org.w3c.dom.Node;
 import org.xhtmlrenderer.extend.ReplacedElement;
 import org.xhtmlrenderer.extend.ReplacedElementFactory;
 import org.xhtmlrenderer.extend.UserAgentCallback;
+import org.xhtmlrenderer.js.canvas.impl.CanvasRenderingContext2DImpl;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.DefaultFormSubmissionListener;
@@ -95,7 +96,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
         if (context.getNamespaceHandler().isImageElement(e)) {
             return replaceImage(uac, context, e, cssWidth, cssHeight);
         } else if(e.getTagName().equals("canvas")){
-            return new CanvasReplacedElement();
+            return new CanvasReplacedElement(new CanvasRenderingContext2DImpl());
         } else {
             //form components
             Element parentForm = getParentForm(e, context);

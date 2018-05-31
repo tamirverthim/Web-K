@@ -231,7 +231,7 @@ public class ImageResourceLoader {
         }
 
         public int hashCode() {
-            int result = uri.hashCode();
+            int result = uri == null ? 0 : uri.hashCode();
             result = 31 * result + width;
             result = 31 * result + height;
             return result;

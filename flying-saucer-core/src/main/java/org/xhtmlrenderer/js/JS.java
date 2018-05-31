@@ -25,6 +25,7 @@ import static javax.script.ScriptContext.ENGINE_SCOPE;
  */
 @Slf4j
 public class JS {
+    private static JS instance;
     private final ScriptEngine engine;
     private final ScriptContext context;
     
@@ -43,7 +44,6 @@ public class JS {
     }
 
     public class JsWindow implements SetInterval {
-        
         public void setInterval(Consumer<Object> fn, int interval) {
             Timer timer = new Timer();
             timer.schedule(new TimerTask() {
@@ -59,6 +59,7 @@ public class JS {
     }
     
     public JS(XHTMLPanel panel) {
+        instance = this; // todo rem
         this.panel = panel;
         engine = new ScriptEngineManager().getEngineByName("nashorn");
         context = engine.getContext();
@@ -106,14 +107,20 @@ public class JS {
         });
     }
     
-    public void eval(String scr){
+    public Object eval(String scr){
+        Object res;
         try {
-            engine.eval(scr, context);
+            res = engine.eval(scr, context);
         } catch (ScriptException e) {
             throw new RuntimeException(e);
         }
         panel.repaint();
+        return res;
     }
     
 
+    // temp
+    public static JS getInstance(){
+        return instance;
+    }
 }

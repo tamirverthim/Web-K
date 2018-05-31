@@ -42,6 +42,7 @@ import org.xhtmlrenderer.extend.NamespaceHandler;
 import org.xhtmlrenderer.extend.ReplacedElementFactory;
 import org.xhtmlrenderer.extend.TextRenderer;
 import org.xhtmlrenderer.extend.UserAgentCallback;
+import org.xhtmlrenderer.js.JS;
 import org.xhtmlrenderer.layout.breaker.DefaultLineBreakingStrategy;
 import org.xhtmlrenderer.layout.breaker.LineBreakingStrategy;
 import org.xhtmlrenderer.render.Box;
@@ -98,6 +99,8 @@ public class SharedContext {
     private Rectangle temp_canvas;
     
     private LineBreakingStrategy lineBreakingStrategy = new DefaultLineBreakingStrategy();
+    
+    private JS js;
 
     public SharedContext() {
     }
@@ -124,7 +127,7 @@ public class SharedContext {
     /**
      * Constructor for the Context object
      */
-    public SharedContext(UserAgentCallback uac, FontResolver fr, ReplacedElementFactory ref, TextRenderer tr, float dpi) {
+    public SharedContext(UserAgentCallback uac, FontResolver fr, ReplacedElementFactory ref, TextRenderer tr, float dpi, JS js) {
         font_resolver = fr;
         replacedElementFactory = ref;
         setMedia("screen");
@@ -133,6 +136,7 @@ public class SharedContext {
         XRLog.render("Using CSS implementation from: " + getCss().getClass().getName());
         setTextRenderer(tr);
         setDPI(dpi);
+        this.js = js;
     }
 
     public void setFormSubmissionListener(FormSubmissionListener fsl) {
@@ -630,6 +634,10 @@ public class SharedContext {
 	public void setLineBreakingStrategy(LineBreakingStrategy lineBreakingStrategy) {
 		this.lineBreakingStrategy = lineBreakingStrategy;
 	}
+
+    public JS getJS() {
+        return JS.getInstance(); // todo pass correctly
+    }
 }
 
 /*
