@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.newmatch.CascadedStyle;
@@ -56,6 +57,7 @@ import org.xhtmlrenderer.newtable.TableRowBox;
  * A block box as defined in the CSS spec.  It also provides a base class for
  * other kinds of block content (for example table rows or cells).
  */
+@Slf4j
 public class BlockBox extends Box implements InlinePaintable {
 
     public static final int POSITION_VERTICALLY = 1;
@@ -711,6 +713,7 @@ public class BlockBox extends Box implements InlinePaintable {
                 }
 
                 //check if replaced
+                log.error(" check repl {}", getElement().getTagName());
                 ReplacedElement re = getReplacedElement();
                 if (re == null) {
                     re = c.getReplacedElementFactory().createReplacedElement(

@@ -1,6 +1,6 @@
 package org.xhtmlrenderer.js.canvas;
 
-import org.xhtmlrenderer.js.DOMString;
+import org.xhtmlrenderer.js.dom.DOMString;
 import org.xhtmlrenderer.js.Nullable;
 import org.xhtmlrenderer.js.Optional;
 

@@ -1,20 +1,43 @@
 package org.xhtmlrenderer.js.web_idl;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author Taras Maslov
- * 5/31/2018
+ * 6/1/2018
  */
-@Target(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Attribute {
-    boolean readonly() default false;
-    String defaultString() default "";
-    int defaultInt() default 0;
+public interface Attribute<T> {
+    public T get();
+    public void set(T t);
+    
+    static <T> AtBuilder receive(Consumer<T> consumer){
+        return new AtBuilder<T>(consumer);
+    }
+    
+    static <T> AtBuilder readOnly(){
+        return new AtBuilder<T>(null);
+    }
+    
+    public static class AtBuilder<T> {
+        private Consumer<T> consumer;
 
-    boolean unsigned() default false;
+        private AtBuilder(Consumer<T> consumer) {
+            this.consumer = consumer;
+        }
+
+        public Attribute<T> give(Supplier<T> supplier){
+            return new Attribute<T>() {
+                @Override
+                public T get() {
+                    return supplier.get();
+                }
+
+                @Override
+                public void set(T o) {
+                    consumer.accept(o);
+                }
+            };
+        };
+    }
 }

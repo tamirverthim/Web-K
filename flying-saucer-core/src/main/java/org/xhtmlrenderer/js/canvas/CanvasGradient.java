@@ -1,6 +1,6 @@
 package org.xhtmlrenderer.js.canvas;
 
-import org.xhtmlrenderer.js.DOMString;
+import org.xhtmlrenderer.js.dom.DOMString;
 
 /**
  * @author Taras Maslov

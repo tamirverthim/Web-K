@@ -20,6 +20,7 @@
 import org.xhtmlrenderer.simple.FSScrollPane;
 import org.xhtmlrenderer.simple.XHTMLPanel;
 import org.xhtmlrenderer.extend.ReplacedElementFactory;
+import org.xhtmlrenderer.test.CanvasElementReplacer;
 import org.xhtmlrenderer.test.DelegatingReplacedElementFactory;
 import org.xhtmlrenderer.test.SwingImageReplacer;
 
@@ -86,6 +87,7 @@ public class ReplaceRender {
         XHTMLPanel panel = new XHTMLPanel();
         DelegatingReplacedElementFactory delegatingFactory = new DelegatingReplacedElementFactory();
         delegatingFactory.addReplacer(new SwingImageReplacer());
+        delegatingFactory.addReplacer(new CanvasElementReplacer());
         panel.getSharedContext().setReplacedElementFactory(delegatingFactory);
         return panel;
     }

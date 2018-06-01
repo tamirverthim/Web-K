@@ -145,6 +145,20 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
                 style.append(convertToLength(s));
                 style.append(";");
             }
+        } else if (e.getNodeName().equals("canvas")) {
+            String s;
+            s = getAttribute(e, "width");
+            if (s != null) {
+                style.append("width: ");
+                style.append(convertToLength(s));
+                style.append(";");
+            }
+            s = getAttribute(e, "height");
+            if (s != null) {
+                style.append("height: ");
+                style.append(convertToLength(s));
+                style.append(";");
+            }
         } else if (e.getNodeName().equals("colgroup") || e.getNodeName().equals("col")) {
             String s;
             s = getAttribute(e, "span");

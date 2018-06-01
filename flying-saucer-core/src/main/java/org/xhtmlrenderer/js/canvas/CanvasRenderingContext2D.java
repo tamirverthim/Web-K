@@ -1,12 +1,9 @@
 package org.xhtmlrenderer.js.canvas;
 
-import org.xhtmlrenderer.js.DOMString;
-import org.xhtmlrenderer.js.Element;
+import org.xhtmlrenderer.js.dom.DOMString;
+import org.xhtmlrenderer.js.dom.Element;
 import org.xhtmlrenderer.js.Optional;
-import org.xhtmlrenderer.js.web_idl.Attribute;
-import org.xhtmlrenderer.js.web_idl.NullTreat;
-import org.xhtmlrenderer.js.web_idl.OneOf;
-import org.xhtmlrenderer.js.web_idl.TreatNullAs;
+import org.xhtmlrenderer.js.web_idl.*;
 
 /**
  * @author Taras Maslov
@@ -17,8 +14,9 @@ public interface CanvasRenderingContext2D {
     /** 
      * back-reference to the canvas 
      */
-    @Attribute(readonly = true)
-    HTMLCanvasElement canvas = null;
+
+    @Readonly
+    Attribute<HTMLCanvasElement> canvas();
 
     // region - state -
     
@@ -48,24 +46,24 @@ public interface CanvasRenderingContext2D {
     
     // region compositing
     
-    @Attribute(defaultInt = 1)
-    double globalAlpha = 0; // (default: 1.0)
+    @DefaultDouble(1)
+    Attribute<Double> globalAlpha(); // (default: 1.0)
     
-    @Attribute(defaultString = "source-over") 
-    DOMString globalCompositeOperation = null;
+    @DefaultString("source-over")
+    Attribute<DOMString> globalCompositeOperation();
 
     // endregion
     
     
     // region colors and styles (see also the CanvasDrawingStyles interface)
     
-    @Attribute
+    @DefaultString("black")
     @OneOf({DOMString.class, CanvasGradient.class, CanvasPattern.class})
-    Object strokeStyle = null; // (default: "black")
+    Attribute<Object> strokeStyle(); // (default: "black")
     
-    @Attribute(defaultString = "black")
+    @DefaultString("black")
     @OneOf({DOMString.class, CanvasGradient.class, CanvasPattern.class})
-    Object fillStyle = null;
+    Attribute<Object> fillStyle();
 
     CanvasGradient createLinearGradient(double x0, double y0, double x1, double y1);
 
@@ -76,18 +74,18 @@ public interface CanvasRenderingContext2D {
     
     
     // region shadows
-    
-    @Attribute(defaultInt = 0)
-    double shadowOffsetX = 0; // (default: 0)
 
-    @Attribute(defaultInt = 0)
-    double shadowOffsetY = 0; // (default: 0)
+    @DefaultDouble(0)
+    Attribute<Double> shadowOffsetX(); // (default: 0)
 
-    @Attribute(defaultInt = 0)
-    double shadowBlur = 0; // (default: 0)
+    @DefaultDouble(0)
+    Attribute<Double> shadowOffsetY(); // (default: 0)
 
-    @Attribute(defaultString = "transparent black")
-    DOMString shadowColor = null; // (default: "transparent black")
+    @DefaultDouble(0)
+    Attribute<Double> shadowBlur(); // (default: 0)
+
+    @DefaultString("transparent black")
+    Attribute<DOMString> shadowColor(); // (default: "transparent black")
 
     // endregion
     

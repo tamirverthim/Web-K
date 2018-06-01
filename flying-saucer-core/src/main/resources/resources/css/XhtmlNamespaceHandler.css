@@ -75,6 +75,14 @@ img {
     padding: 0px;
 }
 
+/* don't handle all replaced things yet, besides xml should do this via entities!*/
+canvas {
+    display: inline-block;
+    border-width: 1px 1px 1px 1px;
+    margin: 0px;
+    padding: 0px;
+}
+
 a {
     color: #0000ff;
 }

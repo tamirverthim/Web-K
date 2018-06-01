@@ -17,6 +17,7 @@ public class CanvasReplacedElement extends SwingReplacedElement {
 
     public CanvasReplacedElement(CanvasRenderingContext2DImpl impl) {
         super(new CanvasPanel(impl.getBufferedImage()));
+        this.impl = impl;
     }
 
 

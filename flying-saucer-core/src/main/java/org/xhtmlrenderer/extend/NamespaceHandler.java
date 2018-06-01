@@ -146,5 +146,7 @@ public interface NamespaceHandler {
      * @return String containing the URI for the image.
      */
     String getImageSourceURI(Element e);
+
+    boolean isCanvasElement(Element element);
 }
 

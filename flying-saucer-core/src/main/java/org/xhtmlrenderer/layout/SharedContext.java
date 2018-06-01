@@ -127,7 +127,7 @@ public class SharedContext {
     /**
      * Constructor for the Context object
      */
-    public SharedContext(UserAgentCallback uac, FontResolver fr, ReplacedElementFactory ref, TextRenderer tr, float dpi, JS js) {
+    public SharedContext(UserAgentCallback uac, FontResolver fr, ReplacedElementFactory ref, TextRenderer tr, float dpi) {
         font_resolver = fr;
         replacedElementFactory = ref;
         setMedia("screen");
@@ -136,7 +136,6 @@ public class SharedContext {
         XRLog.render("Using CSS implementation from: " + getCss().getClass().getName());
         setTextRenderer(tr);
         setDPI(dpi);
-        this.js = js;
     }
 
     public void setFormSubmissionListener(FormSubmissionListener fsl) {

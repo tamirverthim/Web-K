@@ -189,4 +189,8 @@ public class NoNamespaceHandler implements NamespaceHandler {
         return null;
     }
 
+    @Override
+    public boolean isCanvasElement(Element e) {
+        return (e != null && e.getNodeName().equalsIgnoreCase("canvas"));
+    }
 }

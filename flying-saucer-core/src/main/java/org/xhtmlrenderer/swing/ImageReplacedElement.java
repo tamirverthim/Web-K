@@ -22,6 +22,7 @@ package org.xhtmlrenderer.swing;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+import org.omg.CORBA.NO_IMPLEMENT;
 import org.xhtmlrenderer.extend.ReplacedElement;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.util.Configuration;
@@ -37,6 +38,7 @@ public class ImageReplacedElement implements ReplacedElement {
     private Point _location = new Point(0, 0);
 
     protected ImageReplacedElement() {
+        assert true == true;
     }
 
     /**

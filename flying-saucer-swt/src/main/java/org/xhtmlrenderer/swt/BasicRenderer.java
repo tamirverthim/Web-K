@@ -128,7 +128,7 @@ public class BasicRenderer extends Canvas implements PaintListener, UserInterfac
         setBackgroundMode(SWT.INHERIT_FORCE);
 
         _sharedContext = new SharedContext(uac, new SWTFontResolver(parent.getDisplay()),
-                new SWTReplacedElementFactory(), new SWTTextRenderer(), getDisplay().getDPI().y, null);
+                new SWTReplacedElementFactory(), new SWTTextRenderer(), getDisplay().getDPI().y);
         _sharedContext.setCanvas(this);
 
         getHorizontalBar().addListener(SWT.Selection, new Listener() {

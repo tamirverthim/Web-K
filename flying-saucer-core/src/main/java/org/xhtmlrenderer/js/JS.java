@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.xhtmlrenderer.event.DefaultDocumentListener;
+import org.xhtmlrenderer.js.dom.Document;
+import org.xhtmlrenderer.js.dom.impl.DocumentImpl;
 import org.xhtmlrenderer.net.Network;
 import org.xhtmlrenderer.simple.XHTMLPanel;
 
@@ -63,10 +65,11 @@ public class JS {
         this.panel = panel;
         engine = new ScriptEngineManager().getEngineByName("nashorn");
         context = engine.getContext();
-        context.setAttribute("document", panel.getDocument(), ENGINE_SCOPE);
+        context.setAttribute("document",new WebIDJAdapter<Document>(this, new DocumentImpl(panel.getDocument())), ENGINE_SCOPE);
         context.setAttribute("console", console, ENGINE_SCOPE);
         context.setAttribute("setInterval", window, ENGINE_SCOPE);
         context.setAttribute("location", new Location(), ENGINE_SCOPE);
+        context.setAttribute("HTMLCanvasElement", new Location(), ENGINE_SCOPE);
         try {
             context.setAttribute("window", engine.eval("this"), ENGINE_SCOPE);
             context.setAttribute("self", engine.eval("this"), ENGINE_SCOPE);

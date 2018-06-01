@@ -54,14 +54,18 @@ public class XhtmlNamespaceHandler extends XhtmlCssOnlyNamespaceHandler {
     }
 
     public String getNonCssStyling(Element e) {
-        if (e.getNodeName().equals("table")) {
-            return applyTableStyles(e);            
-        } else if (e.getNodeName().equals("td") || e.getNodeName().equals("th")) {
-            return applyTableCellStyles(e);
-        } else if (e.getNodeName().equals("tr")) {
-            return applyTableRowStyles(e);
-        } else if (e.getNodeName().equals("img")) {
-            return applyImgStyles(e);
+        switch (e.getNodeName()) {
+            case "table":
+                return applyTableStyles(e);
+            case "td":
+            case "th":
+                return applyTableCellStyles(e);
+            case "tr":
+                return applyTableRowStyles(e);
+            case "img":
+            case "canvas":    
+                return applyImgStyles(e);
+                
         }
         return "";
     }
@@ -258,5 +262,9 @@ public class XhtmlNamespaceHandler extends XhtmlCssOnlyNamespaceHandler {
         }
     }
 
+    @Override
+    public boolean isCanvasElement(Element e) {
+        return (e != null && e.getNodeName().equalsIgnoreCase("canvas"));
+    }
 }
 

@@ -181,7 +181,7 @@ public class BrowserUserAgent extends NaiveUserAgent {
                 inputStream = uc.getInputStream();
                 SAXSource source = new SAXSource(new PlainTextXMLReader(
                     inputStream), new InputSource());
-                xr = XMLResource.load(source);
+//                xr = XMLResource.load(source);
             } else if (contentType.startsWith("image")) {
                 String doc = "<img src='" + uri + "'/>";
                 xr = XMLResource.load(new StringReader(doc));

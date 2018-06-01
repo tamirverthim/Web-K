@@ -4,9 +4,10 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.xhtmlrenderer.js.DOMString;
-import org.xhtmlrenderer.js.Element;
+import org.xhtmlrenderer.js.dom.DOMString;
+import org.xhtmlrenderer.js.dom.Element;
 import org.xhtmlrenderer.js.canvas.*;
+import org.xhtmlrenderer.js.web_idl.Attribute;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -36,6 +37,11 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     ;
 
     @Override
+    public Attribute<HTMLCanvasElement> canvas() {
+        return null;
+    }
+
+    @Override
     public void save() {
         stateStack.add(new G2DState());
     }
@@ -43,6 +49,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     @Override
     public void restore() {
         stateStack.pop();
+        state().apply(g2d);
     }
 
     @Override
@@ -71,6 +78,26 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     }
 
     @Override
+    public Attribute<Double> globalAlpha() {
+        return null;
+    }
+
+    @Override
+    public Attribute<DOMString> globalCompositeOperation() {
+        return null;
+    }
+
+    @Override
+    public Attribute<Object> strokeStyle() {
+        return null;
+    }
+
+    @Override
+    public Attribute<Object> fillStyle() {
+        return null;
+    }
+
+    @Override
     public CanvasGradient createLinearGradient(double x0, double y0, double x1, double y1) {
         val res = new CanvasGradientImpl();
         // todo prepare
@@ -86,6 +113,26 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
     @Override
     public CanvasPattern createPattern(CanvasImageSource image, DOMString repetition) {
+        return null;
+    }
+
+    @Override
+    public Attribute<Double> shadowOffsetX() {
+        return null;
+    }
+
+    @Override
+    public Attribute<Double> shadowOffsetY() {
+        return null;
+    }
+
+    @Override
+    public Attribute<Double> shadowBlur() {
+        return null;
+    }
+
+    @Override
+    public Attribute<DOMString> shadowColor() {
         return null;
     }
 
@@ -195,7 +242,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
     @Override
     public void putImageData(ImageData imagedata, double dx, double dy) {
-        val array = (Uint8ClampedArrayImpl) imagedata.getData();
+        val array = (Uint8ClampedArrayImpl) imagedata.data().get();
         try {
             // todo optimize
             g2d.drawImage(ImageIO.read(new ByteArrayInputStream(array.getBytes())), (int) dx, (int) dy, null);

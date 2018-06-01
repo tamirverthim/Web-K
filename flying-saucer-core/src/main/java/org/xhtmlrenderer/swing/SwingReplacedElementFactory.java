@@ -19,11 +19,15 @@
  */
 package org.xhtmlrenderer.swing;
 
+import lombok.val;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xhtmlrenderer.extend.ReplacedElement;
 import org.xhtmlrenderer.extend.ReplacedElementFactory;
 import org.xhtmlrenderer.extend.UserAgentCallback;
+import org.xhtmlrenderer.js.JS;
+import org.xhtmlrenderer.js.WebIDJAdapter;
+import org.xhtmlrenderer.js.canvas.CanvasRenderingContext2D;
 import org.xhtmlrenderer.js.canvas.impl.CanvasRenderingContext2DImpl;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
@@ -95,8 +99,11 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
 
         if (context.getNamespaceHandler().isImageElement(e)) {
             return replaceImage(uac, context, e, cssWidth, cssHeight);
-        } else if(e.getTagName().equals("canvas")){
-            return new CanvasReplacedElement(new CanvasRenderingContext2DImpl());
+        } else if(context.getNamespaceHandler().isCanvasElement(e)){
+            val impl = new CanvasRenderingContext2DImpl();
+//            JS.getInstance().eval("var canvas = " + new WebIDJAdapter<CanvasRenderingContext2D>(impl));
+//            JS.getInstance().eval("var canvas = " + new WebIDJAdapter<CanvasRenderingContext2D>(impl));
+            return new CanvasReplacedElement(impl);
         } else {
             //form components
             Element parentForm = getParentForm(e, context);

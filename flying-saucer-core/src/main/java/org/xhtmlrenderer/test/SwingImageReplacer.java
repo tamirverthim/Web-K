@@ -22,6 +22,7 @@ import java.util.List;
  * @author patrick
  */
 public class SwingImageReplacer extends ElementReplacer {
+    
     private final Map imageComponents;
 
     public SwingImageReplacer() {
