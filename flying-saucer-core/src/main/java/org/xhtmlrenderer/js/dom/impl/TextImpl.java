@@ -20,21 +20,21 @@ public class TextImpl extends CharacterDataImpl implements Text {
 
     @Override
     public Text splitText(long offset) throws DOMException {
-        return null;
+        return new TextImpl(text.splitText((int) offset));
     }
 
     @Override
     public Attribute<Boolean> isElementContentWhitespace() {
-        return null;
+        return Attribute.<Boolean>readOnly().give(text::isElementContentWhitespace);
     }
 
     @Override
     public Attribute<DOMString> wholeText() {
-        return null;
+        return Attribute.readOnly(new DOMStringImpl(text.getWholeText()));
     }
 
     @Override
     public Text replaceWholeText(DOMString content) throws DOMException {
-        return null;
+        return new TextImpl(text.replaceWholeText(content.toString()));
     }
 }

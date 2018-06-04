@@ -41,7 +41,7 @@ public class CanvasElementReplacer extends ElementReplacer {
 
     @Override
     public ReplacedElement replace(LayoutContext context, BlockBox box, UserAgentCallback uac, int cssWidth, int cssHeight) {
-        return new CanvasReplacedElement(new CanvasRenderingContext2DImpl());
+        return null;//new CanvasReplacedElement(new CanvasRenderingContext2DImpl(context.));
     }
 
     @Override

@@ -72,7 +72,7 @@ public class BrowserStartup {
      * Constructor for the BrowserStartup object
      */
     public BrowserStartup() {
-        this("demo:demos/splash/splash.html");
+        this("file:///C:/src/earnix-diff/flyingsaucer/testpages/index.html");
     }
 
     /**

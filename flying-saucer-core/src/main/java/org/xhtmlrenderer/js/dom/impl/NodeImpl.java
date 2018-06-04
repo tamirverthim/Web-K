@@ -10,7 +10,6 @@ import java.util.Objects;
  * @author Taras Maslov
  * 6/1/2018
  */
-@SuppressWarnings("unchecked")
 public class NodeImpl implements Node {
     
     protected org.w3c.dom.Node target;
@@ -19,14 +18,21 @@ public class NodeImpl implements Node {
         this.target = target;
     }
 
+    public static NodeImpl create(org.w3c.dom.Node target){
+        if(target.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
+            return ElementImpl.create((org.w3c.dom.Element)target);
+        } // todo handle other types
+        return new NodeImpl(target);
+    }
+
     @Override
     public Attribute<DOMString> nodeName() {
-        return Attribute.readOnly().give(() -> new DOMStringImpl(target.getNodeName()));
+        return Attribute.<DOMString>readOnly().give(() -> new DOMStringImpl(target.getNodeName()));
     }
 
     @Override
     public Attribute<DOMString> nodeValue() throws DOMException {
-        return Attribute.receive(v -> target.setNodeValue(v.toString()))
+        return Attribute.<DOMString>receive(v -> target.setNodeValue(v.toString()))
                 .give(() -> new DOMStringImpl(target.getNodeValue()));
     }
 

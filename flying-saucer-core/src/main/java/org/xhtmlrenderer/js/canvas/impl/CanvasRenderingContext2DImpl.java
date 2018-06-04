@@ -7,6 +7,7 @@ import lombok.val;
 import org.xhtmlrenderer.js.dom.DOMString;
 import org.xhtmlrenderer.js.dom.Element;
 import org.xhtmlrenderer.js.canvas.*;
+import org.xhtmlrenderer.js.html5.HTMLCanvasElement;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 
 import javax.imageio.ImageIO;
@@ -24,17 +25,30 @@ import java.util.LinkedList;
 @Slf4j
 public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
+    
+    int width;
+    int height;
+
+    public CanvasRenderingContext2DImpl(int width, int height) {
+        this.width = width;
+        this.height = height;
+        
+        image = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .getDefaultScreenDevice()
+                .getDefaultConfiguration()
+                .createCompatibleImage(width, height);
+        g2d = (Graphics2D) image.getGraphics();
+    }
+
     BufferedImage image;
 
     Graphics2D g2d;
 
-    LinkedList<G2DState> stateStack;
+    LinkedList<G2DState> stateStack = new LinkedList<>();
 
     private G2DState state() {
         return stateStack.getLast();
     }
-
-    ;
 
     @Override
     public Attribute<HTMLCanvasElement> canvas() {
@@ -55,31 +69,36 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     @Override
     public void scale(double x, double y) {
         state().scale(x, y);
+        state().apply(g2d);
     }
 
     @Override
     public void rotate(double angle) {
         state().rotate(angle);
+        state().apply(g2d);
     }
 
     @Override
     public void translate(double x, double y) {
         state().translate(x, y);
+        state().apply(g2d);
     }
 
     @Override
     public void transform(double a, double b, double c, double d, double e, double f) {
         state().transform(a, b, c, d, e, f);
+        state().apply(g2d);
     }
 
     @Override
     public void setTransform(double a, double b, double c, double d, double e, double f) {
         state().setTransform(a, b, c, d, e, f);
+        state().apply(g2d);
     }
 
     @Override
     public Attribute<Double> globalAlpha() {
-        return null;
+        return Attribute.readOnly(1.0);
     }
 
     @Override

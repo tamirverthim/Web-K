@@ -7,6 +7,13 @@ import org.xhtmlrenderer.js.dom.*;
  * 6/1/2018
  */
 public class DOMImplementationImpl implements DOMImplementation {
+    
+    private org.w3c.dom.DOMImplementation target;
+    
+    public DOMImplementationImpl(org.w3c.dom.DOMImplementation implementation) {
+        this.target = implementation;
+    }
+
     @Override
     public boolean hasFeature(DOMString feature, DOMString version) {
         return false;

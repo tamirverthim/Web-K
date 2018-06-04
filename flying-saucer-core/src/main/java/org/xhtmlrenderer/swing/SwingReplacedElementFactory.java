@@ -25,10 +25,8 @@ import org.w3c.dom.Node;
 import org.xhtmlrenderer.extend.ReplacedElement;
 import org.xhtmlrenderer.extend.ReplacedElementFactory;
 import org.xhtmlrenderer.extend.UserAgentCallback;
-import org.xhtmlrenderer.js.JS;
-import org.xhtmlrenderer.js.WebIDJAdapter;
-import org.xhtmlrenderer.js.canvas.CanvasRenderingContext2D;
-import org.xhtmlrenderer.js.canvas.impl.CanvasRenderingContext2DImpl;
+import org.xhtmlrenderer.js.Binder;
+import org.xhtmlrenderer.js.html5.impl.HTMLCanvasElementImpl;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.DefaultFormSubmissionListener;
@@ -100,10 +98,13 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
         if (context.getNamespaceHandler().isImageElement(e)) {
             return replaceImage(uac, context, e, cssWidth, cssHeight);
         } else if(context.getNamespaceHandler().isCanvasElement(e)){
-            val impl = new CanvasRenderingContext2DImpl();
+//            val impl = new CanvasRenderingContext2DImpl();
+            
 //            JS.getInstance().eval("var canvas = " + new WebIDJAdapter<CanvasRenderingContext2D>(impl));
 //            JS.getInstance().eval("var canvas = " + new WebIDJAdapter<CanvasRenderingContext2D>(impl));
-            return new CanvasReplacedElement(impl);
+            val canvasElement = new HTMLCanvasElementImpl(e);
+            Binder.put(e, canvasElement);
+            return new CanvasReplacedElement(canvasElement);
         } else {
             //form components
             Element parentForm = getParentForm(e, context);

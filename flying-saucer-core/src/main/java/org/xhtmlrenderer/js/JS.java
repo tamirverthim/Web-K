@@ -28,18 +28,23 @@ import static javax.script.ScriptContext.ENGINE_SCOPE;
 @Slf4j
 public class JS {
     private static JS instance;
-    private final ScriptEngine engine;
-    private final ScriptContext context;
-    
+    private ScriptEngine engine;
+    private ScriptContext context;
+
     private XHTMLPanel panel;
     private JsConsole console = new JsConsole();
     private JsWindow window = new JsWindow();
-    
+    private org.w3c.dom.Document document;
+
+    public void onload() {
+        eval("window.onload && window.onload()");
+    }
+
     @FunctionalInterface
     public interface SetInterval {
         void setInterval(Consumer<Object> fn, int interval);
-    }    
-    
+    }
+
     @FunctionalInterface
     public interface SetTimeout {
         void setTimeout(Consumer<Object> fn, int interval);
@@ -59,13 +64,11 @@ public class JS {
             }, 0, interval);
         }
     }
-    
-    public JS(XHTMLPanel panel) {
-        instance = this; // todo rem
-        this.panel = panel;
+
+    private void initEngine() {
         engine = new ScriptEngineManager().getEngineByName("nashorn");
         context = engine.getContext();
-        context.setAttribute("document",new WebIDJAdapter<Document>(this, new DocumentImpl(panel.getDocument())), ENGINE_SCOPE);
+        context.setAttribute("document", new WebIDJAdapter<Document>(this, new DocumentImpl(panel.getDocument())), ENGINE_SCOPE);
         context.setAttribute("console", console, ENGINE_SCOPE);
         context.setAttribute("setInterval", window, ENGINE_SCOPE);
         context.setAttribute("location", new Location(), ENGINE_SCOPE);
@@ -76,41 +79,53 @@ public class JS {
         } catch (ScriptException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public JS(XHTMLPanel panel) {
+        instance = this; // todo rem
+        this.panel = panel;
+
 //        eval("this.setInterval = __rebind.setInterval;");
-        panel.addDocumentListener(new DefaultDocumentListener(){
+        panel.addDocumentListener(new DefaultDocumentListener() {
             @Override
             public void documentLoaded() {
-                val scripts = panel.getDocument().getElementsByTagName("script");
-                log.trace("Document has {} scripts", scripts.getLength());
-                for (int i = 0; i < scripts.getLength(); i++) {
-                    val script = scripts.item(i);
-                    if(StringUtils.isNotBlank(script.getTextContent())) {
-                        try {
-
-                            log.trace("Evaluating script {} {}", System.lineSeparator(), script.getTextContent());
-                            eval(script.getTextContent());
-                        } catch (Exception e){  
-                            log.warn("script.eval", e);
-                        }
-                    } else {
-                        val scriptUri = script.getAttributes().getNamedItem("src");
-                        if(StringUtils.isNotBlank(scriptUri.getTextContent())){
+                val nextDocument = panel.getDocument();
+                if (nextDocument != document) {
+                    initEngine();
+                    val scripts = panel.getDocument().getElementsByTagName("script");
+                    log.trace("Document has {} scripts", scripts.getLength());
+                    for (int i = 0; i < scripts.getLength(); i++) {
+                        val script = scripts.item(i);
+                        if (StringUtils.isNotBlank(script.getTextContent())) {
                             try {
-                                val scriptText = Network.load(scriptUri.getTextContent());
-                                log.trace("Evaluating script {} {}", System.lineSeparator(), scriptText);
-                                eval(scriptText);
-                            } catch (RuntimeException e){
-                                log.debug("script.src", e);
+
+                                log.trace("Evaluating script {} {}", System.lineSeparator(), script.getTextContent());
+                                eval(script.getTextContent());
+                            } catch (Exception e) {
+                                log.warn("script.eval", e);
+                            }
+                        } else {
+                            val scriptUri = script.getAttributes().getNamedItem("src");
+                            if (StringUtils.isNotBlank(scriptUri.getTextContent())) {
+                                try {
+                                    val scriptText = Network.load(scriptUri.getTextContent());
+                                    log.trace("Evaluating script {} {}", System.lineSeparator(), scriptText);
+                                    eval(scriptText);
+                                } catch (RuntimeException e) {
+                                    log.debug("script.src", e);
+                                }
                             }
                         }
+
+                        onload();
                     }
+                    document = nextDocument;
                 }
             }
-            
         });
     }
-    
-    public Object eval(String scr){
+
+    public Object eval(String scr) {
         Object res;
         try {
             res = engine.eval(scr, context);
@@ -120,10 +135,10 @@ public class JS {
         panel.repaint();
         return res;
     }
-    
+
 
     // temp
-    public static JS getInstance(){
+    public static JS getInstance() {
         return instance;
     }
 }

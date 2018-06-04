@@ -23,7 +23,7 @@ public class DOMStringListImpl implements DOMStringList {
     @Override
     public Attribute<Long> length() {
         //noinspection unchecked
-        return Attribute.readOnly().give(() -> items.size());
+        return Attribute.<Long>readOnly().give(() -> (long) items.size());
     }
 
     @Override

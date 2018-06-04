@@ -1,7 +1,7 @@
 package org.xhtmlrenderer.swing;
 
 import lombok.AllArgsConstructor;
-import org.xhtmlrenderer.js.canvas.impl.CanvasRenderingContext2DImpl;
+import org.xhtmlrenderer.js.html5.impl.HTMLCanvasElementImpl;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,10 +13,10 @@ import java.awt.image.BufferedImage;
  */
 public class CanvasReplacedElement extends SwingReplacedElement {
 
-    private CanvasRenderingContext2DImpl impl;
+    private HTMLCanvasElementImpl impl;
 
-    public CanvasReplacedElement(CanvasRenderingContext2DImpl impl) {
-        super(new CanvasPanel(impl.getBufferedImage()));
+    public CanvasReplacedElement(HTMLCanvasElementImpl impl) {
+        super(new CanvasPanel(impl.getContextImpl().getBufferedImage()));
         this.impl = impl;
     }
 
@@ -29,6 +29,8 @@ public class CanvasReplacedElement extends SwingReplacedElement {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
+            g.setColor(Color.red);
+            g.drawLine(0 ,0, 50 ,50);
             g.drawImage(bufferedImage, 0, 0, null);
         }
     }

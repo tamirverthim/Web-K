@@ -11,6 +11,13 @@ import org.xhtmlrenderer.js.web_idl.Attribute;
  * 6/1/2018
  */
 public class NamedNodeMapImpl implements NamedNodeMap {
+    
+    private org.w3c.dom.NamedNodeMap target;
+
+    public NamedNodeMapImpl(org.w3c.dom.NamedNodeMap target) {
+        this.target = target;
+    }
+
     @Override
     public Node getNamedItem(DOMString name) {
         return null;

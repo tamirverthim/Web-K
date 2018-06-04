@@ -1,13 +1,13 @@
 package org.xhtmlrenderer.js.dom.impl;
 
 import org.xhtmlrenderer.js.dom.*;
+import org.xhtmlrenderer.js.html5.impl.HTMLCanvasElementImpl;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 
 /**
  * @author Taras Maslov
  * 6/1/2018
  */
-@SuppressWarnings("unchecked")
 public class ElementImpl extends NodeImpl implements Element {
 
     private org.w3c.dom.Element target;
@@ -17,10 +17,18 @@ public class ElementImpl extends NodeImpl implements Element {
         this.target = target;
     }
 
+    public static ElementImpl create(org.w3c.dom.Element target) {
+        if (target.getTagName().equals("canvas")) {
+            return new HTMLCanvasElementImpl(target);
+        } else {
+            return new ElementImpl(target);
+        }
+    }
+
 
     @Override
     public Attribute<DOMString> tagName() {
-        return Attribute.readOnly().give(() -> target.getTagName());
+        return Attribute.<DOMString>readOnly().give(() -> new DOMStringImpl(target.getTagName()));
     }
 
     @Override

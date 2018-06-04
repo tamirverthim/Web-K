@@ -3,14 +3,17 @@ package org.xhtmlrenderer.js;
 import jdk.nashorn.api.scripting.JSObject;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.commons.lang3.ArrayUtils;
 import org.reflections.ReflectionUtils;
+import org.xhtmlrenderer.js.dom.DOMString;
+import org.xhtmlrenderer.js.dom.impl.DOMStringImpl;
+import org.xhtmlrenderer.js.web_idl.Indexed;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
-import java.util.function.Function;
 
 /**
  * @author Taras Maslov
@@ -18,11 +21,11 @@ import java.util.function.Function;
  */
 @Slf4j
 public class WebIDJAdapter<T> implements JSObject {
-    
+
     private T target;
     private JS js;
-    private HashMap<String, Object> members;
-    
+    private HashMap<String, Object> members = new HashMap<>();
+
     public WebIDJAdapter(JS js, T target) {
         this.target = target;
         this.js = js;
@@ -30,17 +33,22 @@ public class WebIDJAdapter<T> implements JSObject {
     }
 
     private void processTarget() {
-        ReflectionUtils.getAllMethods(target.getClass(), (method -> !Modifier.isStatic(method.getModifiers()))).forEach(m ->{
-            members.put(m.getName(), new Function<Object[], Object>() {
-                @Override
-                public Object apply(Object[] objects) {
-                    try {
-                        return m.invoke(target, objects);
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        throw new RuntimeException(e);
+        ReflectionUtils.getAllMethods(target.getClass(), (method -> !Modifier.isStatic(method.getModifiers()))).forEach(m -> {
+            members.put(m.getName(), new Function<>((ctx, arg) -> {
+                try {
+                    Object adaptedArg;
+                    if (m.getParameterTypes()[0] == DOMString.class && arg instanceof String) {
+                        adaptedArg = new DOMStringImpl((String) arg);
+                    } else {
+                        adaptedArg = arg;
                     }
+                    val res = m.invoke(target, adaptedArg);
+
+                    return wrapIfNeeded(res);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    throw new RuntimeException(e);
                 }
-            });
+            }));
         });
     }
 
@@ -67,7 +75,11 @@ public class WebIDJAdapter<T> implements JSObject {
 
     @Override
     public Object getSlot(int i) {
-        return null;
+        if (target instanceof Indexed) {
+            return wrapIfNeeded(((Indexed) target).elementAtIndex(i));
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -107,8 +119,8 @@ public class WebIDJAdapter<T> implements JSObject {
 
     @Override
     public boolean isInstance(Object o) {
-        if (o instanceof WebIDJAdapter){
-            val adapter = (WebIDJAdapter)o;
+        if (o instanceof WebIDJAdapter) {
+            val adapter = (WebIDJAdapter) o;
             return target.getClass().isAssignableFrom(adapter.target.getClass());
         } else {
             return false;
@@ -118,8 +130,8 @@ public class WebIDJAdapter<T> implements JSObject {
     @Override
     public boolean isInstanceOf(Object o) {
         // todo check diff from prev
-        if (o instanceof WebIDJAdapter){
-            val adapter = (WebIDJAdapter)o;
+        if (o instanceof WebIDJAdapter) {
+            val adapter = (WebIDJAdapter) o;
             return target.getClass().isAssignableFrom(adapter.target.getClass());
         } else {
             return false;
@@ -149,5 +161,15 @@ public class WebIDJAdapter<T> implements JSObject {
     @Override
     public double toNumber() {
         return 0;
+    }
+
+
+    private static Object wrapIfNeeded(Object res) {
+        String[] packages = new String[]{"org.xhtmlrenderer.js.html5.impl", "org.xhtmlrenderer.js.dom.impl"};
+        if (ArrayUtils.contains(packages, res.getClass().getPackage().getName())) {
+            return new WebIDJAdapter<Object>(JS.getInstance(), res);
+        } else {
+            return res;
+        }
     }
 }

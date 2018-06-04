@@ -18,7 +18,7 @@ public class Function <T, K> implements JSObject {
     
     private Callback<T, K> callback;
 
-    public Function(Callback<T, K > callback){
+    public Function(Callback<T, K> callback){
         this.callback = callback;
     }
 

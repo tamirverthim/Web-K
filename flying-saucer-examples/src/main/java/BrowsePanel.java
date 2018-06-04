@@ -126,6 +126,7 @@ public class BrowsePanel {
                     for (int i = 0; i < scripts.getLength(); i++) {
                         js.eval(scripts.item(i).getTextContent());
                     }
+                    js.onload();
                 }
             }
 
