@@ -3,14 +3,13 @@ package org.xhtmlrenderer.js.canvas;
 import org.xhtmlrenderer.js.dom.DOMString;
 import org.xhtmlrenderer.js.dom.Element;
 import org.xhtmlrenderer.js.Optional;
-import org.xhtmlrenderer.js.html5.HTMLCanvasElement;
 import org.xhtmlrenderer.js.web_idl.*;
 
 /**
  * @author Taras Maslov
  * 5/29/2018
  */
-public interface CanvasRenderingContext2D {
+public interface CanvasRenderingContext2D extends CanvasPathMethods, CanvasDrawingStyles {
 
     /** 
      * back-reference to the canvas 

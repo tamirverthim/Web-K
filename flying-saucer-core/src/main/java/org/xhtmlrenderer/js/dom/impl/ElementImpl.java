@@ -1,7 +1,9 @@
 package org.xhtmlrenderer.js.dom.impl;
 
+import lombok.val;
+import org.xhtmlrenderer.js.Binder;
 import org.xhtmlrenderer.js.dom.*;
-import org.xhtmlrenderer.js.html5.impl.HTMLCanvasElementImpl;
+import org.xhtmlrenderer.js.canvas.impl.HTMLCanvasElementImpl;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 
 /**
@@ -18,11 +20,16 @@ public class ElementImpl extends NodeImpl implements Element {
     }
 
     public static ElementImpl create(org.w3c.dom.Element target) {
-        if (target.getTagName().equals("canvas")) {
+        val bound = Binder.get(target);
+        
+        if(bound != null) {
+            // element created by renderer
+            return (ElementImpl) bound;
+        } else 
+            if (target.getTagName().equals("canvas")){
             return new HTMLCanvasElementImpl(target);
-        } else {
-            return new ElementImpl(target);
         }
+        return new ElementImpl(target);
     }
 
 

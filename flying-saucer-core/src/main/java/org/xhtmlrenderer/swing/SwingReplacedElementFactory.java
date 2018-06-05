@@ -19,14 +19,13 @@
  */
 package org.xhtmlrenderer.swing;
 
-import lombok.val;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xhtmlrenderer.extend.ReplacedElement;
 import org.xhtmlrenderer.extend.ReplacedElementFactory;
 import org.xhtmlrenderer.extend.UserAgentCallback;
 import org.xhtmlrenderer.js.Binder;
-import org.xhtmlrenderer.js.html5.impl.HTMLCanvasElementImpl;
+import org.xhtmlrenderer.js.canvas.impl.HTMLCanvasElementImpl;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.DefaultFormSubmissionListener;
@@ -98,12 +97,11 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
         if (context.getNamespaceHandler().isImageElement(e)) {
             return replaceImage(uac, context, e, cssWidth, cssHeight);
         } else if(context.getNamespaceHandler().isCanvasElement(e)){
-//            val impl = new CanvasRenderingContext2DImpl();
-            
-//            JS.getInstance().eval("var canvas = " + new WebIDJAdapter<CanvasRenderingContext2D>(impl));
-//            JS.getInstance().eval("var canvas = " + new WebIDJAdapter<CanvasRenderingContext2D>(impl));
-            val canvasElement = new HTMLCanvasElementImpl(e);
-            Binder.put(e, canvasElement);
+            HTMLCanvasElementImpl canvasElement = (HTMLCanvasElementImpl) Binder.get(e);
+            if(canvasElement == null) {
+                canvasElement = new HTMLCanvasElementImpl(e);
+                Binder.put(e, canvasElement);
+            }
             return new CanvasReplacedElement(canvasElement);
         } else {
             //form components

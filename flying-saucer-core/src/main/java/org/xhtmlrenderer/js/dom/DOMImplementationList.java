@@ -10,6 +10,7 @@ import org.xhtmlrenderer.js.web_idl.Unsigned;
  */
 public interface DOMImplementationList {
     DOMImplementation  item(@Unsigned long index);
-    @Readonly @Unsigned
+    @Readonly 
+    @Unsigned
     Attribute<Long> length();
 }

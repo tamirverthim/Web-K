@@ -1,4 +1,4 @@
-package org.xhtmlrenderer.js.html5;
+package org.xhtmlrenderer.js.canvas;
 
 import org.xhtmlrenderer.js.Optional;
 import org.xhtmlrenderer.js.canvas.CanvasRenderingContext2D;

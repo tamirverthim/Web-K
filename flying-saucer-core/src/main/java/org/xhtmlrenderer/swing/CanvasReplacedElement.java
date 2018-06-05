@@ -1,7 +1,7 @@
 package org.xhtmlrenderer.swing;
 
 import lombok.AllArgsConstructor;
-import org.xhtmlrenderer.js.html5.impl.HTMLCanvasElementImpl;
+import org.xhtmlrenderer.js.canvas.impl.HTMLCanvasElementImpl;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,11 +13,12 @@ import java.awt.image.BufferedImage;
  */
 public class CanvasReplacedElement extends SwingReplacedElement {
 
-    private HTMLCanvasElementImpl impl;
+//    private HTMLCanvasElementImpl impl;
 
     public CanvasReplacedElement(HTMLCanvasElementImpl impl) {
         super(new CanvasPanel(impl.getContextImpl().getBufferedImage()));
-        this.impl = impl;
+        getJComponent().setSize(impl.getContextImpl().getWidth(), impl.getContextImpl().getHeight());
+//        this.impl = impl;
     }
 
 
@@ -35,4 +36,8 @@ public class CanvasReplacedElement extends SwingReplacedElement {
         }
     }
 
+    @Override
+    public boolean isRequiresInteractivePaint() {
+        return true;
+    }
 }

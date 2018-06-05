@@ -14,16 +14,20 @@ import java.awt.geom.AffineTransform;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 public class G2DState {
-//    double sx = 1;
-//    double sy = 1;
-//    double rotation = 0;
-//    double tx = 0;
-//    double ty = 0;
 
     AffineTransform transform = new AffineTransform();
+    Color fillColor;
+    Color strokeColor;
+    double lineWidth = 2;
 
     void apply(Graphics2D graphics2D) {
-
+        graphics2D.setTransform(transform);
+        graphics2D.setStroke(new BasicStroke((float) lineWidth));
+    }
+    
+    void apply(Graphics2D graphics2D, boolean fill) {
+        apply(graphics2D);
+        graphics2D.setColor(fill ? fillColor : strokeColor);
     }
 
     public void scale(double x, double y) {
@@ -44,5 +48,17 @@ public class G2DState {
 
     void setTransform(double a, double b, double c, double d, double e, double f) {
         transform.setTransform(new AffineTransform(a, b, c, d, e, f));
+    }
+    
+    public void setFillColor(Color color) {
+        this.fillColor = color;
+    }
+
+    public void setStrokeColor(Color color) {
+        this.strokeColor = color;
+    }
+
+    public void setLineWidth(double value) {
+        this.lineWidth = value;
     }
 }

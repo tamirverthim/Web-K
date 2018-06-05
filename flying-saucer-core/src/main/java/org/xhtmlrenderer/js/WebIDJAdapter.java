@@ -4,12 +4,16 @@ import jdk.nashorn.api.scripting.JSObject;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.reflections.ReflectionUtils;
 import org.xhtmlrenderer.js.dom.DOMString;
 import org.xhtmlrenderer.js.dom.impl.DOMStringImpl;
+import org.xhtmlrenderer.js.web_idl.Attribute;
 import org.xhtmlrenderer.js.web_idl.Indexed;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.HashMap;
@@ -19,6 +23,7 @@ import java.util.Set;
  * @author Taras Maslov
  * 5/31/2018
  */
+@SuppressWarnings("unchecked")
 @Slf4j
 public class WebIDJAdapter<T> implements JSObject {
 
@@ -34,20 +39,35 @@ public class WebIDJAdapter<T> implements JSObject {
 
     private void processTarget() {
         ReflectionUtils.getAllMethods(target.getClass(), (method -> !Modifier.isStatic(method.getModifiers()))).forEach(m -> {
-            members.put(m.getName(), new Function<>((ctx, arg) -> {
-                try {
-                    Object adaptedArg;
-                    if (m.getParameterTypes()[0] == DOMString.class && arg instanceof String) {
-                        adaptedArg = new DOMStringImpl((String) arg);
-                    } else {
-                        adaptedArg = arg;
-                    }
-                    val res = m.invoke(target, adaptedArg);
 
-                    return wrapIfNeeded(res);
-                } catch (IllegalAccessException | InvocationTargetException e) {
+            // Attribute member
+
+            try {
+                if (m.getReturnType().equals(Attribute.class)) {
+                    members.put(m.getName(), m.invoke(target));
+                    return;
+                }
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+
+            // Function member
+
+            members.put(m.getName(), new Function<>((ctx, arg) -> {
+                Object[] adaptedArg;
+                if (m.getParameterTypes().length > 0 && m.getParameterTypes()[0] == DOMString.class && arg instanceof String) {
+                    adaptedArg = new Object[]{new DOMStringImpl((String) arg)};
+                } else {
+                    adaptedArg = (Object[]) arg;
+                }
+                Object res;
+                try {
+                    res = MethodUtils.invokeMethod(target, m.getName(), adaptedArg, m.getParameterTypes());
+                } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | IllegalArgumentException e) {
                     throw new RuntimeException(e);
                 }
+                return wrapIfNeeded(res);
+
             }));
         });
     }
@@ -70,7 +90,12 @@ public class WebIDJAdapter<T> implements JSObject {
 
     @Override
     public Object getMember(String s) {
-        return members.get(s);
+        val member = members.get(s);
+        if (member instanceof Attribute) {
+            return wrapIfNeeded(((Attribute) member).get());
+        } else {
+            return member;
+        }
     }
 
     @Override
@@ -99,7 +124,20 @@ public class WebIDJAdapter<T> implements JSObject {
 
     @Override
     public void setMember(String s, Object o) {
-        members.put(s, o);
+        val member = members.get(s);
+        if (member instanceof Attribute) {
+            
+            try {
+        
+                ((Attribute) member).set(unwrapIfNeeded(o));
+            } catch (ClassCastException e) {
+                members.remove(s);
+                setMember(s, o);
+            }
+
+        } else {
+            members.put(s, o);
+        }
     }
 
     @Override
@@ -164,12 +202,27 @@ public class WebIDJAdapter<T> implements JSObject {
     }
 
 
-    private static Object wrapIfNeeded(Object res) {
-        String[] packages = new String[]{"org.xhtmlrenderer.js.html5.impl", "org.xhtmlrenderer.js.dom.impl"};
+    public static Object wrapIfNeeded(Object res) {
+        if (res == null || ClassUtils.isPrimitiveOrWrapper(res.getClass())) {
+            return res;
+        } 
+        
+        String[] packages = new String[]{"org.xhtmlrenderer.js.canvas.impl", "org.xhtmlrenderer.js.dom.impl"};
         if (ArrayUtils.contains(packages, res.getClass().getPackage().getName())) {
-            return new WebIDJAdapter<Object>(JS.getInstance(), res);
+            return new WebIDJAdapter<>(JS.getInstance(), res);
         } else {
             return res;
         }
     }
+
+    public static Object unwrapIfNeeded(Object object) {
+        if(object instanceof String) {
+            return new DOMStringImpl((String) object);
+        }
+        if (object instanceof WebIDJAdapter) {
+            return ((WebIDJAdapter) object).target;
+        }
+        return object;
+    }
+
 }

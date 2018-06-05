@@ -1,12 +1,14 @@
-package org.xhtmlrenderer.js.html5.impl;
+package org.xhtmlrenderer.js.canvas.impl;
 
 import org.w3c.dom.Element;
 import org.xhtmlrenderer.js.canvas.CanvasRenderingContext2D;
 import org.xhtmlrenderer.js.canvas.impl.CanvasRenderingContext2DImpl;
 import org.xhtmlrenderer.js.dom.DOMString;
 import org.xhtmlrenderer.js.dom.impl.ElementImpl;
-import org.xhtmlrenderer.js.html5.HTMLCanvasElement;
+import org.xhtmlrenderer.js.canvas.HTMLCanvasElement;
 import org.xhtmlrenderer.js.web_idl.Attribute;
+
+import static java.lang.Integer.parseInt;
 
 /**
  * @author Taras Maslov
@@ -18,7 +20,10 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
 
     public HTMLCanvasElementImpl(Element target) {
         super(target);
-        context = new CanvasRenderingContext2DImpl(100, 100);
+        context = new CanvasRenderingContext2DImpl(
+                parseInt(target.getAttribute("width")), 
+                parseInt(target.getAttribute("height"))
+        );
     }
 
     @Override
@@ -38,7 +43,7 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
 
     @Override
     public CanvasRenderingContext2D getContext(DOMString contextId) {
-        return new CanvasRenderingContext2DImpl(100, 100);
+        return context;
     }
 
     public CanvasRenderingContext2DImpl getContextImpl() {
