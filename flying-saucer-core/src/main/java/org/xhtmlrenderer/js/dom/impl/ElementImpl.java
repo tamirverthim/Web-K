@@ -6,6 +6,8 @@ import org.xhtmlrenderer.js.dom.*;
 import org.xhtmlrenderer.js.canvas.impl.HTMLCanvasElementImpl;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 
+import java.util.Objects;
+
 /**
  * @author Taras Maslov
  * 6/1/2018
@@ -21,12 +23,11 @@ public class ElementImpl extends NodeImpl implements Element {
 
     public static ElementImpl create(org.w3c.dom.Element target) {
         val bound = Binder.get(target);
-        
-        if(bound != null) {
+
+        if (bound != null) {
             // element created by renderer
             return (ElementImpl) bound;
-        } else 
-            if (target.getTagName().equals("canvas")){
+        } else if (Objects.equals(target.getTagName(), "canvas")) {
             return new HTMLCanvasElementImpl(target);
         }
         return new ElementImpl(target);
@@ -260,7 +261,7 @@ public class ElementImpl extends NodeImpl implements Element {
 
     @Override
     public Attribute<DOMString> textContent() {
-        return null;
+        return super.textContent();
     }
 
     @Override

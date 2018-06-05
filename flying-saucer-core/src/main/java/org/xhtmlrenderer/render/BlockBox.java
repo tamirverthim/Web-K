@@ -713,7 +713,7 @@ public class BlockBox extends Box implements InlinePaintable {
                 }
 
                 //check if replaced
-                log.error(" check repl {}", getElement().getTagName());
+//                log.error(" check repl {}", getElement().getTagName());
                 ReplacedElement re = getReplacedElement();
                 if (re == null) {
                     re = c.getReplacedElementFactory().createReplacedElement(

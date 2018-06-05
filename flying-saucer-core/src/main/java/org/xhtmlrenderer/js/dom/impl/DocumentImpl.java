@@ -1,8 +1,11 @@
 package org.xhtmlrenderer.js.dom.impl;
 
 import lombok.AllArgsConstructor;
+import lombok.val;
 import org.xhtmlrenderer.js.dom.*;
 import org.xhtmlrenderer.js.web_idl.Attribute;
+
+import java.util.Objects;
 
 /**
  * @author Taras Maslov
@@ -97,7 +100,27 @@ public class DocumentImpl implements Document {
 
     @Override
     public Element getElementById(DOMString elementId) {
-        return ElementImpl.create(target.getElementById(elementId.toString()));
+        
+        return ElementImpl.create(findById(target, elementId.toString()));
+    }
+    
+    private org.w3c.dom.Element findById(org.w3c.dom.Node node, String id){
+        org.w3c.dom.NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            org.w3c.dom.Node currentNode = nodeList.item(i);
+            if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
+                val att = currentNode.getAttributes().getNamedItem("id");
+                if(att != null && Objects.equals(att.getNodeValue(), id)){
+                    return (org.w3c.dom.Element) currentNode;
+                } else {
+                    val found =  findById(currentNode, id);
+                    if(found != null){
+                        return found;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     @Override

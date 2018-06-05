@@ -13,7 +13,6 @@ import org.xhtmlrenderer.js.web_idl.Attribute;
 import org.xhtmlrenderer.js.web_idl.Indexed;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,13 +24,13 @@ import java.util.Set;
  */
 @SuppressWarnings("unchecked")
 @Slf4j
-public class WebIDJAdapter<T> implements JSObject {
+public class WebIDLAdapter<T> implements JSObject {
 
     private T target;
     private JS js;
     private HashMap<String, Object> members = new HashMap<>();
 
-    public WebIDJAdapter(JS js, T target) {
+    public WebIDLAdapter(JS js, T target) {
         this.target = target;
         this.js = js;
         processTarget();
@@ -39,7 +38,7 @@ public class WebIDJAdapter<T> implements JSObject {
 
     private void processTarget() {
         ReflectionUtils.getAllMethods(target.getClass(), (method -> !Modifier.isStatic(method.getModifiers()))).forEach(m -> {
-
+            
             // Attribute member
 
             try {
@@ -57,8 +56,15 @@ public class WebIDJAdapter<T> implements JSObject {
                 Object[] adaptedArg;
                 if (m.getParameterTypes().length > 0 && m.getParameterTypes()[0] == DOMString.class && arg instanceof String) {
                     adaptedArg = new Object[]{new DOMStringImpl((String) arg)};
-                } else {
+                } else if (m.getParameterTypes().length > 1) {
                     adaptedArg = (Object[]) arg;
+                    if(adaptedArg[0] instanceof String){
+                        adaptedArg[0] = new DOMStringImpl(adaptedArg[0].toString());
+                    }
+                } else if (arg != null){
+                    adaptedArg = new Object[]{arg};
+                } else {
+                    adaptedArg = null;
                 }
                 Object res;
                 try {
@@ -80,7 +86,7 @@ public class WebIDJAdapter<T> implements JSObject {
 
     @Override
     public Object newObject(Object... objects) {
-        return new WebIDJAdapter(js, ReflectionHelper.create(target.getClass()));
+        return new WebIDLAdapter(js, ReflectionHelper.create(target.getClass()));
     }
 
     @Override
@@ -157,8 +163,8 @@ public class WebIDJAdapter<T> implements JSObject {
 
     @Override
     public boolean isInstance(Object o) {
-        if (o instanceof WebIDJAdapter) {
-            val adapter = (WebIDJAdapter) o;
+        if (o instanceof WebIDLAdapter) {
+            val adapter = (WebIDLAdapter) o;
             return target.getClass().isAssignableFrom(adapter.target.getClass());
         } else {
             return false;
@@ -168,8 +174,8 @@ public class WebIDJAdapter<T> implements JSObject {
     @Override
     public boolean isInstanceOf(Object o) {
         // todo check diff from prev
-        if (o instanceof WebIDJAdapter) {
-            val adapter = (WebIDJAdapter) o;
+        if (o instanceof WebIDLAdapter) {
+            val adapter = (WebIDLAdapter) o;
             return target.getClass().isAssignableFrom(adapter.target.getClass());
         } else {
             return false;
@@ -209,7 +215,7 @@ public class WebIDJAdapter<T> implements JSObject {
         
         String[] packages = new String[]{"org.xhtmlrenderer.js.canvas.impl", "org.xhtmlrenderer.js.dom.impl"};
         if (ArrayUtils.contains(packages, res.getClass().getPackage().getName())) {
-            return new WebIDJAdapter<>(JS.getInstance(), res);
+            return new WebIDLAdapter<>(JS.getInstance(), res);
         } else {
             return res;
         }
@@ -219,8 +225,8 @@ public class WebIDJAdapter<T> implements JSObject {
         if(object instanceof String) {
             return new DOMStringImpl((String) object);
         }
-        if (object instanceof WebIDJAdapter) {
-            return ((WebIDJAdapter) object).target;
+        if (object instanceof WebIDLAdapter) {
+            return ((WebIDLAdapter) object).target;
         }
         return object;
     }

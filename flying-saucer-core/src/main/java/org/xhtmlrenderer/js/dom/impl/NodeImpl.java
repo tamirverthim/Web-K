@@ -11,16 +11,16 @@ import java.util.Objects;
  * 6/1/2018
  */
 public class NodeImpl implements Node {
-    
+
     protected org.w3c.dom.Node target;
 
     public NodeImpl(org.w3c.dom.Node target) {
         this.target = target;
     }
 
-    public static NodeImpl create(org.w3c.dom.Node target){
-        if(target.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
-            return ElementImpl.create((org.w3c.dom.Element)target);
+    public static NodeImpl create(org.w3c.dom.Node target) {
+        if (target.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
+            return ElementImpl.create((org.w3c.dom.Element) target);
         } // todo handle other types
         return new NodeImpl(target);
     }
@@ -153,7 +153,7 @@ public class NodeImpl implements Node {
 
     @Override
     public Attribute<DOMString> textContent() {
-        return null;
+        return Attribute.<DOMString>receive(value -> target.setTextContent(value.toString())).give(() -> new DOMStringImpl(target.getTextContent()));
     }
 
     @Override
@@ -178,7 +178,7 @@ public class NodeImpl implements Node {
 
     @Override
     public boolean isEqualNode(Node arg) {
-        val other = (NodeImpl)arg;
+        val other = (NodeImpl) arg;
         return Objects.equals(target, other.target);
     }
 

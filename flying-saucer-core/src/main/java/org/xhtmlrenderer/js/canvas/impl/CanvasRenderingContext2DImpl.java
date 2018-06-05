@@ -15,6 +15,7 @@ import java.awt.*;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -197,7 +198,6 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     public void fillRect(double x, double y, double w, double h) {
         state().apply(g2d, true);
         g2d.fillRect((int) x, (int) y, (int) w, (int) h);
-        System.err.println();
     }
 
     @Override
@@ -208,7 +208,6 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
     @Override
     public void beginPath() {
-        log.trace("beginPath");
     }
 
     @Override
@@ -366,11 +365,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
     @Override
     public void rect(double x, double y, double w, double h) {
-        path2D.moveTo(x, y);
-        path2D.lineTo(x + w, y);
-        path2D.lineTo(x + w, y + h);
-        path2D.lineTo(x, y + h);
-        path2D.lineTo(x, y);
+        path2D.append(new Rectangle2D.Double(x, y, w, h), false);
     }
 
     @Override
