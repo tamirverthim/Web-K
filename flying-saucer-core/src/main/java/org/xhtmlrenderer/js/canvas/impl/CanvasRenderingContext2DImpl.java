@@ -14,7 +14,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -383,7 +382,8 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
     @Override
     public Attribute<Double> lineWidth() {
-        return Attribute.<Double>receive(value -> state().setLineWidth(value)).give(() -> state().getLineWidth());
+        return Attribute.<Double>receive(value -> 
+                state().setLineWidth(value)).give(() -> state().getLineWidth());
     }
 
     @Override

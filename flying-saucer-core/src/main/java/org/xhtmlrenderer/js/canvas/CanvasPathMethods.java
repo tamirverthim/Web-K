@@ -2,7 +2,6 @@ package org.xhtmlrenderer.js.canvas;
 
 import org.xhtmlrenderer.js.Optional;
 import org.xhtmlrenderer.js.web_idl.DefaultBoolean;
-import org.xhtmlrenderer.js.web_idl.DefaultDouble;
 import org.xhtmlrenderer.js.web_idl.Unrestricted;
 
 /**

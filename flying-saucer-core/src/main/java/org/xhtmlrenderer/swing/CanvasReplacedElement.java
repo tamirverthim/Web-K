@@ -30,8 +30,6 @@ public class CanvasReplacedElement extends SwingReplacedElement {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            g.setColor(Color.red);
-            g.drawLine(0 ,0, 50 ,50);
             g.drawImage(bufferedImage, 0, 0, null);
         }
     }

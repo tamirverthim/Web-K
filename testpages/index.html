@@ -44,6 +44,11 @@
 
         window.onload = function () {
             var canvas = document.getElementsByTagName("canvas")[0];
+			var canvas2 = document.getElementsByTagName("canvas")[1];
+			var ct2 = canvas2.getContext("2d");
+			ct2.fillStyle = "#FF0000";
+			ct2.fillRect(5, 5, 10, 15);
+			
             var ctx = canvas.getContext("2d");
             ctx.fillStyle = "#7FDBFF";
             ctx.fillRect(0, 0, 800, 800);

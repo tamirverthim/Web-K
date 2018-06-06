@@ -73,6 +73,11 @@ public class JS {
         context.setAttribute("setInterval", window, ENGINE_SCOPE);
         context.setAttribute("location", new Location(), ENGINE_SCOPE);
         context.setAttribute("HTMLCanvasElement", new Location(), ENGINE_SCOPE);
+        context.setAttribute("addEventListener", new Function<>((ctx, arg) -> {
+            log.trace("addEventListener");
+            return null;
+        }
+        ), ENGINE_SCOPE);
         try {
             context.setAttribute("window", engine.eval("this"), ENGINE_SCOPE);
             context.setAttribute("self", engine.eval("this"), ENGINE_SCOPE);

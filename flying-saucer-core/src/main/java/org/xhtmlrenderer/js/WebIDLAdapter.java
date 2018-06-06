@@ -133,8 +133,9 @@ public class WebIDLAdapter<T> implements JSObject {
         val member = members.get(s);
         if (member instanceof Attribute) {
             
+            
+            
             try {
-        
                 ((Attribute) member).set(unwrapIfNeeded(o));
             } catch (ClassCastException e) {
                 members.remove(s);
