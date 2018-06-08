@@ -21,9 +21,8 @@
 
 package org.xhtmlrenderer.css.extend.lib;
 
-import org.w3c.dom.Attr;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
+
+import org.jsoup.nodes.Element;
 import org.xhtmlrenderer.css.extend.AttributeResolver;
 import org.xhtmlrenderer.css.extend.TreeResolver;
 
@@ -32,39 +31,20 @@ import org.xhtmlrenderer.css.extend.TreeResolver;
  */
 public class DOMStaticXhtmlAttributeResolver implements AttributeResolver {
     public String getAttributeValue(Object e, String attrName) {
-        return ((Element) e).getAttribute(attrName);
+        return ((Element) e).attr(attrName);
     }
     
     public String getAttributeValue(Object o, String namespaceURI, String attrName) {
         Element e = (Element)o;
-        if (namespaceURI == TreeResolver.NO_NAMESPACE) {
-            return e.getAttribute(attrName);
-        } else if (namespaceURI == null) {
-            if (e.getLocalName() == null) { // No namespaces
-                return e.getAttribute(attrName);
-            } else {
-                NamedNodeMap attrs = e.getAttributes();
-                int l = attrs.getLength();
-                for (int i = 0; i < l; i++) {
-                    Attr attr = (Attr)attrs.item(i);
-                    if (attrName.equals(attr.getLocalName())) {
-                        return attr.getValue();
-                    }
-                }
-                
-                return "";
-            }
-        } else {
-            return e.getAttributeNS(namespaceURI, attrName);
-        }
+        return e.attr(attrName);
     }
 
     public String getClass(Object e) {
-        return ((Element) e).getAttribute("class");
+        return ((Element) e).attr("class");
     }
 
     public String getID(Object e) {
-        return ((Element) e).getAttribute("id");
+        return ((Element) e).attr("id");
     }
 
     public String getNonCssStyling(Object e) {
@@ -72,26 +52,26 @@ public class DOMStaticXhtmlAttributeResolver implements AttributeResolver {
     }
 
     public String getLang(Object e) {
-        return ((Element) e).getAttribute("lang");
+        return ((Element) e).attr("lang");
     }
 
     public String getElementStyling(Object el) {
         Element e = ((Element) el);
         StringBuffer style = new StringBuffer();
-        if (e.getNodeName().equals("td")) {
+        if (e.nodeName().equals("td")) {
             String s;
-            if (!(s = e.getAttribute("colspan")).equals("")) {
+            if (!(s = e.attr("colspan")).equals("")) {
                 style.append("-fs-table-cell-colspan: ");
                 style.append(s);
                 style.append(";");
             }
-            if (!(s = e.getAttribute("rowspan")).equals("")) {
+            if (!(s = e.attr("rowspan")).equals("")) {
                 style.append("-fs-table-cell-rowspan: ");
                 style.append(s);
                 style.append(";");
             }
         }
-        style.append(e.getAttribute("style"));
+        style.append(e.attr("style"));
         return style.toString();
     }
 
@@ -109,7 +89,7 @@ public class DOMStaticXhtmlAttributeResolver implements AttributeResolver {
 
     public boolean isLink(Object el) {
         Element e = ((Element) el);
-        if (e.getNodeName().equalsIgnoreCase("a") && !e.getAttribute("href").equals("")) return true;
+        if (e.nodeName().equalsIgnoreCase("a") && !e.attr("href").equals("")) return true;
         return false;
     }
 

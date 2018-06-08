@@ -22,9 +22,9 @@ package org.xhtmlrenderer.layout.breaker;
 
 import java.text.BreakIterator;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.Text;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.TextNode;
+
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.layout.LayoutContext;
@@ -117,15 +117,15 @@ public class Breaker {
     	return c.getTextRenderer().getWidth(c.getFontContext(), f, text);
     }
 
-    public static BreakPointsProvider getBreakPointsProvider(String text, LayoutContext c, Element element, CalculatedStyle style) {
+    public static BreakPointsProvider getBreakPointsProvider(String text, LayoutContext c, org.jsoup.nodes.Element element, CalculatedStyle style) {
     	return c.getSharedContext().getLineBreakingStrategy().getBreakPointsProvider(text, getLanguage(c, element), style);
     }
 
-    public static BreakPointsProvider getBreakPointsProvider(String text, LayoutContext c, Text textNode, CalculatedStyle style) {
+    public static BreakPointsProvider getBreakPointsProvider(String text, LayoutContext c, TextNode textNode, CalculatedStyle style) {
     	return c.getSharedContext().getLineBreakingStrategy().getBreakPointsProvider(text, getLanguage(c, textNode), style);
     }
 
-    private static String getLanguage(LayoutContext c, Element element) {
+    private static String getLanguage(LayoutContext c, org.jsoup.nodes.Element element) {
     	String language = c.getNamespaceHandler().getLang(element);
     	if (language == null || language.isEmpty()) {
     		language = DEFAULT_LANGUAGE;
@@ -133,11 +133,11 @@ public class Breaker {
     	return language;
     }
 
-    private static String getLanguage(LayoutContext c, Text textNode) {
+    private static String getLanguage(LayoutContext c, TextNode textNode) {
         if (textNode != null) {
-            Node parentNode = textNode.getParentNode();
+            org.jsoup.nodes.Node parentNode = textNode.parentNode();
             if (parentNode instanceof Element) {
-                return getLanguage(c, (Element) parentNode);
+                return getLanguage(c, (org.jsoup.nodes.Element) parentNode);
             }
         }
         return DEFAULT_LANGUAGE;

@@ -26,12 +26,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.w3c.dom.Attr;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.ProcessingInstruction;
+import lombok.val;
+import org.jsoup.nodes.*;
+import org.jsoup.select.Elements;
+
 import org.xhtmlrenderer.css.extend.StylesheetFactory;
 import org.xhtmlrenderer.css.extend.TreeResolver;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo;
@@ -50,77 +48,58 @@ public class NoNamespaceHandler implements NamespaceHandler {
         return _namespace;
     }
 
-    public String getAttributeValue(org.w3c.dom.Element e, String attrName) {
-        return e.getAttribute(attrName);
+    public String getAttributeValue(org.jsoup.nodes.Element e, String attrName) {
+        return e.attr(attrName);
     }
     
-    public String getAttributeValue(Element e, String namespaceURI, String attrName) {
-        if (namespaceURI == TreeResolver.NO_NAMESPACE) {
-            return e.getAttribute(attrName);
-        } else if (namespaceURI == null) {
-            if (e.getLocalName() == null) { // No namespaces
-                return e.getAttribute(attrName);
-            } else {
-                NamedNodeMap attrs = e.getAttributes();
-                int l = attrs.getLength();
-                for (int i = 0; i < l; i++) {
-                    Attr attr = (Attr)attrs.item(i);
-                    if (attrName.equals(attr.getLocalName())) {
-                        return attr.getValue();
-                    }
-                }
-                
-                return "";
-            }
-        } else {
-            return e.getAttributeNS(namespaceURI, attrName);
-        }
+    public String getAttributeValue(org.jsoup.nodes.Element e, String namespaceURI, String attrName) {
+        return e.attr(attrName);
     }
 
-    public String getClass(org.w3c.dom.Element e) {
+    public String getClass(org.jsoup.nodes.Element e) {
         return null;
     }
 
-    public String getID(org.w3c.dom.Element e) {
+    public String getID(org.jsoup.nodes.Element e) {
         return null;
     }
 
-    public String getLang(org.w3c.dom.Element e) {
+    public String getLang(org.jsoup.nodes.Element e) {
         if(e == null) {
             return "";
         }
-        return e.getAttribute("lang");
+        return e.attr("lang");
     }
 
-    public String getElementStyling(org.w3c.dom.Element e) {
+    public String getElementStyling(org.jsoup.nodes.Element e) {
         return null;
     }
 
-    public String getNonCssStyling(Element e) {
+    public String getNonCssStyling(org.jsoup.nodes.Element e) {
         return null;
     }
 
-    public String getLinkUri(org.w3c.dom.Element e) {
+    public String getLinkUri(org.jsoup.nodes.Element e) {
         return null;
     }
 
-    public String getDocumentTitle(org.w3c.dom.Document doc) {
+    public String getDocumentTitle(org.jsoup.nodes.Document doc) {
         return null;
     }
     
-    public String getAnchorName(Element e) {
+    public String getAnchorName(org.jsoup.nodes.Element e) {
         return null;
     }
 
-    public boolean isImageElement(Element e) {
+    public boolean isImageElement(org.jsoup.nodes.Element e) {
         return false;
     }
 
-    public String getImageSourceURI(Element e) {
+    public String getImageSourceURI(org.jsoup.nodes.Element e) {
         return null;
     }
     
-    public boolean isFormElement(Element e) {
+    public boolean isFormElement(org.jsoup.nodes.Element e) {
         return false;
     }
 
@@ -130,55 +109,63 @@ public class NoNamespaceHandler implements NamespaceHandler {
     private Pattern _alternatePattern = Pattern.compile("alternate\\s?=\\s?");
     private Pattern _mediaPattern = Pattern.compile("media\\s?=\\s?");
 
-    public StylesheetInfo[] getStylesheets(org.w3c.dom.Document doc) {
+    public StylesheetInfo[] getStylesheets(org.jsoup.nodes.Document doc) {
         List list = new ArrayList();
         //get the processing-instructions (actually for XmlDocuments)
         //type and href are required to be set
-        NodeList nl = doc.getChildNodes();
-        for (int i = 0, len = nl.getLength(); i < len; i++) {
-            Node node = nl.item(i);
-            if (node.getNodeType() != Node.PROCESSING_INSTRUCTION_NODE) continue;
-            ProcessingInstruction piNode = (ProcessingInstruction) node;
-            if (!piNode.getTarget().equals("xml-stylesheet")) continue;
+        Elements nl = doc.getAllElements();
+        for (int i = 0, len = nl.size(); i < len; i++) {
+            val element = nl.get(i);
+            org.jsoup.nodes.Node node = element.childNodeSize() > 0 ? element.childNode(0) : element;
+            if (!(node instanceof DataNode) )
+                continue;
+//            ProcessingInstruction piNode = (ProcessingInstruction) node;
+//            if (!piNode.getTarget().equals("xml-stylesheet")) continue;
             StylesheetInfo info;
             info = new StylesheetInfo();
             info.setOrigin(StylesheetInfo.AUTHOR);
-            String pi = piNode.getData();
+            String pi = ((org.jsoup.nodes.DataNode) node).getWholeData();
             Matcher m = _alternatePattern.matcher(pi);
             if (m.matches()) {
                 int start = m.end();
                 String alternate = pi.substring(start + 1, pi.indexOf(pi.charAt(start), start + 1));
-                //TODO: handle alternate stylesheets
+//                TODO: handle alternate stylesheets
                 if (alternate.equals("yes")) continue;//DON'T get alternate stylesheets for now
             }
-            m = _typePattern.matcher(pi);
-            if (m.find()) {
-                int start = m.end();
-                String type = pi.substring(start + 1, pi.indexOf(pi.charAt(start), start + 1));
-                //TODO: handle other stylesheet types
-                if (!type.equals("text/css")) continue;//for now
-                info.setType(type);
+            
+            if(!node.parent().nodeName().equals("style")){
+                continue;
             }
+//            m = _typePattern.matcher(pi);
+//            if (m.find()) {
+//                int start = m.end();
+//                String type = pi.substring(start + 1, pi.indexOf(pi.charAt(start), start + 1));
+////                TODO: handle other stylesheet types
+//                if (!type.equals("text/css")) continue;//for now
+//                info.setType(type);
+//            }
             m = _hrefPattern.matcher(pi);
             if (m.find()) {
                 int start = m.end();
                 String href = pi.substring(start + 1, pi.indexOf(pi.charAt(start), start + 1));
                 info.setUri(href);
             }
-            m = _titlePattern.matcher(pi);
-            if (m.find()) {
-                int start = m.end();
-                String title = pi.substring(start + 1, pi.indexOf(pi.charAt(start), start + 1));
-                info.setTitle(title);
-            }
-            m = _mediaPattern.matcher(pi);
-            if (m.find()) {
-                int start = m.end();
-                String media = pi.substring(start + 1, pi.indexOf(pi.charAt(start), start + 1));
-                info.setMedia(media);
-            } else {
-                info.addMedium("screen");
-            }
+            
+            info.setContent(((DataNode) node).getWholeData());
+//            m = _titlePattern.matcher(pi);
+//            if (m.find()) {
+//                int start = m.end();
+//                String title = pi.substring(start + 1, pi.indexOf(pi.charAt(start), start + 1));
+//                info.setTitle(title);
+//            }
+//            m = _mediaPattern.matcher(pi);
+//            if (m.find()) {
+//                int start = m.end();
+//                String media = pi.substring(start + 1, pi.indexOf(pi.charAt(start), start + 1));
+//                info.setMedia(media);
+//            } else {
+//                info.addMedium("screen");
+//            }
             list.add(info);
         }
 
@@ -190,7 +177,7 @@ public class NoNamespaceHandler implements NamespaceHandler {
     }
 
     @Override
-    public boolean isCanvasElement(Element e) {
-        return (e != null && e.getNodeName().equalsIgnoreCase("canvas"));
+    public boolean isCanvasElement(org.jsoup.nodes.Element e) {
+        return (e != null && e.nodeName().equalsIgnoreCase("canvas"));
     }
 }

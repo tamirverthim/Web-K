@@ -24,7 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.w3c.dom.Element;
+import org.jsoup.nodes.Element;
 import org.xhtmlrenderer.simple.extend.URLUTF8Encoder;
 import org.xhtmlrenderer.simple.xhtml.controls.ButtonControl;
 import org.xhtmlrenderer.simple.xhtml.controls.CheckControl;
@@ -87,9 +87,9 @@ public class XhtmlForm {
             return null;
 
         FormControl control;
-        String name = e.getNodeName();
+        String name = e.nodeName();
         if (name.equals("input")) {
-            String type = e.getAttribute("type");
+            String type = e.attr("type");
             if (type.equals("text") || type.equals("password")) {
                 control = new TextControl(form, e);
             } else if (type.equals("hidden")) {

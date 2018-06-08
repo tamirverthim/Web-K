@@ -14,20 +14,20 @@ import java.util.Objects;
  */
 public class ElementImpl extends NodeImpl implements Element {
 
-    private org.w3c.dom.Element target;
+    private org.jsoup.nodes.Element target;
 
-    public ElementImpl(org.w3c.dom.Element target) {
+    public ElementImpl(org.jsoup.nodes.Element target) {
         super(target);
         this.target = target;
     }
 
-    public static ElementImpl create(org.w3c.dom.Element target) {
+    public static ElementImpl create(org.jsoup.nodes.Element target) {
         val bound = Binder.get(target);
 
         if (bound != null) {
             // element created by renderer
             return (ElementImpl) bound;
-        } else if (Objects.equals(target.getTagName(), "canvas")) {
+        } else if (Objects.equals(target.tagName(), "canvas")) {
             return new HTMLCanvasElementImpl(target);
         }
         return new ElementImpl(target);
@@ -36,22 +36,22 @@ public class ElementImpl extends NodeImpl implements Element {
 
     @Override
     public Attribute<DOMString> tagName() {
-        return Attribute.<DOMString>readOnly().give(() -> new DOMStringImpl(target.getTagName()));
+        return Attribute.<DOMString>readOnly().give(() -> new DOMStringImpl(target.tagName()));
     }
 
     @Override
     public DOMString getAttribute(DOMString name) {
-        return new DOMStringImpl(target.getAttribute(name.toString()));
+        return new DOMStringImpl(target.attr(name.toString()));
     }
 
     @Override
     public void setAttribute(DOMString name, DOMString value) throws DOMException {
-        target.setAttribute(name.toString(), value.toString());
+        target.attr(name.toString(), value.toString());
     }
 
     @Override
     public void removeAttribute(DOMString name) throws DOMException {
-        target.removeAttribute(name.toString());
+        target.attr(name.toString());
     }
 
     @Override

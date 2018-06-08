@@ -35,6 +35,9 @@ import java.net.URLConnection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import javax.imageio.ImageIO;
+
+import lombok.val;
+import org.jsoup.nodes.Document;
 import org.xhtmlrenderer.event.DocumentListener;
 import org.xhtmlrenderer.extend.UserAgentCallback;
 import org.xhtmlrenderer.resource.CSSResource;
@@ -279,21 +282,29 @@ public class NaiveUserAgent implements UserAgentCallback, DocumentListener {
      * @param uri Location of the XML source.
      * @return An XMLResource containing the image.
      */
-    public XMLResource getXMLResource(String uri) {
-        InputStream inputStream = resolveAndOpenStream(uri);
-        XMLResource xmlResource;
+    public Document getXMLResource(String uri) {
+//        InputStream inputStream = resolveAndOpenStream(uri);
+//        XMLResource xmlResource;
+//        try {
+//            xmlResource = XMLResource.load(inputStream);
+//        } finally {
+//            if (inputStream != null) {
+//                try {
+//                    inputStream.close();
+//                } catch (IOException e) {
+//                    // swallow
+//                }
+//            }
+//        }
+
         try {
-            xmlResource = XMLResource.load(inputStream);
-        } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    // swallow
-                }
+            try (val s = resolveAndOpenStream(uri)){
+                return XMLResource.load(s);
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
-        return xmlResource;
     }
 
     public byte[] getBinaryResource(String uri) {

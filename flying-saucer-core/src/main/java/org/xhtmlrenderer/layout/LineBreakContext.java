@@ -19,7 +19,7 @@
  */
 package org.xhtmlrenderer.layout;
 
-import org.w3c.dom.Text;
+import org.jsoup.nodes.TextNode;
 
 /**
  * A bean which serves as a way for the layout code to pass information to the
@@ -35,7 +35,7 @@ public class LineBreakContext {
     private boolean _needsNewLine;
     private int _width;
     private boolean _endsOnNL;
-    private Text _textNode;
+    private TextNode _textNode;
     
     public int getLast() {
         return _master.length();
@@ -130,11 +130,11 @@ public class LineBreakContext {
         _endsOnNL = b;
     }
 
-    public Text getTextNode() {
+    public TextNode getTextNode() {
         return this._textNode;
     }
 
-    public void setTextNode(Text _text) {
+    public void setTextNode(TextNode _text) {
         this._textNode = _text;
     }
 }

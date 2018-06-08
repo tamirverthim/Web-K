@@ -69,7 +69,7 @@ public class InlineLayoutBox extends Box implements InlinePaintable {
     
     private int _containingBlockWidth;
     
-    public InlineLayoutBox(LayoutContext c, Element elem, CalculatedStyle style, int cbWidth) {
+    public InlineLayoutBox(LayoutContext c, org.jsoup.nodes.Element elem, CalculatedStyle style, int cbWidth) {
         this();
         setElement(elem);
         setStyle(style);
@@ -548,7 +548,7 @@ public class InlineLayoutBox extends Box implements InlinePaintable {
         return false;
     }
     
-    public List getElementBoxes(Element elem) {
+    public List getElementBoxes(org.jsoup.nodes.Element elem) {
         List result = new ArrayList();
         for (int i = 0; i < getInlineChildCount(); i++) {
             Object child = getInlineChild(i);
@@ -804,7 +804,7 @@ public class InlineLayoutBox extends Box implements InlinePaintable {
         result.append("InlineLayoutBox: ");
         if (getElement() != null) {
             result.append("<");
-            result.append(getElement().getNodeName());
+            result.append(getElement().nodeName());
             result.append("> ");
         } else {
             result.append("(anonymous) ");

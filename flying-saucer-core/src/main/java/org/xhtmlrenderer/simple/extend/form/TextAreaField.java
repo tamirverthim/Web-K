@@ -26,7 +26,6 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.plaf.basic.BasicTextAreaUI;
 import javax.swing.plaf.basic.BasicTextUI;
 
-import org.w3c.dom.Element;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.css.style.FSDerivedValue;
@@ -43,7 +42,7 @@ import java.awt.*;
 class TextAreaField extends FormField {
     private TextAreaFieldJTextArea _textarea;
 
-    public TextAreaField(Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
+    public TextAreaField(org.jsoup.nodes.Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }
 

@@ -13,16 +13,18 @@ import org.xhtmlrenderer.js.web_idl.Indexed;
 @AllArgsConstructor
 public class NodeListImpl implements NodeList, Indexed<Node> {
     
-    private org.w3c.dom.NodeList impl;
+//    private Node impl;
     
     @Override
     public Node item(long index) {
-        return NodeImpl.create(impl.item((int) index));
+        return null;
+//        return NodeImpl.create(impl.item((int) index));
     }
 
     @Override
     public Attribute<Long> length() {
-        return Attribute.<Long>readOnly().give(() -> (long) impl.getLength());
+        return null;
+//        return Attribute.<Long>readOnly().give(() -> (long) impl.getLength());
     }
 
     @Override

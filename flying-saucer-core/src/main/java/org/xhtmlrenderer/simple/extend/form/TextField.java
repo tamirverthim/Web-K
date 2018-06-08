@@ -24,7 +24,6 @@ import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicTextFieldUI;
 import javax.swing.plaf.basic.BasicTextUI;
 
-import org.w3c.dom.Element;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.css.style.FSDerivedValue;
@@ -39,7 +38,7 @@ import org.xhtmlrenderer.util.GeneralUtil;
 import java.awt.*;
 
 class TextField extends InputField {
-    public TextField(Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
+    public TextField(org.jsoup.nodes.Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }
 

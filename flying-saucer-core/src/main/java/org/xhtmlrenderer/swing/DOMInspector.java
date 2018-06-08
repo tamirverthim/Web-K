@@ -19,10 +19,11 @@
  */
 package org.xhtmlrenderer.swing;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+
+import org.jsoup.nodes.Comment;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.xhtmlrenderer.context.StyleReference;
 import org.xhtmlrenderer.css.constants.ValueConstants;
@@ -80,7 +81,7 @@ public class DOMInspector extends JPanel {
     /**
      * Description of the Field
      */
-    Document doc;
+    org.jsoup.nodes.Document doc;
     /**
      * Description of the Field
      */
@@ -100,7 +101,7 @@ public class DOMInspector extends JPanel {
      *
      * @param doc PARAM
      */
-    public DOMInspector(Document doc) {
+    public DOMInspector(org.jsoup.nodes.Document doc) {
         this(doc, null, null);
     }
 
@@ -111,7 +112,7 @@ public class DOMInspector extends JPanel {
      * @param context PARAM
      * @param sr      PARAM
      */
-    public DOMInspector(Document doc, SharedContext context, StyleReference sr) {
+    public DOMInspector(org.jsoup.nodes.Document doc, SharedContext context, StyleReference sr) {
         super();
 
         this.setLayout(new java.awt.BorderLayout());
@@ -164,7 +165,7 @@ public class DOMInspector extends JPanel {
      *
      * @param doc The new forDocument value
      */
-    public void setForDocument(Document doc) {
+    public void setForDocument(org.jsoup.nodes.Document doc) {
         setForDocument(doc, null, null);
     }
 
@@ -175,7 +176,7 @@ public class DOMInspector extends JPanel {
      * @param context The new forDocument value
      * @param sr      The new forDocument value
      */
-    public void setForDocument(Document doc, SharedContext context, StyleReference sr) {
+    public void setForDocument(org.jsoup.nodes.Document doc, SharedContext context, StyleReference sr) {
         this.doc = doc;
         this.styleReference = sr;
         this.context = context;
@@ -271,7 +272,7 @@ class ElementPropertiesPanel extends JPanel {
      *
      * @param node The new forElement value
      */
-    public void setForElement(Node node) {
+    public void setForElement(org.jsoup.nodes.Node node) {
         try {
             _properties.setModel(tableModel(node));
             TableColumnModel model = _properties.getColumnModel();
@@ -290,12 +291,12 @@ class ElementPropertiesPanel extends JPanel {
      * @return Returns
      * @throws Exception Throws
      */
-    private TableModel tableModel(Node node) {
-        if (node.getNodeType() != Node.ELEMENT_NODE) {
+    private TableModel tableModel(org.jsoup.nodes.Node node) {
+        if (!(node instanceof Element)) {
             Toolkit.getDefaultToolkit().beep();
             return _defaultTableModel;
         }
-        Map props = _sr.getCascadedPropertiesMap((Element) node);
+        Map props = _sr.getCascadedPropertiesMap((org.jsoup.nodes.Element) node);
         return new PropertiesTableModel(props);
     }
 
@@ -498,7 +499,7 @@ class DOMSelectionListener implements TreeSelectionListener {
      * @param e PARAM
      */
     public void valueChanged(TreeSelectionEvent e) {
-        Node node = (Node) _tree.getLastSelectedPathComponent();
+        org.jsoup.nodes.Node node = (org.jsoup.nodes.Node) _tree.getLastSelectedPathComponent();
 
         if (node == null) {
             return;
@@ -520,12 +521,12 @@ class DOMTreeModel implements TreeModel {
     /**
      * Description of the Field
      */
-    Document doc;
+    org.jsoup.nodes.Document doc;
 
     /**
      * Our root for display
      */
-    Node root;
+    org.jsoup.nodes.Node root;
 
     /**
      * Description of the Field
@@ -542,18 +543,18 @@ class DOMTreeModel implements TreeModel {
      *
      * @param doc PARAM
      */
-    public DOMTreeModel(Document doc) {
+    public DOMTreeModel(org.jsoup.nodes.Document doc) {
         this.displayableNodes = new HashMap();
         this.doc = doc;
         setRoot("body");
     }
 
     private void setRoot(String rootNodeName) {
-        Node tempRoot = doc.getDocumentElement();
-        NodeList nl = tempRoot.getChildNodes();
-        for (int i = 0; i < nl.getLength(); i++) {
-            if (nl.item(i).getNodeName().toLowerCase().equals(rootNodeName)) {
-                this.root = nl.item(i);
+        org.jsoup.nodes.Node tempRoot = doc;
+        List<org.jsoup.nodes.Node> nl = tempRoot.childNodes();
+        for (int i = 0; i < nl.size(); i++) {
+            if (nl.get(i).nodeName().toLowerCase().equals(rootNodeName)) {
+                this.root = nl.get(i);
             }
         }
     }
@@ -618,14 +619,14 @@ class DOMTreeModel implements TreeModel {
      */
     public Object getChild(Object parent, int index) {
 
-        Node node = (Node) parent;
+        org.jsoup.nodes.Node node = (org.jsoup.nodes.Node) parent;
 
         List children = (List) this.displayableNodes.get(parent);
         if (children == null) {
             children = addDisplayable(node);
         }
 
-        return (Node) children.get(index);
+        return (org.jsoup.nodes.Node) children.get(index);
     }
 
 
@@ -639,7 +640,7 @@ class DOMTreeModel implements TreeModel {
      */
     public int getChildCount(Object parent) {
 
-        Node node = (Node) parent;
+        org.jsoup.nodes.Node node = (org.jsoup.nodes.Node) parent;
         List children = (List) this.displayableNodes.get(parent);
         if (children == null) {
             children = addDisplayable(node);
@@ -696,9 +697,9 @@ class DOMTreeModel implements TreeModel {
      */
     public boolean isLeaf(Object nd) {
 
-        Node node = (Node) nd;
+        org.jsoup.nodes.Node node = (org.jsoup.nodes.Node) nd;
 
-        return !node.hasChildNodes();
+        return node.childNodes().isEmpty();
     }
 
     // only adds displayable nodes--not stupid DOM text filler nodes
@@ -708,17 +709,17 @@ class DOMTreeModel implements TreeModel {
      * @param parent The feature to be added to the Displayable attribute
      * @return Returns
      */
-    private List addDisplayable(Node parent) {
+    private List addDisplayable(org.jsoup.nodes.Node parent) {
         List children = (List) this.displayableNodes.get(parent);
         if (children == null) {
             children = new ArrayList();
             this.displayableNodes.put(parent, children);
-            NodeList nl = parent.getChildNodes();
-            for (int i = 0, len = nl.getLength(); i < len; i++) {
-                Node child = nl.item(i);
-                if (child.getNodeType() == Node.ELEMENT_NODE ||
-                        child.getNodeType() == Node.COMMENT_NODE ||
-                        (child.getNodeType() == Node.TEXT_NODE && (child.getNodeValue().trim().length() > 0))) {
+            List<Node> nl = parent.childNodes();
+            for (int i = 0, len = nl.size(); i < len; i++) {
+                Node child = nl.get(i);
+                if (child instanceof Element ||
+                        child instanceof Comment ||
+                        (child instanceof TextNode && (((TextNode) child).getWholeText().trim().length() > 0))) {
                     children.add(child);
                 }
             }
@@ -758,29 +759,29 @@ class DOMTreeCellRenderer extends DefaultTreeCellRenderer {
 
         Node node = (Node) value;
 
-        if (node.getNodeType() == Node.ELEMENT_NODE) {
+        if (node instanceof Element) {
 
             String cls = "";
-            if (node.hasAttributes()) {
-                Node cn = node.getAttributes().getNamedItem("class");
+            if (node.attributes().size() > 0) {
+                String cn = node.attributes().get("class");
                 if (cn != null) {
-                    cls = " class='" + cn.getNodeValue() + "'";
+                    cls = " class='" + cn + "'";
                 }
             }
-            value = "<" + node.getNodeName() + cls + ">";
+            value = "<" + node.nodeName() + cls + ">";
 
         }
 
-        if (node.getNodeType() == Node.TEXT_NODE) {
+        if (node instanceof TextNode) {
 
-            if (node.getNodeValue().trim().length() > 0) {
-                value = "\"" + node.getNodeValue() + "\"";
+            if (((TextNode) node).getWholeText().trim().length() > 0) {
+                value = "\"" + ((TextNode) node).getWholeText() + "\"";
             }
         }
 
-        if (node.getNodeType() == Node.COMMENT_NODE) {
+        if (node instanceof Comment) {
 
-            value = "<!-- " + node.getNodeValue() + " -->";
+            value = "<!-- " + ((Comment) node).getData() + " -->";
 
         }
 

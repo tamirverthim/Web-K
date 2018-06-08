@@ -19,7 +19,6 @@
  */
 package org.xhtmlrenderer.extend;
 
-import org.w3c.dom.Element;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.FormSubmissionListener;
@@ -50,7 +49,7 @@ public interface ReplacedElementFactory {
      * Removes any reference to <code>Element</code> <code>e</code>.
      * @param e
      */
-    public void remove(Element e);
+    public void remove(org.jsoup.nodes.Element e);
 
     /**
      * Identifies the FSL which will be used for callbacks when a form submit action is executed; you can use a

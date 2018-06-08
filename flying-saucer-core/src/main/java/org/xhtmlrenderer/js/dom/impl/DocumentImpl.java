@@ -14,23 +14,21 @@ import java.util.Objects;
 @AllArgsConstructor
 public class DocumentImpl implements Document {
     
-    private org.w3c.dom.Document target;
+    private org.jsoup.nodes.Document target;
 
     @Override
     public Attribute<DocumentType> doctype() {
-        return Attribute.<DocumentType>readOnly().give(() -> 
-                new DocumentTypeImpl(target.getDoctype())
-        );
+        return null;
     }
 
     @Override
     public Attribute<DOMImplementation> implementation() {
-        return Attribute.<DOMImplementation>readOnly().give(() -> new DOMImplementationImpl(target.getImplementation()));
+        return null;//Attribute.<DOMImplementation>readOnly().give(() -> new DOMImplementationImpl(target.getImplementation()));
     }
 
     @Override
     public Attribute<Element> documentElement() {
-        return Attribute.<Element>readOnly().give(() -> ElementImpl.create(target.getDocumentElement()));
+        return null;
     }
 
     @Override
@@ -40,12 +38,12 @@ public class DocumentImpl implements Document {
 
     @Override
     public DocumentFragment createDocumentFragment() {
-        return new DocumentFragmentImpl(target.createDocumentFragment());
+        return null;//new DocumentFragmentImpl(target.createDocumentFragment());
     }
 
     @Override
     public Text createTextNode(DOMString data) {
-        return new TextImpl(target.createTextNode(data.toString()));
+        return null;///new TextImpl(target.createTextNode(data.toString()));
     }
 
     @Override
@@ -75,7 +73,7 @@ public class DocumentImpl implements Document {
 
     @Override
     public NodeList getElementsByTagName(DOMString tagname) {
-        return new NodeListImpl(target.getElementsByTagName(tagname.toString()));
+        return null;//new NodeListImpl(target.getElementsByTagName(tagname.toString()));
     }
 
     @Override
@@ -101,7 +99,7 @@ public class DocumentImpl implements Document {
     @Override
     public Element getElementById(DOMString elementId) {
         
-        return ElementImpl.create(findById(target, elementId.toString()));
+        return null;//; ElementImpl.create(findById(target, elementId.toString()));
     }
     
     private org.w3c.dom.Element findById(org.w3c.dom.Node node, String id){

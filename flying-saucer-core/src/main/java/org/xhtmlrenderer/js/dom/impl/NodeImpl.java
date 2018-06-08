@@ -4,6 +4,7 @@ import lombok.val;
 import org.xhtmlrenderer.js.dom.*;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 
+import java.io.IOException;
 import java.util.Objects;
 
 /**
@@ -12,33 +13,34 @@ import java.util.Objects;
  */
 public class NodeImpl implements Node {
 
-    protected org.w3c.dom.Node target;
+    protected org.jsoup.nodes.Node target;
 
-    public NodeImpl(org.w3c.dom.Node target) {
+    public NodeImpl(org.jsoup.nodes.Element target) {
         this.target = target;
     }
 
-    public static NodeImpl create(org.w3c.dom.Node target) {
-        if (target.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
-            return ElementImpl.create((org.w3c.dom.Element) target);
+    public static NodeImpl create(org.jsoup.nodes.Element target) {
+        if (target instanceof org.jsoup.nodes.Element) {
+            return ElementImpl.create((org.jsoup.nodes.Element) target);
         } // todo handle other types
         return new NodeImpl(target);
     }
 
     @Override
     public Attribute<DOMString> nodeName() {
-        return Attribute.<DOMString>readOnly().give(() -> new DOMStringImpl(target.getNodeName()));
+        return Attribute.<DOMString>readOnly().give(() -> new DOMStringImpl(target.nodeName()));
     }
 
     @Override
     public Attribute<DOMString> nodeValue() throws DOMException {
-        return Attribute.<DOMString>receive(v -> target.setNodeValue(v.toString()))
-                .give(() -> new DOMStringImpl(target.getNodeValue()));
+//        return Attribute.<DOMString>receive(v -> target.node(v.toString()))
+//                .give(() -> new DOMStringImpl(target.getNodeValue()));
+        return null;
     }
 
     @Override
     public Attribute<Short> nodeType() {
-        return Attribute.<Short>readOnly().give(() -> target.getNodeType());
+        return Attribute.<Short>readOnly().give(() -> null);
     }
 
     @Override
@@ -153,7 +155,7 @@ public class NodeImpl implements Node {
 
     @Override
     public Attribute<DOMString> textContent() {
-        return Attribute.<DOMString>receive(value -> target.setTextContent(value.toString())).give(() -> new DOMStringImpl(target.getTextContent()));
+        return null;
     }
 
     @Override

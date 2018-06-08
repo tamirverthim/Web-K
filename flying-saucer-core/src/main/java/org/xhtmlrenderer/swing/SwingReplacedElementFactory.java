@@ -19,8 +19,8 @@
  */
 package org.xhtmlrenderer.swing;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+
+import org.jsoup.nodes.Element;
 import org.xhtmlrenderer.extend.ReplacedElement;
 import org.xhtmlrenderer.extend.ReplacedElementFactory;
 import org.xhtmlrenderer.extend.UserAgentCallback;
@@ -88,7 +88,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
             int cssWidth,
             int cssHeight
     ) {
-        Element e = box.getElement();
+        org.jsoup.nodes.Element e = box.getElement();
 
         if (e == null) {
             return null;
@@ -146,7 +146,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
      * @param cssHeight Target height of the image @return A ReplacedElement for the image; will not be null.
      * @return
      */
-    protected ReplacedElement replaceImage(UserAgentCallback uac, LayoutContext context, Element elem, int cssWidth, int cssHeight) {
+    protected ReplacedElement replaceImage(UserAgentCallback uac, LayoutContext context, org.jsoup.nodes.Element elem, int cssWidth, int cssHeight) {
         ReplacedElement re = null;
         String imageSrc = context.getNamespaceHandler().getImageSourceURI(elem);
         
@@ -176,7 +176,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
         return re;
     }
 
-    private ReplacedElement lookupImageReplacedElement(final Element elem, final String ruri, final int cssWidth, final int cssHeight) {
+    private ReplacedElement lookupImageReplacedElement(final org.jsoup.nodes.Element elem, final String ruri, final int cssWidth, final int cssHeight) {
         if (imageComponents == null) {
             return null;
         }
@@ -224,7 +224,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
      * @param cssWidth
      * @param cssHeight
      */
-    protected void storeImageReplacedElement(Element e, ReplacedElement cc, String uri, final int cssWidth, final int cssHeight) {
+    protected void storeImageReplacedElement(org.jsoup.nodes.Element e, ReplacedElement cc, String uri, final int cssWidth, final int cssHeight) {
         if (imageComponents == null) {
             imageComponents = new HashMap();
         }
@@ -239,7 +239,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
      * @param uri
      * @return The ReplacedElement for the image, or null if there is none.
      */
-    protected ReplacedElement lookupImageReplacedElement(Element e, String uri) {
+    protected ReplacedElement lookupImageReplacedElement(org.jsoup.nodes.Element e, String uri) {
         return lookupImageReplacedElement(e, uri, -1, -1);
     }
 
@@ -272,15 +272,15 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
     /**
      * @param e
      */
-    protected Element getParentForm(Element e, LayoutContext context) {
-        Node node = e;
+    protected Element getParentForm(org.jsoup.nodes.Element e, LayoutContext context) {
+        org.jsoup.nodes.Node node = e;
 
         do {
-            node = node.getParentNode();
-        } while (node.getNodeType() == Node.ELEMENT_NODE &&
-                !context.getNamespaceHandler().isFormElement((Element) node));
+            node = node.parentNode();
+        } while (node instanceof org.jsoup.nodes.Element &&
+                !context.getNamespaceHandler().isFormElement((org.jsoup.nodes.Element) node));
 
-        if (node.getNodeType() != Node.ELEMENT_NODE) {
+        if ((node instanceof org.jsoup.nodes.Element)) {
             return null;
         }
 
@@ -310,12 +310,12 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
     }
 
     private static class CacheKey {
-        final Element elem;
+        final org.jsoup.nodes.Element elem;
         final String uri;
         final int width;
         final int height;
 
-        public CacheKey(final Element elem, final String uri, final int width, final int height) {
+        public CacheKey(final org.jsoup.nodes.Element elem, final String uri, final int width, final int height) {
             this.uri = uri;
             this.width = width;
             this.height = height;

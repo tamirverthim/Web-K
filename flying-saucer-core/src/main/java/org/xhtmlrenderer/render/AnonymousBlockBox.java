@@ -23,7 +23,6 @@ package org.xhtmlrenderer.render;
 import java.util.Iterator;
 import java.util.List;
 
-import org.w3c.dom.Element;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.css.style.CssContext;
 import org.xhtmlrenderer.layout.LayoutContext;
@@ -39,7 +38,7 @@ import org.xhtmlrenderer.layout.Styleable;
 public class AnonymousBlockBox extends BlockBox {
     private List _openInlineBoxes;
     
-    public AnonymousBlockBox(Element element) {
+    public AnonymousBlockBox(org.jsoup.nodes.Element element) {
         setElement(element);
     }
 

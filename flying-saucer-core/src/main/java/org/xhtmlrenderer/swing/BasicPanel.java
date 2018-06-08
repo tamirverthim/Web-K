@@ -40,7 +40,6 @@ import java.util.logging.Level;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import org.w3c.dom.Document;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.css.style.derived.RectPropertySet;
 import org.xhtmlrenderer.extend.NamespaceHandler;
@@ -339,19 +338,19 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
 =========== set document utility methods =============== */
 
     public void setDocument(InputStream stream, String url, NamespaceHandler nsh) {
-        Document dom = XMLResource.load(stream).getDocument();
+        org.jsoup.nodes.Document dom = XMLResource.load(stream);
 
         setDocument(dom, url, nsh);
     }
 
     public void setDocumentFromString(String content, String url, NamespaceHandler nsh) {
         InputSource is = new InputSource(new BufferedReader(new StringReader(content)));
-        Document dom = XMLResource.load(is).getDocument();
+        org.jsoup.nodes.Document dom = XMLResource.load(is);
 
         setDocument(dom, url, nsh);
     }
 
-    public void setDocument(Document doc, String url) {
+    public void setDocument(org.jsoup.nodes.Document doc, String url) {
         setDocument(doc, url, new NoNamespaceHandler());
     }
 
@@ -394,7 +393,7 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
                 return;
             }
         }
-        Document dom = loadDocument(url);
+        org.jsoup.nodes.Document dom = loadDocument(url);
         setDocument(dom, url);
     }
 
@@ -415,7 +414,7 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
      *
      * @param doc The document to reload.
      */
-    public void reloadDocument(Document doc) {
+    public void reloadDocument(org.jsoup.nodes.Document doc) {
         if (this.doc == null) {
             XRLog.render("Reload called on BasicPanel, but there is no document set on the panel yet.");
             return;
@@ -435,7 +434,7 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
         return base;
     }
 
-    public Document getDocument() {
+    public org.jsoup.nodes.Document getDocument() {
         return doc;
     }
 
@@ -450,9 +449,9 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
         return doc == null ? "" : getSharedContext().getNamespaceHandler().getDocumentTitle(doc);
     }
 
-    protected Document loadDocument(final String uri) {
-        XMLResource xmlResource = sharedContext.getUac().getXMLResource(uri);
-        return xmlResource.getDocument();
+    protected org.jsoup.nodes.Document loadDocument(final String uri) {
+        org.jsoup.nodes.Document xmlResource = sharedContext.getUac().getXMLResource(uri);
+        return xmlResource;
     }
     
     /**

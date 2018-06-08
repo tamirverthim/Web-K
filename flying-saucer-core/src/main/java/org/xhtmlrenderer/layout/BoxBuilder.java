@@ -28,6 +28,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
+import org.jsoup.nodes.CDataNode;
+import org.jsoup.nodes.TextNode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -72,6 +75,7 @@ import org.xhtmlrenderer.render.InlineBox;
  * content for purposes of inserting anonymous block boxes and calculating
  * the kind of content contained in a given block box.
  */
+@Slf4j
 public class BoxBuilder {
     public static final int MARGIN_BOX_VERTICAL = 1;
     public static final int MARGIN_BOX_HORIZONTAL = 2;
@@ -79,8 +83,8 @@ public class BoxBuilder {
     private static final int CONTENT_LIST_DOCUMENT = 1;
     private static final int CONTENT_LIST_MARGIN_BOX = 2;
 
-    public static BlockBox createRootBox(LayoutContext c, Document document) {
-        Element root = document.getDocumentElement();
+    public static BlockBox createRootBox(LayoutContext c, org.jsoup.nodes.Document root) {
+//        Element root = document.element();
 
         CalculatedStyle style = c.getSharedContext().getStyle(root);
 
@@ -140,7 +144,7 @@ public class BoxBuilder {
             return null;
         }
 
-        Element source = c.getRootLayer().getMaster().getElement(); // HACK
+        org.jsoup.nodes.Element source = c.getRootLayer().getMaster().getElement(); // HACK
 
         ChildBoxInfo info = new ChildBoxInfo();
         CalculatedStyle pageStyle = new EmptyStyle().deriveStyle(pageInfo.getPageStyle());
@@ -384,7 +388,7 @@ public class BoxBuilder {
             Styleable styleable = (Styleable) i.next();
             if (styleable instanceof InlineBox) {
                 InlineBox iB = (InlineBox) styleable;
-                Element elem = iB.getElement();
+                org.jsoup.nodes.Element elem = iB.getElement();
 
                 if (!boxesByElement.containsKey(elem)) {
                     iB.setStartsHere(true);
@@ -782,13 +786,13 @@ public class BoxBuilder {
         }
     }
 
-    private static String getAttributeValue(FSFunction attrFunc, Element e) {
+    private static String getAttributeValue(FSFunction attrFunc, org.jsoup.nodes.Element e) {
         PropertyValue value = (PropertyValue) attrFunc.getParameters().get(0);
-        return e.getAttribute(value.getStringValue());
+        return e.attr(value.getStringValue());
     }
 
     private static List createGeneratedContentList(
-            LayoutContext c, Element element, PropertyValue propValue,
+            LayoutContext c, org.jsoup.nodes.Element element, PropertyValue propValue,
             String peName, CalculatedStyle style, int mode, ChildBoxInfo info) {
         List values = propValue.getValues();
 
@@ -895,7 +899,7 @@ public class BoxBuilder {
     }
 
     private static void insertGeneratedContent(
-            LayoutContext c, Element element, CalculatedStyle parentStyle,
+            LayoutContext c, org.jsoup.nodes.Element element, CalculatedStyle parentStyle,
             String peName, List children, ChildBoxInfo info) {
         CascadedStyle peStyle = c.getCss().getPseudoElementStyle(element, peName);
         if (peStyle != null) {
@@ -932,7 +936,7 @@ public class BoxBuilder {
     }
 
     private static List createGeneratedContent(
-            LayoutContext c, Element element, String peName,
+            LayoutContext c, org.jsoup.nodes.Element element, String peName,
             CalculatedStyle style, PropertyValue property, ChildBoxInfo info) {
         if (style.isDisplayNone() || style.isIdent(CSSName.DISPLAY, IdentValue.TABLE_COLUMN)
                 || style.isIdent(CSSName.DISPLAY, IdentValue.TABLE_COLUMN_GROUP)) {
@@ -974,7 +978,7 @@ public class BoxBuilder {
     }
 
     private static List createGeneratedMarginBoxContent(
-            LayoutContext c, Element element, PropertyValue property,
+            LayoutContext c, org.jsoup.nodes.Element element, PropertyValue property,
             CalculatedStyle style, ChildBoxInfo info) {
         List result = createGeneratedContentList(
                 c, element, property, null, style, CONTENT_LIST_MARGIN_BOX, info);
@@ -1028,11 +1032,11 @@ public class BoxBuilder {
     private static void addColumns(LayoutContext c, TableBox table, TableColumn parent) {
         SharedContext sharedContext = c.getSharedContext();
 
-        Node working = parent.getElement().getFirstChild();
+        org.jsoup.nodes.Node working = parent.getElement().childNode(0);
         boolean found = false;
         while (working != null) {
-            if (working.getNodeType() == Node.ELEMENT_NODE) {
-                Element element = (Element) working;
+            if (working instanceof org.jsoup.nodes.Element) {
+                org.jsoup.nodes.Element element = (org.jsoup.nodes.Element) working;
                 CalculatedStyle style = sharedContext.getStyle(element);
 
                 if (style.isIdent(CSSName.DISPLAY, IdentValue.TABLE_COLUMN)) {
@@ -1042,7 +1046,7 @@ public class BoxBuilder {
                     table.addStyleColumn(col);
                 }
             }
-            working = working.getNextSibling();
+            working = working.nextSibling();
         }
         if (! found) {
             table.addStyleColumn(parent);
@@ -1050,7 +1054,7 @@ public class BoxBuilder {
     }
 
     private static void addColumnOrColumnGroup(
-            LayoutContext c, TableBox table, Element e, CalculatedStyle style) {
+            LayoutContext c, TableBox table, org.jsoup.nodes.Element e, CalculatedStyle style) {
         if (style.isIdent(CSSName.DISPLAY, IdentValue.TABLE_COLUMN)) {
             table.addStyleColumn(new TableColumn(e, style));
         } else { /* style.isIdent(CSSName.DISPLAY, IdentValue.TABLE_COLUMN_GROUP) */
@@ -1059,10 +1063,10 @@ public class BoxBuilder {
     }
 
     private static InlineBox createInlineBox(
-            String text, Element parent, CalculatedStyle parentStyle, Text node) {
+            String text, org.jsoup.nodes.Element parent, CalculatedStyle parentStyle, TextNode node) {
         InlineBox result = new InlineBox(text, node);
 
-        if (parentStyle.isInline() && ! (parent.getParentNode() instanceof Document)) {
+        if (parentStyle.isInline() && ! (parent.parent() instanceof Document)) {
             result.setStyle(parentStyle);
             result.setElement(parent);
         } else {
@@ -1075,7 +1079,7 @@ public class BoxBuilder {
     }
 
     private static void createChildren(
-            LayoutContext c, BlockBox blockParent, Element parent,
+            LayoutContext c, BlockBox blockParent, org.jsoup.nodes.Element parent,
             List children, ChildBoxInfo info, boolean inline) {
         SharedContext sharedContext = c.getSharedContext();
 
@@ -1083,16 +1087,16 @@ public class BoxBuilder {
 
         insertGeneratedContent(c, parent, parentStyle, "before", children, info);
 
-        Node working = parent.getFirstChild();
+        org.jsoup.nodes.Node working = parent.childNodeSize() > 0 ? parent.childNode(0) : null;
         boolean needStartText = inline;
         boolean needEndText = inline;
         if (working != null) {
             InlineBox previousIB = null;
             do {
                 Styleable child = null;
-                short nodeType = working.getNodeType();
-                if (nodeType == Node.ELEMENT_NODE) {
-                    Element element = (Element) working;
+//                short nodeType = working.getNodeType();
+                if (working instanceof org.jsoup.nodes.Element) {
+                    org.jsoup.nodes.Element element = (org.jsoup.nodes.Element) working;
                     CalculatedStyle style = sharedContext.getStyle(element);
 
                     if (style.isDisplayNone()) {
@@ -1100,20 +1104,20 @@ public class BoxBuilder {
                     }
 
                     Integer start = null;
-					if ("ol".equals(working.getNodeName())) {
-						Node startAttribute = working.getAttributes().getNamedItem("start");
+					if ("ol".equals(working.nodeName())) {
+                        String startAttribute = working.attr("start");
 						if (startAttribute != null) {
 							try {
-								start = new Integer(Integer.parseInt(startAttribute.getNodeValue()) - 1);
+								start = new Integer(Integer.parseInt(startAttribute) - 1);
 							} catch (NumberFormatException e) {
 								// ignore
 							}
 						}
-					} else if ("li".equals(working.getNodeName())) {
-						Node valueAttribute = working.getAttributes().getNamedItem("value");
+					} else if ("li".equals(working.nodeName())) {
+						String valueAttribute = working.attr("value");
 						if (valueAttribute != null) {
 							try {
-								start = new Integer(Integer.parseInt(valueAttribute.getNodeValue()) - 1);
+								start = new Integer(Integer.parseInt(valueAttribute) - 1);
 							} catch (NumberFormatException e) {
 								// ignore
 							}
@@ -1182,11 +1186,11 @@ public class BoxBuilder {
                         //I think we need to do this to evaluate counters correctly
                         block.ensureChildren(c);
                     }
-                } else if (nodeType == Node.TEXT_NODE || nodeType == Node.CDATA_SECTION_NODE) {
+                } else if (working instanceof TextNode) {
                     needStartText = false;
                     needEndText = false;
 
-                    Text textNode = (Text)working;
+                    TextNode textNode = (TextNode)working;
 
                     /*
                     StringBuffer text = new StringBuffer(textNode.getData());
@@ -1212,7 +1216,7 @@ public class BoxBuilder {
                     child = createInlineBox(text.toString(), parent, parentStyle, textNode);
                     */
 
-                    child = createInlineBox(textNode.getData(), parent, parentStyle, textNode);
+                    child = createInlineBox(textNode.text(), parent, parentStyle, textNode);
 
                     InlineBox iB = (InlineBox) child;
                     iB.setEndsHere(true);
@@ -1222,24 +1226,30 @@ public class BoxBuilder {
                         previousIB.setEndsHere(false);
                     }
                     previousIB = iB;
-                } else if(nodeType == Node.ENTITY_REFERENCE_NODE) {
-                    EntityReference entityReference = (EntityReference)working;
-                    child = createInlineBox(entityReference.getTextContent(), parent, parentStyle, null);
-
-                    InlineBox iB = (InlineBox) child;
-                    iB.setEndsHere(true);
-                    if (previousIB == null) {
-                        iB.setStartsHere(true);
-                    } else {
-                        previousIB.setEndsHere(false);
-                    }
-                    previousIB = iB;
+                } 
+                
+//                else if(nodeType == Node.ENTITY_REFERENCE_NODE) {
+//                    EntityReference entityReference = (EntityReference)working;
+//                    child = createInlineBox(entityReference.getTextContent(), parent, parentStyle, null);
+//
+//                    InlineBox iB = (InlineBox) child;
+//                    iB.setEndsHere(true);
+//                    if (previousIB == null) {
+//                        iB.setStartsHere(true);
+//                    } else {
+//                        previousIB.setEndsHere(false);
+//                    }
+//                    previousIB = iB;
+//                }
+                
+                else {
+                    log.error("Unknown node {}", working);
                 }
 
                 if (child != null) {
                     children.add(child);
                 }
-            } while ((working = working.getNextSibling()) != null);
+            } while ((working = working.nextSibling()) != null);
         }
         if (needStartText || needEndText) {
             InlineBox iB = createInlineBox("", parent, parentStyle, null);

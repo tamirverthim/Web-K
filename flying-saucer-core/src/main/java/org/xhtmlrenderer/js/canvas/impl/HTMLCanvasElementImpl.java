@@ -1,6 +1,5 @@
 package org.xhtmlrenderer.js.canvas.impl;
 
-import org.w3c.dom.Element;
 import org.xhtmlrenderer.js.canvas.CanvasRenderingContext2D;
 import org.xhtmlrenderer.js.dom.DOMString;
 import org.xhtmlrenderer.js.dom.impl.ElementImpl;
@@ -17,11 +16,11 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
 
     private CanvasRenderingContext2DImpl context;
 
-    public HTMLCanvasElementImpl(Element target) {
+    public HTMLCanvasElementImpl(org.jsoup.nodes.Element target) {
         super(target);
         context = new CanvasRenderingContext2DImpl(
-                parseInt(target.getAttribute("width")), 
-                parseInt(target.getAttribute("height"))
+                parseInt(target.attr("width")), 
+                parseInt(target.attr("height"))
         );
     }
 

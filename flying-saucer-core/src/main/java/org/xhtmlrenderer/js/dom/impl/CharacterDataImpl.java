@@ -12,7 +12,7 @@ import org.xhtmlrenderer.js.web_idl.Attribute;
 public class CharacterDataImpl extends NodeImpl implements CharacterData {
     
     public CharacterDataImpl(org.w3c.dom.CharacterData characterData) {
-        super(characterData);
+        super(null);
     }
 
     @Override

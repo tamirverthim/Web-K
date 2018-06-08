@@ -39,8 +39,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.*;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.css.style.derived.RectPropertySet;
 import org.xhtmlrenderer.event.DocumentListener;
@@ -803,14 +803,14 @@ public class BasicRenderer extends Canvas implements PaintListener, UserInterfac
     }
 
     public void setDocument(InputStream stream, String url, NamespaceHandler nsh) {
-        Document dom = XMLResource.load(stream).getDocument();
+        Document dom = XMLResource.load(stream);
 
         setDocument(dom, url, nsh);
     }
 
     public void setDocumentFromString(String content, String url, NamespaceHandler nsh) {
         InputSource is = new InputSource(new BufferedReader(new StringReader(content)));
-        Document dom = XMLResource.load(is).getDocument();
+        Document dom = XMLResource.load(is);
 
         setDocument(dom, url, nsh);
     }
@@ -869,11 +869,11 @@ public class BasicRenderer extends Canvas implements PaintListener, UserInterfac
     }
 
     protected Document loadDocument(final String uri) {
-        XMLResource xmlResource = _sharedContext.getUac().getXMLResource(uri);
+        Document xmlResource = _sharedContext.getUac().getXMLResource(uri);
         if (xmlResource == null) {
             return null;
         }
-        return xmlResource.getDocument();
+        return xmlResource;
     }
 
     public String getDocumentTitle() {

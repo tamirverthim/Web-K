@@ -19,6 +19,8 @@
  */
 package org.xhtmlrenderer.swing;
 
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.DocumentType;
 import org.xhtmlrenderer.event.DocumentListener;
 import org.xhtmlrenderer.extend.UserAgentCallback;
 import org.xhtmlrenderer.resource.CSSResource;
@@ -123,7 +125,7 @@ public class DelegatingUserAgent implements UserAgentCallback, DocumentListener 
      * @param uri Location of the XML source.
      * @return An XMLResource containing the image.
      */
-    public XMLResource getXMLResource(String uri) {
+    public Document getXMLResource(String uri) {
         String ruri = _uriResolver.resolve(uri);
         StreamResource sr = new StreamResource(ruri);
         try {

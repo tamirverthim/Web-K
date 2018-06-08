@@ -20,6 +20,7 @@ package org.xhtmlrenderer.render;
 
 import java.text.BreakIterator;
 
+import org.jsoup.nodes.TextNode;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 import org.xhtmlrenderer.css.constants.IdentValue;
@@ -49,7 +50,7 @@ import org.xhtmlrenderer.layout.breaker.Breaker;
  * @see InlineLayoutBox
  */
 public class InlineBox implements Styleable {
-    private Element _element;
+    private org.jsoup.nodes.Element _element;
 
     private String _originalText;
     private String _text;
@@ -70,9 +71,9 @@ public class InlineBox implements Styleable {
 
     private String _pseudoElementOrClass;
 
-    private final Text _textNode;
+    private final TextNode _textNode;
 
-    public InlineBox(String text, Text textNode) {
+    public InlineBox(String text, TextNode textNode) {
         _text = text;
         _originalText = text;
         _textNode = textNode;
@@ -124,11 +125,11 @@ public class InlineBox implements Styleable {
         _style = style;
     }
 
-    public Element getElement() {
+    public org.jsoup.nodes.Element getElement() {
         return _element;
     }
 
-    public void setElement(Element element) {
+    public void setElement(org.jsoup.nodes.Element element) {
         _element = element;
     }
 
@@ -390,7 +391,7 @@ public class InlineBox implements Styleable {
         result.append("InlineBox: ");
         if (getElement() != null) {
             result.append("<");
-            result.append(getElement().getNodeName());
+            result.append(getElement().nodeName());
             result.append("> ");
         } else {
             result.append("(anonymous) ");
@@ -467,7 +468,7 @@ public class InlineBox implements Styleable {
         _originalText = "";
     }
 
-    public Text getTextNode() {
+    public TextNode getTextNode() {
         return this._textNode;
     }
 }

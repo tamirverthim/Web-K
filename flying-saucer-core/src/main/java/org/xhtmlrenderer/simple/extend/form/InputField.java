@@ -28,7 +28,7 @@ import org.xhtmlrenderer.simple.extend.XhtmlForm;
 
 public abstract class InputField extends FormField {
 
-    public InputField(Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
+    public InputField(org.jsoup.nodes.Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }
 

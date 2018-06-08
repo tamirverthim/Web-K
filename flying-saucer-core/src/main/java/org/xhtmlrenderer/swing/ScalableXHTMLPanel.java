@@ -26,7 +26,6 @@ import java.awt.print.PrinterGraphics;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import org.w3c.dom.Document;
 import org.xhtmlrenderer.extend.UserAgentCallback;
 import org.xhtmlrenderer.layout.Layer;
 import org.xhtmlrenderer.layout.PaintingInfo;
@@ -82,7 +81,7 @@ public class ScalableXHTMLPanel extends XHTMLPanel {
 	 * @param doc The new document value
 	 * @param url The new document value
 	 */
-	public void setDocument(Document doc, String url) {
+	public void setDocument(org.jsoup.nodes.Document doc, String url) {
 		resetScaleAccordingToPolicy();
 		lastLayoutSize = null;
 		super.setDocument(doc, url);

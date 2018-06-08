@@ -19,6 +19,7 @@
  */
 package org.xhtmlrenderer.extend;
 
+import org.jsoup.nodes.Document;
 import org.xhtmlrenderer.resource.CSSResource;
 import org.xhtmlrenderer.resource.ImageResource;
 import org.xhtmlrenderer.resource.XMLResource;
@@ -70,7 +71,7 @@ public interface UserAgentCallback {
      * @param uri Location of the XML
      * @return A XMLResource for the content at the URI.
      */
-    XMLResource getXMLResource(String uri);
+    Document getXMLResource(String uri);
     
     /**
      * Retrieves a binary resource located at a given URI and returns its contents

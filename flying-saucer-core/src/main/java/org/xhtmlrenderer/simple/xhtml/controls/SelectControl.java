@@ -24,9 +24,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.xhtmlrenderer.simple.xhtml.XhtmlForm;
 
 public class SelectControl extends AbstractControl {
@@ -44,7 +44,7 @@ public class SelectControl extends AbstractControl {
         super(form, e);
 
         _size = getIntAttribute(e, "size", 1);
-        _multiple = e.getAttribute("multiple").length() != 0;
+        _multiple = e.attr("multiple").length() != 0;
         if (_multiple) {
             _values = new ArrayList();
         }
@@ -68,16 +68,16 @@ public class SelectControl extends AbstractControl {
     }
 
     private void traverseOptions(Element e, String prefix) {
-        NodeList children = e.getChildNodes();
-        for (int i = 0; i < children.getLength(); i++) {
-            if (children.item(i).getNodeType() == Node.ELEMENT_NODE) {
-                Element child = (Element) children.item(i);
-                if (child.getNodeName().equalsIgnoreCase("optgroup")) {
-                    traverseOptions(child, prefix + child.getAttribute("label")
+        List<Node> children = e.childNodes();
+        for (int i = 0; i < children.size(); i++) {
+            if (children.get(i) instanceof Element) {
+                Element child = (Element) children.get(i);
+                if (child.nodeName().equalsIgnoreCase("optgroup")) {
+                    traverseOptions(child, prefix + child.attr("label")
                             + " ");
-                } else if (child.getNodeName().equalsIgnoreCase("option")) {
-                    String value = child.getAttribute("value");
-                    String label = child.getAttribute("label");
+                } else if (child.nodeName().equalsIgnoreCase("option")) {
+                    String value = child.attr("value");
+                    String label = child.attr("label");
                     String content = collectText(child);
                     if (value.length() == 0) {
                         value = content;
@@ -88,7 +88,7 @@ public class SelectControl extends AbstractControl {
                         label = prefix.concat(label);
                     }
                     _options.put(value, label);
-                    if (child.getAttribute("selected").length() != 0) {
+                    if (child.attr("selected").length() != 0) {
                         if (isMultiple()) {
                             if (!_values.contains(value)) {
                                 _values.add(value);

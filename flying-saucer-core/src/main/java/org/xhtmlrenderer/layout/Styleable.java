@@ -19,7 +19,6 @@
  */
 package org.xhtmlrenderer.layout;
 
-import org.w3c.dom.Element;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 
 /**
@@ -34,8 +33,8 @@ public interface Styleable {
     public CalculatedStyle getStyle();
     public void setStyle(CalculatedStyle style);
     
-    public Element getElement();
-    public void setElement(Element e);
+    public org.jsoup.nodes.Element getElement();
+    public void setElement(org.jsoup.nodes.Element e);
     
     public String getPseudoElementOrClass();
 }

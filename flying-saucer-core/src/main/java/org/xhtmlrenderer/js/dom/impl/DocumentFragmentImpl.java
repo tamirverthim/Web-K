@@ -8,6 +8,6 @@ import org.xhtmlrenderer.js.dom.DocumentFragment;
  */
 public class DocumentFragmentImpl extends NodeImpl implements DocumentFragment {
     public DocumentFragmentImpl(org.w3c.dom.DocumentFragment target) {
-        super(target);
+        super(null);
     }
 }

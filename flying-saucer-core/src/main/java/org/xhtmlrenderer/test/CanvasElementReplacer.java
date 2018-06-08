@@ -1,7 +1,7 @@
 package org.xhtmlrenderer.test;
 
 import lombok.extern.slf4j.Slf4j;
-import org.w3c.dom.Element;
+
 import org.xhtmlrenderer.extend.FSImage;
 import org.xhtmlrenderer.extend.ReplacedElement;
 import org.xhtmlrenderer.extend.ReplacedElementFactory;
@@ -35,7 +35,7 @@ public class CanvasElementReplacer extends ElementReplacer {
     }
 
     @Override
-    public boolean accept(LayoutContext context, Element element) {
+    public boolean accept(LayoutContext context, org.jsoup.nodes.Element element) {
         return context.getNamespaceHandler().isCanvasElement(element);
     }
 
@@ -45,7 +45,7 @@ public class CanvasElementReplacer extends ElementReplacer {
     }
 
     @Override
-    public void clear(Element element) {
+    public void clear(org.jsoup.nodes.Element element) {
         log.warn("clear");
     }
 

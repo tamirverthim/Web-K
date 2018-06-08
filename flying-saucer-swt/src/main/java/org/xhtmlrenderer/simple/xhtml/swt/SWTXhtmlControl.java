@@ -58,7 +58,7 @@ public abstract class SWTXhtmlControl implements SWTFormControl {
         if (!control.isEnabled()) {
             _swtControl.setEnabled(false);
         }
-        String title = control.getElement().getAttribute("title");
+        String title = control.getElement().attr("title");
         if (title.length() != 0) {
             _swtControl.setToolTipText(title);
         }

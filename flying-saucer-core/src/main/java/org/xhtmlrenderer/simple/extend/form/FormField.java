@@ -21,7 +21,7 @@ package org.xhtmlrenderer.simple.extend.form;
 
 import javax.swing.JComponent;
 
-import org.w3c.dom.Element;
+import org.apache.commons.lang3.StringUtils;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.parser.FSColor;
 import org.xhtmlrenderer.css.parser.FSRGBColor;
@@ -40,7 +40,7 @@ import java.awt.*;
 
 public abstract class FormField {
     private XhtmlForm _parentForm;
-    private Element _element;
+    private org.jsoup.nodes.Element _element;
     private FormFieldState _originalState;
     private JComponent _component;
     private LayoutContext context;
@@ -49,7 +49,7 @@ public abstract class FormField {
     protected Integer intrinsicHeight;
     
 
-    public FormField(Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
+    public FormField(org.jsoup.nodes.Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
         _element = e;
         _parentForm = form;
         this.context = context;
@@ -58,7 +58,7 @@ public abstract class FormField {
         initialize();
     }
 
-    protected Element getElement() {
+    protected org.jsoup.nodes.Element getElement() {
         return _element;
     }
     
@@ -96,11 +96,11 @@ public abstract class FormField {
     }
     
     protected boolean hasAttribute(String attributeName) {
-        return getElement().getAttribute(attributeName).length() > 0;
+        return StringUtils.isNotBlank(getElement().attr(attributeName));
     }
 
     protected String getAttribute(String attributeName) {
-        return getElement().getAttribute(attributeName);
+        return getElement().attr(attributeName);
     }
     
     private void initialize() {
@@ -114,7 +114,7 @@ public abstract class FormField {
 
             _component.setSize(getIntrinsicSize());
 
-            String d = _element.getAttribute("disabled");
+            String d = _element.attr("disabled");
             if (d.equalsIgnoreCase("disabled")) {
                 _component.setEnabled(false);
             }

@@ -25,8 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.jsoup.nodes.Element;
 import org.xhtmlrenderer.extend.NamespaceHandler;
 import org.xhtmlrenderer.extend.UserAgentCallback;
 import org.xhtmlrenderer.extend.UserInterface;
@@ -78,7 +77,7 @@ public class Java2DRenderer {
 	private SharedContext sharedContext;
 	private Java2DOutputDevice outputDevice;
 
-	private Document doc;
+	private org.jsoup.nodes.Document doc;
 	private Box root;
 
 	private float dotsPerPoint;
@@ -157,14 +156,14 @@ public class Java2DRenderer {
          * @param width Target width, in pixels, for the image; required to provide horizontal bounds for the layout.
          * @param height Target height, in pixels, for the image.
          */
-        public Java2DRenderer(Document doc, int width, int height) {
+        public Java2DRenderer(org.jsoup.nodes.Document doc, int width, int height) {
             this(DEFAULT_DOTS_PER_POINT, DEFAULT_DOTS_PER_PIXEL);
             this.doc = doc;
             this.width = width;
             this.height = height;
         }
 
-	public Java2DRenderer(Document doc, int width) {
+	public Java2DRenderer(org.jsoup.nodes.Document doc, int width) {
 		this(doc, width, NO_HEIGHT);
 	}
 
@@ -177,7 +176,7 @@ public class Java2DRenderer {
          * @param width Target width, in pixels, for the image; required to provide horizontal bounds for the layout.
          * @param height Target height, in pixels, for the image.
          */
-        public Java2DRenderer(Document doc, String baseUrl, int width, int height) {
+        public Java2DRenderer(org.jsoup.nodes.Document doc, String baseUrl, int width, int height) {
             this(doc, width, height);
             this.sourceDocumentBase = baseUrl;
         }
@@ -320,7 +319,7 @@ public class Java2DRenderer {
 		return image;
 	}
 
-	private void setDocument(Document doc, String url, NamespaceHandler nsh) {
+	private void setDocument(org.jsoup.nodes.Document doc, String url, NamespaceHandler nsh) {
 		this.doc = doc;
 
 		sharedContext.reset();
@@ -349,8 +348,8 @@ public class Java2DRenderer {
 		this.root = root;
 	}
 
-	private Document loadDocument(final String uri) {
-		return sharedContext.getUac().getXMLResource(uri).getDocument();
+	private org.jsoup.nodes.Document loadDocument(final String uri) {
+		return sharedContext.getUac().getXMLResource(uri);
 	}
 
 	private LayoutContext newLayoutContext() {

@@ -19,8 +19,8 @@
  */
 package org.xhtmlrenderer.extend;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+
+import org.jsoup.nodes.Element;
 import org.xhtmlrenderer.css.extend.StylesheetFactory;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo;
 
@@ -46,14 +46,14 @@ public interface NamespaceHandler {
      * @param doc
      * @return the title for this document, if any exists
      */
-    String getDocumentTitle(Document doc);
+    String getDocumentTitle(org.jsoup.nodes.Document doc);
 
     /**
      * @param doc
      * @return all links to CSS stylesheets (type="text/css") in this
      *         document
      */
-    StylesheetInfo[] getStylesheets(Document doc);
+    StylesheetInfo[] getStylesheets(org.jsoup.nodes.Document doc);
 
     /**
      * may return null. Required to return null if attribute does not exist and
@@ -63,9 +63,9 @@ public interface NamespaceHandler {
      * @param attrName PARAM
      * @return The attributeValue value
      */
-    String getAttributeValue(org.w3c.dom.Element e, String attrName);
+    String getAttributeValue(Element e, String attrName);
     
-    String getAttributeValue(org.w3c.dom.Element e, String namespaceURI, String attrName);
+    String getAttributeValue(Element e, String namespaceURI, String attrName);
 
     /**
      * may return null
@@ -73,7 +73,7 @@ public interface NamespaceHandler {
      * @param e PARAM
      * @return The class value
      */
-    String getClass(org.w3c.dom.Element e);
+    String getClass(org.jsoup.nodes.Element e);
 
     /**
      * may return null
@@ -81,7 +81,7 @@ public interface NamespaceHandler {
      * @param e PARAM
      * @return The iD value
      */
-    String getID(org.w3c.dom.Element e);
+    String getID(org.jsoup.nodes.Element e);
 
     /**
      * may return null
@@ -89,7 +89,7 @@ public interface NamespaceHandler {
      * @param e PARAM
      * @return The elementStyling value (style attribute)
      */
-    String getElementStyling(org.w3c.dom.Element e);
+    String getElementStyling(org.jsoup.nodes.Element e);
 
     /**
      * may return null
@@ -97,7 +97,7 @@ public interface NamespaceHandler {
      * @param e
      * @return The corresponding css properties for styling that is obtained in other ways.
      */
-    String getNonCssStyling(org.w3c.dom.Element e);
+    String getNonCssStyling(org.jsoup.nodes.Element e);
 
     /**
      * may return null
@@ -105,7 +105,7 @@ public interface NamespaceHandler {
      * @param e PARAM
      * @return The lang value
      */
-    String getLang(org.w3c.dom.Element e);
+    String getLang(org.jsoup.nodes.Element e);
 
     /**
      * should return null if element is not a link
@@ -113,18 +113,18 @@ public interface NamespaceHandler {
      * @param e PARAM
      * @return The linkUri value
      */
-    String getLinkUri(org.w3c.dom.Element e);
+    String getLinkUri(org.jsoup.nodes.Element e);
 
     /**
      * 
      * @param e
      */
-    String getAnchorName(Element e);
+    String getAnchorName(org.jsoup.nodes.Element e);
 
     /**
      * @return Returns true if the Element represents an image.
      */
-    boolean isImageElement(Element e);
+    boolean isImageElement(org.jsoup.nodes.Element e);
 
     /**
      * Determines whether or not the specified Element represents a
@@ -133,7 +133,7 @@ public interface NamespaceHandler {
      * @param e The Element to evaluate.
      * @return true if the Element is a &lt;form&gt; element, false otherwise.
      */
-    boolean isFormElement(Element e);
+    boolean isFormElement(org.jsoup.nodes.Element e);
 
     /**
      * For an element where isImageElement returns true, retrieves the URI associated with that Image, as
@@ -145,8 +145,8 @@ public interface NamespaceHandler {
      * @param e The element to extract image info from.
      * @return String containing the URI for the image.
      */
-    String getImageSourceURI(Element e);
+    String getImageSourceURI(org.jsoup.nodes.Element e);
 
-    boolean isCanvasElement(Element element);
+    boolean isCanvasElement(org.jsoup.nodes.Element element);
 }
 

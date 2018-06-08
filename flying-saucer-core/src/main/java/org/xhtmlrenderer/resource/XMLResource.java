@@ -100,16 +100,16 @@ public class XMLResource extends AbstractResource {
     
     // endregion
     
-    public static XMLResource load(InputStream stream) {
-        return XML_RESOURCE_BUILDER.createXMLResource(getJsoup(stream));
+    public static org.jsoup.nodes.Document load(InputStream stream) {
+        return getJsoup(stream);
     }
 
-    public static XMLResource load(InputSource source) {
-        return XML_RESOURCE_BUILDER.createXMLResource(getJsoup(source));
+    public static org.jsoup.nodes.Document load(InputSource source) {
+        return getJsoup(source);
     }
 
-    public static XMLResource load(Reader reader) {
-        return XML_RESOURCE_BUILDER.createXMLResource(getJsoup(reader));
+    public static org.jsoup.nodes.Document load(Reader reader) {
+        return getJsoup(reader);
     }
 
 //    public static XMLResource load(Source source) {
@@ -196,49 +196,49 @@ public class XMLResource extends AbstractResource {
         private final XMLReaderPool parserPool = new XMLReaderPool();
         private final IdentityTransformerPool traxPool = new IdentityTransformerPool();
 
-        XMLResource createXMLResource(XMLResource target, org.jsoup.nodes.Document jsoup) {
-            Document document;
+//        XMLResource createXMLResource(org.jsoup.nodes.Document jsoup) {
+//            Document document;
+//
+//            long st = System.currentTimeMillis();
+//            XMLReader xmlReader = parserPool.get();
+//            try {
+//                document = transform(jsoup);
+//            } finally {
+//                parserPool.release(xmlReader);
+//            }
+//
+//            long end = System.currentTimeMillis();
+//
+////            target.setElapsedLoadTime(end - st);
+//
+////            XRLog.load("Loaded document in ~" + target.getElapsedLoadTime() + "ms");
+//
+//            target.setDocument(document);
+//            return target;
+//        }
 
-            long st = System.currentTimeMillis();
-            XMLReader xmlReader = parserPool.get();
-            try {
-                document = transform(jsoup);
-            } finally {
-                parserPool.release(xmlReader);
-            }
-
-            long end = System.currentTimeMillis();
-
+//        public XMLResource createXMLResource(org.jsoup.nodes.Document source) {
+//            Document document;
+//
+//            long st = System.currentTimeMillis();
+//
+//            document = transform(source);
+//
+//            long end = System.currentTimeMillis();
+//
+//            //HACK: should rather use a default constructor
+//            XMLResource target = new XMLResource((InputSource) null);
+//
 //            target.setElapsedLoadTime(end - st);
-
+//
 //            XRLog.load("Loaded document in ~" + target.getElapsedLoadTime() + "ms");
+//
+//            target.setDocument(document);
+//            return target;
+//        }
 
-            target.setDocument(document);
-            return target;
-        }
-
-        public XMLResource createXMLResource(org.jsoup.nodes.Document source) {
-            Document document;
-
-            long st = System.currentTimeMillis();
-
-            document = transform(source);
-
-            long end = System.currentTimeMillis();
-
-            //HACK: should rather use a default constructor
-            XMLResource target = new XMLResource((InputSource) null);
-
-            target.setElapsedLoadTime(end - st);
-
-            XRLog.load("Loaded document in ~" + target.getElapsedLoadTime() + "ms");
-
-            target.setDocument(document);
-            return target;
-        }
-
-        private Document transform(org.jsoup.nodes.Document source) {
-            return DOMBuilder.jsoup2DOM(source);
+        private org.jsoup.nodes.Document transform(org.jsoup.nodes.Document source) {
+            return source;
         }
 
     } // class XMLResourceBuilder

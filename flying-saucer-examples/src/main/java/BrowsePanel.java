@@ -17,6 +17,7 @@
  */
 
 
+import org.jsoup.select.Elements;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xhtmlrenderer.event.DefaultDocumentListener;
@@ -122,9 +123,9 @@ public class BrowsePanel {
                     panel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                     frame.setTitle(panel.getDocumentTitle());
                     js = new JS(panel);
-                    NodeList scripts = panel.getDocument().getElementsByTagName("script");
-                    for (int i = 0; i < scripts.getLength(); i++) {
-                        js.eval(scripts.item(i).getTextContent());
+                    Elements scripts = panel.getDocument().getElementsByTag("script");
+                    for (int i = 0; i < scripts.size(); i++) {
+                        js.eval(scripts.get(i).text());
                     }
                     js.onload();
                 }
@@ -132,18 +133,18 @@ public class BrowsePanel {
 
             public void onLayoutException(Throwable t) {
                 panel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-                panel.setDocument(getErrorDocument("can't layout: " + t.getMessage()).getDocument());
+                panel.setDocument(getErrorDocument("can't layout: " + t.getMessage()));
             }
 
             public void onRenderException(Throwable t) {
                 panel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-                panel.setDocument(getErrorDocument("can't render: " + t.getMessage()).getDocument());
+                panel.setDocument(getErrorDocument("can't render: " + t.getMessage()));
             }
         });
     }
 
-    private XMLResource getErrorDocument(String reason) {
-        XMLResource xr;
+    private org.jsoup.nodes.Document getErrorDocument(String reason) {
+        org.jsoup.nodes.Document xr;
         String cleanUri = GeneralUtil.escapeHTML(uri);
         String notFound = "<html><h1>Document not found</h1><p>Could not load URI <pre>" + cleanUri + "</pre>, because: " + reason + "</p></html>";
         xr = XMLResource.load(new StringReader(notFound));
@@ -154,10 +155,10 @@ public class BrowsePanel {
     private void launchLoad() {
         new Thread(new Runnable() {
             public void run() {
-                final Document doc;
+                final org.jsoup.nodes.Document doc;
                 try {
                     if (panel != null ) panel.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-                    doc = getUAC().getXMLResource(uri).getDocument();
+                    doc = getUAC().getXMLResource(uri);
                 } catch (Exception e) {
                     e.printStackTrace();
                     System.err.println("Can't load document");
@@ -179,7 +180,7 @@ public class BrowsePanel {
         return uac;
     }
 
-    private void startRender(final Document document) {
+    private void startRender(final org.jsoup.nodes.Document document) {
         // first, load the document, so we can trap any parse errors
         // in loading;
 

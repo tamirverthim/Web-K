@@ -21,8 +21,6 @@ package org.xhtmlrenderer.swing;
 
 import java.awt.event.MouseEvent;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.xhtmlrenderer.render.Box;
 
 
@@ -69,11 +67,11 @@ public class LinkListener extends DefaultFSMouseListener {
 
     // looks to see if the given element has a link URI associated with it; if so, returns the URI as a string, if
     // not, returns null
-    private String findLink(BasicPanel panel, Element e) {
+    private String findLink(BasicPanel panel, org.jsoup.nodes.Element e) {
         String uri = null;
 
-        for (Node node = e; node.getNodeType() == Node.ELEMENT_NODE; node = node.getParentNode()) {
-            uri = panel.getSharedContext().getNamespaceHandler().getLinkUri((Element) node);
+        for (org.jsoup.nodes.Node node = e; node instanceof org.jsoup.nodes.Element; node = node.parentNode()) {
+            uri = panel.getSharedContext().getNamespaceHandler().getLinkUri((org.jsoup.nodes.Element) node);
 
             if (uri != null) {
                 break;

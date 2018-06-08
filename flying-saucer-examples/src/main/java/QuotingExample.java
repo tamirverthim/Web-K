@@ -2,7 +2,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import org.xhtmlrenderer.simple.XHTMLPanel;
-import org.xhtmlrenderer.util.XMLUtil;
+//import org.xhtmlrenderer.util.XMLUtil;
 
 
 public class QuotingExample extends JFrame {
@@ -36,7 +36,7 @@ public class QuotingExample extends JFrame {
         
         XHTMLPanel xr = new XHTMLPanel();
         try {
-            xr.setDocument(XMLUtil.documentFromString(DOCUMENT));
+            //xr.setDocument(XMLUtil.documentFromString(DOCUMENT));
         } catch (Exception e) {
             throw new ExceptionInInitializerError(e);
         }

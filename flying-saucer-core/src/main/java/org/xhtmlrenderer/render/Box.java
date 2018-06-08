@@ -50,7 +50,7 @@ import org.xhtmlrenderer.util.XRLog;
 public abstract class Box implements Styleable {
     protected static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
-    private Element _element;
+    private org.jsoup.nodes.Element _element;
 
     private int _x;
     private int _y;
@@ -496,7 +496,7 @@ public abstract class Box implements Styleable {
         }
     }
 
-    public List getElementBoxes(Element elem) {
+    public List getElementBoxes(org.jsoup.nodes.Element elem) {
         List result = new ArrayList();
         for (int i = 0; i < getChildCount(); i++) {
             Box child = getChild(i);
@@ -527,7 +527,7 @@ public abstract class Box implements Styleable {
             c.removeBoxId(anchorName);
         }
 
-        Element e = getElement();
+        org.jsoup.nodes.Element e = getElement();
         if (e != null) {
             String id = c.getNamespaceHandler().getID(e);
             if (id != null) {
@@ -693,18 +693,18 @@ public abstract class Box implements Styleable {
     }
 
     public boolean isRoot() {
-        return getElement() != null && ! isAnonymous() && getElement().getParentNode().getNodeType() == Node.DOCUMENT_NODE;
+        return getElement() != null && ! isAnonymous() && getElement().parent() == null; //() == Node.DOCUMENT_NODE;
     }
 
     public boolean isBody() {
         return getParent() != null && getParent().isRoot();
     }
 
-    public Element getElement() {
+    public org.jsoup.nodes.Element getElement() {
         return _element;
     }
 
-    public void setElement(Element element) {
+    public void setElement(org.jsoup.nodes.Element element) {
         _element = element;
     }
 
@@ -842,7 +842,7 @@ public abstract class Box implements Styleable {
     }
 
     public void restyle(LayoutContext c) {
-        Element e = getElement();
+        org.jsoup.nodes.Element e = getElement();
         CalculatedStyle style = null;
 
         String pe = getPseudoElementOrClass();

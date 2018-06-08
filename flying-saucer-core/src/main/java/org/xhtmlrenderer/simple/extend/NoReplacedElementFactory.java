@@ -1,6 +1,5 @@
 package org.xhtmlrenderer.simple.extend;
 
-import org.w3c.dom.Element;
 import org.xhtmlrenderer.extend.ReplacedElement;
 import org.xhtmlrenderer.extend.ReplacedElementFactory;
 import org.xhtmlrenderer.extend.UserAgentCallback;
@@ -14,7 +13,7 @@ public class NoReplacedElementFactory implements ReplacedElementFactory {
         return null;
     }
 
-    public void remove(Element e) {
+    public void remove(org.jsoup.nodes.Element e) {
 
     }
 

@@ -34,7 +34,7 @@ public class JS {
     private XHTMLPanel panel;
     private JsConsole console = new JsConsole();
     private JsWindow window = new JsWindow();
-    private org.w3c.dom.Document document;
+    private org.jsoup.nodes.Document document;
 
     public void onload() {
         eval("window.onload && window.onload()");
@@ -97,23 +97,23 @@ public class JS {
                 val nextDocument = panel.getDocument();
                 if (nextDocument != document) {
                     initEngine();
-                    val scripts = panel.getDocument().getElementsByTagName("script");
-                    log.trace("Document has {} scripts", scripts.getLength());
-                    for (int i = 0; i < scripts.getLength(); i++) {
-                        val script = scripts.item(i);
-                        if (StringUtils.isNotBlank(script.getTextContent())) {
+                    val scripts = panel.getDocument().getElementsByTag("script");
+                    log.trace("Document has {} scripts", scripts.size());
+                    for (int i = 0; i < scripts.size(); i++) {
+                        val script = scripts.get(i);
+                        if (StringUtils.isNotBlank(script.text())) {
                             try {
 
-                                log.trace("Evaluating script {} {}", System.lineSeparator(), script.getTextContent());
-                                eval(script.getTextContent());
+                                log.trace("Evaluating script {} {}", System.lineSeparator(), script.text());
+                                eval(script.text());
                             } catch (Exception e) {
                                 log.warn("script.eval", e);
                             }
                         } else {
-                            val scriptUri = script.getAttributes().getNamedItem("src");
-                            if (StringUtils.isNotBlank(scriptUri.getTextContent())) {
+                            val scriptUri = script.attributes().get("src");
+                            if (StringUtils.isNotBlank(scriptUri)) {
                                 try {
-                                    val scriptText = Network.load(scriptUri.getTextContent());
+                                    val scriptText = Network.load(scriptUri);
                                     log.trace("Evaluating script {} {}", System.lineSeparator(), scriptText);
                                     eval(scriptText);
                                 } catch (RuntimeException e) {

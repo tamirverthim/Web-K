@@ -19,7 +19,6 @@
  */
 package org.xhtmlrenderer.test;
 
-import org.w3c.dom.Element;
 import org.xhtmlrenderer.extend.ReplacedElement;
 import org.xhtmlrenderer.extend.ReplacedElementFactory;
 import org.xhtmlrenderer.extend.UserAgentCallback;
@@ -49,7 +48,7 @@ public class DelegatingReplacedElementFactory implements ReplacedElementFactory 
                                                  final int cssWidth,
                                                  final int cssHeight
     ) {
-        final ElementReplacer nameReplacer = (ElementReplacer) byNameReplacers.get(box.getElement().getNodeName());
+        final ElementReplacer nameReplacer = (ElementReplacer) byNameReplacers.get(box.getElement().nodeName());
         if (nameReplacer != null) {
             return replaceUsing(context, box, uac, cssWidth, cssHeight, nameReplacer);
         }
@@ -80,7 +79,7 @@ public class DelegatingReplacedElementFactory implements ReplacedElementFactory 
         }
     }
 
-    public void remove(final Element element) {
+    public void remove(final org.jsoup.nodes.Element element) {
         final int idx = elementReplacements.indexOf(element);
         ERItem item = (ERItem) elementReplacements.get(idx);
         elementReplacements.remove(idx);
@@ -105,11 +104,11 @@ public class DelegatingReplacedElementFactory implements ReplacedElementFactory 
     }
 
     private static class ERItem {
-        private final Element element;
+        private final org.jsoup.nodes.Element element;
         private final ReplacedElement replacedElement;
         private final ElementReplacer elementReplacer;
 
-        private ERItem(final Element e, final ReplacedElement re, final ElementReplacer er) {
+        private ERItem(final org.jsoup.nodes.Element e, final ReplacedElement re, final ElementReplacer er) {
             element = e;
             replacedElement = re;
             elementReplacer = er;

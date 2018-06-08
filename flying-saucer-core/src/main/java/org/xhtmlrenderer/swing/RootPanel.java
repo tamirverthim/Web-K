@@ -39,8 +39,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+
+import org.jsoup.nodes.Element;
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.constants.IdentValue;
@@ -83,14 +83,14 @@ public class RootPanel extends JPanel implements Scrollable, UserInterface, FSCa
     // initialize to JViewport default mode
     private int default_scroll_mode = JViewport.BLIT_SCROLL_MODE;
 
-    protected Document doc = null;
+    protected org.jsoup.nodes.Document doc = null;
 
     /*
      * ========= UserInterface implementation ===============
      */
-    public Element hovered_element = null;
-    public Element active_element = null;
-    public Element focus_element = null;
+    public org.jsoup.nodes.Element hovered_element = null;
+    public org.jsoup.nodes.Element active_element = null;
+    public org.jsoup.nodes.Element focus_element = null;
 
     // On-demand repaint requests for async image loading
     private long lastRepaintRunAt = System.currentTimeMillis();
@@ -109,7 +109,7 @@ public class RootPanel extends JPanel implements Scrollable, UserInterface, FSCa
         return layoutContext;
     }
 
-    public void setDocument(Document doc, String url, NamespaceHandler nsh) {
+    public void setDocument(org.jsoup.nodes.Document doc, String url, NamespaceHandler nsh) {
         fireDocumentStarted();
         resetScrollPosition();
         setRootBox(null);
@@ -523,15 +523,15 @@ public class RootPanel extends JPanel implements Scrollable, UserInterface, FSCa
     }
 
 
-    public boolean isHover(org.w3c.dom.Element e) {
+    public boolean isHover(Element e) {
         return e == hovered_element;
     }
 
-    public boolean isActive(org.w3c.dom.Element e) {
+    public boolean isActive(Element e) {
         return e == active_element;
     }
 
-    public boolean isFocus(org.w3c.dom.Element e) {
+    public boolean isFocus(Element e) {
         return e == focus_element;
     }
 

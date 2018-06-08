@@ -31,13 +31,13 @@ public class ViewSourceAction extends AbstractAction {
             serializer.setOutputProperty(OutputKeys.INDENT, "yes");
             serializer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 
-            Element document = panel.getRootBox().getElement();
-            DOMSource source = new DOMSource(document);
-            StreamResult output = new StreamResult(System.out);
-            serializer.transform(
-                    source,
-                    output
-            );
+            org.jsoup.nodes.Element document = panel.getRootBox().getElement();
+//            DOMSource source = new DOMSource(document);
+//            StreamResult output = new StreamResult(System.out);
+//            serializer.transform(
+//                    source,
+//                    output
+//            );
         } catch (TransformerException ex) {
             // this is fatal, just dump the stack and throw a runtime exception
             ex.printStackTrace();

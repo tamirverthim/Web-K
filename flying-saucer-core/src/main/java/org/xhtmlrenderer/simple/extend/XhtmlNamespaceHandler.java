@@ -18,9 +18,9 @@
  */
 package org.xhtmlrenderer.simple.extend;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 
 /**
  * Handles xhtml documents, including presentational html attributes (see css 2.1 spec, 6.4.4).
@@ -34,34 +34,34 @@ public class XhtmlNamespaceHandler extends XhtmlCssOnlyNamespaceHandler {
      * {@inheritDoc}
      */
     public boolean isImageElement(Element e) {
-        return (e != null && e.getNodeName().equalsIgnoreCase("img"));
+        return (e != null && e.nodeName().equalsIgnoreCase("img"));
     }
     
     /**
      * {@inheritDoc}
      */
     public boolean isFormElement(Element e) {
-        return (e != null && e.getNodeName().equalsIgnoreCase("form"));
+        return (e != null && e.nodeName().equalsIgnoreCase("form"));
     }
 
     public String getImageSourceURI(Element e) {
         String uri = null;
         if (e != null) {
-            uri = e.getAttribute("src");
+            uri = e.attr("src");
         }
         return uri;
     }
 
     public String getNonCssStyling(Element e) {
-        if (e.getNodeName().equals("table")) {
+        if (e.nodeName().equals("table")) {
             return applyTableStyles(e);            
-        } else if (e.getNodeName().equals("td") || e.getNodeName().equals("th")) {
+        } else if (e.nodeName().equals("td") || e.nodeName().equals("th")) {
             return applyTableCellStyles(e);
-        } else if (e.getNodeName().equals("tr")) {
+        } else if (e.nodeName().equals("tr")) {
             return applyTableRowStyles(e);
-        } else if (e.getNodeName().equals("img") || e.getNodeName().equals("canvas")) {
+        } else if (e.nodeName().equals("img") || e.nodeName().equals("canvas")) {
             return applyImgStyles(e);
-        } else if (e.getNodeName().equals("p") || e.getNodeName().equals("div")) {
+        } else if (e.nodeName().equals("p") || e.nodeName().equals("div")) {
             return applyBlockAlign(e);
         }
         return "";
@@ -239,24 +239,24 @@ public class XhtmlNamespaceHandler extends XhtmlCssOnlyNamespaceHandler {
     }
     
     private Element findTable(Element cell) {
-        Node n = cell.getParentNode();
+        Node n = cell.parent();
         Element next;
-        if (n.getNodeType() == Node.ELEMENT_NODE) {
+        if (n instanceof Element) {
             next = (Element)n;
-            if (next.getNodeName().equals("tr")) {
-                n = next.getParentNode();
-                if (n.getNodeType() == Node.ELEMENT_NODE) {
+            if (next.nodeName().equals("tr")) {
+                n = next.parent();
+                if (n instanceof Element) {
                     next = (Element)n;
-                    String name = next.getNodeName();
+                    String name = next.nodeName();
                     if (name.equals("table")) {
                         return next;
                     }
                     
                     if (name.equals("tbody") || name.equals("tfoot") || name.equals("thead")) {
-                        n = next.getParentNode();
-                        if (n.getNodeType() == Node.ELEMENT_NODE) {
+                        n = next.parent();
+                        if (n instanceof Element) {
                             next =(Element)n;
-                            if (next.getNodeName().equals("table")) {
+                            if (next.nodeName().equals("table")) {
                                 return next;
                             }
                         }
@@ -269,8 +269,8 @@ public class XhtmlNamespaceHandler extends XhtmlCssOnlyNamespaceHandler {
     }
 
     @Override
-    public boolean isCanvasElement(Element e) {
-        return (e != null && e.getNodeName().equalsIgnoreCase("canvas"));
+    public boolean isCanvasElement(org.jsoup.nodes.Element e) {
+        return (e != null && e.nodeName().equalsIgnoreCase("canvas"));
     }
 }
 

@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.w3c.dom.Element;
+
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.parser.FSRGBColor;
@@ -537,7 +537,7 @@ public class LineBox extends Box implements InlinePaintable {
     
     public void restyle(LayoutContext c) {
         Box parent = getParent();
-        Element e = parent.getElement();
+        org.jsoup.nodes.Element e = parent.getElement();
         if (e != null) {
             CalculatedStyle style = c.getSharedContext().getStyle(e, true);
             setStyle(style.createAnonymousStyle(IdentValue.BLOCK));

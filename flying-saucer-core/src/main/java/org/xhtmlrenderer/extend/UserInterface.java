@@ -20,6 +20,7 @@
 package org.xhtmlrenderer.extend;
 
 
+import org.jsoup.nodes.Element;
 
 /**
  *
@@ -33,7 +34,7 @@ public interface UserInterface {
      * @param e  PARAM
      * @return   The hover value
      */
-    public boolean isHover( org.w3c.dom.Element e );
+    public boolean isHover( Element e );
 
     /**
      * Gets the active attribute of the UserInterface object
@@ -41,7 +42,7 @@ public interface UserInterface {
      * @param e  PARAM
      * @return   The active value
      */
-    public boolean isActive( org.w3c.dom.Element e );
+    public boolean isActive( Element e );
 
     /**
      * Gets the focus attribute of the UserInterface object
@@ -49,6 +50,6 @@ public interface UserInterface {
      * @param e  PARAM
      * @return   The focus value
      */
-    public boolean isFocus( org.w3c.dom.Element e );
+    public boolean isFocus( Element e );
 }
 

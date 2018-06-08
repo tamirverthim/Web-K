@@ -36,6 +36,9 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.apache.commons.lang3.StringUtils;
+import org.jsoup.nodes.Node;
+import org.jsoup.select.Elements;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xhtmlrenderer.layout.LayoutContext;
@@ -44,7 +47,7 @@ import org.xhtmlrenderer.simple.extend.XhtmlForm;
 import org.xhtmlrenderer.util.GeneralUtil;
 
 class SelectField extends FormField {
-    public SelectField(Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
+    public SelectField(org.jsoup.nodes.Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }
 
@@ -94,12 +97,12 @@ class SelectField extends FormField {
     protected FormFieldState loadOriginalState() {
         ArrayList list = new ArrayList();
         
-        NodeList options = getElement().getElementsByTagName("option");
+        Elements options = getElement().getElementsByTag("option");
 
-        for (int i = 0; i < options.getLength(); i++) {
-            Element option = (Element) options.item(i);
+        for (int i = 0; i < options.size(); i++) {
+            org.jsoup.nodes.Element option = (org.jsoup.nodes.Element) options.get(i);
 
-            if (option.hasAttribute("selected") && option.getAttribute("selected").equalsIgnoreCase("selected")) {
+            if (StringUtils.isNotBlank(option.attr("selected")) && option.attr("selected").equalsIgnoreCase("selected")) {
                 list.add(new Integer(i));
             }
         }
@@ -163,27 +166,27 @@ class SelectField extends FormField {
         return list;
     }
 
-    private void addChildren(List list, Element e, int indent) {
-        NodeList children = e.getChildNodes();
+    private void addChildren(List list, org.jsoup.nodes.Element e, int indent) {
+        List<Node> children = e.childNodes();
         
-        for (int i = 0; i < children.getLength(); i++) {
-            if (!(children.item(i) instanceof Element)) continue;
-            Element child = (Element) children.item(i);
+        for (int i = 0; i < children.size(); i++) {
+            if (!(children.get(i) instanceof org.jsoup.nodes.Element)) continue;
+            org.jsoup.nodes.Element child = (org.jsoup.nodes.Element) children.get(i);
             
-            if ("option".equals(child.getNodeName())) {
+            if ("option".equals(child.nodeName())) {
                 // option tag, add it
                 String optionText = XhtmlForm.collectText(child);
                 String optionValue = optionText;
                 
-                if (child.hasAttribute("value")) {
-                    optionValue = child.getAttribute("value");
+                if (StringUtils.isNotBlank(child.attr("value"))) {
+                    optionValue = child.attr("value");
                 }
 
                 list.add(new NameValuePair(optionText, optionValue, indent));
                 
-            } else if ("optgroup".equals(child.getNodeName())) {
+            } else if ("optgroup".equals(child.nodeName())) {
                 // optgroup tag, append heading and indent children
-                String titleText = child.getAttribute("label");
+                String titleText = child.attr("label");
                 list.add(new NameValuePair(titleText, null, indent));
                 addChildren(list, child, indent+1);
             }

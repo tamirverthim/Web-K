@@ -24,6 +24,7 @@ import java.awt.HeadlessException;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.w3c.dom.Document;
@@ -551,11 +552,11 @@ public class SharedContext {
         this.dotsPerPixel = pixelsPerDot;
     }
 
-    public CalculatedStyle getStyle(Element e) {
+    public CalculatedStyle getStyle(org.jsoup.nodes.Element e) {
         return getStyle(e, false);
     }
 
-    public CalculatedStyle getStyle(Element e, boolean restyle) {
+    public CalculatedStyle getStyle(org.jsoup.nodes.Element e, boolean restyle) {
         if (styleMap == null) {
             styleMap = new HashMap(1024, 0.75f);
         }
@@ -565,15 +566,18 @@ public class SharedContext {
             result = (CalculatedStyle)styleMap.get(e);
         }
         if (result == null) {
-            Node parent = e.getParentNode();
+            org.jsoup.nodes.Node parent = e.parent();
+            if(parent == null) {
+                parent = e;
+            }
             CalculatedStyle parentCalculatedStyle;
-            if (parent instanceof Document) {
+            if (parent instanceof org.jsoup.nodes.Document) {
                 parentCalculatedStyle = new EmptyStyle();
             } else {
-                parentCalculatedStyle = getStyle((Element)parent, false);
-            }
+                parentCalculatedStyle = getStyle((org.jsoup.nodes.Element)parent, false);
+            }  
 
-            result = parentCalculatedStyle.deriveStyle(getCss().getCascadedStyle(e, restyle));
+            result = parentCalculatedStyle.deriveStyle(getCss().getCascadedStyle((org.jsoup.nodes.Element)e, restyle));
 
             styleMap.put(e, result);
         }
@@ -602,7 +606,7 @@ public class SharedContext {
         this.replacedElementFactory = ref;
     }
 
-    public void removeElementReferences(Element e) {
+    public void removeElementReferences(org.jsoup.nodes.Element e) {
         String id = namespaceHandler.getID(e);
         if (id != null && id.length() > 0) {
             removeBoxId(id);
@@ -615,12 +619,12 @@ public class SharedContext {
         getCss().removeStyle(e);
         getReplacedElementFactory().remove(e);
 
-        if (e.hasChildNodes()) {
-            NodeList children = e.getChildNodes();
-            for (int i = 0; i < children.getLength(); i++) {
-                Node child = children.item(i);
-                if (child.getNodeType() == Node.ELEMENT_NODE) {
-                    removeElementReferences((Element)child);
+        if (e.children().size() > 0) {
+            List<org.jsoup.nodes.Node> children = e.childNodes();
+            for (int i = 0; i < children.size(); i++) {
+                org.jsoup.nodes.Node child = children.get(i);
+                if (child instanceof org.jsoup.nodes.Element) {
+                    removeElementReferences((org.jsoup.nodes.Element)child);
                 }
             }
         }

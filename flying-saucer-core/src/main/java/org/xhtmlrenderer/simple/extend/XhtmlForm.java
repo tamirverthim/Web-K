@@ -30,9 +30,10 @@ import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JRadioButton;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.Text;
+import org.jsoup.nodes.CDataNode;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.TextNode;
+
 import org.xhtmlrenderer.extend.UserAgentCallback;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
@@ -93,8 +94,8 @@ public class XhtmlForm {
         return FS_DEFAULT_GROUP + ++_defaultGroupCount;
     }
 
-    private static boolean isFormField(Element e) {
-        String nodeName = e.getNodeName();
+    private static boolean isFormField(org.jsoup.nodes.Element e) {
+        String nodeName = e.nodeName();
         
         if (nodeName.equals("input") || nodeName.equals("select") || nodeName.equals("textarea")) {
             return true;
@@ -103,7 +104,7 @@ public class XhtmlForm {
         return false;
     }
 
-    public FormField addComponent(Element e, LayoutContext context, BlockBox box) {
+    public FormField addComponent(org.jsoup.nodes.Element e, LayoutContext context, BlockBox box) {
         FormField field = null;
 
         if (_componentCache.containsKey(e)) {
@@ -116,7 +117,7 @@ public class XhtmlForm {
             field = FormFieldFactory.create(this, context, box);
     
             if (field == null) {
-                XRLog.layout("Unknown field type: " + e.getNodeName());
+                XRLog.layout("Unknown field type: " + e.nodeName());
 
                 return null;
             }
@@ -147,7 +148,7 @@ public class XhtmlForm {
         }
 
         StringBuffer data = new StringBuffer();
-        String action = _parentFormElement.getAttribute("action");
+        String action = _parentFormElement.attr("action");
         data.append(action).append("?");
         Iterator fields = _componentCache.entrySet().iterator();
         boolean first=true;
@@ -173,17 +174,17 @@ public class XhtmlForm {
         if(_formSubmissionListener !=null) _formSubmissionListener.submit(data.toString());
     }
 
-    public static String collectText(Element e) {
+    public static String collectText(org.jsoup.nodes.Element e) {
         StringBuffer result = new StringBuffer();
-        Node node = e.getFirstChild();
+        org.jsoup.nodes.Node node = e.childNode(0);
         if (node != null) {
             do {
-                short nodeType = node.getNodeType();
-                if (nodeType == Node.TEXT_NODE || nodeType == Node.CDATA_SECTION_NODE) {
-                    Text text = (Text) node;
-                    result.append(text.getData());
+//                short nodeType = node.getNodeType();
+                if (node instanceof TextNode) {
+                    TextNode text = (TextNode) node;
+                    result.append(text.getWholeText());
                 }
-            } while ((node = node.getNextSibling()) != null);
+            } while ((node = node.nextSibling()) != null);
         }
         return result.toString().trim();
     }

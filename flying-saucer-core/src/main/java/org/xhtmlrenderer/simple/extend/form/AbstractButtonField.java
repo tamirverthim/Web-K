@@ -11,7 +11,6 @@ import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.simple.extend.XhtmlForm;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
-import org.w3c.dom.Element;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
@@ -20,7 +19,7 @@ import java.awt.*;
 
 public abstract class AbstractButtonField extends InputField {
 
-    public AbstractButtonField(Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
+    public AbstractButtonField(org.jsoup.nodes.Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }
 

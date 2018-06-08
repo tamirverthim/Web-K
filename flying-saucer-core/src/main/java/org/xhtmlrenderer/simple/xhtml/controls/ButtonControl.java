@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.w3c.dom.Element;
 import org.xhtmlrenderer.simple.xhtml.XhtmlForm;
 
 public class ButtonControl extends AbstractControl {
@@ -32,17 +31,17 @@ public class ButtonControl extends AbstractControl {
     private boolean _extended;
     private List _listeners = new ArrayList();
 
-    public ButtonControl(XhtmlForm form, Element e) {
+    public ButtonControl(XhtmlForm form, org.jsoup.nodes.Element e) {
         super(form, e);
 
-        _extended = e.getNodeName().equalsIgnoreCase("button");
+        _extended = e.nodeName().equalsIgnoreCase("button");
         if (_extended) {
             _label = collectText(e);
         } else {
             _label = getValue();
         }
 
-        _type = e.getAttribute("type").toLowerCase();
+        _type = e.attr("type").toLowerCase();
         if (!_type.equals("reset") && !_type.equals("button")) {
             _type = "submit";
         }

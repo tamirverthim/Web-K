@@ -26,11 +26,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.logging.Level;
 
-import org.w3c.dom.Document;
 import org.xhtmlrenderer.render.Box;
 import org.xhtmlrenderer.simple.Graphics2DRenderer;
 import org.xhtmlrenderer.util.Uu;
-import org.xhtmlrenderer.util.XMLUtil;
 import org.xhtmlrenderer.util.XRLog;
 
 /**
@@ -130,7 +128,7 @@ public class DocumentDiffTest {
      */
     public static String xhtmlToDiff(String xhtml, int width, int height)
             throws Exception {
-        Document doc = XMLUtil.documentFromFile(xhtml);
+        org.jsoup.nodes.Document doc = null;//XMLUtil.documentFromFile(xhtml);
         Graphics2DRenderer renderer = new Graphics2DRenderer();
         renderer.setDocument(doc, new File(xhtml).toURL().toString());
 

@@ -44,15 +44,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.Text;
-import org.w3c.dom.ranges.DocumentRange;
+import lombok.val;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.TextNode;
+import org.jsoup.select.Elements;
 import org.w3c.dom.ranges.Range;
-import org.w3c.dom.traversal.DocumentTraversal;
-import org.w3c.dom.traversal.NodeFilter;
-import org.w3c.dom.traversal.NodeIterator;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
@@ -100,13 +96,13 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
 
     protected transient ChangeEvent changeEvent = null;
 
-    private DocumentRange docRange;
+//    private DocumentRange docRange;
 
     // private List lastModified = new ArrayList();
 
     private Range lastSelectionRange = null;
 
-    private DocumentTraversal docTraversal;
+//    private DocumentTraversal docTraversal;
 
     private Map elementBoxMap;
 
@@ -116,7 +112,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
 
     private TransferHandler handler;
 
-    private Document document;
+    private org.jsoup.nodes.Document document;
 
     public void addChangeListener(ChangeListener l) {
         listenerList.add(ChangeListener.class, l);
@@ -163,32 +159,33 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
     }
 
     private boolean checkDocument() {
-        while (true) {
-            if (this.document != panel.getDocument() || textInlineMap == null) {
-                this.document = panel.getDocument();
-                textInlineMap = null;
-                this.dotInfo = null;
-                this.markInfo = null;
-                this.lastSelectionRange = null;
-                try {
-                    this.docRange = (DocumentRange) panel.getDocument();
-                    this.docTraversal = (DocumentTraversal) panel.getDocument();
-                    if (this.document != null && this.createMaps()) {
-                        return true;
-                    }
-                    try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException e) {
-                        return false;
-                    }
-                } catch (ClassCastException cce) {
-                    XRLog.layout(Level.WARNING,
-                            "Document instance cannot create ranges: no selection possible");
-                    return false;
-                }
-            }
-            return true;
-        }
+//        while (true) {
+//            if (this.document != panel.getDocument() || textInlineMap == null) {
+//                this.document = panel.getDocument();
+//                textInlineMap = null;
+//                this.dotInfo = null;
+//                this.markInfo = null;
+//                this.lastSelectionRange = null;
+//                try {
+//                    this.docRange = (DocumentRange) panel.getDocument();
+//                    this.docTraversal = (DocumentTraversal) panel.getDocument();
+//                    if (this.document != null && this.createMaps()) {
+//                        return true;
+//                    }
+//                    try {
+//                        Thread.sleep(10);
+//                    } catch (InterruptedException e) {
+//                        return false;
+//                    }
+//                } catch (ClassCastException cce) {
+//                    XRLog.layout(Level.WARNING,
+//                            "Document instance cannot create ranges: no selection possible");
+//                    return false;
+//                }
+//            }
+//            return true;
+//        }
+        return false;
     }
 
     public void setDot(ViewModelInfo pos) {
@@ -298,47 +295,48 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
     }
 
     public void selectAll() {
-        if (this.getComponent() == null || this.getComponent().getWidth() == 0
-                || this.getComponent().getHeight() == 0) {
-            return;
-        }
-        checkDocument();
-        NodeIterator nodeIterator = this.docTraversal.createNodeIterator(this.document
-                .getDocumentElement(), NodeFilter.SHOW_TEXT, null, false);
-        Text firstText = null;
-        Text lastText = null;
-        while (true) {
-            Node n = nodeIterator.nextNode();
-            if (n == null) {
-                break;
-            }
-            if (!textInlineMap.containsKey(n)) {
-                continue;
-            }
-            lastText = (Text) n;
-            if (firstText == null) {
-                firstText = lastText;
-            }
-        }
-        if (firstText == null) {
-            return;
-        }
-        Range r = docRange.createRange();
-        r.setStart(firstText, 0);
-        ViewModelInfo firstPoint = new ViewModelInfo(r, (InlineText) ((List) textInlineMap
-                .get(firstText)).get(0));
-        r = docRange.createRange();
-        try {
-            // possibly some dom impls don't handle this?
-            r.setStart(lastText, lastText.getLength());
-        } catch (Exception e) {
-            r.setStart(lastText, Math.max(0, lastText.getLength() - 1));
-        }
-        List l = (List) textInlineMap.get(firstText);
-
-        ViewModelInfo lastPoint = new ViewModelInfo(r, (InlineText) l.get(l.size() - 1));
-        setDot(firstPoint);
-        moveDot(lastPoint);
+//        if (this.getComponent() == null || this.getComponent().getWidth() == 0
+//                || this.getComponent().getHeight() == 0) {
+//            return;
+//        }
+//        checkDocument();
+//        //NodeIterator nodeIterator = this.docTraversal.createNodeIterator(this.document, NodeFilter.SHOW_TEXT, null, false);
+//        Elements all = document.getAllElements();
+//        val nodeIterator = all.iterator();
+//        Text firstText = null;
+//        Text lastText = null;
+//        while (true) {
+//            org.jsoup.nodes.Node n = nodeIterator.next();
+//            if (n == null) {
+//                break;
+//            }
+//            if (!textInlineMap.containsKey(n)) {
+//                continue;
+//            }
+//            lastText = (Text) n;
+//            if (firstText == null) {
+//                firstText = lastText;
+//            }
+//        }
+//        if (firstText == null) {
+//            return;
+//        }
+//        Range r = docRange.createRange();
+//        r.setStart(firstText, 0);
+//        ViewModelInfo firstPoint = new ViewModelInfo(r, (InlineText) ((List) textInlineMap
+//                .get(firstText)).get(0));
+//        r = docRange.createRange();
+//        try {
+//            // possibly some dom impls don't handle this?
+//            r.setStart(lastText, lastText.getLength());
+//        } catch (Exception e) {
+//            r.setStart(lastText, Math.max(0, lastText.getLength() - 1));
+//        }
+//        List l = (List) textInlineMap.get(firstText);
+//
+//        ViewModelInfo lastPoint = new ViewModelInfo(r, (InlineText) l.get(l.size() - 1));
+//        setDot(firstPoint);
+//        moveDot(lastPoint);
 
     }
 
@@ -358,99 +356,99 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
 
     private void updateHighlights() {
 
-        List modified = new ArrayList();
-        StringBuffer hlText = new StringBuffer();
-        if (this.dotInfo == null) {
-            getComponent().getRootBox().clearSelection(modified);
-            getComponent().repaint();
-            lastHighlightedString = "";
-            return;
-        }
-        Range range = getSelectionRange();
-
-        if (lastSelectionRange != null
-                && range.compareBoundaryPoints(Range.START_TO_START, lastSelectionRange) == 0
-                && range.compareBoundaryPoints(Range.END_TO_END, lastSelectionRange) == 0) {
-            return;
-        }
-        lastHighlightedString = "";
-        lastSelectionRange = range.cloneRange();
-
-        if (range.compareBoundaryPoints(Range.START_TO_END, range) == 0) {
-            getComponent().getRootBox().clearSelection(modified);
-        } else {
-            boolean endBeforeStart = (this.markInfo.range.compareBoundaryPoints(
-                    Range.START_TO_START, this.dotInfo.range) >= 0);
-            // TODO: track modifications
-            getComponent().getRootBox().clearSelection(modified);
-            InlineText t1 = (endBeforeStart) ? this.dotInfo.text : this.markInfo.text;
-            InlineText t2 = (!endBeforeStart) ? this.dotInfo.text : this.markInfo.text;
-            if (t1 == null || t2 == null) {
-                // TODO: need general debug here (never print to system.err; use XRLog instead)
-                // TODO: is this just a warning, or should we bail out
-                XRLog.general(Level.FINE, "null text node");
-            }
-
-            final Range acceptRange = docRange.createRange();
-            final Range tr = range;
-            NodeFilter f = new NodeFilter() {
-                public short acceptNode(Node n) {
-                    acceptRange.setStart(n, 0);
-                    if (tr.getStartContainer() == n) {
-                        return FILTER_ACCEPT;
-                    }
-                    if ((acceptRange.compareBoundaryPoints(Range.START_TO_START, tr) < 0 || acceptRange
-                            .compareBoundaryPoints(Range.END_TO_START, tr) > 0)
-                            && n != tr.getStartContainer() && n != tr.getEndContainer()) {
-                        return NodeFilter.FILTER_SKIP;
-                    }
-
-                    return NodeFilter.FILTER_ACCEPT;
-                }
-
-            };
-            NodeIterator nodeIterator = this.docTraversal.createNodeIterator(range
-                    .getCommonAncestorContainer(), NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT
-                    | NodeFilter.SHOW_CDATA_SECTION, f, false);
-            Box box;
-            boolean lastNodeWasBox = false;
-            for (Node n = nodeIterator.nextNode(); n != null; n = nodeIterator.nextNode()) {
-                if (n.getNodeType() == Node.ELEMENT_NODE) {
-                    box = getBoxForElement((Element) n);
-                    if (box instanceof BlockBox && !lastNodeWasBox) {
-                        hlText.append(PARA_EQUIV);
-                        lastNodeWasBox = true;
-                    } else {
-                        lastNodeWasBox = false;
-                    }
-                } else {
-                    lastNodeWasBox = false;
-                    Text t = (Text) n;
-                    List iTs = getInlineTextsForText(t);
-                    if (iTs == null) {
-                        // shouldn't happen
-                        continue;
-                    }
-                    int selTxtSt = (t == range.getStartContainer()) ? range.getStartOffset() : 0;
-                    int selTxtEnd = (t == range.getEndContainer()) ? range.getEndOffset() : t
-                            .getNodeValue().length();
-
-                    hlText.append(t.getNodeValue().substring(selTxtSt, selTxtEnd));
-                    for (Iterator itr = iTs.iterator(); itr.hasNext();) {
-                        InlineText iT = (InlineText) itr.next();
-
-                        iT.setSelectionStart((short) Math.max(0, Math.min(selTxtSt, iT.getEnd())
-                                - iT.getStart()));
-                        iT.setSelectionEnd((short) Math.max(0, Math.min(iT.getEnd(), selTxtEnd)
-                                - iT.getStart()));
-
-                    }
-                }
-            }
-        }
-        String s = normalizeSpaces(hlText.toString());
-        getComponent().repaint();
-        lastHighlightedString = Util.replace(s, PARA_EQUIV, "\n\n");
+//        List modified = new ArrayList();
+//        StringBuffer hlText = new StringBuffer();
+//        if (this.dotInfo == null) {
+//            getComponent().getRootBox().clearSelection(modified);
+//            getComponent().repaint();
+//            lastHighlightedString = "";
+//            return;
+//        }
+//        Range range = getSelectionRange();
+//
+//        if (lastSelectionRange != null
+//                && range.compareBoundaryPoints(Range.START_TO_START, lastSelectionRange) == 0
+//                && range.compareBoundaryPoints(Range.END_TO_END, lastSelectionRange) == 0) {
+//            return;
+//        }
+//        lastHighlightedString = "";
+//        lastSelectionRange = range.cloneRange();
+//
+//        if (range.compareBoundaryPoints(Range.START_TO_END, range) == 0) {
+//            getComponent().getRootBox().clearSelection(modified);
+//        } else {
+//            boolean endBeforeStart = (this.markInfo.range.compareBoundaryPoints(
+//                    Range.START_TO_START, this.dotInfo.range) >= 0);
+//            // TODO: track modifications
+//            getComponent().getRootBox().clearSelection(modified);
+//            InlineText t1 = (endBeforeStart) ? this.dotInfo.text : this.markInfo.text;
+//            InlineText t2 = (!endBeforeStart) ? this.dotInfo.text : this.markInfo.text;
+//            if (t1 == null || t2 == null) {
+//                // TODO: need general debug here (never print to system.err; use XRLog instead)
+//                // TODO: is this just a warning, or should we bail out
+//                XRLog.general(Level.FINE, "null text node");
+//            }
+//
+//            final Range acceptRange = docRange.createRange();
+//            final Range tr = range;
+//            NodeFilter f = new NodeFilter() {
+//                public short acceptNode(Node n) {
+//                    acceptRange.setStart(n, 0);
+//                    if (tr.getStartContainer() == n) {
+//                        return FILTER_ACCEPT;
+//                    }
+//                    if ((acceptRange.compareBoundaryPoints(Range.START_TO_START, tr) < 0 || acceptRange
+//                            .compareBoundaryPoints(Range.END_TO_START, tr) > 0)
+//                            && n != tr.getStartContainer() && n != tr.getEndContainer()) {
+//                        return NodeFilter.FILTER_SKIP;
+//                    }
+//
+//                    return NodeFilter.FILTER_ACCEPT;
+//                }
+//
+//            };
+//            NodeIterator nodeIterator = this.docTraversal.createNodeIterator(range
+//                    .getCommonAncestorContainer(), NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT
+//                    | NodeFilter.SHOW_CDATA_SECTION, f, false);
+//            Box box;
+//            boolean lastNodeWasBox = false;
+//            for (Node n = nodeIterator.nextNode(); n != null; n = nodeIterator.nextNode()) {
+//                if (n.getNodeType() == Node.ELEMENT_NODE) {
+//                    box = getBoxForElement((Element) n);
+//                    if (box instanceof BlockBox && !lastNodeWasBox) {
+//                        hlText.append(PARA_EQUIV);
+//                        lastNodeWasBox = true;
+//                    } else {
+//                        lastNodeWasBox = false;
+//                    }
+//                } else {
+//                    lastNodeWasBox = false;
+//                    Text t = (Text) n;
+//                    List iTs = getInlineTextsForText(t);
+//                    if (iTs == null) {
+//                        // shouldn't happen
+//                        continue;
+//                    }
+//                    int selTxtSt = (t == range.getStartContainer()) ? range.getStartOffset() : 0;
+//                    int selTxtEnd = (t == range.getEndContainer()) ? range.getEndOffset() : t
+//                            .getNodeValue().length();
+//
+//                    hlText.append(t.getNodeValue().substring(selTxtSt, selTxtEnd));
+//                    for (Iterator itr = iTs.iterator(); itr.hasNext();) {
+//                        InlineText iT = (InlineText) itr.next();
+//
+//                        iT.setSelectionStart((short) Math.max(0, Math.min(selTxtSt, iT.getEnd())
+//                                - iT.getStart()));
+//                        iT.setSelectionEnd((short) Math.max(0, Math.min(iT.getEnd(), selTxtEnd)
+//                                - iT.getStart()));
+//
+//                    }
+//                }
+//            }
+//        }
+//        String s = normalizeSpaces(hlText.toString());
+//        getComponent().repaint();
+//        lastHighlightedString = Util.replace(s, PARA_EQUIV, "\n\n");
         // lastModified = modified;
     }
 
@@ -493,7 +491,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
         s.push(panel.getRootBox());
         while (!s.empty()) {
             Box b = (Box) s.pop();
-            Element element = b.getElement();
+            org.jsoup.nodes.Element element = b.getElement();
             if (element != null && !elementBoxMap.containsKey(element)) {
                 elementBoxMap.put(element, b);
             }
@@ -503,7 +501,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
                     Object o = it.next();
                     if (o instanceof InlineText) {
                         InlineText t = (InlineText) o;
-                        Text txt = t.getTextNode();
+                        TextNode txt = t.getTextNode();
                         if (!textInlineMap.containsKey(txt)) {
                             textInlineMap.put(txt, new ArrayList());
                         }
@@ -523,7 +521,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
 
     }
 
-    private List getInlineTextsForText(Text t) {
+    private List getInlineTextsForText(TextNode t) {
         return (List) textInlineMap.get(t);
     }
 
@@ -588,7 +586,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
 
     ViewModelInfo infoFromPoint(MouseEvent e) {
         checkDocument();
-        Range r = docRange.createRange();
+//        Range r = docRange.createRange();
         InlineText fndTxt = null;
         Box box = panel.getRootLayer().find(panel.getLayoutContext(), e.getX(), e.getY(), true);
         if (box == null) {
@@ -691,14 +689,14 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
             }
         }
 
-        Node node = fndTxt.getTextNode();
-        try {
-            r.setStart(node, offset);
-        } catch (Exception ex) {
-            // maybe differs for dom impl? anyway, fix for issue 216
-            r.setStart(node, ((Text) node).getLength() - 1);
-        }
-        return new ViewModelInfo(r, fndTxt);
+        org.jsoup.nodes.Node node = fndTxt.getTextNode();
+//        try {
+//            r.setStart(node, offset);
+//        } catch (Exception ex) {
+//            // maybe differs for dom impl? anyway, fix for issue 216
+//            r.setStart(node, ((Text) node).getLength() - 1);
+//        }
+        return new ViewModelInfo(null, fndTxt);
 
     }
 
@@ -707,22 +705,23 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
     }
 
     public Range getSelectionRange() {
-        if (this.dotInfo == null || this.dotInfo.range == null) {
-            return null;
-        }
-        Range r = docRange.createRange();
-        // some xml parsers don't allow end<start in the same text node. So,
-        // handle dot<mark here
-
-        if (this.markInfo.range.compareBoundaryPoints(Range.START_TO_START, this.dotInfo.range) <= 0) {
-            r.setStart(this.markInfo.range.getStartContainer(), this.markInfo.range
-                    .getStartOffset());
-            r.setEnd(this.dotInfo.range.getStartContainer(), this.dotInfo.range.getStartOffset());
-        } else {
-            r.setStart(this.dotInfo.range.getStartContainer(), this.dotInfo.range.getStartOffset());
-            r.setEnd(this.markInfo.range.getStartContainer(), this.markInfo.range.getStartOffset());
-        }
-        return r;
+//        if (this.dotInfo == null || this.dotInfo.range == null) {
+//            return null;
+//        }
+//        Range r = docRange.createRange();
+//        // some xml parsers don't allow end<start in the same text node. So,
+//        // handle dot<mark here
+//
+//        if (this.markInfo.range.compareBoundaryPoints(Range.START_TO_START, this.dotInfo.range) <= 0) {
+//            r.setStart(this.markInfo.range.getStartContainer(), this.markInfo.range
+//                    .getStartOffset());
+//            r.setEnd(this.dotInfo.range.getStartContainer(), this.dotInfo.range.getStartOffset());
+//        } else {
+//            r.setStart(this.dotInfo.range.getStartContainer(), this.dotInfo.range.getStartOffset());
+//            r.setEnd(this.markInfo.range.getStartContainer(), this.markInfo.range.getStartOffset());
+//        }
+//        return r;
+        return null;
     }
 
     protected void adjustVisibility(Rectangle nloc) {

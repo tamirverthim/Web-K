@@ -19,6 +19,7 @@
  */
 package org.xhtmlrenderer.demo.browser;
 
+import org.jsoup.nodes.Document;
 import org.xhtmlrenderer.resource.XMLResource;
 import org.xhtmlrenderer.swing.DelegatingUserAgent;
 import org.xhtmlrenderer.util.Uu;
@@ -100,7 +101,7 @@ public class PanelManager extends DelegatingUserAgent {
 	/**
 	 * {@inheritDoc}
 	 */
-	public XMLResource getXMLResource(String uri) {
+	public Document getXMLResource(String uri) {
         uri = resolveURI(uri);
         if (uri != null && uri.startsWith("file:")) {
             File file = null;
@@ -119,7 +120,7 @@ public class PanelManager extends DelegatingUserAgent {
                 return XMLResource.load(new StringReader(dirlist));
             }
         }
-        XMLResource xr = null;
+        Document xr = null;
         URLConnection uc = null;
         InputStream inputStream = null;
         try {
@@ -166,8 +167,8 @@ public class PanelManager extends DelegatingUserAgent {
 	 *
 	 * @return An XMLResource containing XML which about the failure.
 	 */
-	private XMLResource getNotFoundDocument(String uri) {
-        XMLResource xr;
+	private Document getNotFoundDocument(String uri) {
+        Document xr;
 
         // URI may contain & symbols which can "break" the XHTML we're creating
         String cleanUri = GeneralUtil.escapeHTML(uri);
