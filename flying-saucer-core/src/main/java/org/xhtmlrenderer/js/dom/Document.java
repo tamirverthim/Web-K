@@ -1,6 +1,7 @@
 package org.xhtmlrenderer.js.dom;
 
 import org.xhtmlrenderer.js.web_idl.Attribute;
+import org.xhtmlrenderer.js.web_idl.DOMString;
 import org.xhtmlrenderer.js.web_idl.Readonly;
 
 /**

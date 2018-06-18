@@ -1,6 +1,7 @@
 package org.xhtmlrenderer.js.dom;
 
 import org.xhtmlrenderer.js.web_idl.Attribute;
+import org.xhtmlrenderer.js.web_idl.DOMString;
 import org.xhtmlrenderer.js.web_idl.Readonly;
 import org.xhtmlrenderer.js.web_idl.Unsigned;
 
@@ -17,7 +18,7 @@ public interface DOMError {
     @Unsigned @Readonly
     Attribute<Short> severity();
     @Readonly
-    Attribute< DOMString> message();
+    Attribute<DOMString> message();
     @Readonly
     Attribute< DOMString> type();
     @Readonly

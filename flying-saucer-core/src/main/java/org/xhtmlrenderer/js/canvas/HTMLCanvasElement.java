@@ -1,8 +1,7 @@
 package org.xhtmlrenderer.js.canvas;
 
 import org.xhtmlrenderer.js.Optional;
-import org.xhtmlrenderer.js.canvas.CanvasRenderingContext2D;
-import org.xhtmlrenderer.js.dom.DOMString;
+import org.xhtmlrenderer.js.web_idl.DOMString;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 import org.xhtmlrenderer.js.web_idl.Unsigned;
 

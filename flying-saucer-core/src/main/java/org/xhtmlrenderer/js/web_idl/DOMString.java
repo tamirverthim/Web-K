@@ -1,6 +1,5 @@
-package org.xhtmlrenderer.js.dom;
+package org.xhtmlrenderer.js.web_idl;
 
-import lombok.AllArgsConstructor;
 
 /**
  * @author Taras Maslov

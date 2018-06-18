@@ -1,7 +1,7 @@
 package org.xhtmlrenderer.js.canvas.impl;
 
 import org.xhtmlrenderer.js.canvas.HitRegionOptions;
-import org.xhtmlrenderer.js.dom.DOMString;
+import org.xhtmlrenderer.js.web_idl.DOMString;
 import org.xhtmlrenderer.js.dom.Element;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 

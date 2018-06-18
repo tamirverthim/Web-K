@@ -1,5 +1,7 @@
 package org.xhtmlrenderer.js.dom;
 
+import org.xhtmlrenderer.js.web_idl.DOMString;
+
 /**
  * @author Taras Maslov
  * 6/1/2018

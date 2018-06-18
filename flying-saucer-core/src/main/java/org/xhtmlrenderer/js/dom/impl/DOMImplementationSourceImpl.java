@@ -3,7 +3,7 @@ package org.xhtmlrenderer.js.dom.impl;
 import org.xhtmlrenderer.js.dom.DOMImplementation;
 import org.xhtmlrenderer.js.dom.DOMImplementationList;
 import org.xhtmlrenderer.js.dom.DOMImplementationSource;
-import org.xhtmlrenderer.js.dom.DOMString;
+import org.xhtmlrenderer.js.web_idl.DOMString;
 
 /**
  * @author Taras Maslov

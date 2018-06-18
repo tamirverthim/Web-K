@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.val;
 import org.xhtmlrenderer.js.dom.*;
 import org.xhtmlrenderer.js.web_idl.Attribute;
+import org.xhtmlrenderer.js.web_idl.DOMString;
 
 import java.util.Objects;
 

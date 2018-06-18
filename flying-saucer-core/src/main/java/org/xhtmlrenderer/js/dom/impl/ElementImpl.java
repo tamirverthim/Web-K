@@ -5,6 +5,7 @@ import org.xhtmlrenderer.js.Binder;
 import org.xhtmlrenderer.js.dom.*;
 import org.xhtmlrenderer.js.canvas.impl.HTMLCanvasElementImpl;
 import org.xhtmlrenderer.js.web_idl.Attribute;
+import org.xhtmlrenderer.js.web_idl.DOMString;
 
 import java.util.Objects;
 

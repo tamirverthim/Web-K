@@ -1,7 +1,7 @@
 package org.xhtmlrenderer.js.dom.impl;
 
 import org.xhtmlrenderer.js.dom.DOMLocator;
-import org.xhtmlrenderer.js.dom.DOMString;
+import org.xhtmlrenderer.js.web_idl.DOMString;
 import org.xhtmlrenderer.js.dom.Node;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 

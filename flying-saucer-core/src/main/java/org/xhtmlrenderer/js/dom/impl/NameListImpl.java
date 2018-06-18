@@ -3,7 +3,7 @@ package org.xhtmlrenderer.js.dom.impl;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
-import org.xhtmlrenderer.js.dom.DOMString;
+import org.xhtmlrenderer.js.web_idl.DOMString;
 import org.xhtmlrenderer.js.dom.NameList;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 

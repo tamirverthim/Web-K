@@ -1,6 +1,6 @@
 package org.xhtmlrenderer.js.dom.impl;
 
-import org.xhtmlrenderer.js.dom.DOMString;
+import org.xhtmlrenderer.js.web_idl.DOMString;
 import org.xhtmlrenderer.js.dom.TypeInfo;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 
