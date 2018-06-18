@@ -345,7 +345,7 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
         result.addAll(Arrays.asList(super.getStylesheets(doc)));
 
         //get the link elements
-        org.jsoup.nodes.Element html = doc.getElementsByTag("html").get(0);
+        org.jsoup.nodes.Element html = doc.child(0);
         org.jsoup.nodes.Element head = findFirstChild(html, "head");
         if (head != null) {
             org.jsoup.nodes.Node current = head.childNode(0);

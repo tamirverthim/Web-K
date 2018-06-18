@@ -83,8 +83,8 @@ public class BoxBuilder {
     private static final int CONTENT_LIST_DOCUMENT = 1;
     private static final int CONTENT_LIST_MARGIN_BOX = 2;
 
-    public static BlockBox createRootBox(LayoutContext c, org.jsoup.nodes.Document root) {
-//        Element root = document.element();
+    public static BlockBox createRootBox(LayoutContext c, org.jsoup.nodes.Document document) {
+        org.jsoup.nodes.Element root = document.child(0); // "html" element
 
         CalculatedStyle style = c.getSharedContext().getStyle(root);
 

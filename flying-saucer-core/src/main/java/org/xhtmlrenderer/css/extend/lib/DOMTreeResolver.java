@@ -43,16 +43,14 @@ public class DOMTreeResolver implements TreeResolver {
         while (sibling != null && !(sibling instanceof org.jsoup.nodes.Element)) {
             sibling = sibling.previousSibling();
         }
-        if (sibling == null || (!(sibling instanceof org.jsoup.nodes.Element))) {
+        if (sibling == null) {
             return null;
         }
         return sibling;
     }
 
     public String getElementName(Object element) {
-        String name = ((Element) element).nodeName();
-        if (name == null) name = ((Element) element).nodeName();
-        return name;
+        return ((Element) element).nodeName();
     }
 
     public boolean isFirstChildElement(Object element) {
@@ -65,7 +63,7 @@ public class DOMTreeResolver implements TreeResolver {
     }
 
     public boolean isLastChildElement(Object element) {
-        Node parent = ((Element) element).parent();
+        Node parent = ((Element) element).parentNode();
         Node currentChild = parent.childNode(parent.childNodeSize() - 1);
         while (currentChild != null && !(currentChild instanceof Element)) {
             currentChild = currentChild.previousSibling();
@@ -74,23 +72,7 @@ public class DOMTreeResolver implements TreeResolver {
     }
 
     public boolean matchesElement(Object element, String namespaceURI, String name) {
-        org.jsoup.nodes.Element e = (org.jsoup.nodes.Element)element;
-        String localName = e.nodeName();
-        String eName;
-
-        if (localName == null) {
-            eName = e.nodeName();
-        } else {
-            eName = localName;
-        }
-
-//        if (namespaceURI != null) {
-//            return name.equals(localName) && namespaceURI.equals(e.getNamespaceURI());
-//        } else if (namespaceURI == TreeResolver.NO_NAMESPACE) {
-//            return name.equals(eName) && e.getNamespaceURI() == null;
-//        } else /* if (namespaceURI == null) */ {
-            return name.equals(eName);
-//        }
+        return ((Element)element).nodeName().equalsIgnoreCase(name);
     }
     
     public int getPositionOfElement(Object element) {
@@ -111,6 +93,6 @@ public class DOMTreeResolver implements TreeResolver {
         }
         
         //should not happen
-        return -1;
+        throw new RuntimeException("getPositionOfElement out of bounds");
     }
 }

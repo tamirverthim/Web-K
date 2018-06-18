@@ -22,6 +22,8 @@
 package org.xhtmlrenderer.css.extend.lib;
 
 
+import lombok.val;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
 import org.xhtmlrenderer.css.extend.AttributeResolver;
 import org.xhtmlrenderer.css.extend.TreeResolver;
@@ -30,21 +32,28 @@ import org.xhtmlrenderer.css.extend.TreeResolver;
  * Works for Xhtml in a DOM tree
  */
 public class DOMStaticXhtmlAttributeResolver implements AttributeResolver {
+    
+    private static String toNullIfEmpty(String value) {
+        return StringUtils.isNotBlank(value) ? value : null;
+    }
+    
     public String getAttributeValue(Object e, String attrName) {
-        return ((Element) e).attr(attrName);
+        val value = ((Element) e).attr(attrName);
+        return toNullIfEmpty(value);
     }
     
     public String getAttributeValue(Object o, String namespaceURI, String attrName) {
         Element e = (Element)o;
-        return e.attr(attrName);
+        val value = e.attr(attrName);
+        return toNullIfEmpty(value);
     }
 
     public String getClass(Object e) {
-        return ((Element) e).attr("class");
+        return toNullIfEmpty(((Element) e).attr("class"));
     }
 
     public String getID(Object e) {
-        return ((Element) e).attr("id");
+        return toNullIfEmpty(((Element) e).id());
     }
 
     public String getNonCssStyling(Object e) {
@@ -52,20 +61,21 @@ public class DOMStaticXhtmlAttributeResolver implements AttributeResolver {
     }
 
     public String getLang(Object e) {
-        return ((Element) e).attr("lang");
+        return toNullIfEmpty(((Element) e).attr("lang"));
     }
 
     public String getElementStyling(Object el) {
         Element e = ((Element) el);
-        StringBuffer style = new StringBuffer();
+        StringBuilder style = new StringBuilder();
         if (e.nodeName().equals("td")) {
-            String s;
-            if (!(s = e.attr("colspan")).equals("")) {
+            String s = toNullIfEmpty(e.attr("colspan"));
+            if (s != null) {
                 style.append("-fs-table-cell-colspan: ");
                 style.append(s);
                 style.append(";");
             }
-            if (!(s = e.attr("rowspan")).equals("")) {
+            s = toNullIfEmpty(e.attr("rowspan"));
+            if (s != null) {
                 style.append("-fs-table-cell-rowspan: ");
                 style.append(s);
                 style.append(";");
@@ -89,8 +99,7 @@ public class DOMStaticXhtmlAttributeResolver implements AttributeResolver {
 
     public boolean isLink(Object el) {
         Element e = ((Element) el);
-        if (e.nodeName().equalsIgnoreCase("a") && !e.attr("href").equals("")) return true;
-        return false;
+        return e.nodeName().equalsIgnoreCase("a") && !e.attr("href").isEmpty();
     }
 
     public boolean isVisited(Object e) {
