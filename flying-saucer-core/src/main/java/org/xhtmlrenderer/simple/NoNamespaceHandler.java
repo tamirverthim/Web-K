@@ -27,6 +27,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import lombok.val;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.*;
 import org.jsoup.select.Elements;
 
@@ -109,67 +110,87 @@ public class NoNamespaceHandler implements NamespaceHandler {
     private Pattern _alternatePattern = Pattern.compile("alternate\\s?=\\s?");
     private Pattern _mediaPattern = Pattern.compile("media\\s?=\\s?");
 
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     public StylesheetInfo[] getStylesheets(org.jsoup.nodes.Document doc) {
-        List list = new ArrayList();
+        List<StylesheetInfo> list = new ArrayList<>();
         //get the processing-instructions (actually for XmlDocuments)
         //type and href are required to be set
-        Elements nl = doc.getAllElements();
-        for (int i = 0, len = nl.size(); i < len; i++) {
-            val element = nl.get(i);
-            org.jsoup.nodes.Node node = element.childNodeSize() > 0 ? element.childNode(0) : element;
-            if (!(node instanceof DataNode) )
-                continue;
-//            ProcessingInstruction piNode = (ProcessingInstruction) node;
-//            if (!piNode.getTarget().equals("xml-stylesheet")) continue;
-            StylesheetInfo info;
-            info = new StylesheetInfo();
-            info.setOrigin(StylesheetInfo.AUTHOR);
-            String pi = ((org.jsoup.nodes.DataNode) node).getWholeData();
-            Matcher m = _alternatePattern.matcher(pi);
-            if (m.matches()) {
-                int start = m.end();
-                String alternate = pi.substring(start + 1, pi.indexOf(pi.charAt(start), start + 1));
-//                TODO: handle alternate stylesheets
-                if (alternate.equals("yes")) continue;//DON'T get alternate stylesheets for now
+        val styleElements = new ArrayList<Element>();
+        styleElements.addAll(doc.getElementsByTag("style"));
+        styleElements.addAll(doc.select("link[rel=stylesheet]"));
+        
+        styleElements.forEach(e -> {
+            if(e.tagName().equals("link")) {
+                val href = e.attr("href");
+                if(StringUtils.isNotBlank(href)){
+                    val info = new StylesheetInfo();
+                    info.setUri(href);
+                    info.setType("stylesheet");
+                    list.add(info);
+                }
+            } else if(e.tagName().equals("style")){
+                val info = new StylesheetInfo();
+                info.setType("text/css");
+                list.add(info);
             }
-            
-            if(!node.parent().nodeName().equals("style")){
-                continue;
-            }
-//            m = _typePattern.matcher(pi);
+        });
+        
+//        for (int i = 0, len = nl.size(); i < len; i++) {
+//            val element = nl.get(i);
+//            org.jsoup.nodes.Node node = element.childNodeSize() > 0 ? element.childNode(0) : element;
+//            if (!(node instanceof DataNode) )
+//                continue;
+////            ProcessingInstruction piNode = (ProcessingInstruction) node;
+////            if (!piNode.getTarget().equals("xml-stylesheet")) continue;
+//            StylesheetInfo info;
+//            info = new StylesheetInfo();
+//            info.setOrigin(StylesheetInfo.AUTHOR);
+//            String pi = ((org.jsoup.nodes.DataNode) node).getWholeData();
+//            Matcher m = _alternatePattern.matcher(pi);
+//            if (m.matches()) {
+//                int start = m.end();
+//                String alternate = pi.substring(start + 1, pi.indexOf(pi.charAt(start), start + 1));
+////                TODO: handle alternate stylesheets
+//                if (alternate.equals("yes")) continue;//DON'T get alternate stylesheets for now
+//            }
+//            
+////            if(!node.parent().nodeName().equals("style")){
+////                continue;
+////            }
+////            m = _typePattern.matcher(pi);
+////            if (m.find()) {
+////                int start = m.end();
+////                String type = pi.substring(start + 1, pi.indexOf(pi.charAt(start), start + 1));
+//////                TODO: handle other stylesheet types
+////                if (!type.equals("text/css")) continue;//for now
+////                info.setType(type);
+////            }
+//            m = _hrefPattern.matcher(pi);
 //            if (m.find()) {
 //                int start = m.end();
-//                String type = pi.substring(start + 1, pi.indexOf(pi.charAt(start), start + 1));
-////                TODO: handle other stylesheet types
-//                if (!type.equals("text/css")) continue;//for now
-//                info.setType(type);
+//                String href = pi.substring(start + 1, pi.indexOf(pi.charAt(start), start + 1));
+//                info.setUri(href);
 //            }
-            m = _hrefPattern.matcher(pi);
-            if (m.find()) {
-                int start = m.end();
-                String href = pi.substring(start + 1, pi.indexOf(pi.charAt(start), start + 1));
-                info.setUri(href);
-            }
-            
-            info.setContent(((DataNode) node).getWholeData());
-//            m = _titlePattern.matcher(pi);
-//            if (m.find()) {
-//                int start = m.end();
-//                String title = pi.substring(start + 1, pi.indexOf(pi.charAt(start), start + 1));
-//                info.setTitle(title);
-//            }
-//            m = _mediaPattern.matcher(pi);
-//            if (m.find()) {
-//                int start = m.end();
-//                String media = pi.substring(start + 1, pi.indexOf(pi.charAt(start), start + 1));
-//                info.setMedia(media);
-//            } else {
-//                info.addMedium("screen");
-//            }
-            list.add(info);
-        }
+//            
+//            info.setContent(((DataNode) node).getWholeData());
+////            m = _titlePattern.matcher(pi);
+////            if (m.find()) {
+////                int start = m.end();
+////                String title = pi.substring(start + 1, pi.indexOf(pi.charAt(start), start + 1));
+////                info.setTitle(title);
+////            }
+////            m = _mediaPattern.matcher(pi);
+////            if (m.find()) {
+////                int start = m.end();
+////                String media = pi.substring(start + 1, pi.indexOf(pi.charAt(start), start + 1));
+////                info.setMedia(media);
+////            } else {
+////                info.addMedium("screen");
+////            }
+//            list.add(info);
+//        }
 
-        return (StylesheetInfo[])list.toArray(new StylesheetInfo[list.size()]);
+        return list.toArray(new StylesheetInfo[0]);
     }
 
     public StylesheetInfo getDefaultStylesheet(StylesheetFactory factory) {

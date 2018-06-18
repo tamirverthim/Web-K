@@ -566,7 +566,7 @@ public class SharedContext {
             result = (CalculatedStyle)styleMap.get(e);
         }
         if (result == null) {
-            org.jsoup.nodes.Node parent = e.parent();
+            org.jsoup.nodes.Node parent = e.parentNode();
             if(parent == null) {
                 parent = e;
             }
@@ -619,7 +619,7 @@ public class SharedContext {
         getCss().removeStyle(e);
         getReplacedElementFactory().remove(e);
 
-        if (e.children().size() > 0) {
+        if (e.childNodeSize() > 0) {
             List<org.jsoup.nodes.Node> children = e.childNodes();
             for (int i = 0; i < children.size(); i++) {
                 org.jsoup.nodes.Node child = children.get(i);

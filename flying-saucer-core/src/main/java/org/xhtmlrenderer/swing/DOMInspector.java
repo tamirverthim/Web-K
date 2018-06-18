@@ -699,7 +699,7 @@ class DOMTreeModel implements TreeModel {
 
         org.jsoup.nodes.Node node = (org.jsoup.nodes.Node) nd;
 
-        return node.childNodes().isEmpty();
+        return node.childNodeSize() == 0;
     }
 
     // only adds displayable nodes--not stupid DOM text filler nodes

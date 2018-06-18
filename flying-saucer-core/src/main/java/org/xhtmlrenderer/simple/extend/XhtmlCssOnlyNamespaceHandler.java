@@ -279,7 +279,7 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
         info.setOrigin(StylesheetInfo.AUTHOR);
 
         StringBuffer buf = new StringBuffer();
-        org.jsoup.nodes.Node current = style.children().size() > 0 ? style.child(0) : null;
+        org.jsoup.nodes.Node current = style.childNodeSize() > 0 ? style.childNode(0) : null;
         while (current != null) {
             if (current instanceof DataNode) {
                 buf.append(((DataNode)current).getWholeData());
@@ -345,7 +345,7 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
         result.addAll(Arrays.asList(super.getStylesheets(doc)));
 
         //get the link elements
-        org.jsoup.nodes.Element html = doc;
+        org.jsoup.nodes.Element html = doc.getElementsByTag("html").get(0);
         org.jsoup.nodes.Element head = findFirstChild(html, "head");
         if (head != null) {
             org.jsoup.nodes.Node current = head.childNode(0);
