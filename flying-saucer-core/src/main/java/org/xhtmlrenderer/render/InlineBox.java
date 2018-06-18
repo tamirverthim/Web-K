@@ -21,8 +21,6 @@ package org.xhtmlrenderer.render;
 import java.text.BreakIterator;
 
 import org.jsoup.nodes.TextNode;
-import org.w3c.dom.Element;
-import org.w3c.dom.Text;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.extend.ContentFunction;
 import org.xhtmlrenderer.css.parser.FSFunction;

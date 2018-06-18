@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jsoup.nodes.CDataNode;
 import org.jsoup.nodes.DataNode;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
@@ -69,8 +68,8 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
      * @param e PARAM
      * @return The class value
      */
-    public String getClass(org.w3c.dom.Element e) {
-        return e.getAttribute("class");
+    public String getClass(Element e) {
+        return e.attr("class");
     }
 
     /**
@@ -79,9 +78,8 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
      * @param e PARAM
      * @return The iD value
      */
-    public String getID(org.w3c.dom.Element e) {
-        String result = e.getAttribute("id").trim();
-        return result.length() == 0 ? null : result;
+    public String getID(Element e) {
+        return e.id();
     }
 
     protected String convertToLength(String value) {

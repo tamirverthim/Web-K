@@ -62,6 +62,8 @@ import org.xhtmlrenderer.render.Box;
 import org.xhtmlrenderer.render.FloatedBoxData;
 import org.xhtmlrenderer.render.InlineBox;
 
+import static org.xhtmlrenderer.util.StringHelper.nullIfEmpty;
+
 /**
  * This class is responsible for creating the box tree from the DOM.  This is
  * mostly just a one-to-one translation from the <code>Element</code> to an
@@ -1066,7 +1068,7 @@ public class BoxBuilder {
             String text, org.jsoup.nodes.Element parent, CalculatedStyle parentStyle, TextNode node) {
         InlineBox result = new InlineBox(text, node);
 
-        if (parentStyle.isInline() && ! (parent.parent() instanceof Document)) {
+        if (parentStyle.isInline() && ! (parent.parentNode() instanceof Document)) {
             result.setStyle(parentStyle);
             result.setElement(parent);
         } else {
@@ -1104,20 +1106,20 @@ public class BoxBuilder {
                     }
 
                     Integer start = null;
-					if ("ol".equals(working.nodeName())) {
-                        String startAttribute = working.attr("start");
+					if ("ol".equalsIgnoreCase(working.nodeName())) {
+                        String startAttribute = nullIfEmpty(working.attr("start"));
 						if (startAttribute != null) {
 							try {
-								start = new Integer(Integer.parseInt(startAttribute) - 1);
+								start = Integer.parseInt(startAttribute) - 1;
 							} catch (NumberFormatException e) {
 								// ignore
 							}
 						}
-					} else if ("li".equals(working.nodeName())) {
-						String valueAttribute = working.attr("value");
+					} else if ("li".equalsIgnoreCase(working.nodeName())) {
+						String valueAttribute = nullIfEmpty(working.attr("value"));
 						if (valueAttribute != null) {
 							try {
-								start = new Integer(Integer.parseInt(valueAttribute) - 1);
+								start = Integer.parseInt(valueAttribute) - 1;
 							} catch (NumberFormatException e) {
 								// ignore
 							}

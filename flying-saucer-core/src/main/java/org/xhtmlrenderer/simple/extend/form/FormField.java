@@ -38,6 +38,7 @@ import org.xhtmlrenderer.swing.AWTFSFont;
 
 import java.awt.*;
 
+
 public abstract class FormField {
     private XhtmlForm _parentForm;
     private org.jsoup.nodes.Element _element;
@@ -96,7 +97,7 @@ public abstract class FormField {
     }
     
     protected boolean hasAttribute(String attributeName) {
-        return StringUtils.isNotBlank(getElement().attr(attributeName));
+        return getElement().hasAttr(attributeName);
     }
 
     protected String getAttribute(String attributeName) {

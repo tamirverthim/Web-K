@@ -81,9 +81,7 @@ public class XMLResource extends AbstractResource {
     private static org.jsoup.nodes.Document getJsoup(InputStream stream){
         try {
             String source = IOUtils.toString(stream, "UTF-8");
-            org.jsoup.nodes.Document doc = Jsoup.parse(source);
-            doc.outputSettings().syntax(org.jsoup.nodes.Document.OutputSettings.Syntax.xml);
-            return doc;
+            return Jsoup.parse(source);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

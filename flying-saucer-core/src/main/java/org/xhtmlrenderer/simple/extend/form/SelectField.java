@@ -39,8 +39,6 @@ import javax.swing.event.ListSelectionListener;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.XhtmlForm;

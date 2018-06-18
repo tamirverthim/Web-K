@@ -692,7 +692,7 @@ public abstract class Box implements Styleable {
     }
 
     public boolean isRoot() {
-        return getElement() != null && getElement().nodeName().equalsIgnoreCase("html"); //() == Node.DOCUMENT_NODE;
+        return getElement() != null && ! isAnonymous() && getElement().parentNode() instanceof Document;
     }
 
     public boolean isBody() {

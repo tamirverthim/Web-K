@@ -33,37 +33,37 @@ public class FormFieldFactory {
 
         org.jsoup.nodes.Element e = box.getElement();
 
-        if (e.nodeName().equals("input")) {
+        if (e.nodeName().equalsIgnoreCase("input")) {
             typeKey = e.attr("type");  
-        } else if (e.nodeName().equals("textarea")) {
+        } else if (e.nodeName().equalsIgnoreCase("textarea")) {
             typeKey = "textarea";
-        } else if (e.nodeName().equals("select")) {
+        } else if (e.nodeName().equalsIgnoreCase("select")) {
             typeKey = "select";
         } else {
             return null;
         }
 
-        if (typeKey.equals("submit")) {
+        if (typeKey.equalsIgnoreCase("submit")) {
             return new SubmitField(e, form, context, box);
-        } else if (typeKey.equals("reset")) {
+        } else if (typeKey.equalsIgnoreCase("reset")) {
             return new ResetField(e, form, context, box);
-        } else if (typeKey.equals("button")) {
+        } else if (typeKey.equalsIgnoreCase("button")) {
             return new ButtonField(e, form, context, box);
-        } else if (typeKey.equals("image")) {
+        } else if (typeKey.equalsIgnoreCase("image")) {
             return new ImageField(e, form, context, box);
-        } else if (typeKey.equals("hidden")) {
+        } else if (typeKey.equalsIgnoreCase("hidden")) {
             return new HiddenField(e, form, context, box);
-        } else if (typeKey.equals("password")) {
+        } else if (typeKey.equalsIgnoreCase("password")) {
             return new PasswordField(e, form, context, box);
-        } else if (typeKey.equals("checkbox")) {
+        } else if (typeKey.equalsIgnoreCase("checkbox")) {
             return new CheckboxField(e, form, context, box);
-        } else if (typeKey.equals("radio")) {
+        } else if (typeKey.equalsIgnoreCase("radio")) {
             return new RadioButtonField(e, form, context, box);
-        } else if (typeKey.equals("file")) {
+        } else if (typeKey.equalsIgnoreCase("file")) {
             return new FileField(e, form, context, box);
-        } else if (typeKey.equals("textarea")) {
+        } else if (typeKey.equalsIgnoreCase("textarea")) {
             return new TextAreaField(e, form, context, box);
-        } else if (typeKey.equals("select")) {
+        } else if (typeKey.equalsIgnoreCase("select")) {
             return new SelectField(e, form, context, box);
         } else {
             return new TextField(e, form, context, box);

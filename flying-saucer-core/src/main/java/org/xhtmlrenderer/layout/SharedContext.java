@@ -27,10 +27,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import lombok.extern.slf4j.Slf4j;
+import org.jsoup.nodes.Element;
 import org.xhtmlrenderer.context.AWTFontResolver;
 import org.xhtmlrenderer.context.StyleReference;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
@@ -60,6 +58,7 @@ import org.xhtmlrenderer.util.XRLog;
  *
  * @author empty
  */
+@Slf4j
 public class SharedContext {
     private TextRenderer text_renderer;
     private String media;
@@ -94,7 +93,7 @@ public class SharedContext {
 
     private int dotsPerPixel = 1;
 
-    private Map styleMap;
+    private Map<Element, CalculatedStyle> styleMap;
 
     private ReplacedElementFactory replacedElementFactory;
     private Rectangle temp_canvas;
@@ -558,7 +557,7 @@ public class SharedContext {
 
     public CalculatedStyle getStyle(org.jsoup.nodes.Element e, boolean restyle) {
         if (styleMap == null) {
-            styleMap = new HashMap(1024, 0.75f);
+            styleMap = new HashMap<>(1024, 0.75f);
         }
 
         CalculatedStyle result = null;
@@ -567,9 +566,6 @@ public class SharedContext {
         }
         if (result == null) {
             org.jsoup.nodes.Node parent = e.parentNode();
-            if(parent == null) {
-                parent = e;
-            }
             CalculatedStyle parentCalculatedStyle;
             if (parent instanceof org.jsoup.nodes.Document) {
                 parentCalculatedStyle = new EmptyStyle();
