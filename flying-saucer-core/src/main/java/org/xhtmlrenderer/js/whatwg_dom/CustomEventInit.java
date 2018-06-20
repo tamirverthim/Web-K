@@ -4,11 +4,9 @@ import org.xhtmlrenderer.js.web_idl.Dictionary;
 
 /**
  * @author Taras Maslov
- * 6/18/2018
+ * 6/19/2018
  */
 @Dictionary
-public interface EventInit {
-    boolean bubbles = false;
-    boolean cancelable = false;
-    boolean composed = false;
+public interface CustomEventInit extends EventInit {
+    Object detail(); // any, default null
 }

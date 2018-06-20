@@ -7,15 +7,9 @@ import java.lang.annotation.Target;
 
 /**
  * @author Taras Maslov
- * 6/18/2018
+ * 6/19/2018
  */
-@Target(ElementType.TYPE)
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Constructor {
-    Class<?>[] value() default {};
-
-    /**
-     * Zero-indexed optional arguments
-     */
-    int[] optionalArgs() default {};
+public @interface CEReactions {
 }
