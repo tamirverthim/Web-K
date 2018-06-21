@@ -7,10 +7,9 @@ import java.lang.annotation.Target;
 
 /**
  * @author Taras Maslov
- * 6/18/2018
+ * 6/21/2018
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Typedef {
-    Class<?>[] value() default {};
+public @interface Serializable {
 }

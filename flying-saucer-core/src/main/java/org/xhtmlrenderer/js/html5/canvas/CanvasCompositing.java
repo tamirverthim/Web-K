@@ -12,7 +12,7 @@ public interface CanvasCompositing {
     @Unrestricted
     @DefaultDouble(1.0)
     Attribute<Double> globalAlpha(); // (default 1.0)
-    
+
     @DefaultString("source-over")
     Attribute<DOMString> globalCompositeOperation(); // (default source-over)
 }

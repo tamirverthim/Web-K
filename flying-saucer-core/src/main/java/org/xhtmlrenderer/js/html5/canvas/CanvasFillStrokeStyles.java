@@ -1,8 +1,5 @@
 package org.xhtmlrenderer.js.html5.canvas;
 
-//import org.xhtmlrenderer.js.canvas.CanvasGradient;
-//import org.xhtmlrenderer.js.canvas.CanvasPattern;
-
 import org.xhtmlrenderer.js.Optional;
 import org.xhtmlrenderer.js.web_idl.*;
 
@@ -12,6 +9,7 @@ import org.xhtmlrenderer.js.web_idl.*;
  */
 @Mixin
 public interface CanvasFillStrokeStyles {
+    
     // colors and styles (see also the CanvasPathDrawingStyles and CanvasTextDrawingStyles interfaces)
     @OneOf({DOMString.class, CanvasGradient.class, CanvasPattern.class})
     Attribute<Object> strokeStyle(); // (default black)

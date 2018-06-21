@@ -15,13 +15,19 @@ import org.xhtmlrenderer.js.web_idl.Unrestricted;
 public interface CanvasTransform {
     // transformations (default transform is the identity matrix)
     void scale(@Unrestricted double x, @Unrestricted double y);
+
     void rotate(@Unrestricted double angle);
+
     void translate(@Unrestricted double x, @Unrestricted double y);
+
     void transform(@Unrestricted double a, @Unrestricted double b, @Unrestricted double c, @Unrestricted double d, @Unrestricted double e, @Unrestricted double f);
 
-  @NewObject
-  DOMMatrix getTransform();
+    @NewObject
+    DOMMatrix getTransform();
+
     void setTransform(@Unrestricted double a, @Unrestricted double b, @Unrestricted double c, @Unrestricted double d, @Unrestricted double e, @Unrestricted double f);
+
     void setTransform(@Optional DOMMatrix2DInit transform);
+
     void resetTransform();
 }

@@ -11,5 +11,5 @@ import org.xhtmlrenderer.js.web_idl.Mixin;
 @Mixin
 public interface CanvasFilters {
     // filters
-    Attribute <DOMString> filter(); // (default "none")
+    Attribute<DOMString> filter(); // (default "none")
 }

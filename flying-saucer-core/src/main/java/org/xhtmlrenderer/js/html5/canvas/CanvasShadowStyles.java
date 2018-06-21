@@ -11,15 +11,15 @@ public interface CanvasShadowStyles {
     @Unrestricted
     @DefaultDouble(0)
     Attribute<Double> shadowOffsetX(); // (default 0)
-    
+
     @Unrestricted
     @DefaultDouble(0)
     Attribute<Double> shadowOffsetY(); // (default 0)
-    
+
     @Unrestricted
     @DefaultDouble(0)
     Attribute<Double> shadowBlur(); // (default 0)
-    
+
     @DefaultString("transparent black")
     Attribute<DOMString> shadowColor(); // (default transparent black)
 }

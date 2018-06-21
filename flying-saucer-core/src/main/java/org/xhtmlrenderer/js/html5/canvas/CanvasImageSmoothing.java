@@ -12,5 +12,6 @@ import org.xhtmlrenderer.js.web_idl.Mixin;
 public interface CanvasImageSmoothing {
     // image smoothing
     Attribute<Boolean> imageSmoothingEnabled(); // (default true)
+
     Attribute<ImageSmoothingQuality> imageSmoothingQuality(); // (default low)
 }
