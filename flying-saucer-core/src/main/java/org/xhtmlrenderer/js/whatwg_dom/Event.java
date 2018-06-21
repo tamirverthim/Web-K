@@ -41,12 +41,11 @@ import org.xhtmlrenderer.js.web_idl.*;
  * @author Taras Maslov
  * 6/18/2018
  */
-@Constructor(
-        value = {DOMString.class, EventInit.class}, 
-        optionalArgs = {1}
-)
+@Constructor(true)
 @Exposed({Window.class, Worker.class, AudioWorker.class})
 public interface Event {
+    
+    void construct(DOMString type, @Optional EventInit init);
     
     @Readonly
     Attribute<DOMString> type();

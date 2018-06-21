@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * 5/29/2018
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
+@Target({ElementType.PARAMETER, ElementType.METHOD})
 public @interface TreatNullAs {
     NullTreat value() default NullTreat.EmptyString;
 }
