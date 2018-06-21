@@ -7,8 +7,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.reflections.ReflectionUtils;
+import org.xhtmlrenderer.js.impl.DOMStringImpl;
 import org.xhtmlrenderer.js.web_idl.DOMString;
-import org.xhtmlrenderer.js.dom.impl.DOMStringImpl;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 import org.xhtmlrenderer.js.web_idl.Indexed;
 
@@ -56,14 +56,16 @@ public class WebIDLAdapter<T> implements JSObject {
                 Object[] adaptedArg;
                 if (m.getParameterTypes().length > 0 && m.getParameterTypes()[0] == DOMString.class && arg instanceof String) {
                     adaptedArg = new Object[]{new DOMStringImpl((String) arg)};
-                } else if (m.getParameterTypes().length > 1) {
+                } else if (m.getParameterTypes().length > 0) {
                     adaptedArg = (Object[]) arg;
                     if(adaptedArg[0] instanceof String){
                         adaptedArg[0] = new DOMStringImpl(adaptedArg[0].toString());
                     }
-                } else if (arg != null){
-                    adaptedArg = new Object[]{arg};
-                } else {
+                } 
+//                else if (arg != null){
+//                    adaptedArg = new Object[]{arg};
+//                }
+                else {
                     adaptedArg = null;
                 }
                 Object res;
@@ -137,7 +139,7 @@ public class WebIDLAdapter<T> implements JSObject {
             
             try {
                 ((Attribute) member).set(unwrapIfNeeded(o));
-            } catch (ClassCastException e) {
+            } catch (Exception e) {
                 members.remove(s);
                 setMember(s, o);
             }
@@ -214,7 +216,7 @@ public class WebIDLAdapter<T> implements JSObject {
             return res;
         } 
         
-        String[] packages = new String[]{"org.xhtmlrenderer.js.canvas.impl", "org.xhtmlrenderer.js.dom.impl"};
+        String[] packages = new String[]{"org.xhtmlrenderer.js.impl"};
         if (ArrayUtils.contains(packages, res.getClass().getPackage().getName())) {
             return new WebIDLAdapter<>(JS.getInstance(), res);
         } else {

@@ -1,7 +1,7 @@
 package org.xhtmlrenderer.swing;
 
 import lombok.AllArgsConstructor;
-import org.xhtmlrenderer.js.canvas.impl.HTMLCanvasElementImpl;
+import org.xhtmlrenderer.js.impl.HTMLCanvasElementImpl;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +16,7 @@ public class CanvasReplacedElement extends SwingReplacedElement {
 //    private HTMLCanvasElementImpl impl;
 
     public CanvasReplacedElement(HTMLCanvasElementImpl impl) {
-        super(new CanvasPanel(impl.getContextImpl().getBufferedImage()));
+        super(new CanvasPanel(impl.getContextImpl().getImage()));
         getJComponent().setSize(impl.getContextImpl().getWidth(), impl.getContextImpl().getHeight());
 //        this.impl = impl;
     }

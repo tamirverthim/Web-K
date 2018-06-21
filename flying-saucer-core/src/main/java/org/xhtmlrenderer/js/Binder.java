@@ -1,6 +1,8 @@
 package org.xhtmlrenderer.js;
 
 
+import org.xhtmlrenderer.js.whatwg_dom.Element;
+
 import java.util.HashMap;
 
 /**
@@ -8,13 +10,13 @@ import java.util.HashMap;
  * 6/4/2018
  */
 public class Binder {
-    private static final HashMap<org.jsoup.nodes.Element, org.xhtmlrenderer.js.dom.Element> registry = new HashMap<>();
+    private static final HashMap<org.jsoup.nodes.Element, Element> registry = new HashMap<>();
 
-    public static org.xhtmlrenderer.js.dom.Element get(Object key) {
+    public static Element get(Object key) {
         return registry.get(key);
     }
 
-    public static org.xhtmlrenderer.js.dom.Element put(org.jsoup.nodes.Element key, org.xhtmlrenderer.js.dom.Element value) {
+    public static Element put(org.jsoup.nodes.Element key, Element value) {
         return registry.put(key, value);
     }
 

@@ -25,7 +25,7 @@ import org.xhtmlrenderer.extend.ReplacedElement;
 import org.xhtmlrenderer.extend.ReplacedElementFactory;
 import org.xhtmlrenderer.extend.UserAgentCallback;
 import org.xhtmlrenderer.js.Binder;
-import org.xhtmlrenderer.js.canvas.impl.HTMLCanvasElementImpl;
+import org.xhtmlrenderer.js.impl.HTMLCanvasElementImpl;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.DefaultFormSubmissionListener;
@@ -99,7 +99,10 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
         } else if(context.getNamespaceHandler().isCanvasElement(e)){
             HTMLCanvasElementImpl canvasElement = (HTMLCanvasElementImpl) Binder.get(e);
             if(canvasElement == null) {
-                canvasElement = new HTMLCanvasElementImpl(e);
+                canvasElement = new HTMLCanvasElementImpl(e, 
+                        Integer.parseInt(e.attr("width")), 
+                        Integer.parseInt(e.attr("height"))
+                );
                 Binder.put(e, canvasElement);
             }
             return new CanvasReplacedElement(canvasElement);

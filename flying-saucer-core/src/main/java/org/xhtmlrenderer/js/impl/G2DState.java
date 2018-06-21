@@ -1,4 +1,4 @@
-package org.xhtmlrenderer.js.canvas.impl;
+package org.xhtmlrenderer.js.impl;
 
 import lombok.AccessLevel;
 import lombok.Getter;

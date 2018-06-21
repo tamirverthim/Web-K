@@ -4,8 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.xhtmlrenderer.event.DefaultDocumentListener;
-import org.xhtmlrenderer.js.dom.Document;
-import org.xhtmlrenderer.js.dom.impl.DocumentImpl;
+import org.xhtmlrenderer.js.impl.DocumentImpl;
+import org.xhtmlrenderer.js.whatwg_dom.Document;
 import org.xhtmlrenderer.net.Network;
 import org.xhtmlrenderer.simple.XHTMLPanel;
 
@@ -101,11 +101,11 @@ public class JS {
                     log.trace("Document has {} scripts", scripts.size());
                     for (int i = 0; i < scripts.size(); i++) {
                         val script = scripts.get(i);
-                        if (StringUtils.isNotBlank(script.text())) {
+                        if (StringUtils.isNotBlank(script.data())) {
                             try {
 
-                                log.trace("Evaluating script {} {}", System.lineSeparator(), script.text());
-                                eval(script.text());
+                                log.trace("Evaluating script {} {}", System.lineSeparator(), script.data());
+                                eval(script.data());
                             } catch (Exception e) {
                                 log.warn("script.eval", e);
                             }
