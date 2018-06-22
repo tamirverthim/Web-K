@@ -1,6 +1,5 @@
 package org.xhtmlrenderer.js.whatwg_dom;
 
-import org.xhtmlrenderer.js.Nullable;
 import org.xhtmlrenderer.js.web_idl.*;
 
 /**

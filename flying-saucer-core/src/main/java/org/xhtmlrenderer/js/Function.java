@@ -9,35 +9,30 @@ import java.util.Set;
  * @author Taras Maslov
  * 6/1/2018
  */
-public class Function <T, K> implements JSObject {
+public class Function<T> implements JSObject {
+
+    final String id;
 
     @FunctionalInterface
-    public interface Callback<T, K> {
-        T call(Object ctx, K arg);
+    public interface Callback<T> {
+        T call(Object ctx, Object... arg);
     }
-    
-    private Callback<T, K> callback;
 
-    public Function(Callback<T, K> callback){
+    private Callback<T> callback;
+
+    public Function(Callback<T> callback, String id) {
         this.callback = callback;
+        this.id = id;
     }
 
     @Override
     public Object call(Object o, Object... objects) {
-        Object arg;
-        if(objects.length > 1){
-            arg = objects;
-        } else if(objects.length == 1) {
-            arg = objects[0];
-        } else {
-            arg = null;
-        }
-        return callback.call(o, (K) arg);
+        return callback.call(o, objects);
     }
 
     @Override
     public Object newObject(Object... objects) {
-        return new Function<>(callback);
+        return new Function<>(callback, id);
     }
 
     @Override
@@ -47,6 +42,9 @@ public class Function <T, K> implements JSObject {
 
     @Override
     public Object getMember(String s) {
+        if ("toString".equals(s)) {
+            return new Function<>((Callback<Object>) (ctx, arg) -> id, id + ".toString");
+        }
         return null;
     }
 
@@ -57,7 +55,7 @@ public class Function <T, K> implements JSObject {
 
     @Override
     public boolean hasMember(String s) {
-        return false;
+        return "toString".equals(s);
     }
 
     @Override
@@ -124,4 +122,5 @@ public class Function <T, K> implements JSObject {
     public double toNumber() {
         return 0;
     }
+
 }

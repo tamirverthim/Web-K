@@ -1,4 +1,4 @@
-package org.xhtmlrenderer.js;
+package org.xhtmlrenderer.js.web_idl;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

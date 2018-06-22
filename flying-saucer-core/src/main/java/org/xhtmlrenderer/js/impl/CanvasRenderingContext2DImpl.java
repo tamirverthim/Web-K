@@ -1,5 +1,11 @@
 package org.xhtmlrenderer.js.impl;
 
+import com.helger.css.ECSSVersion;
+import com.helger.css.decl.CSSDeclaration;
+import com.helger.css.decl.shorthand.CSSShortHandDescriptor;
+import com.helger.css.decl.shorthand.CSSShortHandRegistry;
+import com.helger.css.property.ECSSProperty;
+import com.helger.css.reader.CSSReaderDeclarationList;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
@@ -17,6 +23,7 @@ import java.awt.geom.Arc2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author Taras Maslov
@@ -38,9 +45,17 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     
     java.awt.geom.Path2D path2D = new java.awt.geom.Path2D.Double();
     
-    public CanvasRenderingContext2DImpl(int width, int height) {
+    // G2D state is not equal to state in stack
+    private boolean stateDirty;
+    
+    private HTMLCanvasElementImpl canvas;
+    private boolean wasFill;
+    private DOMString fontStyle;
+
+    public CanvasRenderingContext2DImpl(HTMLCanvasElementImpl canvas, int width, int height) {
         this.width = width;
         this.height = height;
+        this.canvas = canvas;
 
         image = GraphicsEnvironment.getLocalGraphicsEnvironment()
                 .getDefaultScreenDevice()
@@ -50,14 +65,16 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
         g2d.setBackground(Color.red);
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-
+        
+        g2d.setBackground(Color.WHITE);
+        g2d.clearRect(0 ,0 ,width, height);
         // initial state
         stateStack.push(new G2DState());
     }
 
     @Override
     public HTMLCanvasElement canvas() {
-        return null;
+        return canvas;
     }
 
     @Override
@@ -87,31 +104,32 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
     @Override
     public void beginPath() {
-
+        path2D = new java.awt.geom.Path2D.Double();
     }
 
     @Override
     public void fill(CanvasFillRule fillRule) {
-        state().apply(g2d, true);
+        ensureState(true);
         g2d.fill(path2D);
         path2D = new java.awt.geom.Path2D.Double();
     }
 
     @Override
     public void fill(Path2D path, CanvasFillRule fillRule) {
-
+//        state().apply(g2d);
+//        g2d.fill(path2D);
+//        path2D = new java.awt.geom.Path2D.Double();
     }
 
     @Override
     public void stroke() {
-        state().apply(g2d, false);
+        ensureState(false);
         g2d.draw(path2D);
-        path2D = new java.awt.geom.Path2D.Double();
     }
 
     @Override
     public void stroke(Path2D path) {
-
+        
     }
 
     @Override
@@ -156,8 +174,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
             if (value instanceof DOMString) {
                 val color = Color.decode(value.toString());
                 state().setStrokeColor(color);
-                g2d.setBackground(color);
-                g2d.setColor(color);
+                stateDirty = true;
             } else {
                 // todo grad and pattern
                 throw new RuntimeException();
@@ -172,8 +189,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
             if (value instanceof DOMString) {
                 val color = Color.decode(value.toString());
                 state().setFillColor(color);
-                g2d.setBackground(color);
-                g2d.setColor(color);
+                stateDirty = true;
             } else {
                 // todo grad and pattern
                 throw new RuntimeException();
@@ -276,7 +292,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
         double top = x - r;
         double left = y - r;
         double diam = 2*r;
-        state().apply(g2d, false);
+        ensureState(false);
 
         path2D.append(
                 new Arc2D.Double(top, left, diam, diam,
@@ -332,13 +348,13 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
     @Override
     public void fillRect(double x, double y, double w, double h) {
-        state().apply(g2d, true);
+        ensureState( true);
         g2d.fillRect((int) x, (int) y, (int) w, (int) h);
     }
 
     @Override
     public void strokeRect(double x, double y, double w, double h) {
-        state().apply(g2d, false);
+        ensureState(false);
         g2d.drawRect((int) x, (int) y, (int) w, (int) h);
     }
 
@@ -364,35 +380,57 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
     @Override
     public void save() {
-        stateStack.add(new G2DState());
+        stateStack.add(state().clone());
     }
 
     @Override
     public void restore() {
         stateStack.pop();
-        state().apply(g2d);
+        stateDirty = true;
     }
 
     @Override
-    public void fillText(DOMString text, double x, double y, double maxWidth) {
-        state().apply(g2d, true);
+    public void fillText(DOMString text, double x, double y, Double maxWidth) {
+        ensureState(true);
         g2d.drawString(text.toString(), (int)x, (int)y);
         // todo handle max width
     }
 
     @Override
-    public void strokeText(DOMString text, double x, double y, double maxWidth) {
+    public void strokeText(DOMString text, double x, double y, Double maxWidth) {
 
     }
 
     @Override
     public TextMetrics measureText(DOMString text) {
+        ensureState();
         return new TextMetricsImpl(g2d.getFontMetrics().stringWidth(text.toString()));
     }
 
     @Override
     public Attribute<DOMString> font() {
-        return null;
+        return Attribute.<DOMString>receive(style->{
+            fontStyle = style;
+            val styleString = style.toString();
+            val declarations = CSSReaderDeclarationList.readFromString("font: " + styleString, ECSSVersion.CSS30);
+            val declaration = declarations.getDeclarationAtIndex(0);
+            
+            // Get the Shorthand descriptor for "border"    
+            final CSSShortHandDescriptor aSHD = CSSShortHandRegistry.getShortHandDescriptor (ECSSProperty.FONT);
+
+            // And now split it into pieces
+            final List<CSSDeclaration> aSplittedDecls = aSHD.getSplitIntoPieces (declaration);
+            for (CSSDeclaration aSplittedDecl : aSplittedDecls) {
+                
+                val fontSize = aSplittedDecl.getExpression().getAsCSSString();
+                if(fontSize.endsWith("px")){
+                    state().setFontSize((int) Math.round(Double.parseDouble(fontSize.substring(0, 2))));
+                    stateDirty = true;
+                }
+                
+            }
+                    
+        }).give(() -> fontStyle);
     }
 
     @Override
@@ -413,25 +451,25 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     @Override
     public void scale(double x, double y) {
         state().scale(x, y);
-        state().apply(g2d);
+        stateDirty = true;
     }
 
     @Override
     public void rotate(double angle) {
         state().rotate(angle);
-        state().apply(g2d);
+        stateDirty = true;
     }
 
     @Override
     public void translate(double x, double y) {
         state().translate(x, y);
-        state().apply(g2d);
+        stateDirty = true;
     }
 
     @Override
     public void transform(double a, double b, double c, double d, double e, double f) {
         state().transform(a, b, c, d, e, f);
-        state().apply(g2d);
+        stateDirty = true;
     }
 
     @Override
@@ -442,7 +480,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     @Override
     public void setTransform(double a, double b, double c, double d, double e, double f) {
         state().setTransform(a, b, c, d, e, f);
-        state().apply(g2d);
+        stateDirty = true;
     }
 
     @Override
@@ -493,5 +531,20 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
         return height;
     }
 
+    private void ensureState(boolean fill){
+        if (stateDirty || wasFill != fill){
+            state().apply(g2d, fill);
+            wasFill = fill;
+            stateDirty = false;
+        }
+    }
+    private void ensureState(){
+        if (stateDirty){
+            state().apply(g2d);
+            stateDirty = false;
+        }
+    }
+    
+    
     // endregion
 }

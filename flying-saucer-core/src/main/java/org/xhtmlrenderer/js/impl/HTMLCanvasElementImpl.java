@@ -21,7 +21,7 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
 
     public HTMLCanvasElementImpl(Element target, int width, int heigth) {
         super(target);
-        context = new CanvasRenderingContext2DImpl(width, heigth);
+        context = new CanvasRenderingContext2DImpl(this, width, heigth);
     }
 
     @Override

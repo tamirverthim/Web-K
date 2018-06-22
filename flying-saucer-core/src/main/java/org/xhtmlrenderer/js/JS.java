@@ -76,7 +76,8 @@ public class JS {
         context.setAttribute("addEventListener", new Function<>((ctx, arg) -> {
             log.trace("addEventListener");
             return null;
-        }
+        },
+                "addEventListener"
         ), ENGINE_SCOPE);
         try {
             context.setAttribute("window", engine.eval("this"), ENGINE_SCOPE);

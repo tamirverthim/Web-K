@@ -1,6 +1,6 @@
 package org.xhtmlrenderer.js.html5.canvas;
 
-import org.xhtmlrenderer.js.Optional;
+import org.xhtmlrenderer.js.web_idl.Optional;
 import org.xhtmlrenderer.js.future.Worker;
 import org.xhtmlrenderer.js.geom.DOMMatrix2DInit;
 import org.xhtmlrenderer.js.web_idl.Exposed;

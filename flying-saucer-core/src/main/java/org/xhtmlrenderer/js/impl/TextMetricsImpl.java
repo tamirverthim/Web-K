@@ -1,18 +1,24 @@
 package org.xhtmlrenderer.js.impl;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.xhtmlrenderer.js.html5.canvas.TextMetrics;
 
 /**
  * @author Taras Maslov
  * 6/21/2018
  */
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class TextMetricsImpl implements TextMetrics {
+    int width;
+    
     public TextMetricsImpl(int i) {
+        width = i;
     }
 
     @Override
     public double width() {
-        return 0;
+        return width;
     }
 
     @Override

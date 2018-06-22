@@ -1,6 +1,6 @@
 package org.xhtmlrenderer.js.whatwg_dom;
 
-import org.xhtmlrenderer.js.Optional;
+import org.xhtmlrenderer.js.web_idl.Optional;
 import org.xhtmlrenderer.js.html5.canvas.HTMLSlotElement;
 import org.xhtmlrenderer.js.web_idl.Mixin;
 import org.xhtmlrenderer.js.web_idl.ReadonlyAttribute;

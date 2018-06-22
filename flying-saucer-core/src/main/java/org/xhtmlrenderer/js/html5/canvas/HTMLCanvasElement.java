@@ -1,7 +1,6 @@
 package org.xhtmlrenderer.js.html5.canvas;
 
-import org.xhtmlrenderer.js.Nullable;
-import org.xhtmlrenderer.js.Optional;
+import org.xhtmlrenderer.js.web_idl.Optional;
 import org.xhtmlrenderer.js.web_idl.*;
 import org.xhtmlrenderer.js.whatwg_dom.Element;
 import org.xhtmlrenderer.js.whatwg_dom.Window;

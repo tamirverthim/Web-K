@@ -1,10 +1,8 @@
 package org.xhtmlrenderer.js.whatwg_dom;
 
-import org.xhtmlrenderer.js.Optional;
+import org.xhtmlrenderer.js.web_idl.Optional;
 import org.xhtmlrenderer.js.future.Worker;
 import org.xhtmlrenderer.js.web_idl.*;
-
-import java.util.Objects;
 
 /**
  * @author Taras Maslov

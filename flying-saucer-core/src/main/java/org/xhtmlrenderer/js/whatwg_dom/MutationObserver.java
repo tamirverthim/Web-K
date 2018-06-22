@@ -1,6 +1,6 @@
 package org.xhtmlrenderer.js.whatwg_dom;
 
-import org.xhtmlrenderer.js.Optional;
+import org.xhtmlrenderer.js.web_idl.Optional;
 import org.xhtmlrenderer.js.web_idl.Constructor;
 import org.xhtmlrenderer.js.web_idl.Exposed;
 import org.xhtmlrenderer.js.web_idl.Sequence;

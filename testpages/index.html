@@ -43,9 +43,9 @@
         };
 
         window.onload = function () {
-            var canvas = document.getElementsByTagName("canvas")[0];
+            var canvas = document.getElementById("cid");
 
-            var ctx = canvas.getContext("2d");
+            var ctx = canvas.getContext("2d", null);
             ctx.fillStyle = "#7FDBFF";
             ctx.fillRect(0, 0, 800, 800);
 
@@ -142,13 +142,13 @@
         };
 
         // lorem ipsum
-        var lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
-        var loremIndex = 0;
-        window.setInterval(function () {
-            var loremElement = document.getElementById("lorem");
-            loremElement.textContent = loremElement.textContent + " " + (lorem.split(" ")[loremIndex] || "");
-            loremIndex++;
-        }, 1000);
+        // var lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+        // var loremIndex = 0;
+        // window.setInterval(function () {
+        //     var loremElement = document.getElementById("lorem");
+        //     loremElement.textContent = loremElement.textContent + " " + (lorem.split(" ")[loremIndex] || "");
+        //     loremIndex++;
+        // }, 1000);
         
     </script>
     <style>
@@ -186,7 +186,7 @@
 
 <body>
 <h1>Hello, canvas</h1>
-<canvas width="800" height="800"></canvas>
+<canvas id="cid" width="800" height="800"></canvas>
 <p id="lorem">
 </p>
 </body>
