@@ -108,17 +108,14 @@ public abstract class FormField {
         _component = create();
         
         if (_component != null) {
+
+            Dimension ps = _component.getPreferredSize();
             if (intrinsicWidth == null)
-                intrinsicWidth = new Integer(_component.getPreferredSize().width);
+                intrinsicWidth = new Integer(ps.width);
             if (intrinsicHeight == null)
-                intrinsicHeight = new Integer(_component.getPreferredSize().height);
+                intrinsicHeight = new Integer(ps.height);
 
             _component.setSize(getIntrinsicSize());
-
-            String d = _element.attr("disabled");
-            if (d.equalsIgnoreCase("disabled")) {
-                _component.setEnabled(false);
-            }
         }
 
         applyOriginalState();

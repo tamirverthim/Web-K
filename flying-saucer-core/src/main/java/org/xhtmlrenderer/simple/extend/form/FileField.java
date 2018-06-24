@@ -19,89 +19,40 @@
  */
 package org.xhtmlrenderer.simple.extend.form;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.XhtmlForm;
 
-class FileField extends InputField implements ActionListener {
-    private JTextField _pathTextField;
-    private JButton _browseButton;
+class FileField extends InputField {
 
+    public FileField(Element e, XhtmlForm form, LayoutContext context, BlockBox box)
+    {
     public FileField(org.jsoup.nodes.Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }
 
-    public JComponent create() {
-        JPanel panel = new JPanel(new GridBagLayout());
-        
-        panel.setOpaque(false);
-
-        _pathTextField = new JTextField();
-        _pathTextField.setColumns(15);
-
-        _browseButton = new JButton("Browse...");
-        _browseButton.addActionListener(this);
-
-        GridBagConstraints pathConstraints = new GridBagConstraints();
-        pathConstraints.fill = GridBagConstraints.HORIZONTAL;
-        pathConstraints.gridx = 0;
-        pathConstraints.gridy = 0;
-        pathConstraints.weightx = 1.0;
-        pathConstraints.anchor = GridBagConstraints.EAST;
-        pathConstraints.insets = new Insets(0, 0, 0, 0);
-        panel.add(_pathTextField, pathConstraints);
-
-        GridBagConstraints browseConstraints = new GridBagConstraints();
-        browseConstraints.fill = GridBagConstraints.HORIZONTAL;
-        browseConstraints.gridx = 1;
-        browseConstraints.gridy = 0;
-        browseConstraints.weightx = 0.0;
-        browseConstraints.anchor = GridBagConstraints.EAST;
-        browseConstraints.insets = new Insets(0, 5, 0, 0);
-        panel.add(_browseButton, browseConstraints);
-
-        return panel;
+    @Override
+    public JComponent create()
+    {
+        return (JComponent) SwingComponentFactory.getInstance().createFileInputComponent(this);
     }
-    
-    protected void applyOriginalState() {
+
+    @Override
+    protected void applyOriginalState()
+    {
         // This is always the default, since you can't set a default
         // value for this in the HTML
-        _pathTextField.setText("");
+        FileInputComponent com = (FileInputComponent) getComponent();
+        com.setFilePath("");
     }
-    
-    protected String[] getFieldValues() {
-        return new String [] {
-                // TODO: This will have to be special once we aren't
-                // just passing plain strings around
-                _pathTextField.getText()
-        };
+
+    @Override
+    protected String[] getFieldValues()
+    {
+        FileInputComponent com = (FileInputComponent) getComponent();
+        return new String[] { com.getFilePath() };
     }
-    
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == _browseButton) {
-            JFileChooser chooser = new JFileChooser();
-            
-            // TODO: We should probably use the BasicPanel as the parent
-            int result = chooser.showOpenDialog(_browseButton);
-            
-            if (result == JFileChooser.APPROVE_OPTION) {
-                _pathTextField.setText(chooser.getSelectedFile().getAbsolutePath());
-                _pathTextField.setCaretPosition(0);
-                
-                _browseButton.requestFocus();
-            }
-        }
-    }
+
 }

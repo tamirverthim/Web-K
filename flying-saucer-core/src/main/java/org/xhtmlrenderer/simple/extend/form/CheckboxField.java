@@ -23,6 +23,9 @@ import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JToggleButton;
 
+import java.awt.Dimension;
+
+import org.w3c.dom.Element;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.XhtmlForm;
@@ -32,11 +35,13 @@ class CheckboxField extends InputField {
         super(e, form, context, box);
     }
 
-    public JComponent create() {
-        JCheckBox checkbox = new JCheckBox();
+    public JComponent create()
+    {
+        JCheckBox checkbox = SwingComponentFactory.getInstance().createCheckBox(this);
 
-        checkbox.setText("");
-        checkbox.setOpaque(false);
+        Dimension ps = checkbox.getPreferredSize();
+        intrinsicWidth = new Integer(ps.width + 1);
+        intrinsicHeight = new Integer(ps.height);
 
         return checkbox;
     }

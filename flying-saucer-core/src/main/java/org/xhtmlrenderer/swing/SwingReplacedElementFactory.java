@@ -33,6 +33,7 @@ import org.xhtmlrenderer.simple.extend.FormSubmissionListener;
 import org.xhtmlrenderer.simple.extend.XhtmlForm;
 import org.xhtmlrenderer.simple.extend.form.FormField;
 import org.xhtmlrenderer.util.ImageUtil;
+import org.xhtmlrenderer.util.XHTMLUtils;
 import org.xhtmlrenderer.util.XRLog;
 import org.xhtmlrenderer.resource.ImageResource;
 
@@ -78,10 +79,53 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
         this.formSubmissionListener = new DefaultFormSubmissionListener();
     }
 
+    public ReplacedElement createReplacedElement(
+            LayoutContext context,
+            BlockBox box,
+            UserAgentCallback uac,
+            int cssWidth,
+            int cssHeight
+    )
+    {
+        Element el = box.getElement();
+        ReplacedElement replacedEl = createReplacedElementImpl(context, box, uac, cssWidth, cssHeight);
+
+        if (replacedEl instanceof SwingReplacedElement)
+        {
+            SwingReplacedElement swingEl = (SwingReplacedElement) replacedEl;
+            JComponent jCom = swingEl.getJComponent();
+            if (jCom != null)
+            {
+                if (cssWidth > -1 || cssHeight > -1)
+                {
+                    int w = cssWidth > -1 ? cssWidth : jCom.getPreferredSize().width;
+                    int h = cssHeight > -1 ? cssHeight : jCom.getPreferredSize().height;
+                    jCom.setSize(w, h);
+                    swingEl.setIntrinsicSize(null);
+                }
+
+                if (el != null)
+                {
+                    if (XHTMLUtils.isTrue(el, "disabled"))
+                    {
+                        jCom.setEnabled(false);
+                    }
+                    else if (XHTMLUtils.isTrue(el, "autofocus"))
+                    {
+                        SwingUtilities.invokeLater(() -> jCom.requestFocusInWindow());
+                    }
+
+                    XHTMLUtils.getOptionalStringValue(el, "title").ifPresent(t -> jCom.setToolTipText(t));
+                }
+            }
+        }
+        return replacedEl;
+    }
+
     /**
      * {@inheritDoc}
      */
-    public ReplacedElement createReplacedElement(
+    private ReplacedElement createReplacedElementImpl(
             LayoutContext context,
             BlockBox box,
             UserAgentCallback uac,

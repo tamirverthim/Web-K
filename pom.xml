@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.xhtmlrenderer</groupId>
   <artifactId>flying-saucer-parent</artifactId>
-  <version>9.1.12</version>
+  <version>9.1.13.2_earnix-SNAPSHOT</version>
 
   <packaging>pom</packaging>
 
@@ -45,17 +44,66 @@
   </modules>
 
   <scm>
-    <connection>scm:git:git://github.com/flyingsaucerproject/flyingsaucer.git</connection>
-    <developerConnection>scm:git:git@github.com:flyingsaucerproject/flyingsaucer.git</developerConnection>
-    <url>git://github.com/flyingsaucerproject/flyingsaucer.git</url>
+    <connection>scm:git:ssh://git@gitcore/eli.rosenblum/flyingsaucer.git</connection>
+    <developerConnection>scm:git:ssh://git@gitcore/eli.rosenblum/flyingsaucer.git</developerConnection>
+    <url>http://gitcore/eli.rosenblum/flyingsaucer.git</url>
     <tag>HEAD</tag>
   </scm>
 
+  <repositories>
+    <repository>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>central</id>
+      <name>libs-release</name>
+      <url>http://factory.earnix.local:8081/artifactory/libs-release</url>
+    </repository>
+
+    <repository>
+      <snapshots />
+      <id>snapshots</id>
+      <name>libs-snapshot</name>
+      <url>http://factory.earnix.local:8081/artifactory/libs-snapshot</url>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>central</id>
+      <name>plugins-release</name>
+      <url>http://factory.earnix.local:8081/artifactory/plugins-release</url>
+    </pluginRepository>
+    <pluginRepository>
+      <snapshots />
+      <id>snapshots</id>
+      <name>plugins-snapshot</name>
+      <url>http://factory.earnix.local:8081/artifactory/plugins-snapshot</url>
+    </pluginRepository>
+  </pluginRepositories>
+
   <distributionManagement>
     <repository>
-      <id>bintray</id>
-      <url>https://api.bintray.com/maven/flyingsaucerproject/maven/org.xhtmlrenderer:flying-saucer</url>
+      <id>central</id>
+      <name>factory-releases</name>
+      <url>http://factory:8081/artifactory/Earnix</url>
     </repository>
+    <snapshotRepository>
+      <id>snapshots</id>
+      <name>factory-snapshots</name>
+      <url>http://factory:8081/artifactory/Earnix</url>
+    </snapshotRepository>
   </distributionManagement>
 
   <developers>
