@@ -1,6 +1,9 @@
 package org.xhtmlrenderer.js.impl;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import lombok.val;
+import org.xhtmlrenderer.BrowserContext;
 import org.xhtmlrenderer.js.Binder;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 import org.xhtmlrenderer.js.web_idl.DOMString;
@@ -11,27 +14,31 @@ import org.xhtmlrenderer.js.whatwg_dom.*;
  * @author Taras Maslov
  * 6/21/2018
  */
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class DocumentImpl implements Document {
     
     org.jsoup.nodes.Document document;
-
-    public DocumentImpl(org.jsoup.nodes.Document document) {
-        this.document = document;
+    DOMImplementation implementation = new DOMImplementationImpl();
+    
+    BrowserContext browserContext;
+    
+    public DocumentImpl(BrowserContext browserContext) {
+        this.document = browserContext.parsedDocument();
     }
 
     @Override
     public DOMImplementation implementation() {
-        return null;
+        return implementation;
     }
 
     @Override
     public USVString URL() {
-        return null;
+        return USVStringImpl.of(browserContext.url());
     }
 
     @Override
     public USVString documentURI() {
-        return null;
+        return USVStringImpl.of(browserContext.documentUri());
     }
 
     @Override
@@ -41,12 +48,12 @@ public class DocumentImpl implements Document {
 
     @Override
     public DOMString compatMode() {
-        return null;
+        return DOMStringImpl.of("CSS1Compat");
     }
 
     @Override
     public DOMString characterSet() {
-        return null;
+        return DOMStringImpl.of("UTF-8");
     }
 
     @Override

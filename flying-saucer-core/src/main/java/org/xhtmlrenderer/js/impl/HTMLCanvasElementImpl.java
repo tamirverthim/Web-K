@@ -8,7 +8,6 @@ import org.xhtmlrenderer.js.html5.canvas.RenderingContext;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 import org.xhtmlrenderer.js.web_idl.DOMString;
 import org.xhtmlrenderer.js.web_idl.USVString;
-import sun.awt.image.ToolkitImage;
 
 /**
  * @author Taras Maslov

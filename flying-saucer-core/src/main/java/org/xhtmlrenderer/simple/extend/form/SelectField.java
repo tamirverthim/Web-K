@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 import org.xhtmlrenderer.layout.LayoutContext;
@@ -67,10 +68,10 @@ class SelectField extends FormField {
     protected FormFieldState loadOriginalState()
     {
         List<Integer> selectedIndices = new ArrayList();
-        NodeList options = getElement().getElementsByTag("option");
-        for (int i = 0; i < options.getLength(); i++)
+        Elements options = getElement().getElementsByTag("option");
+        for (int i = 0; i < options.size(); i++)
         {
-            Element option = (Element) options.item(i);
+            Element option = (Element) options.get(i);
             if (XHTMLUtils.isTrue(option, "selected"))
             {
                 selectedIndices.add(new Integer(i));

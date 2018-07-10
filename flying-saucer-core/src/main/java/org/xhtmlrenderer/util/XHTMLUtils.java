@@ -1,10 +1,12 @@
 package org.xhtmlrenderer.util;
 
+import org.apache.commons.lang3.StringUtils;
+import org.jsoup.nodes.Element;
+
 import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
 
-import org.w3c.dom.Element;
 
 /*
  * {{{ header & license
@@ -37,8 +39,8 @@ public class XHTMLUtils
 		Objects.requireNonNull(el);
 		Objects.requireNonNull(attr);
 
-		String attValue = el.getAttribute(attr);
-		return attValue != null && attValue.equalsIgnoreCase(attr);
+		String attValue = el.attr(attr);
+		return StringUtils.isNotBlank(attValue) && !attValue.equalsIgnoreCase("false");
 	}
 
 	public static int getIntValue(Element el, String attr, int defaultValue)
@@ -47,9 +49,9 @@ public class XHTMLUtils
 		Objects.requireNonNull(attr);
 
 		int val = 0;
-		if (el.hasAttribute(attr))
+		if (el.hasAttr(attr))
 		{
-			val = GeneralUtil.parseIntRelaxed(el.getAttribute(attr));
+			val = GeneralUtil.parseIntRelaxed(el.attr(attr));
 		}
 		return val > 0 ? val : defaultValue;
 	}
@@ -60,9 +62,9 @@ public class XHTMLUtils
 		Objects.requireNonNull(attr);
 
 		int val = 0;
-		if (el.hasAttribute(attr))
+		if (el.hasAttr(attr))
 		{
-			val = GeneralUtil.parseIntRelaxed(el.getAttribute(attr));
+			val = GeneralUtil.parseIntRelaxed(el.attr(attr));
 		}
 		return val > 0 ? OptionalInt.of(val) : OptionalInt.empty();
 	}
@@ -72,7 +74,7 @@ public class XHTMLUtils
 		Objects.requireNonNull(el);
 		Objects.requireNonNull(attr);
 
-		String val = el.getAttribute(attr);
+		String val = el.attr(attr);
 		if (val != null && val.length() > 0)
 		{
 			return Optional.of(val);

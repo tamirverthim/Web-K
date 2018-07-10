@@ -111,25 +111,17 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     public void fill(CanvasFillRule fillRule) {
         ensureState(true);
         g2d.fill(path2D);
-        path2D = new java.awt.geom.Path2D.Double();
     }
 
-    @Override
-    public void fill(Path2D path, CanvasFillRule fillRule) {
-//        state().apply(g2d);
-//        g2d.fill(path2D);
-//        path2D = new java.awt.geom.Path2D.Double();
-    }
+//    @Override
+//    public void fill(Path2D path, CanvasFillRule fillRule) {
+//
+//    }
 
     @Override
     public void stroke() {
         ensureState(false);
         g2d.draw(path2D);
-    }
-
-    @Override
-    public void stroke(Path2D path) {
-        
     }
 
     @Override
@@ -287,13 +279,32 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
         path2D.append(new Rectangle2D.Double(x, y, w, h), false);
     }
 
+    //  boolean ccw = arcAngle > 0;
+    //    ctx.beginPath();
+    //    ctx.arc(cx, cy, r, -startAngle, -(startAngle + arcAngle), ccw);
+    //    ctx.stroke();
+    
+    // x = -startAngle - arcAngle
+    
+    // arcA = - startAngle - x
+    
+    //  int top = (int) (cx - r);
+    //    int left = (int) (cy - r);
+    //    int diam = (int) (2*r);
+    //    currentState().prepareStroke(g2d);
+    //    g2d.drawArc(top, left, diam, diam,
+    //                FloatMath.round(FloatMath.toDegrees(startAngle)),
+    //                FloatMath.round(FloatMath.toDegrees(arcAngle)));
+    
     @Override
     public void arc(double x, double y, double r, double startAngle, double endAngle, boolean anticlockwise) {
         double top = x - r;
         double left = y - r;
         double diam = 2*r;
         ensureState(false);
-
+        
+        val ext = Math.abs(startAngle - endAngle);
+        
         path2D.append(
                 new Arc2D.Double(top, left, diam, diam,
                         Math.toDegrees(anticlockwise ? - startAngle: endAngle),

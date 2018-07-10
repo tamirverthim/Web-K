@@ -2,6 +2,8 @@ package org.xhtmlrenderer.js;
 
 import jdk.nashorn.api.scripting.JSObject;
 import jdk.nashorn.api.scripting.ScriptUtils;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.ArrayUtils;
@@ -10,11 +12,13 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 import org.xhtmlrenderer.js.impl.DOMStringImpl;
 import org.xhtmlrenderer.js.web_idl.*;
 import org.xhtmlrenderer.js.web_idl.Nullable;
+import org.xhtmlrenderer.js.whatwg_dom.Attr;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Optional;
@@ -40,6 +44,13 @@ public class WebIDLAdapter<T> implements JSObject {
     }
     
     Object readonlyAttributeMark = new Object();
+    
+    @Getter
+    @AllArgsConstructor
+    class AttributeLink {
+        Attribute attribute;
+        Class attributeClass;
+    }
 
     private void processTarget() {
 
@@ -48,7 +59,10 @@ public class WebIDLAdapter<T> implements JSObject {
 
             try {
                 if (m.getReturnType().equals(Attribute.class)) {
-                    members.put(m.getName(), m.invoke(target));
+                    members.put(m.getName(), new AttributeLink(
+                            (Attribute<?>) m.invoke(target), 
+                            (Class<?>)((ParameterizedType)m.getGenericReturnType()).getActualTypeArguments()[0])
+                    );
                     return;
                 }
             } catch (IllegalAccessException | InvocationTargetException e) {
@@ -98,8 +112,8 @@ public class WebIDLAdapter<T> implements JSObject {
     @Override
     public Object getMember(String s) {
         val member = members.get(s);
-        if (member instanceof Attribute) {
-            return wrapIfNeeded(((Attribute) member).get());
+        if (member instanceof WebIDLAdapter.AttributeLink) {
+            return wrapIfNeeded(((Attribute) ((AttributeLink)member).attribute).get());
         } else if (readonlyAttributeMark.equals(member)) {
             try {
                 return wrapIfNeeded(MethodUtils.invokeMethod(target, s));
@@ -138,9 +152,13 @@ public class WebIDLAdapter<T> implements JSObject {
     @Override
     public void setMember(String s, Object o) {
         val member = members.get(s);
-        if (member instanceof Attribute) {
+        if (member instanceof WebIDLAdapter.AttributeLink) {
             try {
-                ((Attribute) member).set(unwrapIfNeeded(o));
+                val att = ((AttributeLink)member).attribute;
+                val unwrapped = unwrapIfNeeded(o);
+                val adapted = autoCast(unwrapped, ((AttributeLink)member).attributeClass);
+                
+                att.set(adapted);
             } catch (Exception e) {
                 log.error("setMember Attribute {}", s, e);
 //                members.remove(s);
@@ -229,7 +247,7 @@ public class WebIDLAdapter<T> implements JSObject {
 
     public static Object unwrapIfNeeded(Object object) {
         if(object instanceof String) {
-            return new DOMStringImpl((String) object);
+            return DOMStringImpl.of((String) object);
         }
         if (object instanceof WebIDLAdapter) {
             return ((WebIDLAdapter) object).target;
@@ -269,7 +287,7 @@ public class WebIDLAdapter<T> implements JSObject {
 
                     if (parameterType.equals(DOMString.class)) {
                         if (rawArg instanceof String) {
-                            arg = new DOMStringImpl((String) rawArg);
+                            arg = DOMStringImpl.of((String) rawArg);
                         } else {
                             log.warn("Auto toString for JS call to parameter {} of {}", i, method);
                             arg = rawArg.toString();

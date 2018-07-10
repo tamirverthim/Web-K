@@ -16,11 +16,11 @@ public interface CanvasDrawPath {
 
     void fill(@Optional @DefaultString("nonzero") CanvasFillRule fillRule);
 
-    void fill(Path2D path, @Optional @DefaultString("nonzero") CanvasFillRule fillRule);
+//    void fill(Path2D path, @Optional @DefaultString("nonzero") CanvasFillRule fillRule);
 
     void stroke();
 
-    void stroke(Path2D path);
+//    void stroke(Path2D path);
 
     void clip(@Optional @DefaultString("nonzero") CanvasFillRule fillRule);
 

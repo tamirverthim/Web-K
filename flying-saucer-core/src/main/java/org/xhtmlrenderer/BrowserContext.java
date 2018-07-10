@@ -1,5 +1,6 @@
 package org.xhtmlrenderer;
 
+import org.jsoup.nodes.Document;
 import org.xhtmlrenderer.js.JS;
 import org.xhtmlrenderer.simple.XHTMLPanel;
 
@@ -12,4 +13,11 @@ public interface BrowserContext {
     XHTMLPanel getPanel();
     
     JS getJS(); 
+    
+    String url();
+    
+    String documentUri();
+    
+    Document parsedDocument();
+    
 }

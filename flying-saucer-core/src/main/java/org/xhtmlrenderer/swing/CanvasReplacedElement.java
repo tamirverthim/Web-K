@@ -12,13 +12,10 @@ import java.awt.image.BufferedImage;
  * 5/29/2018
  */
 public class CanvasReplacedElement extends SwingReplacedElement {
-
-//    private HTMLCanvasElementImpl impl;
-
+    
     public CanvasReplacedElement(HTMLCanvasElementImpl impl) {
         super(new CanvasPanel(impl.getContextImpl().getImage()));
         getJComponent().setSize(impl.getContextImpl().getWidth(), impl.getContextImpl().getHeight());
-//        this.impl = impl;
     }
 
 
