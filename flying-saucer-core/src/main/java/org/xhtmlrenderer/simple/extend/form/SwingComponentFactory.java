@@ -1,5 +1,6 @@
 package org.xhtmlrenderer.simple.extend.form;
 
+
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -13,8 +14,8 @@ import java.util.Objects;
 
 public abstract class SwingComponentFactory
 {
-	private static SwingComponentFactory instance;
-
+	private static SwingComponentFactory instance = new DefaultSwingComponentFactory();
+	
 	public static SwingComponentFactory getInstance()
 	{
 		return instance;
