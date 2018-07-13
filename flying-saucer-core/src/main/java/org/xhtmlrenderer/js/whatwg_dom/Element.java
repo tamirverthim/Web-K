@@ -7,7 +7,7 @@ import org.xhtmlrenderer.js.web_idl.*;
  * @author Taras Maslov
  * 6/20/2018
  */
-public interface Element extends ParentNode, NonDocumentTypeChildNode, ChildNode, Slotable {
+public interface Element extends Node, ParentNode, NonDocumentTypeChildNode, ChildNode, Slotable {
     @ReadonlyAttribute
     @Nullable
     DOMString namespaceURI();

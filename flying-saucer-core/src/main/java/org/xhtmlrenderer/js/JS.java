@@ -68,7 +68,7 @@ public class JS {
     private void initEngine() {
         engine = new ScriptEngineManager().getEngineByName("nashorn");
         context = engine.getContext();
-        context.setAttribute("document", new WebIDLAdapter<Document>(this, new DocumentImpl(panel.getDocument())), ENGINE_SCOPE);
+        context.setAttribute("document", new WebIDLAdapter<Document>(this, new DocumentImpl(panel)), ENGINE_SCOPE);
         context.setAttribute("console", console, ENGINE_SCOPE);
         context.setAttribute("setInterval", window, ENGINE_SCOPE);
         context.setAttribute("location", new Location(), ENGINE_SCOPE);

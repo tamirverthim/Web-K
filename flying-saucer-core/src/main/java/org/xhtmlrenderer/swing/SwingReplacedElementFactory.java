@@ -142,13 +142,6 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
             return replaceImage(uac, context, e, cssWidth, cssHeight);
         } else if(context.getNamespaceHandler().isCanvasElement(e)){
             HTMLCanvasElementImpl canvasElement = (HTMLCanvasElementImpl) Binder.get(e);
-            if(canvasElement == null) {
-                canvasElement = new HTMLCanvasElementImpl(e, 
-                        Integer.parseInt(e.attr("width")), 
-                        Integer.parseInt(e.attr("height"))
-                );
-                Binder.put(e, canvasElement);
-            }
             return new CanvasReplacedElement(canvasElement);
         } else {
             //form components

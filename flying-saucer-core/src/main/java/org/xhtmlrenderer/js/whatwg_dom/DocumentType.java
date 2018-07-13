@@ -9,7 +9,7 @@ import org.xhtmlrenderer.js.web_idl.ReadonlyAttribute;
  * 6/21/2018
  */
 @Exposed(Window.class)
-public interface DocumentType extends ChildNode {
+public interface DocumentType extends Node {
     
     @ReadonlyAttribute
     DOMString name();

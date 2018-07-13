@@ -3,12 +3,12 @@ package org.xhtmlrenderer.js.impl;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
-import org.xhtmlrenderer.BrowserContext;
 import org.xhtmlrenderer.js.Binder;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 import org.xhtmlrenderer.js.web_idl.DOMString;
 import org.xhtmlrenderer.js.web_idl.USVString;
 import org.xhtmlrenderer.js.whatwg_dom.*;
+import org.xhtmlrenderer.simple.XHTMLPanel;
 
 /**
  * @author Taras Maslov
@@ -20,10 +20,10 @@ public class DocumentImpl implements Document {
     org.jsoup.nodes.Document document;
     DOMImplementation implementation = new DOMImplementationImpl();
     
-    BrowserContext browserContext;
+    XHTMLPanel panel;
     
-    public DocumentImpl(BrowserContext browserContext) {
-        this.document = browserContext.parsedDocument();
+    public DocumentImpl(XHTMLPanel panel) {
+        this.document = panel.getDocument();
     }
 
     @Override
@@ -33,12 +33,12 @@ public class DocumentImpl implements Document {
 
     @Override
     public USVString URL() {
-        return USVStringImpl.of(browserContext.url());
+        return USVStringImpl.of(panel.getURL().toString());
     }
 
     @Override
     public USVString documentURI() {
-        return USVStringImpl.of(browserContext.documentUri());
+        return USVStringImpl.of(panel.getURL().toString());
     }
 
     @Override
@@ -58,7 +58,7 @@ public class DocumentImpl implements Document {
 
     @Override
     public DOMString charset() {
-        return null;
+        return DOMStringImpl.of("UTF8");
     }
 
     @Override
@@ -78,7 +78,7 @@ public class DocumentImpl implements Document {
 
     @Override
     public Element documentElement() {
-        return null;
+        return (Element) Binder.get(document);
     }
 
     @Override
@@ -174,17 +174,7 @@ public class DocumentImpl implements Document {
     @Override
     public Element getElementById(DOMString elementId) {
         val jsoupEl = document.getElementById(elementId.toString());
-        if(Binder.get(jsoupEl) != null){
-            return Binder.get(jsoupEl);
-        }
-        if(jsoupEl.nodeName().equalsIgnoreCase("canvas")){
-            return new HTMLCanvasElementImpl(
-                    jsoupEl,
-                    Integer.parseInt(jsoupEl.attr("width")), 
-                    Integer.parseInt(jsoupEl.attr("height"))
-            );
-        }
-        return new ElementImpl(jsoupEl);
+        return (Element) Binder.get(jsoupEl);
     }
 
     @Override
@@ -219,6 +209,16 @@ public class DocumentImpl implements Document {
 
     @Override
     public Element querySelector(DOMString selectors) {
+        val selected = document.select(selectors.toString());
+        if(selected.size() > 0){
+            Element bound = (Element) Binder.get(selected.first());
+            if(bound == null){
+                bound = new ElementImpl(selected.first());
+                Binder.put(selected.first(), bound);
+            }
+            
+            return bound;
+        }
         return null;
     }
 

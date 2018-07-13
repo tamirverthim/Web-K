@@ -15,13 +15,13 @@ public interface CharacterData extends NonDocumentTypeChildNode, ChildNode, Node
     @Unsigned
     long length();
 
-    DOMString substringData(@Unsigned long offset, @Unsigned long count);
+    DOMString substringData(@Unsigned int offset, @Unsigned int count);
 
     void appendData(DOMString data);
 
-    void insertData(@Unsigned long offset, DOMString data);
+    void insertData(@Unsigned int offset, DOMString data);
 
-    void deleteData(@Unsigned long offset, @Unsigned long count);
+    void deleteData(@Unsigned int offset, @Unsigned int count);
 
-    void replaceData(@Unsigned long offset, @Unsigned long count, DOMString data);
+    void replaceData(@Unsigned int offset, @Unsigned int count, DOMString data);
 }

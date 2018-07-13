@@ -8,6 +8,9 @@ import org.xhtmlrenderer.js.web_idl.ReadonlyAttribute;
  * 6/21/2018
  */
 public interface NonDocumentTypeChildNode {
+    
     @Optional @ReadonlyAttribute Element previousElementSibling();
+    
     @Optional @ReadonlyAttribute Element nextElementSibling();
+    
 }

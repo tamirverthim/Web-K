@@ -1,5 +1,7 @@
 package org.xhtmlrenderer.js.impl;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.xhtmlrenderer.js.html5.canvas.HTMLSlotElement;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 import org.xhtmlrenderer.js.web_idl.DOMString;
@@ -10,12 +12,16 @@ import org.xhtmlrenderer.js.whatwg_dom.*;
  * @author Taras Maslov
  * 6/21/2018
  */
-public class ElementImpl implements Element {
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class ElementImpl extends NodeImpl implements Element {
     
-    org.jsoup.nodes.Element target;
+    final org.jsoup.nodes.Element target;
+    
+    final ChildNodeImpl childNodeMixin;
 
     public ElementImpl(org.jsoup.nodes.Element target) {
         this.target = target;
+        childNodeMixin = new ChildNodeImpl(target);
     }
 
     @Override
@@ -193,25 +199,29 @@ public class ElementImpl implements Element {
 
     }
 
+    // region ChildNode
+    
     @Override
     public void before(Object... nodes) {
-        
+        childNodeMixin.before(nodes);
     }
 
     @Override
     public void after(Object... nodes) {
-
+        childNodeMixin.after(nodes);
     }
 
     @Override
     public void replaceWith(Object... nodes) {
-
+        childNodeMixin.replaceWith(nodes);
     }
 
     @Override
     public void remove() {
-
+        childNodeMixin.remove();
     }
+    
+    // endregion
 
     @Override
     public Element previousElementSibling() {
