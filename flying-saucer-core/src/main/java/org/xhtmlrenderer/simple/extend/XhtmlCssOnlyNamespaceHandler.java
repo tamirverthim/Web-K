@@ -346,7 +346,7 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
         org.jsoup.nodes.Element html = doc.child(0);
         org.jsoup.nodes.Element head = findFirstChild(html, "head");
         if (head != null) {
-            org.jsoup.nodes.Node current = head.childNode(0);
+            org.jsoup.nodes.Node current = head.childNodeSize() > 0 ? head.childNode(0) : null;
             while (current != null) {
                 if (current instanceof org.jsoup.nodes.Element) {
                     org.jsoup.nodes.Element elem = (org.jsoup.nodes.Element)current;

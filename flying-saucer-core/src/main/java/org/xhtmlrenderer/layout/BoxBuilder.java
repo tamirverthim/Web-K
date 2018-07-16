@@ -1034,7 +1034,7 @@ public class BoxBuilder {
     private static void addColumns(LayoutContext c, TableBox table, TableColumn parent) {
         SharedContext sharedContext = c.getSharedContext();
 
-        org.jsoup.nodes.Node working = parent.getElement().childNode(0);
+        org.jsoup.nodes.Node working = parent.getElement().childNodeSize() > 0 ? parent.getElement().childNode(0) : null;
         boolean found = false;
         while (working != null) {
             if (working instanceof org.jsoup.nodes.Element) {

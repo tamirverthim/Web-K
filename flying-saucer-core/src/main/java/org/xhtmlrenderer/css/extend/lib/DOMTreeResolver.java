@@ -55,7 +55,13 @@ public class DOMTreeResolver implements TreeResolver {
 
     public boolean isFirstChildElement(Object element) {
         Node parent = ((Element) element).parentNode();
-        Node currentChild = parent.childNode(0);
+        Node currentChild;
+        if(parent.childNodeSize() > 0) {
+            currentChild = parent.childNode(0);
+        } else {
+            currentChild = null;
+        }
+        
         while (currentChild != null && !(currentChild instanceof Element)) {
             currentChild = currentChild.nextSibling();
         }

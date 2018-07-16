@@ -176,8 +176,9 @@ public class XhtmlForm {
 
     public static String collectText(org.jsoup.nodes.Element e) {
         StringBuffer result = new StringBuffer();
-        org.jsoup.nodes.Node node = e.childNode(0);
-        if (node != null) {
+        if (e.childNodeSize() > 0) {
+            org.jsoup.nodes.Node node = e.childNodeSize() > 0 ? e.childNode(0) : null;
+
             do {
 //                short nodeType = node.getNodeType();
                 if (node instanceof TextNode) {
