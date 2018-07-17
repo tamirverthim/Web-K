@@ -8,6 +8,7 @@ import org.xhtmlrenderer.js.web_idl.Attribute;
 import org.xhtmlrenderer.js.web_idl.DOMString;
 import org.xhtmlrenderer.js.web_idl.USVString;
 import org.xhtmlrenderer.js.whatwg_dom.*;
+import org.xhtmlrenderer.js.whatwg_dom.impl.HTMLCollectionImpl;
 import org.xhtmlrenderer.simple.XHTMLPanel;
 
 /**
@@ -83,7 +84,8 @@ public class DocumentImpl implements Document {
 
     @Override
     public HTMLCollection getElementsByTagName(DOMString qualifiedName) {
-        return null;
+        val elements = document.getElementsByTag(qualifiedName.toString());
+        return new HTMLCollectionImpl(elements);
     }
 
     @Override
@@ -98,7 +100,7 @@ public class DocumentImpl implements Document {
 
     @Override
     public Element createElement(DOMString localName, Object options) {
-        return null;
+        return new ElementImpl(new org.jsoup.nodes.Element(localName.toString()));
     }
 
     @Override

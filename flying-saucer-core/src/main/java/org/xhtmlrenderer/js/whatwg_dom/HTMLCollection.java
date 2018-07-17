@@ -9,8 +9,8 @@ import org.xhtmlrenderer.js.web_idl.*;
  */
 @Exposed(Window.class)
 public interface HTMLCollection {
-    @Unsigned @ReadonlyAttribute long length();
-    @Getter @Optional Element item(@Unsigned long index);
+    @Unsigned @ReadonlyAttribute int length();
+    @Getter @Optional Element item(@Unsigned int index);
     @Getter @Optional Element namedItem(DOMString name);
 }
 

@@ -7,7 +7,9 @@ import org.jsoup.nodes.Comment;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.DocumentType;
 import org.xhtmlrenderer.js.impl.*;
+import org.xhtmlrenderer.js.whatwg_dom.Element;
 import org.xhtmlrenderer.js.whatwg_dom.Node;
+import org.xhtmlrenderer.util.GeneralUtil;
 
 import java.util.HashMap;
 import java.util.function.Function;
@@ -28,8 +30,8 @@ public class Binder {
     static {
         elementsCreators.put("canvas", element -> new HTMLCanvasElementImpl(
                 (org.jsoup.nodes.Element) element, 
-                Integer.parseInt(element.attr("width")), 
-                Integer.parseInt(element.attr("height"))
+                GeneralUtil.parseIntRelaxed(element.attr("width")), 
+                GeneralUtil.parseIntRelaxed(element.attr("height"))
         ));
     }
     
@@ -43,6 +45,10 @@ public class Binder {
             registry.put(key, result);
         } 
         return result;
+    }
+    
+    public static Element getElement(org.jsoup.nodes.Element key){
+        return (Element) get(key);
     }
 
     public static Node put(org.jsoup.nodes.Node key, Node value) {

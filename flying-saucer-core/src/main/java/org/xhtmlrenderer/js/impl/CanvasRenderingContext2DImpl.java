@@ -57,6 +57,10 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
         this.height = height;
         this.canvas = canvas;
 
+        if(width == 0 || height == 0){
+            return;
+        }
+        
         image = GraphicsEnvironment.getLocalGraphicsEnvironment()
                 .getDefaultScreenDevice()
                 .getDefaultConfiguration()
