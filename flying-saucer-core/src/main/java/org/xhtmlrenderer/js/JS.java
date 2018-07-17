@@ -6,7 +6,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.xhtmlrenderer.event.DefaultDocumentListener;
 import org.xhtmlrenderer.js.impl.DocumentImpl;
 import org.xhtmlrenderer.js.whatwg_dom.Document;
-import org.xhtmlrenderer.net.Network;
 import org.xhtmlrenderer.simple.XHTMLPanel;
 
 import javax.script.ScriptContext;
@@ -104,7 +103,6 @@ public class JS {
                         val script = scripts.get(i);
                         if (StringUtils.isNotBlank(script.data())) {
                             try {
-
                                 log.trace("Evaluating script {} {}", System.lineSeparator(), script.data());
                                 eval(script.data());
                             } catch (Exception e) {
@@ -114,7 +112,7 @@ public class JS {
                             val scriptUri = script.attributes().get("src");
                             if (StringUtils.isNotBlank(scriptUri)) {
                                 try {
-                                    val scriptText = Network.load(scriptUri);
+                                    val scriptText = panel.getSharedContext().getUac().getScriptResource(scriptUri);
                                     log.trace("Evaluating script {} {}", System.lineSeparator(), scriptText);
                                     eval(scriptText);
                                 } catch (RuntimeException e) {

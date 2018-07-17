@@ -1,7 +1,5 @@
 package org.xhtmlrenderer.js.web_idl;
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -10,8 +8,8 @@ import java.util.function.Supplier;
  * 6/1/2018
  */
 public interface Attribute<T> {
-    public T get();
-    public void set(T t);
+    T get();
+    void set(T t);
     
     static <T> AtBuilder<T> receive(Consumer<T> consumer){
         return new AtBuilder<T>(consumer);
@@ -34,7 +32,7 @@ public interface Attribute<T> {
         };
     }
     
-    public static class AtBuilder<T> {
+    class AtBuilder<T> {
         private Consumer<T> consumer;
 
         private AtBuilder(Consumer<T> consumer) {

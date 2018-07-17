@@ -48,7 +48,6 @@ public class CommentImpl extends NodeImpl implements Comment {
 
     @Override
     public DOMString substringData(int offset, int count) {
-        val length = target.getData().length();
         try {
             val string = target.getData().substring(offset, offset + count + 1);
             return DOMStringImpl.of(string);

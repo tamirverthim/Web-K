@@ -19,8 +19,9 @@
  */
 package org.xhtmlrenderer.swing;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.DocumentType;
 import org.xhtmlrenderer.event.DocumentListener;
 import org.xhtmlrenderer.extend.UserAgentCallback;
 import org.xhtmlrenderer.resource.CSSResource;
@@ -52,6 +53,7 @@ import java.io.InputStream;
  *
  * @author Torbjoern Gannholm
  */
+@Slf4j
 public class DelegatingUserAgent implements UserAgentCallback, DocumentListener {
     private UriResolver _uriResolver;
     private ImageResourceLoader _imageResourceLoader;
@@ -189,6 +191,16 @@ public class DelegatingUserAgent implements UserAgentCallback, DocumentListener 
      */
     public String resolveURI(String uri) {
         return _uriResolver.resolve(uri);
+    }
+
+    @Override
+    public String getScriptResource(String scriptUri) {
+        try (InputStream is = resolveAndOpenStream(scriptUri)) {
+            return IOUtils.toString(is, "UTF-8");
+        } catch (IOException e) {
+            log.debug("getScriptResource" , e);
+            return null;
+        }    
     }
 
     /**

@@ -110,5 +110,7 @@ public interface UserAgentCallback {
      * @return the full uri in uri-spaces known to the current implementation.
      */
     String resolveURI(String uri);
+
+    String getScriptResource(String scriptUri);
 }
 

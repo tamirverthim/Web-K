@@ -36,7 +36,9 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import javax.imageio.ImageIO;
 
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.commons.io.IOUtils;
 import org.jsoup.nodes.Document;
 import org.xhtmlrenderer.event.DocumentListener;
 import org.xhtmlrenderer.extend.UserAgentCallback;
@@ -63,6 +65,7 @@ import org.xhtmlrenderer.util.XRLog;
  *
  * @author Torbjoern Gannholm
  */
+@Slf4j
 public class NaiveUserAgent implements UserAgentCallback, DocumentListener {
 
     private static final int DEFAULT_IMAGE_CACHE_SIZE = 16;
@@ -331,6 +334,17 @@ public class NaiveUserAgent implements UserAgentCallback, DocumentListener {
                     // ignore
                 }
             }
+        }
+    }
+
+    @Override
+    public String getScriptResource(String scriptUri) {
+        
+        try (InputStream is = resolveAndOpenStream(scriptUri)) {
+            return IOUtils.toString(is, "UTF-8");
+        } catch (IOException e) {
+            log.debug("getScriptResource" , e);
+            return null;
         }
     }
 
