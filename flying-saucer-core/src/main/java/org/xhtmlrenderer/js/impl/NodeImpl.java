@@ -1,16 +1,28 @@
 package org.xhtmlrenderer.js.impl;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 import org.xhtmlrenderer.js.web_idl.DOMString;
 import org.xhtmlrenderer.js.web_idl.USVString;
 import org.xhtmlrenderer.js.whatwg_dom.*;
+import org.xhtmlrenderer.simple.XHTMLPanel;
 
 /**
  * @author Taras Maslov
  * 7/13/2018
  */
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class NodeImpl implements Node {
     
+    org.jsoup.nodes.Node target;
+    XHTMLPanel panel;
+
+    public NodeImpl(org.jsoup.nodes.Node target, XHTMLPanel panel) {
+        this.target = target;
+        this.panel = panel;
+    }
+
     @Override
     public short nodeType() {
         return 0;
@@ -143,7 +155,10 @@ public class NodeImpl implements Node {
 
     @Override
     public Node appendChild(Node node) {
-        return null;
+        NodeImpl impl = (NodeImpl) node;
+        ((org.jsoup.nodes.Element)target).appendChild(impl.target);
+        panel.reloadDocument(panel.getDocument());
+        return node;
     }
 
     @Override
@@ -155,4 +170,24 @@ public class NodeImpl implements Node {
     public Node removeChild(Node child) {
         return null;
     }
+    
+    // region EventTarget
+
+    @Override
+    public void addEventListener(DOMString type, EventListener callback, Object options) {
+        
+    }
+
+    @Override
+    public void removeEventListener(DOMString type, EventListener callback, Object options) {
+
+    }
+
+    @Override
+    public boolean dispatchEvent(Event event) {
+        return false;
+    }
+
+
+    // endregion
 }

@@ -7,6 +7,7 @@ import org.xhtmlrenderer.js.Binder;
 import org.xhtmlrenderer.js.web_idl.DOMString;
 import org.xhtmlrenderer.js.whatwg_dom.Element;
 import org.xhtmlrenderer.js.whatwg_dom.HTMLCollection;
+import org.xhtmlrenderer.simple.XHTMLPanel;
 
 /**
  * @author Taras Maslov
@@ -16,10 +17,12 @@ import org.xhtmlrenderer.js.whatwg_dom.HTMLCollection;
 public class HTMLCollectionImpl implements HTMLCollection {
     
     Elements elements;
-
-    public HTMLCollectionImpl(Elements elements) {
+    XHTMLPanel panel;
+    
+    public HTMLCollectionImpl(Elements elements, XHTMLPanel panel) {
         this.elements = elements;
-    }
+        this.panel = panel;
+    }  
 
     @Override
     public int length() {
@@ -28,7 +31,7 @@ public class HTMLCollectionImpl implements HTMLCollection {
 
     @Override
     public Element item(int index) {
-        return Binder.getElement(elements.get(index));
+        return Binder.getElement(elements.get(index), panel);
     }
 
     @Override

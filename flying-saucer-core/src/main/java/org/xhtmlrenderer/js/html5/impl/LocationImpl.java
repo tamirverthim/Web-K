@@ -20,9 +20,15 @@ public class LocationImpl implements Location {
     XHTMLPanel panel;
     
     Attribute<USVString> href = Attribute
-            .<USVString>receive(next -> {})
+            .<USVString>receive(next -> {
+                // todo
+            })
             .give(() -> USVStringImpl.of(panel.getSharedContext().getBaseURL()));
-    
+
+    public LocationImpl(XHTMLPanel panel) {
+        this.panel = panel;
+    }
+
     @Override
     public Attribute<USVString> href() {
         return href;
@@ -45,7 +51,10 @@ public class LocationImpl implements Location {
 
     @Override
     public Attribute<USVString> hostname() {
-        return null;
+        return Attribute
+                .<USVString>receive(System.err::println)
+                .give(() -> USVStringImpl.of(panel.getURL().getHost())
+        );
     }
 
     @Override
@@ -70,17 +79,17 @@ public class LocationImpl implements Location {
 
     @Override
     public void assign(USVString url) {
-
+        panel.setDocument(url.toString());
     }
 
     @Override
     public void replace(USVString url) {
-
+        panel.setDocument(url.toString());
     }
 
     @Override
     public void reload() {
-
+        panel.reloadDocument(panel.getSharedContext().getBaseURL());
     }
 
     @Override

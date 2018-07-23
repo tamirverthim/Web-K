@@ -8,7 +8,7 @@ import org.xhtmlrenderer.js.web_idl.*;
  * 6/20/2018
  */
 @Exposed(Window.class)
-public interface Node {
+public interface Node extends EventTarget{
 
     @Unsigned short ELEMENT_NODE = 1;
     @Unsigned short ATTRIBUTE_NODE = 2;

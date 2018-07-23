@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * @author Taras Maslov
  * 6/21/2018
  */
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface LegacyUnenumerableNamedProperties {
+public interface LegacyUnenumerableNamedProperties {
+    Object item(int index);
+    Object namedItem(DOMString name);
 }

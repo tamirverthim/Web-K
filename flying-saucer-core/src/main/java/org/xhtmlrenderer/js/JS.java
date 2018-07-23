@@ -1,10 +1,14 @@
 package org.xhtmlrenderer.js;
 
+import jdk.nashorn.api.scripting.AbstractJSObject;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.xhtmlrenderer.event.DefaultDocumentListener;
-import org.xhtmlrenderer.js.impl.DocumentImpl;
+import org.xhtmlrenderer.js.html5.canvas.impl.CanvasGradientImpl;
+import org.xhtmlrenderer.js.html5.canvas.impl.CanvasPatternImpl;
+import org.xhtmlrenderer.js.web_idl.Exposed;
 import org.xhtmlrenderer.js.whatwg_dom.Document;
 import org.xhtmlrenderer.simple.XHTMLPanel;
 
@@ -37,6 +41,10 @@ public class JS {
 
     public void onload() {
         eval("window.onload && window.onload()");
+    }
+
+    public XHTMLPanel getPanel() {
+        return panel;
     }
 
     @FunctionalInterface
@@ -84,8 +92,33 @@ public class JS {
         } catch (ScriptException e) {
             throw new RuntimeException(e);
         }
+        
+        expose(CanvasGradientImpl.class);
+        expose(CanvasPatternImpl.class);
     }
 
+    private void  expose(Class implementationClass){
+        ClassUtils.getAllInterfaces(implementationClass).stream().forEach(i -> {
+            if(i.isAnnotationPresent(Exposed.class)){
+                context.setAttribute(i.getSimpleName(), new AbstractJSObject() {
+                    @Override
+                    public Object newObject(Object... args) {
+                        try {
+                            return implementationClass.newInstance();
+                        } catch (InstantiationException | IllegalAccessException e) {
+                            throw new RuntimeException();
+                        }
+                    }
+
+                    @Override
+                    public String getClassName() {
+                        return i.getSimpleName();
+                    }
+                }, ENGINE_SCOPE);
+            }
+        });
+    }
+    
     public JS(XHTMLPanel panel) {
         instance = this; // todo rem
         this.panel = panel;

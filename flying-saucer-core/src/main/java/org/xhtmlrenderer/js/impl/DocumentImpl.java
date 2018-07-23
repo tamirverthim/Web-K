@@ -79,13 +79,13 @@ public class DocumentImpl implements Document {
 
     @Override
     public Element documentElement() {
-        return (Element) Binder.get(document);
+        return (Element) Binder.get(document, panel);
     }
 
     @Override
     public HTMLCollection getElementsByTagName(DOMString qualifiedName) {
         val elements = document.getElementsByTag(qualifiedName.toString());
-        return new HTMLCollectionImpl(elements);
+        return new HTMLCollectionImpl(elements, panel);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class DocumentImpl implements Document {
 
     @Override
     public Element createElement(DOMString localName, Object options) {
-        return new ElementImpl(new org.jsoup.nodes.Element(localName.toString()));
+        return new ElementImpl(new org.jsoup.nodes.Element(localName.toString()), panel);
     }
 
     @Override
@@ -176,7 +176,7 @@ public class DocumentImpl implements Document {
     @Override
     public Element getElementById(DOMString elementId) {
         val jsoupEl = document.getElementById(elementId.toString());
-        return (Element) Binder.get(jsoupEl);
+        return (Element) Binder.get(jsoupEl, panel);
     }
 
     @Override
@@ -213,9 +213,9 @@ public class DocumentImpl implements Document {
     public Element querySelector(DOMString selectors) {
         val selected = document.select(selectors.toString());
         if(selected.size() > 0){
-            Element bound = (Element) Binder.get(selected.first());
+            Element bound = (Element) Binder.get(selected.first(), panel);
             if(bound == null){
-                bound = new ElementImpl(selected.first());
+                bound = new ElementImpl(selected.first(), panel);
                 Binder.put(selected.first(), bound);
             }
             

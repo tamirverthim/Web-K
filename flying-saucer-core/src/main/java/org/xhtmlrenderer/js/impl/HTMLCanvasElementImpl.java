@@ -8,6 +8,7 @@ import org.xhtmlrenderer.js.html5.canvas.RenderingContext;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 import org.xhtmlrenderer.js.web_idl.DOMString;
 import org.xhtmlrenderer.js.web_idl.USVString;
+import org.xhtmlrenderer.simple.XHTMLPanel;
 
 /**
  * @author Taras Maslov
@@ -18,8 +19,8 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
 
     private final CanvasRenderingContext2DImpl context;
 
-    public HTMLCanvasElementImpl(Element target, int width, int heigth) {
-        super(target);
+    public HTMLCanvasElementImpl(Element target, int width, int heigth, XHTMLPanel panel) {
+        super(target, panel);
         context = new CanvasRenderingContext2DImpl(this, width, heigth);
     }
 

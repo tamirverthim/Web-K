@@ -2,6 +2,7 @@ package org.xhtmlrenderer.js.impl;
 
 import org.xhtmlrenderer.js.web_idl.DOMString;
 import org.xhtmlrenderer.js.whatwg_dom.DocumentType;
+import org.xhtmlrenderer.simple.XHTMLPanel;
 
 /**
  * @author Taras Maslov
@@ -11,7 +12,8 @@ public class DocumentTypeImpl extends NodeImpl implements DocumentType {
     
     private org.jsoup.nodes.DocumentType target;
 
-    public DocumentTypeImpl(org.jsoup.nodes.DocumentType target) {
+    public DocumentTypeImpl(org.jsoup.nodes.DocumentType target, XHTMLPanel panel) {
+        super(target, panel);
         this.target = target;
     }
 

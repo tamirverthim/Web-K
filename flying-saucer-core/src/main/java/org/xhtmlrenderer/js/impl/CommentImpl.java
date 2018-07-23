@@ -10,6 +10,7 @@ import org.xhtmlrenderer.js.web_idl.DOMString;
 import org.xhtmlrenderer.js.whatwg_dom.Comment;
 import org.xhtmlrenderer.js.whatwg_dom.Element;
 import org.xhtmlrenderer.js.whatwg_dom.NonDocumentTypeChildNode;
+import org.xhtmlrenderer.simple.XHTMLPanel;
 
 /**
  * @author Taras Maslov
@@ -29,10 +30,11 @@ public class CommentImpl extends NodeImpl implements Comment {
         Binder.remove(target);
     }).give(() -> DOMStringImpl.of(target.getData()));
 
-    public CommentImpl(org.jsoup.nodes.Comment target) {
+    public CommentImpl(org.jsoup.nodes.Comment target, XHTMLPanel panel) {
+        super(target, panel);
         this.target = target;
         childNodeMixin = new ChildNodeImpl(target);
-        nonDocumentTypeChildNodeMixin = new NonDocumentTypeChildNodeImpl(target);
+        nonDocumentTypeChildNodeMixin = new NonDocumentTypeChildNodeImpl(target, panel);
     }
 
 

@@ -1,5 +1,7 @@
 package org.xhtmlrenderer.js.html5.impl;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.xhtmlrenderer.js.html5.*;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 import org.xhtmlrenderer.js.web_idl.DOMString;
@@ -14,15 +16,19 @@ import org.xhtmlrenderer.simple.XHTMLPanel;
  * @author Taras Maslov
  * 7/17/2018
  */
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class DocumentImpl extends org.xhtmlrenderer.js.impl.DocumentImpl implements Document {
+    
+    Location location;
     
     public DocumentImpl(XHTMLPanel panel) {
         super(panel);
+        location = new LocationImpl(panel);
     }
 
     @Override
     public Location location() {
-        return null;
+        return location;
     }
 
     @Override

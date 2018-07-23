@@ -7,6 +7,7 @@ import org.xhtmlrenderer.js.web_idl.Attribute;
 import org.xhtmlrenderer.js.web_idl.DOMString;
 import org.xhtmlrenderer.js.web_idl.Sequence;
 import org.xhtmlrenderer.js.whatwg_dom.*;
+import org.xhtmlrenderer.simple.XHTMLPanel;
 
 /**
  * @author Taras Maslov
@@ -19,7 +20,8 @@ public class ElementImpl extends NodeImpl implements Element {
     
     final ChildNodeImpl childNodeMixin;
 
-    public ElementImpl(org.jsoup.nodes.Element target) {
+    public ElementImpl(org.jsoup.nodes.Element target, XHTMLPanel panel) {
+        super(target, panel);
         this.target = target;
         childNodeMixin = new ChildNodeImpl(target);
     }

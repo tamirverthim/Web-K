@@ -8,6 +8,7 @@ import org.xhtmlrenderer.js.web_idl.Attribute;
 import org.xhtmlrenderer.js.web_idl.DOMException;
 import org.xhtmlrenderer.js.web_idl.DOMString;
 import org.xhtmlrenderer.js.whatwg_dom.*;
+import org.xhtmlrenderer.simple.XHTMLPanel;
 
 /**
  * @author Taras Maslov
@@ -22,10 +23,11 @@ public class CharacterDataImpl extends NodeImpl implements CharacterData {
     
     Attribute<DOMString> dataAttribute = Attribute.<DOMString>receive(val -> target.text(val.toString())).give(() -> DOMStringImpl.of(target.getWholeText()));
     
-    public CharacterDataImpl(CDataNode target) {
+    public CharacterDataImpl(CDataNode target, XHTMLPanel panel) {
+        super(target, panel);
         this.target = target;
         childNodeMixin = new ChildNodeImpl(target);
-        nonDocumentTypeChildNodeMixin = new NonDocumentTypeChildNodeImpl(target);
+        nonDocumentTypeChildNodeMixin = new NonDocumentTypeChildNodeImpl(target, panel);
     }
 
 

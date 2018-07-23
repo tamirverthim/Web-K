@@ -7,8 +7,7 @@ import org.xhtmlrenderer.js.web_idl.*;
  * 6/21/2018
  */
 @Exposed(Window.class)
-@LegacyUnenumerableNamedProperties
-public interface NamedNodeMap {
+public interface NamedNodeMap extends LegacyUnenumerableNamedProperties {
     @Readonly
     @Unsigned
     Attribute<Long> length();

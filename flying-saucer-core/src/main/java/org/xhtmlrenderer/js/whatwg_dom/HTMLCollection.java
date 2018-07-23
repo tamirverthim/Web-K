@@ -8,7 +8,7 @@ import org.xhtmlrenderer.js.web_idl.*;
  * 6/19/2018
  */
 @Exposed(Window.class)
-public interface HTMLCollection {
+public interface HTMLCollection extends LegacyUnenumerableNamedProperties {
     @Unsigned @ReadonlyAttribute int length();
     @Getter @Optional Element item(@Unsigned int index);
     @Getter @Optional Element namedItem(DOMString name);

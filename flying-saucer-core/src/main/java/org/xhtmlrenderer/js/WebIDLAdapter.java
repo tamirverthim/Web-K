@@ -6,13 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.xhtmlrenderer.js.impl.DOMStringImpl;
+import org.xhtmlrenderer.js.impl.USVStringImpl;
 import org.xhtmlrenderer.js.web_idl.*;
 import org.xhtmlrenderer.js.web_idl.Nullable;
-import org.xhtmlrenderer.js.whatwg_dom.Attr;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -54,7 +53,10 @@ public class WebIDLAdapter<T> implements JSObject {
 
     private void processTarget() {
 
-        Stream.of(target.getClass().getInterfaces()).flatMap(i -> Stream.of(i.getMethods())).forEach(m -> {
+        ClassUtils.getAllInterfaces(target.getClass())
+                .stream()
+                .flatMap(i -> Stream.of(i.getMethods()))
+                .forEach(m -> {
             // Attribute member
 
             try {
@@ -129,6 +131,8 @@ public class WebIDLAdapter<T> implements JSObject {
     public Object getSlot(int i) {
         if (target instanceof Indexed) {
             return wrapIfNeeded(((Indexed) target).elementAtIndex(i));
+        } else if (target instanceof LegacyUnenumerableNamedProperties) {
+            return wrapIfNeeded(((LegacyUnenumerableNamedProperties) target).item(i));
         } else {
             return null;
         }
@@ -233,12 +237,17 @@ public class WebIDLAdapter<T> implements JSObject {
 
 
     public static Object wrapIfNeeded(Object res) {
+        
         if (res == null || ClassUtils.isPrimitiveOrWrapper(res.getClass())) {
             return res;
-        } 
+        }
         
-        String[] packages = new String[]{"org.xhtmlrenderer.js.impl"};
-        if (ArrayUtils.contains(packages, res.getClass().getPackage().getName())) {
+        if(res instanceof DOMString || res instanceof USVString){
+            return res.toString();
+        }
+        
+//        String[] packages = new String[]{"org.xhtmlrenderer.js.impl"};
+        if (res.getClass().getPackage().getName().startsWith("org.xhtmlrenderer.js")) {
             return new WebIDLAdapter<>(JS.getInstance(), res);
         } else {
             return res;
@@ -292,6 +301,13 @@ public class WebIDLAdapter<T> implements JSObject {
                             log.warn("Auto toString for JS call to parameter {} of {}", i, method);
                             arg = rawArg.toString();
                         }
+                    } else if (parameterType.equals(USVString.class)){
+                        if (rawArg instanceof String) {
+                            arg = USVStringImpl.of((String) rawArg);
+                        } else {
+                            log.warn("Auto toString for JS call to parameter {} of {}", i, method);
+                            arg = rawArg.toString();
+                        }
                     } else {
                         arg = rawArg;
                     }
@@ -318,7 +334,7 @@ public class WebIDLAdapter<T> implements JSObject {
                 }
             }
             
-            result[i] = autoCast(arg, parameterType);
+            result[i] = autoCast(unwrapIfNeeded(arg), parameterType);
           
         }
         
@@ -327,10 +343,15 @@ public class WebIDLAdapter<T> implements JSObject {
     
     private Object autoCast(Object object, Class<?> target){
         Object result;
-        if(target.isEnum() && object instanceof String) {
-            result = Enum.valueOf((Class<Enum>) target, (String)object);
+        if(target.isEnum() && (object instanceof String || object instanceof DOMString || object instanceof USVString)) {
+            result = Enum.valueOf((Class<Enum>) target, object.toString());
         } else {
-            result = ScriptUtils.convert(object, target);
+            try {
+                result = ScriptUtils.convert(object, target);
+            } catch (ClassCastException e) {
+                e.printStackTrace();
+                return null;
+            }
         }
         return result;
     }
