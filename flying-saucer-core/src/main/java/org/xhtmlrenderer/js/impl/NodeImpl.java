@@ -30,12 +30,12 @@ public class NodeImpl implements Node {
 
     @Override
     public DOMString nodeName() {
-        return null;
+        return DOMStringImpl.of(target.nodeName());
     }
 
     @Override
     public USVString baseURI() {
-        return null;
+        return USVStringImpl.of(panel.getURL().toString());
     }
 
     @Override

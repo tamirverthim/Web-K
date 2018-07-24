@@ -1,5 +1,6 @@
 package org.xhtmlrenderer.js.whatwg_dom;
 
+import org.xhtmlrenderer.js.impl.CharacterDataImpl;
 import org.xhtmlrenderer.js.web_idl.Optional;
 import org.xhtmlrenderer.js.web_idl.*;
 
@@ -9,7 +10,7 @@ import org.xhtmlrenderer.js.web_idl.*;
  */
 @Constructor(true)
 @Exposed(Window.class)
-public interface Text extends Slotable {
+public interface Text extends CharacterData, Slotable {
     
     void construct(@Optional @DefaultString("") DOMString data);
 

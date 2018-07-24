@@ -3,12 +3,14 @@ package org.xhtmlrenderer.js.impl;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
+import org.jsoup.nodes.TextNode;
 import org.xhtmlrenderer.js.Binder;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 import org.xhtmlrenderer.js.web_idl.DOMString;
 import org.xhtmlrenderer.js.web_idl.USVString;
 import org.xhtmlrenderer.js.whatwg_dom.*;
 import org.xhtmlrenderer.js.whatwg_dom.impl.HTMLCollectionImpl;
+import org.xhtmlrenderer.js.whatwg_dom.impl.TextImpl;
 import org.xhtmlrenderer.simple.XHTMLPanel;
 
 /**
@@ -25,6 +27,7 @@ public class DocumentImpl implements Document {
     
     public DocumentImpl(XHTMLPanel panel) {
         this.document = panel.getDocument();
+        this.panel = panel;
     }
 
     @Override
@@ -115,7 +118,10 @@ public class DocumentImpl implements Document {
 
     @Override
     public Text createTextNode(DOMString data) {
-        return null;
+        TextNode textNode = new TextNode(data.toString());
+        val result = new TextImpl(textNode, panel);
+        Binder.put(textNode, result);
+        return result;
     }
 
     @Override
