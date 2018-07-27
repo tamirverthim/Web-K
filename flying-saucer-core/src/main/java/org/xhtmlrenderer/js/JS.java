@@ -1,6 +1,8 @@
 package org.xhtmlrenderer.js;
 
 import jdk.nashorn.api.scripting.AbstractJSObject;
+import jdk.nashorn.api.scripting.JSObject;
+import jdk.nashorn.api.scripting.NashornException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.ClassUtils;
@@ -9,7 +11,7 @@ import org.xhtmlrenderer.event.DefaultDocumentListener;
 import org.xhtmlrenderer.js.html5.canvas.impl.CanvasGradientImpl;
 import org.xhtmlrenderer.js.html5.canvas.impl.CanvasPatternImpl;
 import org.xhtmlrenderer.js.web_idl.Exposed;
-import org.xhtmlrenderer.js.whatwg_dom.Document;
+import org.xhtmlrenderer.js.whatwg_dom.css_style_attribute.CSSStyleAttribute;
 import org.xhtmlrenderer.simple.XHTMLPanel;
 
 import javax.script.ScriptContext;
@@ -47,6 +49,14 @@ public class JS {
         return panel;
     }
 
+    public Object getWindow() {
+        try {
+            return engine.eval("this");
+        } catch (ScriptException e) {
+            throw new RuntimeException();
+        }
+    }
+
     @FunctionalInterface
     public interface SetInterval {
         void setInterval(Consumer<Object> fn, int interval);
@@ -57,7 +67,7 @@ public class JS {
         void setTimeout(Consumer<Object> fn, int interval);
     }
 
-    public class JsWindow implements SetInterval {
+    public class JsWindow implements SetInterval, SetTimeout {
         public void setInterval(Consumer<Object> fn, int interval) {
             Timer timer = new Timer();
             timer.schedule(new TimerTask() {
@@ -70,14 +80,34 @@ public class JS {
                 }
             }, 0, interval);
         }
+
+        @Override
+        public void setTimeout(Consumer<Object> fn, int interval) {
+           
+        }
     }
 
     private void initEngine() {
         engine = new ScriptEngineManager().getEngineByName("nashorn");
         context = engine.getContext();
-        context.setAttribute("document", new WebIDLAdapter<Document>(this, new org.xhtmlrenderer.js.html5.impl.DocumentImpl(panel)), ENGINE_SCOPE);
+        context.setAttribute("document", WebIDLAdapter.obtain(this, new org.xhtmlrenderer.js.html5.impl.DocumentImpl(panel)), ENGINE_SCOPE);
         context.setAttribute("console", console, ENGINE_SCOPE);
         context.setAttribute("setInterval", window, ENGINE_SCOPE);
+        
+        context.setAttribute("setTimeout", new Function<>((ctx, arg) -> {
+            val fn = (JSObject) arg[0];
+            double timeout = (double) arg[1];
+
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    fn.call(ctx);
+                }
+            }, (long) timeout);
+            return null;
+        }, "setTimeout"), ENGINE_SCOPE);
+        
         context.setAttribute("location", new Location(), ENGINE_SCOPE);
         context.setAttribute("HTMLCanvasElement", new Location(), ENGINE_SCOPE);
         context.setAttribute("addEventListener", new Function<>((ctx, arg) -> {
@@ -92,6 +122,11 @@ public class JS {
         } catch (ScriptException e) {
             throw new RuntimeException(e);
         }
+        
+        // https://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSview-getComputedStyle
+        context.setAttribute("getComputedStyle", new Function<>((ctx, arg) -> {
+            return new CSSStyleAttribute("");
+        }, "getComputedStyle"), ENGINE_SCOPE);
         
         expose(CanvasGradientImpl.class);
         expose(CanvasPatternImpl.class);
@@ -167,6 +202,9 @@ public class JS {
         try {
             res = engine.eval(scr, context);
         } catch (ScriptException e) {
+            if(e.getCause() instanceof NashornException){
+                log.error(NashornException.getScriptStackString(e.getCause()));
+            }
             throw new RuntimeException(e);
         }
         panel.repaint();

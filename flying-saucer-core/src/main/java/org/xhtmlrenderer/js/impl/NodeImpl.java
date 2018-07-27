@@ -70,7 +70,7 @@ public class NodeImpl implements Node {
 
     @Override
     public NodeList childNodes() {
-        return null;
+        return new NodeListImpl(target.childNodes(), panel);
     }
 
     @Override
@@ -157,7 +157,7 @@ public class NodeImpl implements Node {
     public Node appendChild(Node node) {
         NodeImpl impl = (NodeImpl) node;
         ((org.jsoup.nodes.Element)target).appendChild(impl.target);
-        panel.reloadDocument(panel.getDocument());
+//        panel.reloadDocument(panel.getDocument());
         return node;
     }
 

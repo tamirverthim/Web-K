@@ -1,9 +1,13 @@
 package org.xhtmlrenderer.js;
 
 import jdk.nashorn.api.scripting.JSObject;
+import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import jdk.nashorn.api.scripting.ScriptUtils;
+import jdk.nashorn.internal.objects.NativeArray;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.ClassUtils;
@@ -11,17 +15,14 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 import org.xhtmlrenderer.js.impl.DOMStringImpl;
 import org.xhtmlrenderer.js.impl.USVStringImpl;
 import org.xhtmlrenderer.js.web_idl.*;
+import org.xhtmlrenderer.js.web_idl.Iterable;
 import org.xhtmlrenderer.js.web_idl.Nullable;
+import org.xhtmlrenderer.js.web_idl.impl.SequenceImpl;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.lang.reflect.ParameterizedType;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.Set;
+import java.lang.reflect.*;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -30,20 +31,33 @@ import java.util.stream.Stream;
  */
 @SuppressWarnings("unchecked")
 @Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class WebIDLAdapter<T> implements JSObject {
 
-    private T target;
-    private JS js;
-    private HashMap<String, Object> members = new HashMap<>();
+    private static WeakHashMap<Object, WebIDLAdapter> all = new WeakHashMap<>();
 
-    public WebIDLAdapter(JS js, T target) {
+    T target;
+    JS js;
+    HashMap<String, Object> members = new HashMap<>();
+
+
+    private WebIDLAdapter(JS js, T target) {
         this.target = target;
         this.js = js;
         processTarget();
     }
-    
+
+    public static WebIDLAdapter obtain(JS js, Object target) {
+        WebIDLAdapter result = all.get(target);
+        if (result == null) {
+            result = new WebIDLAdapter(js, target);
+            all.put(target, result);
+        }
+        return result;
+    }
+
     Object readonlyAttributeMark = new Object();
-    
+
     @Getter
     @AllArgsConstructor
     class AttributeLink {
@@ -57,42 +71,44 @@ public class WebIDLAdapter<T> implements JSObject {
                 .stream()
                 .flatMap(i -> Stream.of(i.getMethods()))
                 .forEach(m -> {
-            // Attribute member
+                    // Attribute member
 
-            try {
-                if (m.getReturnType().equals(Attribute.class)) {
-                    members.put(m.getName(), new AttributeLink(
-                            (Attribute<?>) m.invoke(target), 
-                            (Class<?>)((ParameterizedType)m.getGenericReturnType()).getActualTypeArguments()[0])
-                    );
-                    return;
-                }
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                throw new RuntimeException(e);
-            }
-            
-            
-            if(m.isAnnotationPresent(ReadonlyAttribute.class)) {
-                members.put(m.getName(), readonlyAttributeMark);
-                return;
-            }
+                    try {
+                        if (m.getReturnType().equals(Attribute.class)) {
+                            members.put(m.getName(), new AttributeLink(
+                                    (Attribute<?>) m.invoke(target),
+                                    (Class<?>) ((ParameterizedType) m.getGenericReturnType()).getActualTypeArguments()[0])
+                            );
+                            return;
+                        }
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        throw new RuntimeException(e);
+                    }
 
-            // Function member
 
-            members.put(m.getName(), new Function<>((ctx, args) -> {
-                final Object res;
+                    if (m.isAnnotationPresent(ReadonlyAttribute.class)) {
+                        members.put(m.getName(), readonlyAttributeMark);
+                        return;
+                    }
 
-                try {
-                    res = MethodUtils.invokeMethod(target, m.getName(), prepareArguments(m, args), m.getParameterTypes());
-                } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | IllegalArgumentException e) {
-                    throw new RuntimeException(e);
-                }
-                return wrapIfNeeded(res);
+                    // Function member
 
-            }, m.getName()));
-        });
-        
-        members.put("toString", new Function<>((ctx, arg) -> target.toString(), "toString"));
+                    members.put(m.getName(), new Function<>((ctx, args) -> {
+                        final Object res;
+
+                        try {
+                            res = MethodUtils.invokeMethod(target, m.getName(), prepareArguments(m, args), m.getParameterTypes());
+                        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | IllegalArgumentException e) {
+                            throw new RuntimeException(e);
+                        }
+                        return wrapIfNeeded(res);
+
+                    }, m.getName()));
+                });
+
+        members.put("toString", new Function<>((ctx, arg) -> WebIDLAdapter.this.toString() + " " + target.toString(), "toString"));
+        members.put("equals", new Function<>((ctx, arg) ->
+                WebIDLAdapter.this.equals(arg[0]), "equals"));
     }
 
     @Override
@@ -103,7 +119,7 @@ public class WebIDLAdapter<T> implements JSObject {
 
     @Override
     public Object newObject(Object... objects) {
-        return new WebIDLAdapter(js, ReflectionHelper.create(target.getClass()));
+        return WebIDLAdapter.obtain(js, ReflectionHelper.create(target.getClass()));
     }
 
     @Override
@@ -115,7 +131,7 @@ public class WebIDLAdapter<T> implements JSObject {
     public Object getMember(String s) {
         val member = members.get(s);
         if (member instanceof WebIDLAdapter.AttributeLink) {
-            return wrapIfNeeded(((Attribute) ((AttributeLink)member).attribute).get());
+            return wrapIfNeeded(((Attribute) ((AttributeLink) member).attribute).get());
         } else if (readonlyAttributeMark.equals(member)) {
             try {
                 return wrapIfNeeded(MethodUtils.invokeMethod(target, s));
@@ -133,6 +149,8 @@ public class WebIDLAdapter<T> implements JSObject {
             return wrapIfNeeded(((Indexed) target).elementAtIndex(i));
         } else if (target instanceof LegacyUnenumerableNamedProperties) {
             return wrapIfNeeded(((LegacyUnenumerableNamedProperties) target).item(i));
+        } else if (target instanceof Iterable) {
+            return wrapIfNeeded(((Iterable) target).item(i));
         } else {
             return null;
         }
@@ -145,7 +163,16 @@ public class WebIDLAdapter<T> implements JSObject {
 
     @Override
     public boolean hasSlot(int i) {
-        return false;
+
+        return isIterable() && iterableLength() >= i;
+    }
+
+    private boolean isIterable() {
+        return target instanceof Iterable;
+    }
+
+    private int iterableLength() {
+        return ((Iterable) target).length();
     }
 
     @Override
@@ -158,10 +185,10 @@ public class WebIDLAdapter<T> implements JSObject {
         val member = members.get(s);
         if (member instanceof WebIDLAdapter.AttributeLink) {
             try {
-                val att = ((AttributeLink)member).attribute;
+                val att = ((AttributeLink) member).attribute;
                 val unwrapped = unwrapIfNeeded(o);
-                val adapted = autoCast(unwrapped, ((AttributeLink)member).attributeClass);
-                
+                val adapted = autoCast(unwrapped, ((AttributeLink) member).attributeClass);
+
                 att.set(adapted);
             } catch (Exception e) {
                 log.error("setMember Attribute {}", s, e);
@@ -237,25 +264,29 @@ public class WebIDLAdapter<T> implements JSObject {
 
 
     public static Object wrapIfNeeded(Object res) {
-        
-        if (res == null || ClassUtils.isPrimitiveOrWrapper(res.getClass())) {
+
+        if (res instanceof JSObject) {
             return res;
         }
         
-        if(res instanceof DOMString || res instanceof USVString){
+
+        if (res == null || ClassUtils.isPrimitiveOrWrapper(res.getClass())) {
+            return res;
+        }
+
+        if (res instanceof DOMString || res instanceof USVString) {
             return res.toString();
         }
-        
-//        String[] packages = new String[]{"org.xhtmlrenderer.js.impl"};
+
         if (res.getClass().getPackage().getName().startsWith("org.xhtmlrenderer.js")) {
-            return new WebIDLAdapter<>(JS.getInstance(), res);
+            return WebIDLAdapter.obtain(JS.getInstance(), res);
         } else {
             return res;
         }
     }
 
     public static Object unwrapIfNeeded(Object object) {
-        if(object instanceof String) {
+        if (object instanceof String) {
             return DOMStringImpl.of((String) object);
         }
         if (object instanceof WebIDLAdapter) {
@@ -263,67 +294,55 @@ public class WebIDLAdapter<T> implements JSObject {
         }
         return object;
     }
-    
-    private Object[] prepareArguments(Method method, Object[] rawArgs){
+
+    private Object[] prepareArguments(Method method, Object[] rawArgs) {
         Object[] result = new Object[method.getParameterTypes().length];
-        if(log.isDebugEnabled()){
-            if(result.length < rawArgs.length) {
+        if (log.isDebugEnabled()) {
+            if (result.length < rawArgs.length && !method.isVarArgs()) {
                 log.debug("Too many params from JS call to {}", method.toString());
             }
         }
-        
+
+        int varargFromIndex = -1;
+
         for (int i = 0; i < result.length; i++) {
             Object arg;
             Object rawArg;
             val parameter = method.getParameters()[i];
             val parameterType = method.getParameterTypes()[i];
 
-            if(rawArgs.length < i + 1){
+            if (i == method.getParameterCount() - 1 && method.isVarArgs()) {
+                // all next args are targeted to vararg parameter
+                varargFromIndex = i;
+                break;
+            }
+
+            if (rawArgs.length < i + 1) {
                 // absent parameter
-                
-                if(!hasAnnotation(parameter, org.xhtmlrenderer.js.web_idl.Optional.class)){
+
+                if (!hasAnnotation(parameter, org.xhtmlrenderer.js.web_idl.Optional.class)) {
                     log.warn("Absent required argument {} for method {}", parameter, method);
                 }
-                
+
                 arg = getDefaultValue(parameter).orElse(null);
-                
+
             } else {
                 rawArg = rawArgs[i];
-                
-                if(rawArg != null) {
 
-                    // auto DOMString support
+                if (rawArg != null) {
 
-                    if (parameterType.equals(DOMString.class)) {
-                        if (rawArg instanceof String) {
-                            arg = DOMStringImpl.of((String) rawArg);
-                        } else {
-                            log.warn("Auto toString for JS call to parameter {} of {}", i, method);
-                            arg = rawArg.toString();
-                        }
-                    } else if (parameterType.equals(USVString.class)){
-                        if (rawArg instanceof String) {
-                            arg = USVStringImpl.of((String) rawArg);
-                        } else {
-                            log.warn("Auto toString for JS call to parameter {} of {}", i, method);
-                            arg = rawArg.toString();
-                        }
-                    } else {
-                        arg = rawArg;
-                    }
-                    
-                    // other special conversion shoul be here
-                    
+                    arg = convertToJava(parameterType, rawArg);
+
                 } else {
                     // null parameter
-                    
-                    if(!hasAnnotation(parameter, Nullable.class) && hasAnnotation(parameter, org.xhtmlrenderer.js.web_idl.Optional.class)){
+
+                    if (!hasAnnotation(parameter, Nullable.class) && hasAnnotation(parameter, org.xhtmlrenderer.js.web_idl.Optional.class)) {
                         val optionalDefaultValue = getDefaultValue(parameter);
-                        if(optionalDefaultValue.isPresent()){
+                        if (optionalDefaultValue.isPresent()) {
                             arg = optionalDefaultValue.get();
                         } else {
                             arg = null;
-                            if(!isDefaultNull(parameter)) {
+                            if (!isDefaultNull(parameter)) {
                                 log.warn("Non-nullable non-optional parameter {} of method {} received null", parameter, method);
                             }
                         }
@@ -333,18 +352,68 @@ public class WebIDLAdapter<T> implements JSObject {
                     }
                 }
             }
-            
+
             result[i] = autoCast(unwrapIfNeeded(arg), parameterType);
-          
+
         }
-        
+
+
+        if (varargFromIndex > -1) {
+            List<Object> varArgs = new ArrayList<>();
+            val varArgsArrayType = method.getParameterTypes()[method.getParameterCount() - 1];
+            val varArgsElementType = varArgsArrayType.getComponentType();
+            for (int i = varargFromIndex; i < rawArgs.length; i++) {
+                varArgs.add(unwrapIfNeeded(convertToJava(varArgsElementType, rawArgs[i])));
+            }
+            result[varargFromIndex] = varArgs.toArray((Object[]) Array.newInstance(varArgsElementType, rawArgs.length - varargFromIndex));
+        }
+
         return result;
     }
-    
-    private Object autoCast(Object object, Class<?> target){
+
+    Object convertToJava(Class parameterType, Object rawArg) {
+
+        Object arg;
+
+        // auto DOMString support
+
+        if (parameterType.equals(DOMString.class)) {
+            if (rawArg instanceof String) {
+                arg = DOMStringImpl.of((String) rawArg);
+            } else {
+                arg = rawArg.toString();
+            }
+        } else if (parameterType.equals(USVString.class)) {
+            if (rawArg instanceof String) {
+                arg = USVStringImpl.of((String) rawArg);
+            } else {
+                arg = rawArg.toString();
+            }
+        } else if (parameterType.equals(Sequence.class) && rawArg instanceof NativeArray) {
+            val sequenceComponentType = getTypeOfInterfaceGeneric(parameterType);
+            val array = (NativeArray) rawArg;
+            val objectsArray = array.asObjectArray();
+            arg = new SequenceImpl<>(Stream.of(objectsArray).map(obj -> convertToJava(sequenceComponentType, obj)).collect(Collectors.toList()));
+        } else {
+            arg = rawArg;
+        }
+
+        // other special conversion should be here
+        return arg;
+    }
+
+    private Object autoCast(Object object, Class target) {
         Object result;
-        if(target.isEnum() && (object instanceof String || object instanceof DOMString || object instanceof USVString)) {
+        if (target.isEnum() && (object instanceof String || object instanceof DOMString || object instanceof USVString)) {
             result = Enum.valueOf((Class<Enum>) target, object.toString());
+        } else if (object instanceof ScriptObjectMirror && target.equals(Sequence.class)) {
+            val scriptObjectMirror = ((ScriptObjectMirror) object);
+            val size = scriptObjectMirror.size();
+            List<Object> items = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                items.add(scriptObjectMirror.getSlot(i));
+            }
+            return new SequenceImpl<>(items);
         } else {
             try {
                 result = ScriptUtils.convert(object, target);
@@ -355,37 +424,36 @@ public class WebIDLAdapter<T> implements JSObject {
         }
         return result;
     }
-    
-    private boolean hasAnnotation(Parameter parameter, Class<? extends Annotation> annotation){
+
+    private boolean hasAnnotation(Parameter parameter, Class<? extends Annotation> annotation) {
         return parameter.isAnnotationPresent(annotation);
     }
-    
-    private boolean isDefaultNull(Parameter parameter){
+
+    private Class getTypeOfInterfaceGeneric(Class clazz) {
+        ParameterizedType parameterizedType = (ParameterizedType) clazz.getGenericInterfaces()[0];
+        return (Class) parameterizedType.getActualTypeArguments()[0];
+    }
+
+    private boolean isDefaultNull(Parameter parameter) {
         return parameter.isAnnotationPresent(DefaultNull.class);
     }
-    
-    private Optional<Object> getDefaultValue(Parameter parameter){
-    
+
+    private java.util.Optional<Object> getDefaultValue(Parameter parameter) {
+
         final Object result;
-        
-        if(parameter.isAnnotationPresent(DefaultString.class)){
+
+        if (parameter.isAnnotationPresent(DefaultString.class)) {
             result = parameter.getAnnotation(DefaultString.class).value();
-        }    
-        
-        else if(parameter.isAnnotationPresent(DefaultBoolean.class)){
+        } else if (parameter.isAnnotationPresent(DefaultBoolean.class)) {
             result = parameter.getAnnotation(DefaultBoolean.class).value();
-        }
-        
-        else if(parameter.isAnnotationPresent(DefaultDouble.class)){
+        } else if (parameter.isAnnotationPresent(DefaultDouble.class)) {
             result = parameter.getAnnotation(DefaultDouble.class).value();
-        }    
-        
-        else if(parameter.isAnnotationPresent(DefaultLong.class)){
+        } else if (parameter.isAnnotationPresent(DefaultLong.class)) {
             result = parameter.getAnnotation(DefaultLong.class).value();
         } else {
             result = null;
         }
-        
-        return Optional.ofNullable(result);
+
+        return java.util.Optional.ofNullable(result);
     }
 }

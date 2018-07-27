@@ -23,7 +23,7 @@ public class DocumentImpl implements Document {
     org.jsoup.nodes.Document document;
     DOMImplementation implementation = new DOMImplementationImpl();
     
-    XHTMLPanel panel;
+    protected XHTMLPanel panel;
     
     public DocumentImpl(XHTMLPanel panel) {
         this.document = panel.getDocument();

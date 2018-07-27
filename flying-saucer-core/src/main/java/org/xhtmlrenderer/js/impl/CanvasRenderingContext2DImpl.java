@@ -37,43 +37,24 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
     Object fillStyle;
     Object strokeStyle;
-    
+
     Graphics2D g2d;
     BufferedImage image;
 
     LinkedList<G2DState> stateStack = new LinkedList<>();
-    
+
     java.awt.geom.Path2D path2D = new java.awt.geom.Path2D.Double();
-    
+
     // G2D state is not equal to state in stack
     private boolean stateDirty;
-    
+
     private HTMLCanvasElementImpl canvas;
     private boolean wasFill;
     private DOMString fontStyle;
 
     public CanvasRenderingContext2DImpl(HTMLCanvasElementImpl canvas, int width, int height) {
-        this.width = width;
-        this.height = height;
         this.canvas = canvas;
-
-        if(width == 0 || height == 0){
-            return;
-        }
-        
-        image = GraphicsEnvironment.getLocalGraphicsEnvironment()
-                .getDefaultScreenDevice()
-                .getDefaultConfiguration()
-                .createCompatibleImage(width, height);
-        g2d = (Graphics2D) image.getGraphics();
-        g2d.setBackground(Color.red);
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        
-        g2d.setBackground(Color.WHITE);
-        g2d.clearRect(0 ,0 ,width, height);
-        // initial state
-        stateStack.push(new G2DState());
+        resize(width, height);
     }
 
     @Override
@@ -168,9 +149,16 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
         return Attribute.receive((value) -> {
             CanvasRenderingContext2DImpl.this.strokeStyle = value;
             if (value instanceof DOMString) {
-                val color = Color.decode(value.toString());
-                state().setStrokeColor(color);
-                stateDirty = true;
+
+                try {
+                    val color = Color.decode(value.toString());
+                    state().setStrokeColor(color);
+                    stateDirty = true;
+                } catch (NumberFormatException e) {
+                    state().setFillColor(Color.blue);
+                }
+                
+
             } else {
                 // todo grad and pattern
                 throw new RuntimeException();
@@ -183,9 +171,15 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
         return Attribute.receive((value) -> {
             CanvasRenderingContext2DImpl.this.fillStyle = value;
             if (value instanceof DOMString) {
-                val color = Color.decode(value.toString());
-                state().setFillColor(color);
-                stateDirty = true;
+
+                try {
+                    val color = Color.decode(value.toString());
+                    state().setFillColor(color);
+                    stateDirty = true;
+                } catch (NumberFormatException e) {
+                    state().setFillColor(Color.red);
+                }
+
             } else {
                 // todo grad and pattern
                 throw new RuntimeException();
@@ -287,11 +281,11 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     //    ctx.beginPath();
     //    ctx.arc(cx, cy, r, -startAngle, -(startAngle + arcAngle), ccw);
     //    ctx.stroke();
-    
+
     // x = -startAngle - arcAngle
-    
+
     // arcA = - startAngle - x
-    
+
     //  int top = (int) (cx - r);
     //    int left = (int) (cy - r);
     //    int diam = (int) (2*r);
@@ -299,20 +293,20 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     //    g2d.drawArc(top, left, diam, diam,
     //                FloatMath.round(FloatMath.toDegrees(startAngle)),
     //                FloatMath.round(FloatMath.toDegrees(arcAngle)));
-    
+
     @Override
     public void arc(double x, double y, double r, double startAngle, double endAngle, boolean anticlockwise) {
         double top = x - r;
         double left = y - r;
-        double diam = 2*r;
+        double diam = 2 * r;
         ensureState(false);
-        
+
         val ext = Math.abs(startAngle - endAngle);
-        
+
         path2D.append(
                 new Arc2D.Double(top, left, diam, diam,
-                        Math.toDegrees(anticlockwise ? - startAngle: endAngle),
-                        Math.toDegrees(anticlockwise ? - endAngle: endAngle), Arc2D.OPEN), false);
+                        Math.toDegrees(anticlockwise ? -startAngle : endAngle),
+                        Math.toDegrees(anticlockwise ? -endAngle : endAngle), Arc2D.OPEN), false);
     }
 
     @Override
@@ -328,12 +322,32 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
     @Override
     public Attribute<CanvasLineCap> lineCap() {
-        return null;
+        return new Attribute<CanvasLineCap>() {
+            @Override
+            public CanvasLineCap get() {
+                return CanvasLineCap.butt;
+            }
+
+            @Override
+            public void set(CanvasLineCap canvasLineCap) {
+
+            }
+        };
     }
 
     @Override
     public Attribute<CanvasLineJoin> lineJoin() {
-        return null;
+        return new Attribute<CanvasLineJoin>() {
+            @Override
+            public CanvasLineJoin get() {
+                return CanvasLineJoin.miter;
+            }
+
+            @Override
+            public void set(CanvasLineJoin canvasLineJoin) {
+
+            }
+        };
     }
 
     @Override
@@ -353,7 +367,17 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
     @Override
     public Attribute<Double> lineDashOffset() {
-        return null;
+        return new Attribute<Double>() {
+            @Override
+            public Double get() {
+                return null;
+            }
+
+            @Override
+            public void set(Double aDouble) {
+
+            }
+        };
     }
 
     @Override
@@ -363,7 +387,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
     @Override
     public void fillRect(double x, double y, double w, double h) {
-        ensureState( true);
+        ensureState(true);
         g2d.fillRect((int) x, (int) y, (int) w, (int) h);
     }
 
@@ -407,7 +431,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     @Override
     public void fillText(DOMString text, double x, double y, Double maxWidth) {
         ensureState(true);
-        g2d.drawString(text.toString(), (int)x, (int)y);
+        g2d.drawString(text.toString(), (int) x, (int) y);
         // todo handle max width
     }
 
@@ -424,38 +448,58 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
     @Override
     public Attribute<DOMString> font() {
-        return Attribute.<DOMString>receive(style->{
+        return Attribute.<DOMString>receive(style -> {
             fontStyle = style;
             val styleString = style.toString();
             val declarations = CSSReaderDeclarationList.readFromString("font: " + styleString, ECSSVersion.CSS30);
             val declaration = declarations.getDeclarationAtIndex(0);
-            
+
             // Get the Shorthand descriptor for "border"    
-            final CSSShortHandDescriptor aSHD = CSSShortHandRegistry.getShortHandDescriptor (ECSSProperty.FONT);
+            final CSSShortHandDescriptor aSHD = CSSShortHandRegistry.getShortHandDescriptor(ECSSProperty.FONT);
 
             // And now split it into pieces
-            final List<CSSDeclaration> aSplittedDecls = aSHD.getSplitIntoPieces (declaration);
+            final List<CSSDeclaration> aSplittedDecls = aSHD.getSplitIntoPieces(declaration);
             for (CSSDeclaration aSplittedDecl : aSplittedDecls) {
-                
+
                 val fontSize = aSplittedDecl.getExpression().getAsCSSString();
-                if(fontSize.endsWith("px")){
+                if (fontSize.endsWith("px")) {
                     state().setFontSize((int) Math.round(Double.parseDouble(fontSize.substring(0, 2))));
                     stateDirty = true;
                 }
-                
+
             }
-                    
+
         }).give(() -> fontStyle);
     }
 
     @Override
     public Attribute<CanvasTextAlign> textAlign() {
-        return null;
+        return new Attribute<CanvasTextAlign>() {
+            @Override
+            public CanvasTextAlign get() {
+                return null;
+            }
+
+            @Override
+            public void set(CanvasTextAlign canvasTextAlign) {
+
+            }
+        };
     }
 
     @Override
     public Attribute<CanvasTextBaseline> textBaseline() {
-        return null;
+        return new Attribute<CanvasTextBaseline>() {
+            @Override
+            public CanvasTextBaseline get() {
+                return null;
+            }
+
+            @Override
+            public void set(CanvasTextBaseline canvasTextBaseline) {
+
+            }
+        };
     }
 
     @Override
@@ -527,10 +571,44 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     public void scrollPathIntoView(Path2D path) {
 
     }
-    
+
     // region custom
-    
-    private G2DState state(){
+
+    void init() {
+
+        // initial state
+        stateStack = new LinkedList<>();
+        stateStack.push(new G2DState());
+        stateDirty = false;
+
+        if (width == 0 || height == 0) {
+            return;
+        }
+
+        image = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .getDefaultScreenDevice()
+                .getDefaultConfiguration()
+                .createCompatibleImage(width, height);
+        g2d = (Graphics2D) image.getGraphics();
+        g2d.setBackground(Color.red);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+        g2d.setBackground(Color.WHITE);
+        g2d.clearRect(0, 0, width, height);
+    }
+
+
+    public void resize(int w, int h) {
+        if (w == this.width && h == this.height) {
+            return;
+        }
+        this.width = w;
+        this.height = h;
+        init();
+    }
+
+    private G2DState state() {
         return stateStack.getLast();
     }
 
@@ -546,20 +624,21 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
         return height;
     }
 
-    private void ensureState(boolean fill){
-        if (stateDirty || wasFill != fill){
+    private void ensureState(boolean fill) {
+        if (stateDirty || wasFill != fill) {
             state().apply(g2d, fill);
             wasFill = fill;
             stateDirty = false;
         }
     }
-    private void ensureState(){
-        if (stateDirty){
+
+    private void ensureState() {
+        if (stateDirty) {
             state().apply(g2d);
             stateDirty = false;
         }
     }
-    
-    
+
+
     // endregion
 }

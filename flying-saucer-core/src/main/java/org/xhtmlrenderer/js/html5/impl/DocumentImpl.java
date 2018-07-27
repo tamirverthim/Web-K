@@ -147,8 +147,8 @@ public class DocumentImpl extends org.xhtmlrenderer.js.impl.DocumentImpl impleme
     }
 
     @Override
-    public WindowProxy defaultView() {
-        return null;
+    public @WindowProxy Object defaultView() {
+        return panel.getSharedContext().getJS().getWindow();
     }
 
     @Override

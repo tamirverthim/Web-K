@@ -16,9 +16,9 @@ import org.xhtmlrenderer.simple.XHTMLPanel;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LocationImpl implements Location {
-    
+
     XHTMLPanel panel;
-    
+
     Attribute<USVString> href = Attribute
             .<USVString>receive(next -> {
                 // todo
@@ -41,7 +41,10 @@ public class LocationImpl implements Location {
 
     @Override
     public Attribute<USVString> protocol() {
-        return null;
+        return Attribute
+                .<USVString>receive(System.err::println)
+                .give(() -> USVStringImpl.of(panel.getURL().getProtocol())
+                );
     }
 
     @Override
@@ -54,7 +57,7 @@ public class LocationImpl implements Location {
         return Attribute
                 .<USVString>receive(System.err::println)
                 .give(() -> USVStringImpl.of(panel.getURL().getHost())
-        );
+                );
     }
 
     @Override

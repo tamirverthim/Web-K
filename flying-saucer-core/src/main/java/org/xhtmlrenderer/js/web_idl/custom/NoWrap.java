@@ -1,4 +1,4 @@
-package org.xhtmlrenderer.js.html5;
+package org.xhtmlrenderer.js.web_idl.custom;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,9 +7,9 @@ import java.lang.annotation.Target;
 
 /**
  * @author Taras Maslov
- * 7/17/2018
+ * 7/25/2018
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface WindowProxy {
+public @interface NoWrap {
 }

@@ -1,5 +1,8 @@
 package org.xhtmlrenderer.js.web_idl;
 
+import org.jsoup.nodes.Node;
+import org.xhtmlrenderer.js.impl.DOMStringImpl;
+
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -30,6 +33,10 @@ public interface Attribute<T> {
             public void set(T t) {
             }
         };
+    }
+
+    static Attribute<DOMString> forNode(Node node, String attributeName){
+        return Attribute.<DOMString>receive((domString) -> node.attr(attributeName)).give(() -> DOMStringImpl.of(node.attr(attributeName)));
     }
     
     class AtBuilder<T> {

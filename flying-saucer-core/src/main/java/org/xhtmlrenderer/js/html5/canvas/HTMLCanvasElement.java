@@ -12,13 +12,20 @@ import org.xhtmlrenderer.js.whatwg_dom.Window;
 @Exposed(Window.class)
 @HTMLConstructor
 public interface HTMLCanvasElement extends Element {
-    @CEReactions @Unsigned
-    Attribute<Long> width();
-  @CEReactions @Unsigned Attribute<Long> height();
+    @CEReactions
+    @Unsigned
+    Attribute<Integer> width();
 
-    @Nullable RenderingContext getContext(DOMString contextId, @Optional @DefaultNull Object options);
+    @CEReactions
+    @Unsigned
+    Attribute<Integer> height();
+
+    @Nullable
+    RenderingContext getContext(DOMString contextId, @Optional @DefaultNull Object options);
 
     USVString toDataURL(@Optional DOMString type, @Optional Object quality);
+
     void toBlob(BlobCallback _callback, @Optional DOMString type, @Optional Object quality);
+
     OffscreenCanvas transferControlToOffscreen();
 }

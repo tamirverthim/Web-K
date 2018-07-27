@@ -1,10 +1,7 @@
 package org.xhtmlrenderer.js.whatwg_dom;
 
-import org.xhtmlrenderer.js.web_idl.Optional;
+import org.xhtmlrenderer.js.web_idl.Iterable;
 import org.xhtmlrenderer.js.web_idl.Exposed;
-import org.xhtmlrenderer.js.web_idl.Getter;
-import org.xhtmlrenderer.js.web_idl.ReadonlyAttribute;
-import org.xhtmlrenderer.js.web_idl.Unsigned;
 
 /**
  * @author Taras Maslov
@@ -12,6 +9,5 @@ import org.xhtmlrenderer.js.web_idl.Unsigned;
  */
 @Exposed(Window.class)
 public interface NodeList extends Iterable<Node> {
-    @Getter @Optional Node item(@Unsigned long index);
-    @ReadonlyAttribute @Unsigned long length();
+
 }

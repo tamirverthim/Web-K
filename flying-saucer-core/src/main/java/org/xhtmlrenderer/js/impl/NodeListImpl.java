@@ -28,7 +28,7 @@ public class NodeListImpl implements NodeList {
     }
 
     @Override
-    public Node item(long index) {
+    public Node item(int index) {
         if(parserNodes.size() > index) {
             val parsed = parserNodes.get((int) index);
             return Binder.get(parsed, panel);
@@ -38,12 +38,7 @@ public class NodeListImpl implements NodeList {
     }
 
     @Override
-    public long length() {
+    public int length() {
         return parserNodes.size();
-    }
-
-    @Override
-    public Iterator<Node> iterator() {
-        return null;
     }
 }

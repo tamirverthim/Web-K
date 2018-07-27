@@ -25,13 +25,33 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
     }
 
     @Override
-    public Attribute<Long> width() {
-        return Attribute.<Long>readOnly().give(() -> Long.valueOf(context.getWidth()));
+    public Attribute<Integer> width() {
+        return new Attribute<Integer>() {
+            @Override
+            public Integer get() {
+                return context.getWidth();
+            }
+
+            @Override
+            public void set(Integer integer) {
+                context.resize(integer, context.getHeight());
+            }
+        };
     }
 
     @Override
-    public Attribute<Long> height() {
-        return Attribute.<Long>readOnly().give(() -> Long.valueOf(context.getHeight()));
+    public Attribute<Integer> height() {
+        return new Attribute<Integer>() {
+            @Override
+            public Integer get() {
+                return context.getHeight();
+            }
+
+            @Override
+            public void set(Integer integer) {
+                context.resize(context.getWidth(), integer);
+            }
+        };    
     }
 
     @Override

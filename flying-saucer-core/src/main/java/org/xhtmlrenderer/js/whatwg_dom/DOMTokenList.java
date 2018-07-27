@@ -1,5 +1,6 @@
 package org.xhtmlrenderer.js.whatwg_dom;
 
+import org.xhtmlrenderer.js.web_idl.Iterable;
 import org.xhtmlrenderer.js.web_idl.Optional;
 import org.xhtmlrenderer.js.web_idl.*;
 
@@ -8,14 +9,7 @@ import org.xhtmlrenderer.js.web_idl.*;
  * 6/21/2018
  */
 @Exposed(Window.class)
-public interface DOMTokenList extends Iterable<org.xhtmlrenderer.js.web_idl.DOMString> {
-    @Readonly
-    @Unsigned
-    Attribute<Long> length();
-
-    @Getter
-    @Optional
-    DOMString item(@Unsigned long index);
+public interface DOMTokenList extends Iterable<DOMString> {
 
     boolean contains(DOMString token);
 

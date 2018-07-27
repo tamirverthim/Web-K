@@ -12,11 +12,11 @@ import org.xhtmlrenderer.js.whatwg_dom.NodeList;
  */
 @OverrideBuiltins
 public interface Document {
-    
+
     // TODO
     //Document includes GlobalEventHandlers;
     //Document includes DocumentAndElementEventHandlers;
-    
+
     // resource metadata management
 
     @PutForwards("href")
@@ -105,7 +105,8 @@ public interface Document {
     // user interaction
     @ReadonlyAttribute
     @Nullable
-    WindowProxy defaultView();
+    @WindowProxy
+    Object defaultView();
 
     @ReadonlyAttribute
     @Nullable

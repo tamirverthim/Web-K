@@ -2,18 +2,22 @@ package org.xhtmlrenderer.js.impl;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.xhtmlrenderer.js.html5.canvas.HTMLSlotElement;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 import org.xhtmlrenderer.js.web_idl.DOMString;
 import org.xhtmlrenderer.js.web_idl.Sequence;
 import org.xhtmlrenderer.js.whatwg_dom.*;
+import org.xhtmlrenderer.js.whatwg_dom.css_style_attribute.CSSStyleAttribute;
 import org.xhtmlrenderer.simple.XHTMLPanel;
 
+import java.util.HashSet;
 /**
  * @author Taras Maslov
  * 6/21/2018
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Slf4j
 public class ElementImpl extends NodeImpl implements Element {
     
     final org.jsoup.nodes.Element target;
@@ -24,6 +28,10 @@ public class ElementImpl extends NodeImpl implements Element {
         super(target, panel);
         this.target = target;
         childNodeMixin = new ChildNodeImpl(target);
+    }
+
+    public org.jsoup.nodes.Element getTarget() {
+        return target;
     }
 
     @Override
@@ -43,22 +51,22 @@ public class ElementImpl extends NodeImpl implements Element {
 
     @Override
     public DOMString tagName() {
-        return null;
+        return DOMStringImpl.of(target.nodeName());
     }
 
     @Override
     public Attribute<DOMString> id() {
-        return null;
+        return Attribute.forNode(target, "id");
     }
 
     @Override
     public Attribute<DOMString> className() {
-        return null;
+        return Attribute.forNode(target, "className");
     }
 
     @Override
     public DOMTokenList classList() {
-        return null;
+        return new DOMTokenListImpl(target.classNames(), strings -> target.classNames(new HashSet<>(strings)));
     }
 
     @Override
@@ -278,5 +286,148 @@ public class ElementImpl extends NodeImpl implements Element {
     @Override
     public HTMLSlotElement assignedSlot() {
         return null;
+    }
+    
+    // common attributes https://html.spec.whatwg.org/multipage/dom.html#global-attributes
+
+    @Override
+    public Attribute<String> accesskey() {
+        return bindAttribute("accesskey");
+    }
+
+    @Override
+    public Attribute<String> autocapitalize() {
+        return bindAttribute("autocapitalize");
+    }
+
+    @Override
+    public Attribute<String> contenteditable() {
+        return bindAttribute("contenteditable");
+    }
+
+    @Override
+    public Attribute<String> dir() {
+        return bindAttribute("dir");
+    }
+
+    @Override
+    public Attribute<String> draggable() {
+        return bindAttribute("draggable");
+    }
+
+    @Override
+    public Attribute<String> hidden() {
+        return bindAttribute("hidden");
+    }
+
+    @Override
+    public Attribute<String> inputmode() {
+        return bindAttribute("inputmode");
+    }
+
+    @Override
+    public Attribute<String> is() {
+        return bindAttribute("is");
+    }
+
+    @Override
+    public Attribute<String> itemid() {
+        return bindAttribute("itemid");
+    }
+
+    @Override
+    public Attribute<String> itemprop() {
+        return bindAttribute("itemprop");
+    }
+
+    @Override
+    public Attribute<String> itemref() {
+        return bindAttribute("itemref");
+    }
+
+    @Override
+    public Attribute<String> itemscope() {
+        return bindAttribute("itemscope");
+    }
+
+    @Override
+    public Attribute<String> itemtype() {
+        return bindAttribute("itemtype");
+    }
+
+    @Override
+    public Attribute<String> lang() {
+        return bindAttribute("lang");
+    }
+
+    @Override
+    public Attribute<String> nonce() {
+        return bindAttribute("nonce");
+    }
+
+    @Override
+    public Attribute<String> spellcheck() {
+        return bindAttribute("spellcheck");
+    }
+
+    @Override
+    public Attribute<CSSStyleAttribute> style() {
+        return Attribute.<CSSStyleAttribute>receive((a) -> target.attr("style", a.toCSSString()))
+                .give(() -> new CSSStyleAttribute(target.attr("style")));
+    }
+
+    @Override
+    public Attribute<String> tabindex() {
+        return bindAttribute("tabindex");
+    }
+
+    @Override
+    public Attribute<String> title() {
+        return bindAttribute("title");
+    }
+
+    @Override
+    public Attribute<String> translate() {
+        return bindAttribute("translate");
+    }
+    
+    private Attribute<String> bindAttribute(String name){
+        return Attribute.<String>receive((s) -> target.attr(name, s)).give(() -> target.attr(name));
+    }
+
+    @Override
+    public Attribute<DOMString> innerHTML() {
+        return new Attribute<DOMString>() {
+            @Override
+            public DOMString get() {
+                return DOMStringImpl.of(target.html());
+            }
+
+            @Override
+            public void set(DOMString string) {
+                target.outerHtml();
+                target.html(string.toString());
+            }
+        };
+    }
+
+    @Override
+    public Attribute<DOMString> outerHTML() {
+        return new Attribute<DOMString>() {
+            @Override
+            public DOMString get() {
+                return DOMStringImpl.of(target.outerHtml());
+            }
+
+            @Override
+            public void set(DOMString string) {
+                log.warn("outerHTML unimplemented");
+            }
+        };
+    }
+
+    @Override
+    public void insertAdjacentHTML(DOMString position, DOMString text) {
+
     }
 }

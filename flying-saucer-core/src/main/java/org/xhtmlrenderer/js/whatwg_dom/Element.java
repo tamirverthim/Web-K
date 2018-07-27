@@ -2,6 +2,7 @@ package org.xhtmlrenderer.js.whatwg_dom;
 
 import org.xhtmlrenderer.js.web_idl.Optional;
 import org.xhtmlrenderer.js.web_idl.*;
+import org.xhtmlrenderer.js.whatwg_dom.css_style_attribute.CSSStyleAttribute;
 
 /**
  * @author Taras Maslov
@@ -28,7 +29,10 @@ public interface Element extends Node, ParentNode, NonDocumentTypeChildNode, Chi
     @CEReactions
     Attribute<DOMString> className();
 
-    @SameObject @PutForwards("value") @ReadonlyAttribute DOMTokenList classList();
+    @SameObject
+    @PutForwards("value")
+    @ReadonlyAttribute
+    DOMTokenList classList();
 
     @CEReactions
     @Unscopable
@@ -36,7 +40,9 @@ public interface Element extends Node, ParentNode, NonDocumentTypeChildNode, Chi
 
     boolean hasAttributes();
 
-    @SameObject @ReadonlyAttribute NamedNodeMap attributes();
+    @SameObject
+    @ReadonlyAttribute
+    NamedNodeMap attributes();
 
     Sequence<DOMString> getAttributeNames();
 
@@ -106,4 +112,61 @@ public interface Element extends Node, ParentNode, NonDocumentTypeChildNode, Chi
     Element insertAdjacentElement(DOMString where, Element element); // historical
 
     void insertAdjacentText(DOMString where, DOMString data); // historical
+
+    // std attributes
+
+    Attribute<String> accesskey();
+
+    Attribute<String> autocapitalize();
+
+    Attribute<String> contenteditable();
+
+    Attribute<String> dir();
+
+    Attribute<String> draggable();
+
+    Attribute<String> hidden();
+
+    Attribute<String> inputmode();
+
+    Attribute<String> is();
+
+    Attribute<String> itemid();
+
+    Attribute<String> itemprop();
+
+    Attribute<String> itemref();
+
+    Attribute<String> itemscope();
+
+    Attribute<String> itemtype();
+
+    Attribute<String> lang();
+
+    Attribute<String> nonce();
+
+    Attribute<String> spellcheck();
+
+    Attribute<CSSStyleAttribute> style();
+
+    Attribute<String> tabindex();
+
+    Attribute<String> title();
+
+    Attribute<String> translate();
+
+    // region  https://w3c.github.io/DOM-Parsing
+
+    @CEReactions
+    @TreatNullAs(NullTreat.EmptyString)
+    Attribute<DOMString> innerHTML();
+
+    @CEReactions
+    @TreatNullAs(NullTreat.EmptyString)
+    Attribute<DOMString> outerHTML();
+
+    @CEReactions
+    void insertAdjacentHTML(DOMString position, DOMString text);
+    
+    // endregion
 }
