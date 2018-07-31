@@ -3,12 +3,16 @@ package org.xhtmlrenderer.js.impl;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import org.xhtmlrenderer.js.Binder;
 import org.xhtmlrenderer.js.html5.canvas.HTMLSlotElement;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 import org.xhtmlrenderer.js.web_idl.DOMString;
 import org.xhtmlrenderer.js.web_idl.Sequence;
 import org.xhtmlrenderer.js.whatwg_dom.*;
 import org.xhtmlrenderer.js.whatwg_dom.css_style_attribute.CSSStyleAttribute;
+import org.xhtmlrenderer.js.whatwg_dom.impl.HTMLCollectionImpl;
+import org.xhtmlrenderer.js.whatwg_dom.impl.NamedNodeMapImpl;
 import org.xhtmlrenderer.simple.XHTMLPanel;
 
 import java.util.HashSet;
@@ -21,12 +25,13 @@ import java.util.HashSet;
 public class ElementImpl extends NodeImpl implements Element {
     
     final org.jsoup.nodes.Element target;
-    
     final ChildNodeImpl childNodeMixin;
+    final XHTMLPanel panel;
 
     public ElementImpl(org.jsoup.nodes.Element target, XHTMLPanel panel) {
         super(target, panel);
         this.target = target;
+        this.panel = panel;
         childNodeMixin = new ChildNodeImpl(target);
     }
 
@@ -76,12 +81,12 @@ public class ElementImpl extends NodeImpl implements Element {
 
     @Override
     public boolean hasAttributes() {
-        return false;
+        return target.attributes().size() > 0;
     }
 
     @Override
     public NamedNodeMap attributes() {
-        return null;
+        return new NamedNodeMapImpl(target.attributes());
     }
 
     @Override
@@ -186,17 +191,17 @@ public class ElementImpl extends NodeImpl implements Element {
 
     @Override
     public HTMLCollection getElementsByTagName(DOMString qualifiedName) {
-        return null;
+        return new HTMLCollectionImpl(target.getElementsByTag(qualifiedName.toString()), panel);
     }
 
     @Override
     public HTMLCollection getElementsByTagNameNS(DOMString namespace, DOMString localName) {
-        return null;
+        return getElementsByTagName(localName);
     }
 
     @Override
     public HTMLCollection getElementsByClassName(DOMString classNames) {
-        return null;
+        return new HTMLCollectionImpl(target.getElementsByClass(classNames.toString()), panel);
     }
 
     @Override
@@ -235,17 +240,29 @@ public class ElementImpl extends NodeImpl implements Element {
 
     @Override
     public Element previousElementSibling() {
-        return null;
+        return Binder.getElement(target.previousElementSibling(), panel);
     }
 
     @Override
     public Element nextElementSibling() {
-        return null;
+        return Binder.getElement(target.nextElementSibling(), panel);
     }
 
     @Override
     public Attribute<HTMLCollection> children() {
-        return null;
+        return new Attribute<HTMLCollection>() {
+            @Override
+            public HTMLCollection get() {
+                return new HTMLCollectionImpl(target.children(), panel);
+            }
+
+            @Override
+            public void set(HTMLCollection htmlCollection) {
+                val impl = (HTMLCollectionImpl)htmlCollection;
+                target.children().forEach(org.jsoup.nodes.Node::remove);
+                impl.getModel().forEach(target::appendChild);
+            }
+        };
     }
 
     @Override

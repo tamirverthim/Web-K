@@ -8,13 +8,12 @@ import org.xhtmlrenderer.js.web_idl.*;
  */
 @Exposed(Window.class)
 public interface NamedNodeMap extends LegacyUnenumerableNamedProperties {
-    @Readonly
+    
+    @ReadonlyAttribute
     @Unsigned
-    Attribute<Long> length();
+    int length();
 
-    @Getter
-    @Nullable
-    Attr item(@Unsigned long index);
+    Object item(int index);
 
     @Getter
     @Nullable

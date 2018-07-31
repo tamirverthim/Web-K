@@ -27,7 +27,7 @@ public interface Attr extends Node {
 
     @ReadonlyAttribute
     @Nullable
-    Attribute<Element> ownerElement();
+    Element ownerElement();
 
     @ReadonlyAttribute
     boolean specified(); // useless; always returns true

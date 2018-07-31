@@ -2,6 +2,8 @@ package org.xhtmlrenderer.js.impl;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import lombok.val;
+import org.xhtmlrenderer.js.Binder;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 import org.xhtmlrenderer.js.web_idl.DOMString;
 import org.xhtmlrenderer.js.web_idl.USVString;
@@ -45,21 +47,25 @@ public class NodeImpl implements Node {
 
     @Override
     public Document ownerDocument() {
-        return null;
+        return (Document) Binder.get(target.ownerDocument(), panel);
     }
 
     @Override
     public Node getRootNode(GetRootNodeOptions options) {
-        return null;
+        return Binder.get(target.root(), panel);
     }
 
     @Override
     public Node parentNode() {
-        return null;
+        return Binder.get(target.parentNode(), panel);
     }
 
     @Override
     public Element parentElement() {
+        val modelParent = target.parent();
+        if(modelParent instanceof Element) {
+            return Binder.getElement((org.jsoup.nodes.Element) modelParent, panel);
+        } 
         return null;
     }
 

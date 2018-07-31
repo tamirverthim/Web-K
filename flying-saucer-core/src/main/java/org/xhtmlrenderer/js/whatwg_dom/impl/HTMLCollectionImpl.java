@@ -38,4 +38,8 @@ public class HTMLCollectionImpl implements HTMLCollection {
     public Element namedItem(DOMString name) {
         return null;
     }
+    
+    public Elements getModel(){
+        return elements;
+    }
 }

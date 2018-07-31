@@ -21,6 +21,7 @@ public class G2DState implements Cloneable {
     Color strokeColor;
     double lineWidth = 1;
     int fontSize = 12;
+    double alpha;
 
     void apply(Graphics2D graphics2D) {
         graphics2D.setTransform(transform);
@@ -70,6 +71,11 @@ public class G2DState implements Cloneable {
         return this;
     }
 
+    public G2DState setAlpha(double alpha) {
+        this.alpha = alpha;
+        return this;
+    }
+
     @Override
     public G2DState clone()  {
         try {
@@ -77,6 +83,7 @@ public class G2DState implements Cloneable {
             res.transform = transform != null ? (AffineTransform) transform.clone() : null;
             res.fillColor = fillColor;
             res.lineWidth = lineWidth;
+            res.alpha = alpha;
             return res;
         } catch (CloneNotSupportedException e){
             throw new RuntimeException(e);

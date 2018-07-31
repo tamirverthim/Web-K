@@ -2,10 +2,7 @@ package org.xhtmlrenderer.js;
 
 
 import lombok.experimental.var;
-import org.jsoup.nodes.CDataNode;
-import org.jsoup.nodes.Comment;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.DocumentType;
+import org.jsoup.nodes.*;
 import org.xhtmlrenderer.js.impl.*;
 import org.xhtmlrenderer.js.whatwg_dom.Element;
 import org.xhtmlrenderer.js.whatwg_dom.Node;

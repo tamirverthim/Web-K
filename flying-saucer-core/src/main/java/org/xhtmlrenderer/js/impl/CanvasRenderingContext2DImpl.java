@@ -46,11 +46,28 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     java.awt.geom.Path2D path2D = new java.awt.geom.Path2D.Double();
 
     // G2D state is not equal to state in stack
-    private boolean stateDirty;
+    boolean stateDirty;
 
-    private HTMLCanvasElementImpl canvas;
-    private boolean wasFill;
-    private DOMString fontStyle;
+    HTMLCanvasElementImpl canvas;
+    boolean wasFill;
+    DOMString fontStyle;
+    
+    // region external WebIDL attributes implementations
+    
+    Attribute<Double> globalAlpha = new Attribute<Double>() {
+        @Override
+        public Double get() {
+            return state().getAlpha();
+        }
+
+        @Override
+        public void set(Double aDouble) {
+            state().setAlpha(aDouble);
+            stateDirty = true;
+        }
+    };
+    
+    // endregion
 
     public CanvasRenderingContext2DImpl(HTMLCanvasElementImpl canvas, int width, int height) {
         this.canvas = canvas;
@@ -64,7 +81,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
     @Override
     public Attribute<Double> globalAlpha() {
-        return null;
+        return globalAlpha;
     }
 
     @Override
@@ -489,6 +506,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
     @Override
     public Attribute<CanvasTextBaseline> textBaseline() {
+        
         return new Attribute<CanvasTextBaseline>() {
             @Override
             public CanvasTextBaseline get() {
@@ -544,17 +562,18 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
     @Override
     public void setTransform(DOMMatrix2DInit transform) {
-
+        
     }
 
     @Override
     public void resetTransform() {
-
+        state().setTransform(1, 0,0,1,0,0);
+        stateDirty = true;
     }
 
     @Override
     public void drawFocusIfNeeded(Element element) {
-
+        
     }
 
     @Override

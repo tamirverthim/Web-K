@@ -93,12 +93,13 @@ public class DocumentImpl implements Document {
 
     @Override
     public HTMLCollection getElementsByTagNameNS(DOMString namespace, DOMString localName) {
-        return null;
+        return getElementsByTagName(localName);
     }
 
     @Override
     public HTMLCollection getElementsByClassName(DOMString classNames) {
-        return null;
+        val modelElements = document.getElementsByClass(classNames.toString());
+        return new HTMLCollectionImpl(modelElements, panel);
     }
 
     @Override
@@ -108,7 +109,7 @@ public class DocumentImpl implements Document {
 
     @Override
     public Element createElementNS(DOMString namespace, DOMString qualifiedName, Object options) {
-        return null;
+        return createElement(qualifiedName, options);
     }
 
     @Override
