@@ -1,5 +1,7 @@
 package org.xhtmlrenderer.js.whatwg_dom;
 
+import org.xhtmlrenderer.js.geom.DOMRect;
+import org.xhtmlrenderer.js.geom.DOMRectList;
 import org.xhtmlrenderer.js.web_idl.Optional;
 import org.xhtmlrenderer.js.web_idl.*;
 import org.xhtmlrenderer.js.whatwg_dom.css_style_attribute.CSSStyleAttribute;
@@ -8,7 +10,7 @@ import org.xhtmlrenderer.js.whatwg_dom.css_style_attribute.CSSStyleAttribute;
  * @author Taras Maslov
  * 6/20/2018
  */
-public interface Element extends Node, ParentNode, NonDocumentTypeChildNode, ChildNode, Slotable {
+public interface Element extends Node, ParentNode, NonDocumentTypeChildNode, ChildNode, Slotable, org.xhtmlrenderer.js.cssom_view.Element {
     @ReadonlyAttribute
     @Nullable
     DOMString namespaceURI();

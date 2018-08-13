@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.xhtmlrenderer.event.DefaultDocumentListener;
 import org.xhtmlrenderer.js.html5.canvas.impl.CanvasGradientImpl;
 import org.xhtmlrenderer.js.html5.canvas.impl.CanvasPatternImpl;
+import org.xhtmlrenderer.js.impl.ElementImpl;
 import org.xhtmlrenderer.js.web_idl.Exposed;
 import org.xhtmlrenderer.js.whatwg_dom.css_style_attribute.CSSStyleAttribute;
 import org.xhtmlrenderer.simple.XHTMLPanel;
@@ -124,8 +125,10 @@ public class JS {
         }
         
         // https://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSview-getComputedStyle
+        
         context.setAttribute("getComputedStyle", new Function<>((ctx, arg) -> {
-            return new CSSStyleAttribute("");
+            val element = (ElementImpl) ((WebIDLAdapter)arg[0]).getTarget();
+            return new CSSStyleAttribute(panel.getSharedContext().getStyle(element.getTarget()).toString());
         }, "getComputedStyle"), ENGINE_SCOPE);
         
         expose(CanvasGradientImpl.class);
@@ -171,7 +174,7 @@ public class JS {
                         val script = scripts.get(i);
                         if (StringUtils.isNotBlank(script.data())) {
                             try {
-                                log.trace("Evaluating script {} {}", System.lineSeparator(), script.data());
+//                                log.trace("Evaluating script {} {}", System.lineSeparator(), script.data());
                                 eval(script.data());
                             } catch (Exception e) {
                                 log.warn("script.eval", e);
@@ -181,7 +184,7 @@ public class JS {
                             if (StringUtils.isNotBlank(scriptUri)) {
                                 try {
                                     val scriptText = panel.getSharedContext().getUac().getScriptResource(scriptUri);
-                                    log.trace("Evaluating script {} {}", System.lineSeparator(), scriptText);
+//                                    log.trace("Evaluating script {} {}", System.lineSeparator(), scriptText);
                                     eval(scriptText);
                                 } catch (RuntimeException e) {
                                     log.debug("script.src", e);

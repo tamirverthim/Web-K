@@ -5,6 +5,9 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.xhtmlrenderer.js.Binder;
+import org.xhtmlrenderer.js.cssom_view.ScrollToOptions;
+import org.xhtmlrenderer.js.geom.DOMRect;
+import org.xhtmlrenderer.js.geom.DOMRectList;
 import org.xhtmlrenderer.js.html5.canvas.HTMLSlotElement;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 import org.xhtmlrenderer.js.web_idl.DOMString;
@@ -13,6 +16,7 @@ import org.xhtmlrenderer.js.whatwg_dom.*;
 import org.xhtmlrenderer.js.whatwg_dom.css_style_attribute.CSSStyleAttribute;
 import org.xhtmlrenderer.js.whatwg_dom.impl.HTMLCollectionImpl;
 import org.xhtmlrenderer.js.whatwg_dom.impl.NamedNodeMapImpl;
+import org.xhtmlrenderer.render.BoxBinder;
 import org.xhtmlrenderer.simple.XHTMLPanel;
 
 import java.util.HashSet;
@@ -86,7 +90,7 @@ public class ElementImpl extends NodeImpl implements Element {
 
     @Override
     public NamedNodeMap attributes() {
-        return new NamedNodeMapImpl(target.attributes());
+        return new NamedNodeMapImpl(target, panel);
     }
 
     @Override
@@ -447,4 +451,96 @@ public class ElementImpl extends NodeImpl implements Element {
     public void insertAdjacentHTML(DOMString position, DOMString text) {
 
     }
+    
+    // region CSSOM-view
+
+    @Override
+    public DOMRectList getClientRects() {
+        return null;
+    }
+
+    @Override
+    public DOMRect getBoundingClientRect() {
+        return null;
+    }
+
+    @Override
+    public void scrollIntoView(Object arg) {
+
+    }
+
+    @Override
+    public void scroll(ScrollToOptions options) {
+
+    }
+
+    @Override
+    public void scroll(double x, double y) {
+
+    }
+
+    @Override
+    public void scrollTo(ScrollToOptions options) {
+
+    }
+
+    @Override
+    public void scrollTo(double x, double y) {
+
+    }
+
+    @Override
+    public void scrollBy(ScrollToOptions options) {
+
+    }
+
+    @Override
+    public void scrollBy(double x, double y) {
+
+    }
+
+    @Override
+    public Attribute<Double> scrollTop() {
+        return null;
+    }
+
+    @Override
+    public Attribute<Double> scrollLeft() {
+        return null;
+    }
+
+    @Override
+    public int scrollWidth() {
+        return 0;
+    }
+
+    @Override
+    public int scrollHeight() {
+        return 0;
+    }
+
+    @Override
+    public int clientTop() {
+        return 0;
+    }
+
+    @Override
+    public int clientLeft() {
+        return 0;
+    }
+    
+    @Override
+    public int clientWidth() {
+        val box = BoxBinder.BINDINGS.get(target);
+        val paddingStyle = box.getPadding(panel.getLayoutContext());
+        return (int) (box.getContentWidth() + paddingStyle.left() + paddingStyle.right());
+    }
+
+    @Override
+    public int clientHeight() {
+        return 0;
+    }
+
+
+    // endregion
 }

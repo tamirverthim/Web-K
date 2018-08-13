@@ -17,9 +17,11 @@ import org.xhtmlrenderer.simple.XHTMLPanel;
 public class NamedNodeMapImpl implements NamedNodeMap {
     
     Element modelElement;
+    XHTMLPanel panel;
 
-    public NamedNodeMapImpl(Element modelElement) {
+    public NamedNodeMapImpl(Element modelElement, XHTMLPanel panel) {
         this.modelElement = modelElement;
+        this.panel = panel;
     }
 
     @Override

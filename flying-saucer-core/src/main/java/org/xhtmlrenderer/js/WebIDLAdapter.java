@@ -46,6 +46,10 @@ public class WebIDLAdapter<T> implements JSObject {
         this.js = js;
         processTarget();
     }
+    
+    public T getTarget(){
+        return target;
+    }
 
     public static WebIDLAdapter obtain(JS js, Object target) {
         WebIDLAdapter result = all.get(target);

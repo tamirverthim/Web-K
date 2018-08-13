@@ -704,6 +704,8 @@ public abstract class Box implements Styleable {
     }
 
     public void setElement(org.jsoup.nodes.Element element) {
+        BoxBinder.BINDINGS.remove(_element);
+        BoxBinder.BINDINGS.put(element, this);
         _element = element;
     }
 

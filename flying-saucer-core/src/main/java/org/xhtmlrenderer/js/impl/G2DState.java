@@ -3,6 +3,7 @@ package org.xhtmlrenderer.js.impl;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.var;
 import lombok.val;
 
 import java.awt.*;
@@ -21,7 +22,7 @@ public class G2DState implements Cloneable {
     Color strokeColor;
     double lineWidth = 1;
     int fontSize = 12;
-    double alpha;
+    double globalAlpha = 1.0;
 
     void apply(Graphics2D graphics2D) {
         graphics2D.setTransform(transform);
@@ -31,7 +32,11 @@ public class G2DState implements Cloneable {
     
     void apply(Graphics2D graphics2D, boolean fill) {
         apply(graphics2D);
-        graphics2D.setColor(fill ? fillColor : strokeColor);
+        var color = fill ? fillColor : strokeColor;
+        if(globalAlpha != 1.0){
+            color = new Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        }
+        graphics2D.setColor(color);
     }
 
     public void scale(double x, double y) {
@@ -54,6 +59,10 @@ public class G2DState implements Cloneable {
         transform.setTransform(new AffineTransform(a, b, c, d, e, f));
     }
     
+    void setTransform(AffineTransform transform) {
+        this.transform = transform;
+    }
+    
     public void setFillColor(Color color) {
         this.fillColor = color;
     }
@@ -71,8 +80,8 @@ public class G2DState implements Cloneable {
         return this;
     }
 
-    public G2DState setAlpha(double alpha) {
-        this.alpha = alpha;
+    public G2DState setGlobalAlpha(double globalAlpha) {
+        this.globalAlpha = globalAlpha;
         return this;
     }
 
@@ -80,10 +89,10 @@ public class G2DState implements Cloneable {
     public G2DState clone()  {
         try {
             val res = (G2DState) super.clone();
-            res.transform = transform != null ? (AffineTransform) transform.clone() : null;
             res.fillColor = fillColor;
             res.lineWidth = lineWidth;
-            res.alpha = alpha;
+            res.globalAlpha = globalAlpha;
+            res.transform = transform;
             return res;
         } catch (CloneNotSupportedException e){
             throw new RuntimeException(e);

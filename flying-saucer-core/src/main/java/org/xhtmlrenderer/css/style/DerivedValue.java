@@ -19,6 +19,7 @@
  */
 package org.xhtmlrenderer.css.style;
 
+import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.constants.IdentValue;
@@ -27,6 +28,7 @@ import org.xhtmlrenderer.css.parser.FSColor;
 import org.xhtmlrenderer.util.XRRuntimeException;
 
 
+@Slf4j
 public abstract class DerivedValue implements FSDerivedValue {
     private String _asString;
 
@@ -115,5 +117,10 @@ public abstract class DerivedValue implements FSDerivedValue {
     }
     public boolean isDependentOnFontSize() {
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return getStringValue();
     }
 }

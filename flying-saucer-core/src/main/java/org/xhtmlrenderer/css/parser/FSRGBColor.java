@@ -19,7 +19,7 @@
  */
 package org.xhtmlrenderer.css.parser;
 
-public class FSRGBColor implements FSColor {
+public class FSRGBColor implements FSColor{
     public static final FSRGBColor TRANSPARENT = new FSRGBColor(0, 0, 0);
     public static final FSRGBColor RED = new FSRGBColor(255, 0, 0);
     public static final FSRGBColor GREEN = new FSRGBColor(0, 255, 0);

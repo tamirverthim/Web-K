@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 
+import lombok.extern.slf4j.Slf4j;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.newmatch.CascadedStyle;
@@ -66,6 +67,7 @@ import org.xhtmlrenderer.util.XRRuntimeException;
  * @author Torbjoern Gannholm
  * @author Patrick Wright
  */
+@Slf4j
 public class CalculatedStyle {
     /**
      * The parent-style we inherit from
@@ -613,18 +615,15 @@ public class CalculatedStyle {
     }
 
     private String genStyleKey() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         for (int i = 0; i < _derivedValuesById.length; i++) {
             CSSName name = CSSName.getByID(i);
             FSDerivedValue val = _derivedValuesById[i];
             if (val != null) {
-                sb.append(name.toString());
-            } else {
-                sb.append("(no prop assigned in this pos)");
+                result.append(name.toString()).append(": ").append(val.toString()).append(";\n");
             }
-            sb.append("|\n");
         }
-        return sb.toString();
+        return result.toString();
 
     }
 
