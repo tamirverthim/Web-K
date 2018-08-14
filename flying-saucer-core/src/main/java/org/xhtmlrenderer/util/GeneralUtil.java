@@ -328,6 +328,14 @@ public class GeneralUtil {
         }
     }
 
+    public static int parseInt(String string, int def){
+        try {
+            return Integer.parseInt(string.trim());
+        } catch (NumberFormatException e) {
+            return def;
+        }
+    }
+    
     /**
      * Converts any special characters into their corresponding HTML entities , for example < to &lt;. This is done using a character
      * by character test, so you may consider other approaches for large documents. Make sure you declare the

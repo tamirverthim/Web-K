@@ -772,15 +772,11 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
         stateStack = new LinkedList<>();
         stateStack.push(new G2DState());
         stateDirty = false;
-
-        if (width == 0 || height == 0) {
-            return;
-        }
-
+        
         image = GraphicsEnvironment.getLocalGraphicsEnvironment()
                 .getDefaultScreenDevice()
                 .getDefaultConfiguration()
-                .createCompatibleImage(width, height);
+                .createCompatibleImage(width == 0 ? 1 : width, height == 0 ? 1 : height);
         g2d = (Graphics2D) image.getGraphics();
         g2d.setBackground(Color.red);
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -795,7 +791,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
         canvas.getTarget().attr("width", String.valueOf(w));
         canvas.getTarget().attr("height", String.valueOf(w));
         
-        if (w == this.width && h == this.height) {
+        if (w == this.width && h == this.height && image != null) {
             return;
         }
         this.width = w;

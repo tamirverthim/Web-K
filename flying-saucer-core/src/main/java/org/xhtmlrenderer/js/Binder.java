@@ -32,8 +32,8 @@ public class Binder {
     static {
         elementsCreators.put("canvas", (element, panel) -> new HTMLCanvasElementImpl(
                 (org.jsoup.nodes.Element) element, 
-                GeneralUtil.parseIntRelaxed(element.attr("width")), 
-                GeneralUtil.parseIntRelaxed(element.attr("height")),
+                GeneralUtil.parseInt(element.attr("width"), 300), 
+                GeneralUtil.parseInt(element.attr("height"), 150),
                 panel
         ));
     }
