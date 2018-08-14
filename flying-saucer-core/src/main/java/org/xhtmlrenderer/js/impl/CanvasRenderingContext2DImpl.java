@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.xhtmlrenderer.js.geom.DOMMatrix;
 import org.xhtmlrenderer.js.geom.DOMMatrix2DInit;
-import org.xhtmlrenderer.js.html5.ImageSmoothingQuality;
 import org.xhtmlrenderer.js.html5.canvas.*;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 import org.xhtmlrenderer.js.web_idl.DOMString;
@@ -192,14 +191,14 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
             CanvasRenderingContext2DImpl.this.strokeStyle = value;
             if (value instanceof DOMString) {
 
-                try {
-                    val color = Color.decode(value.toString());
-                    state().setStrokeColor(color);
+//                try {
+//                    val color = Color.decode(value.toString());
+//                    state().setStrokeColor(color);
+//                    stateDirty = true;
+//                } catch (NumberFormatException e) {
+                    state().setStrokeColor(new Color((int) (Math.random() * Integer.MAX_VALUE)));
                     stateDirty = true;
-                } catch (NumberFormatException e) {
-                    state().setFillColor(Color.blue);
-                    stateDirty = true;
-                }
+//                }
                 
 
             } else {
@@ -208,7 +207,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
             }
         }).give(() -> {
             log.trace("strokeStyle get");
-            return fillStyle;
+            return strokeStyle;
         });
     }
 
@@ -219,13 +218,14 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
             CanvasRenderingContext2DImpl.this.fillStyle = value;
             if (value instanceof DOMString) {
 
-                try {
-                    val color = Color.decode(value.toString());
-                    state().setFillColor(color);
+//                try {
+//                    val color = Color.decode(value.toString());
+//                    state().setFillColor(color);
+//                    stateDirty = true;
+//                } catch (NumberFormatException e) {
+                    state().setFillColor(new Color((int) (Math.random() * Integer.MAX_VALUE)));
                     stateDirty = true;
-                } catch (NumberFormatException e) {
-                    state().setFillColor(Color.red);
-                }
+//                }
 
             } else {
                 // todo grad and pattern
@@ -291,14 +291,34 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
     @Override
     public Attribute<Boolean> imageSmoothingEnabled() {
-        log.trace("imageSmoothingEnabled");
-        return null;
+        return new Attribute<Boolean>() {
+            @Override
+            public Boolean get() {
+                log.trace("imageSmoothingEnabled get");
+                return true;
+            }
+
+            @Override
+            public void set(Boolean aBoolean) {
+                log.trace("imageSmoothingEnabled set");
+            }
+        };
     }
 
     @Override
     public Attribute<ImageSmoothingQuality> imageSmoothingQuality() {
-        log.trace("imageSmoothingQuality");
-        return null;
+        return new Attribute<ImageSmoothingQuality>() {
+            @Override
+            public ImageSmoothingQuality get() {
+                log.trace("imageSmoothingQuality get");
+                return ImageSmoothingQuality.height;
+            }
+
+            @Override
+            public void set(ImageSmoothingQuality imageSmoothingQuality) {
+                log.trace("imageSmoothingQuality set");
+            }
+        };
     }
 
     @Override
@@ -566,7 +586,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     @Override
     public void restore() {
         log.trace("restore");
-        stateStack.pop();
+        stateStack.removeLast();
         stateDirty = true;
     }
 
@@ -610,6 +630,8 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
                 if (fontSize.endsWith("px")) {
                     state().setFontSize((int) Math.round(Double.parseDouble(fontSize.substring(0, 2))));
                     stateDirty = true;
+                } else {
+                    state().setFontSize(14);
                 }
 
             }
@@ -659,7 +681,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
             @Override
             public CanvasDirection get() {
                 log.trace("direction get");
-                return null;
+                return CanvasDirection.inherit;
             }
 
             @Override
@@ -693,7 +715,6 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     @Override
     public void transform(double a, double b, double c, double d, double e, double f) {
         log.trace("transform");
-
         state().transform(a, b, c, d, e, f);
         stateDirty = true;
     }
@@ -771,6 +792,9 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
 
     public void resize(int w, int h) {
+        canvas.getTarget().attr("width", String.valueOf(w));
+        canvas.getTarget().attr("height", String.valueOf(w));
+        
         if (w == this.width && h == this.height) {
             return;
         }

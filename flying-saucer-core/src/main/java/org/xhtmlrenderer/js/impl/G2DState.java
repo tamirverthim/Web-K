@@ -92,7 +92,7 @@ public class G2DState implements Cloneable {
             res.fillColor = fillColor;
             res.lineWidth = lineWidth;
             res.globalAlpha = globalAlpha;
-            res.transform = transform;
+            res.transform = new AffineTransform(this.transform);
             return res;
         } catch (CloneNotSupportedException e){
             throw new RuntimeException(e);

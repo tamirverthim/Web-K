@@ -39,7 +39,6 @@ public class JS {
 
     private XHTMLPanel panel;
     private JsConsole console = new JsConsole();
-    private JsWindow window = new JsWindow();
     private org.jsoup.nodes.Document document;
 
     public void onload() {
@@ -62,38 +61,24 @@ public class JS {
     public interface SetInterval {
         void setInterval(Consumer<Object> fn, int interval);
     }
-
-    @FunctionalInterface
-    public interface SetTimeout {
-        void setTimeout(Consumer<Object> fn, int interval);
-    }
-
-    public class JsWindow implements SetInterval, SetTimeout {
-        public void setInterval(Consumer<Object> fn, int interval) {
-            Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    SwingUtilities.invokeLater(() -> {
-                        fn.accept(null);
-                        panel.setDocument(panel.getDocument());
-                    });
-                }
-            }, 0, interval);
-        }
-
-        @Override
-        public void setTimeout(Consumer<Object> fn, int interval) {
-           
-        }
-    }
-
     private void initEngine() {
         engine = new ScriptEngineManager().getEngineByName("nashorn");
         context = engine.getContext();
         context.setAttribute("document", WebIDLAdapter.obtain(this, new org.xhtmlrenderer.js.html5.impl.DocumentImpl(panel)), ENGINE_SCOPE);
         context.setAttribute("console", console, ENGINE_SCOPE);
-        context.setAttribute("setInterval", window, ENGINE_SCOPE);
+        context.setAttribute("setInterval", new Function<>((ctx, args) -> {
+            val fn = (JSObject) args[0];
+            double interval = (double) args[1];
+
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    fn.call(ctx);
+                }
+            }, 0, (long) interval);
+            return null;
+        }, "setInterval"), ENGINE_SCOPE);
         
         context.setAttribute("setTimeout", new Function<>((ctx, arg) -> {
             val fn = (JSObject) arg[0];
@@ -108,6 +93,8 @@ public class JS {
             }, (long) timeout);
             return null;
         }, "setTimeout"), ENGINE_SCOPE);
+        
+        
         
         context.setAttribute("location", new Location(), ENGINE_SCOPE);
         context.setAttribute("HTMLCanvasElement", new Location(), ENGINE_SCOPE);

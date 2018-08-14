@@ -133,6 +133,7 @@ public class WebIDLAdapter<T> implements JSObject {
 
     @Override
     public Object getMember(String s) {
+//        log.trace("Getting member {} of {}", s, target);
         val member = members.get(s);
         if (member instanceof WebIDLAdapter.AttributeLink) {
             return wrapIfNeeded((((AttributeLink) member).attribute).get());

@@ -2,19 +2,27 @@ package org.xhtmlrenderer.js.impl;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.var;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.xhtmlrenderer.js.Binder;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 import org.xhtmlrenderer.js.web_idl.DOMString;
 import org.xhtmlrenderer.js.web_idl.USVString;
 import org.xhtmlrenderer.js.whatwg_dom.*;
+import org.xhtmlrenderer.js.whatwg_dom.impl.EventImpl;
 import org.xhtmlrenderer.simple.XHTMLPanel;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * @author Taras Maslov
  * 7/13/2018
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Slf4j
 public class NodeImpl implements Node {
     
     org.jsoup.nodes.Node target;
@@ -179,18 +187,37 @@ public class NodeImpl implements Node {
     
     // region EventTarget
 
+    private LinkedHashMap<DOMString, List<EventListener>> listeners = new LinkedHashMap<>();
+    
     @Override
-    public void addEventListener(DOMString type, EventListener callback, Object options) {
+    public void addEventListener(DOMString type, EventListener callback, Object options) { //callback is NashorJavaAdapter here, check if any adaptaion needed
+        var typeListeners = listeners.computeIfAbsent(type, k -> new ArrayList<>());
+        typeListeners.add(callback);
         
+        // workaround for ChartJS
+        if(type.toString().equals("animationstart")){
+            dispatchEvent(new EventImpl(DOMStringImpl.of("animationstart"), null));
+        }
     }
 
     @Override
     public void removeEventListener(DOMString type, EventListener callback, Object options) {
-
+        val typeListeners = listeners.get(type);
+        if(typeListeners != null){
+            typeListeners.remove(callback);
+            if(typeListeners.isEmpty()){
+                listeners.remove(type);
+            }
+        }
     }
 
     @Override
     public boolean dispatchEvent(Event event) {
+        val typeListeners = listeners.get(event.type());
+        if(typeListeners != null) {
+            typeListeners.forEach(l -> l.handleEvent(event));
+            return true;
+        }
         return false;
     }
 

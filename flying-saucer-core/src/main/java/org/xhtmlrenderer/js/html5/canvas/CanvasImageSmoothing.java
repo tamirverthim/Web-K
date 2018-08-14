@@ -1,6 +1,5 @@
 package org.xhtmlrenderer.js.html5.canvas;
 
-import org.xhtmlrenderer.js.html5.ImageSmoothingQuality;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 import org.xhtmlrenderer.js.web_idl.Mixin;
 

@@ -47,20 +47,15 @@ public interface Event {
     
     void construct(DOMString type, @Optional EventInit init);
     
-    @Readonly
-    Attribute<DOMString> type();
-
-    @Readonly
+    @ReadonlyAttribute DOMString type();
+    
+    @Optional @ReadonlyAttribute EventTarget target();
+    
     @Optional
-    Attribute<EventTarget> target();
-
-    @Readonly
+    @ReadonlyAttribute EventTarget srcElement(); // historical
+    
     @Optional
-    Attribute<EventTarget> srcElement(); // historical
-
-    @Readonly
-    @Optional
-    Attribute<EventTarget> currentTarget();
+    @ReadonlyAttribute EventTarget currentTarget();
 
     Sequence<EventTarget> composedPath();
 
@@ -69,9 +64,7 @@ public interface Event {
     @Unsigned short AT_TARGET = 2;
     @Unsigned short BUBBLING_PHASE = 3;
 
-    @Unsigned
-    @Readonly
-    Attribute<Short> eventPhase();
+    @Unsigned @ReadonlyAttribute Short eventPhase();
 
     void stopPropagation();
 
@@ -79,29 +72,22 @@ public interface Event {
 
     void stopImmediatePropagation();
 
-    @Readonly
-    Attribute<Boolean> bubbles();
+    @ReadonlyAttribute boolean bubbles();
 
-    @Readonly
-    Attribute<Boolean> cancelable();
+    @ReadonlyAttribute boolean cancelable();
 
-    @Readonly
-    Attribute<Boolean> returnValue();  // historical
+    @ReadonlyAttribute boolean returnValue();  // historical
 
     void preventDefault();
 
-    @Readonly
-    Attribute<Boolean> defaultPrevented();
+    @ReadonlyAttribute boolean defaultPrevented();
 
-    @Readonly
-    Attribute<Boolean> composed();
+    @ReadonlyAttribute boolean composed();
 
     @Unforgeable
-    @Readonly
-    Attribute<Boolean> isTrusted();
+    @ReadonlyAttribute boolean isTrusted();
 
-    @Readonly
-    Attribute<DOMHighResTimeStamp> timeStamp();
+    @ReadonlyAttribute DOMHighResTimeStamp timeStamp();
 
     void initEvent(DOMString type, @Optional @DefaultBoolean(false) boolean bubbles, @Optional @DefaultBoolean(false) boolean cancelable); // historical
 }

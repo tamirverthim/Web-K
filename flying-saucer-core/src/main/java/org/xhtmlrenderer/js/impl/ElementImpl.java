@@ -533,7 +533,7 @@ public class ElementImpl extends NodeImpl implements Element {
     public int clientWidth() {
         val box = BoxBinder.BINDINGS.get(target);
         val paddingStyle = box.getPadding(panel.getLayoutContext());
-        return (int) (box.getContentWidth() + paddingStyle.left() + paddingStyle.right());
+        return  (int) (box.getContentWidth() + paddingStyle.left() + paddingStyle.right());
     }
 
     @Override
