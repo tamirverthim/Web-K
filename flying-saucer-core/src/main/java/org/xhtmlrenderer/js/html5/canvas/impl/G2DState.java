@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.var;
 import lombok.val;
+import org.xhtmlrenderer.js.html5.canvas.CanvasTextBaseline;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -23,6 +24,7 @@ public class G2DState implements Cloneable {
     double lineWidth = 1;
     int fontSize = 12;
     float globalAlpha = 1.0f;
+    private CanvasTextBaseline canvasTextBaseline;
 
     void apply(Graphics2D graphics2D) {
         graphics2D.setTransform(transform);
@@ -93,11 +95,15 @@ public class G2DState implements Cloneable {
             res.lineWidth = lineWidth;
             res.globalAlpha = globalAlpha;
             res.transform = new AffineTransform(this.transform);
+            res.canvasTextBaseline = canvasTextBaseline;
             return res;
         } catch (CloneNotSupportedException e){
             throw new RuntimeException(e);
         }
     }
-    
-    
+
+
+    public void setTextBaseline(CanvasTextBaseline canvasTextBaseline) {
+        this.canvasTextBaseline = canvasTextBaseline;
+    }
 }

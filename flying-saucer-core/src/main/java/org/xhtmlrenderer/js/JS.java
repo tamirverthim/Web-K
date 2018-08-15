@@ -76,6 +76,7 @@ public class JS {
                 @Override
                 public void run() {
                     fn.call(ctx);
+                    panel.relayout();
                 }
             }, 0, (long) interval);
             return null;
@@ -90,6 +91,7 @@ public class JS {
                 @Override
                 public void run() {
                     fn.call(ctx);
+                    panel.relayout();
                 }
             }, (long) timeout);
             return null;
@@ -145,45 +147,50 @@ public class JS {
         });
     }
     
+    private void handleNewDocument(){
+        val nextDocument = panel.getDocument();
+        if (nextDocument != document) {
+            initEngine();
+            val scripts = panel.getDocument().getElementsByTag("script");
+            log.trace("Document has {} scripts", scripts.size());
+            for (int i = 0; i < scripts.size(); i++) {
+                val script = scripts.get(i);
+                if (StringUtils.isNotBlank(script.data())) {
+                    try {
+//                                log.trace("Evaluating script {} {}", System.lineSeparator(), script.data());
+                        eval(script.data());
+                    } catch (Exception e) {
+                        log.warn("script.eval", e);
+                    }
+                } else {
+                    val scriptUri = script.attributes().get("src");
+                    if (StringUtils.isNotBlank(scriptUri)) {
+                        try {
+                            val scriptText = panel.getSharedContext().getUac().getScriptResource(scriptUri);
+//                                    log.trace("Evaluating script {} {}", System.lineSeparator(), scriptText);
+                            eval(scriptText);
+                        } catch (RuntimeException e) {
+                            log.debug("script.src", e);
+                        }
+                    }
+                }
+
+                onload();
+            }
+            document = nextDocument;
+        }
+    }
+    
     public JS(XHTMLPanel panel) {
         instance = this; // todo rem
         this.panel = panel;
 
 //        eval("this.setInterval = __rebind.setInterval;");
         panel.addDocumentListener(new DefaultDocumentListener() {
+
             @Override
             public void documentLoaded() {
-                val nextDocument = panel.getDocument();
-                if (nextDocument != document) {
-                    initEngine();
-                    val scripts = panel.getDocument().getElementsByTag("script");
-                    log.trace("Document has {} scripts", scripts.size());
-                    for (int i = 0; i < scripts.size(); i++) {
-                        val script = scripts.get(i);
-                        if (StringUtils.isNotBlank(script.data())) {
-                            try {
-//                                log.trace("Evaluating script {} {}", System.lineSeparator(), script.data());
-                                eval(script.data());
-                            } catch (Exception e) {
-                                log.warn("script.eval", e);
-                            }
-                        } else {
-                            val scriptUri = script.attributes().get("src");
-                            if (StringUtils.isNotBlank(scriptUri)) {
-                                try {
-                                    val scriptText = panel.getSharedContext().getUac().getScriptResource(scriptUri);
-//                                    log.trace("Evaluating script {} {}", System.lineSeparator(), scriptText);
-                                    eval(scriptText);
-                                } catch (RuntimeException e) {
-                                    log.debug("script.src", e);
-                                }
-                            }
-                        }
-
-                        onload();
-                    }
-                    document = nextDocument;
-                }
+                handleNewDocument();
             }
         });
     }
@@ -198,7 +205,7 @@ public class JS {
             }
             throw new RuntimeException(e);
         }
-        panel.repaint();
+        panel.relayout();
         return res;
     }
 

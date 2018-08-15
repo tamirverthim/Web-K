@@ -8,6 +8,7 @@ import com.helger.css.property.ECSSProperty;
 import com.helger.css.reader.CSSReaderDeclarationList;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.var;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.xhtmlrenderer.css.constants.CSSName;
@@ -80,6 +81,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
 
     };
+    private CanvasTextAlign textAlign = CanvasTextAlign.start;
 
 
     // endregion
@@ -587,7 +589,19 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     public void fillText(DOMString text, double x, double y, Double maxWidth) {
         log.trace("fillText");
         ensureState(true);
-        g2d.drawString(text.toString(), (int) x, (int) y);
+        val metrix = g2d.getFontMetrics().getStringBounds(text.toString(), g2d);
+        
+        
+        var floatX = (float)x;
+        if(textAlign == CanvasTextAlign.center) {
+            floatX -= metrix.getWidth() / 2;
+        }
+        
+        if (textAlign == CanvasTextAlign.end || textAlign == CanvasTextAlign.right) {
+            floatX -= metrix.getWidth();
+        }
+        
+        g2d.drawString(text.toString(), floatX, (float) (y + metrix.getHeight() / 4));
         // todo handle max width
     }
 
@@ -655,12 +669,13 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
             @Override
             public CanvasTextAlign get() {
                 log.trace("textAlign get");
-                return null;
+                return textAlign;
             }
 
             @Override
             public void set(CanvasTextAlign canvasTextAlign) {
                 log.trace("textAlign set");
+                textAlign = canvasTextAlign;
             }
         };
     }
@@ -677,6 +692,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
             @Override
             public void set(CanvasTextBaseline canvasTextBaseline) {
+                state().setTextBaseline(canvasTextBaseline);
                 log.trace("textBaseline set");
             }
         };
