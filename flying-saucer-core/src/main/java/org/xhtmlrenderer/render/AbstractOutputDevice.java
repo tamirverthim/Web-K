@@ -92,7 +92,7 @@ public abstract class AbstractOutputDevice implements OutputDevice {
         InlineLayoutBox iB = inlineText.getParent();
         String text = inlineText.getSubstring();
 
-        setColor(new FSRGBColor(0xFF, 0x33, 0xFF));
+        setColor(new FSRGBColor(0xFF, 0x33, 0xFF, 1));
 
         FSFontMetrics fm = iB.getStyle().getFSFontMetrics(null);
         int width = c.getTextRenderer().getWidth(

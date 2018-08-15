@@ -3,6 +3,7 @@ package org.xhtmlrenderer.js;
 
 import lombok.experimental.var;
 import org.jsoup.nodes.*;
+import org.xhtmlrenderer.js.html5.canvas.impl.HTMLCanvasElementImpl;
 import org.xhtmlrenderer.js.impl.*;
 import org.xhtmlrenderer.js.whatwg_dom.Element;
 import org.xhtmlrenderer.js.whatwg_dom.Node;
@@ -10,7 +11,6 @@ import org.xhtmlrenderer.simple.XHTMLPanel;
 import org.xhtmlrenderer.util.GeneralUtil;
 
 import java.util.HashMap;
-import java.util.function.Function;
 
 import static org.xhtmlrenderer.util.AssertHelper.assertNotNull;
 

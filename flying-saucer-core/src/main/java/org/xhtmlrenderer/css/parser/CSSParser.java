@@ -1630,7 +1630,9 @@ public class CSSParser {
             }
 
             if (f.equals("rgb(")) {
-                result = new PropertyValue(createRGBColorFromFunction(params));
+                result = new PropertyValue(createRGBAColorFromFunction(params)); }
+            else if (f.equals("rgba(")) {
+                result = new PropertyValue(createRGBAColorFromFunction(params));
             } else if (f.equals("cmyk(")) {
                 if (! isSupportCMYKColors()) {
                     throw new CSSParseException(
@@ -1689,8 +1691,8 @@ public class CSSParser {
         return result;
     }
 
-    private FSRGBColor createRGBColorFromFunction(List params) {
-        if (params.size() != 3) {
+    private FSRGBColor createRGBAColorFromFunction(List params) {
+        if (params.size() != 3 && params.size() != 4) {
             throw new CSSParseException(
                     "The rgb() function must have exactly three parameters",
                     getCurrentLine());
@@ -1699,6 +1701,7 @@ public class CSSParser {
         int red = 0;
         int green = 0;
         int blue = 0;
+        float alpha = 1;
         for (int i = 0; i < params.size(); i++) {
             PropertyValue value = (PropertyValue)params.get(i);
             short type = value.getPrimitiveType();
@@ -1706,17 +1709,21 @@ public class CSSParser {
                     type != CSSPrimitiveValue.CSS_NUMBER) {
                 throw new CSSParseException(
                         "Parameter " + (i+1) + " to the rgb() function is " +
-                        "not a number or percentage", getCurrentLine());
+                                "not a number or percentage", getCurrentLine());
             }
-
+            
             float f = value.getFloatValue();
-            if (type == CSSPrimitiveValue.CSS_PERCENTAGE) {
-                f = f/100 * 255;
-            }
-            if (f < 0) {
-                f = 0;
-            } else if (f > 255) {
-                f = 255;
+
+            if(i < 3) {
+
+                if (type == CSSPrimitiveValue.CSS_PERCENTAGE) {
+                    f = f / 100 * 255;
+                }
+                if (f < 0) {
+                    f = 0;
+                } else if (f > 255) {
+                    f = 255;
+                }
             }
 
             switch (i) {
@@ -1729,11 +1736,60 @@ public class CSSParser {
                 case 2:
                     blue = (int)f;
                     break;
+                case 3:
+                    alpha = Math.min(Math.max(f, 0), 1);
+                    break;
             }
         }
 
-        return new FSRGBColor(red, green, blue);
+        return new FSRGBColor(red, green, blue, alpha);
     }
+    
+//    private FSRGBColor createRGBColorFromFunction(List params) {
+//        if (params.size() != 3) {
+//            throw new CSSParseException(
+//                    "The rgb() function must have exactly three parameters",
+//                    getCurrentLine());
+//        }
+//
+//        int red = 0;
+//        int green = 0;
+//        int blue = 0;
+//        for (int i = 0; i < params.size(); i++) {
+//            PropertyValue value = (PropertyValue)params.get(i);
+//            short type = value.getPrimitiveType();
+//            if (type != CSSPrimitiveValue.CSS_PERCENTAGE &&
+//                    type != CSSPrimitiveValue.CSS_NUMBER) {
+//                throw new CSSParseException(
+//                        "Parameter " + (i+1) + " to the rgb() function is " +
+//                        "not a number or percentage", getCurrentLine());
+//            }
+//
+//            float f = value.getFloatValue();
+//            if (type == CSSPrimitiveValue.CSS_PERCENTAGE) {
+//                f = f/100 * 255;
+//            }
+//            if (f < 0) {
+//                f = 0;
+//            } else if (f > 255) {
+//                f = 255;
+//            }
+//
+//            switch (i) {
+//                case 0:
+//                    red = (int)f;
+//                    break;
+//                case 1:
+//                    green = (int)f;
+//                    break;
+//                case 2:
+//                    blue = (int)f;
+//                    break;
+//            }
+//        }
+//
+//        return new FSRGBColor(red, green, blue);
+//    }
 
 //  /*
 //  * There is a constraint on the color that it must
@@ -1758,12 +1814,12 @@ public class CSSParser {
                 color = new FSRGBColor(
                             convertToInteger(s.charAt(0), s.charAt(0)),
                             convertToInteger(s.charAt(1), s.charAt(1)),
-                            convertToInteger(s.charAt(2), s.charAt(2)));
+                            convertToInteger(s.charAt(2), s.charAt(2)), 1);
             } else { /* s.length == 6 */
                 color = new FSRGBColor(
                         convertToInteger(s.charAt(0), s.charAt(1)),
                         convertToInteger(s.charAt(2), s.charAt(3)),
-                        convertToInteger(s.charAt(4), s.charAt(5)));
+                        convertToInteger(s.charAt(4), s.charAt(5)), 1);
             }
             result = new PropertyValue(color);
             skip_whitespace();

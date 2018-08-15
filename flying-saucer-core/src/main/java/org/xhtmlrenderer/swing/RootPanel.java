@@ -425,7 +425,7 @@ public class RootPanel extends JPanel implements Scrollable, UserInterface, FSCa
                             .toString(getFont().getSize()))));
             Color c = getForeground();
             style.setDefaultValue(CSSName.COLOR, new ColorValue(CSSName.COLOR,
-                    new PropertyValue(new FSRGBColor(c.getRed(), c.getGreen(), c.getBlue()))));
+                    new PropertyValue(new FSRGBColor(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha()))));
 
             if (getFont().isBold()) {
                 style.setDefaultValue(CSSName.FONT_WEIGHT, IdentValue.BOLD);

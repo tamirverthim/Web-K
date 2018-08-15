@@ -1,10 +1,11 @@
-package org.xhtmlrenderer.js.impl;
+package org.xhtmlrenderer.js.html5.canvas.impl;
 
 import org.jsoup.nodes.Element;
 import org.xhtmlrenderer.js.html5.canvas.BlobCallback;
 import org.xhtmlrenderer.js.html5.canvas.HTMLCanvasElement;
 import org.xhtmlrenderer.js.html5.canvas.OffscreenCanvas;
 import org.xhtmlrenderer.js.html5.canvas.RenderingContext;
+import org.xhtmlrenderer.js.impl.ElementImpl;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 import org.xhtmlrenderer.js.web_idl.DOMString;
 import org.xhtmlrenderer.js.web_idl.USVString;

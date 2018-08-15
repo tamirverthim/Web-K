@@ -19,17 +19,22 @@
  */
 package org.xhtmlrenderer.css.parser;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class FSRGBColor implements FSColor{
-    public static final FSRGBColor TRANSPARENT = new FSRGBColor(0, 0, 0);
-    public static final FSRGBColor RED = new FSRGBColor(255, 0, 0);
-    public static final FSRGBColor GREEN = new FSRGBColor(0, 255, 0);
-    public static final FSRGBColor BLUE = new FSRGBColor(0, 0, 255);
+    public static final FSRGBColor TRANSPARENT = new FSRGBColor(0, 0, 0, 0);
+    public static final FSRGBColor RED = new FSRGBColor(255, 0, 0, 1);
+    public static final FSRGBColor GREEN = new FSRGBColor(0, 255, 0,1);
+    public static final FSRGBColor BLUE = new FSRGBColor(0, 0, 255, 1);
     
     private int _red;
     private int _green;
     private int _blue;
+    private float alpha;
     
-    public FSRGBColor(int red, int green, int blue) {
+    public FSRGBColor(int red, int green, int blue, float alpha) {
         if (red < 0 || red > 255) {
             throw new IllegalArgumentException();
         }
@@ -42,10 +47,11 @@ public class FSRGBColor implements FSColor{
         _red = red;
         _green = green;
         _blue = blue;
+        this.alpha = alpha;
     }
 
     public FSRGBColor(int color) {
-        this(((color & 0xff0000) >> 16),((color & 0x00ff00) >> 8), color & 0xff);
+        this(((color & 0xff0000) >> 16),((color & 0x00ff00) >> 8), color & 0xff, 1);
     }
 
     public int getBlue() {
@@ -59,7 +65,11 @@ public class FSRGBColor implements FSColor{
     public int getRed() {
         return _red;
     }
-    
+
+    public float getAlpha() {
+        return alpha;
+    }
+
     public String toString() {
         return '#' + toString(_red) + toString(_green) + toString(_blue);
     }
@@ -82,7 +92,9 @@ public class FSRGBColor implements FSColor{
         if (_blue != that._blue) return false;
         if (_green != that._green) return false;
         if (_red != that._red) return false;
-
+        if (this.alpha != that.alpha) return false;
+         
+        
         return true;
     }
 
@@ -90,6 +102,7 @@ public class FSRGBColor implements FSColor{
         int result = _red;
         result = 31 * result + _green;
         result = 31 * result + _blue;
+        result = 31 * result + Float.hashCode(alpha);
         return result;
     }
 
@@ -104,7 +117,7 @@ public class FSRGBColor implements FSColor{
         float bLighter = 0.6999f + 0.3f*bBase;
         
         int[] rgb = HSBtoRGB(hLighter, sLighter, bLighter);
-        return new FSRGBColor(rgb[0], rgb[1], rgb[2]);
+        return new FSRGBColor(rgb[0], rgb[1], rgb[2], alpha);
     }
     
     public FSColor darkenColor() {
@@ -118,7 +131,7 @@ public class FSRGBColor implements FSColor{
         float bDarker = 0.56f*bBase;
         
         int[] rgb = HSBtoRGB(hDarker, sDarker, bDarker);
-        return new FSRGBColor(rgb[0], rgb[1], rgb[2]);
+        return new FSRGBColor(rgb[0], rgb[1], rgb[2], alpha);
     }
     
     // Taken from java.awt.Color to avoid dependency on it

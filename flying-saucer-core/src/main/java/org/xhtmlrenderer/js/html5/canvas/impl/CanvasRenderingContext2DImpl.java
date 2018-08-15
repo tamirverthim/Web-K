@@ -1,4 +1,4 @@
-package org.xhtmlrenderer.js.impl;
+package org.xhtmlrenderer.js.html5.canvas.impl;
 
 import com.helger.css.ECSSVersion;
 import com.helger.css.decl.CSSDeclaration;
@@ -10,9 +10,14 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.xhtmlrenderer.css.constants.CSSName;
+import org.xhtmlrenderer.css.parser.CSSErrorHandler;
+import org.xhtmlrenderer.css.parser.CSSParser;
+import org.xhtmlrenderer.css.parser.FSRGBColor;
 import org.xhtmlrenderer.js.geom.DOMMatrix;
 import org.xhtmlrenderer.js.geom.DOMMatrix2DInit;
 import org.xhtmlrenderer.js.html5.canvas.*;
+import org.xhtmlrenderer.js.impl.TextMetricsImpl;
 import org.xhtmlrenderer.js.web_idl.Attribute;
 import org.xhtmlrenderer.js.web_idl.DOMString;
 import org.xhtmlrenderer.js.web_idl.Sequence;
@@ -53,27 +58,33 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     HTMLCanvasElementImpl canvas;
     boolean wasFill;
     DOMString fontStyle;
-    
+
     // region external WebIDL attributes implementations
-    
+
     Attribute<Double> globalAlpha = new Attribute<Double>() {
+
+
         @Override
         public Double get() {
             log.trace("globalAlpha get");
-            return state().getGlobalAlpha();
+            return Double.valueOf(state().getGlobalAlpha());
         }
+
 
         @Override
         public void set(Double aDouble) {
             log.trace("globalAlpha set");
-            state().setGlobalAlpha(aDouble);
+            state().setGlobalAlpha((float) Math.min(1, Math.max(0, aDouble)));
             stateDirty = true;
         }
+
+
     };
-    
+
+
     // endregion
 
-    public CanvasRenderingContext2DImpl(HTMLCanvasElementImpl canvas, int width, int height) {
+    CanvasRenderingContext2DImpl(HTMLCanvasElementImpl canvas, int width, int height) {
         this.canvas = canvas;
         resize(width, height);
     }
@@ -120,8 +131,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     }
 
     @Override
-    public void beginPath()
-    {
+    public void beginPath() {
         log.trace("beginPath");
         path2D = new java.awt.geom.Path2D.Double();
     }
@@ -132,11 +142,6 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
         ensureState(true);
         g2d.fill(path2D);
     }
-
-//    @Override
-//    public void fill(Path2D path, CanvasFillRule fillRule) {
-//
-//    }
 
     @Override
     public void stroke() {
@@ -190,17 +195,10 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
             log.trace("strokeStyle set");
             CanvasRenderingContext2DImpl.this.strokeStyle = value;
             if (value instanceof DOMString) {
-
-//                try {
-//                    val color = Color.decode(value.toString());
-//                    state().setStrokeColor(color);
-//                    stateDirty = true;
-//                } catch (NumberFormatException e) {
-                    state().setStrokeColor(new Color((int) (Math.random() * Integer.MAX_VALUE)));
-                    stateDirty = true;
-//                }
-                
-
+                val parsed = parseCSSColor(value.toString());
+                if(parsed != null) {
+                    state().setStrokeColor(parsed);
+                }   stateDirty = true;
             } else {
                 // todo grad and pattern
                 throw new RuntimeException();
@@ -217,16 +215,11 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
             log.trace("fillStyle set");
             CanvasRenderingContext2DImpl.this.fillStyle = value;
             if (value instanceof DOMString) {
-
-//                try {
-//                    val color = Color.decode(value.toString());
-//                    state().setFillColor(color);
-//                    stateDirty = true;
-//                } catch (NumberFormatException e) {
-                    state().setFillColor(new Color((int) (Math.random() * Integer.MAX_VALUE)));
-                    stateDirty = true;
-//                }
-
+                val parsed = parseCSSColor(value.toString());
+                if(parsed != null) {
+                    state().setFillColor(parsed);
+                }
+                stateDirty = true;
             } else {
                 // todo grad and pattern
                 throw new RuntimeException();
@@ -415,9 +408,9 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
     @Override
     public Attribute<CanvasLineCap> lineCap() {
-        
+
         return new Attribute<CanvasLineCap>() {
-            
+
             @Override
             public CanvasLineCap get() {
                 log.trace("lineCap get");
@@ -428,9 +421,9 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
             public void set(CanvasLineCap canvasLineCap) {
                 log.trace("lineCap set");
             }
-            
+
         };
-        
+
     }
 
     @Override
@@ -610,6 +603,20 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
         return new TextMetricsImpl(g2d.getFontMetrics().stringWidth(text.toString()));
     }
 
+    private Color parseCSSColor(String string) {
+        val parsed = new CSSParser(new CSSErrorHandler() {
+            @Override
+            public void error(String uri, String message) {
+                
+            }
+        }).parsePropertyValue(CSSName.COLOR, 0, string);
+        if (parsed.getFSColor() instanceof FSRGBColor) {
+            val rgbColor = (FSRGBColor)parsed.getFSColor();
+            return new Color(rgbColor.getRed() / (float) 255, rgbColor.getGreen() / (float) 255, rgbColor.getBlue() / (float) 255, rgbColor.getAlpha());
+        } 
+        return null;
+    }
+
     @Override
     public Attribute<DOMString> font() {
         return Attribute.<DOMString>receive(style -> {
@@ -660,7 +667,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
     @Override
     public Attribute<CanvasTextBaseline> textBaseline() {
-        
+
         return new Attribute<CanvasTextBaseline>() {
             @Override
             public CanvasTextBaseline get() {
@@ -772,7 +779,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
         stateStack = new LinkedList<>();
         stateStack.push(new G2DState());
         stateDirty = false;
-        
+
         image = GraphicsEnvironment.getLocalGraphicsEnvironment()
                 .getDefaultScreenDevice()
                 .getDefaultConfiguration()
@@ -790,7 +797,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     public void resize(int w, int h) {
         canvas.getTarget().attr("width", String.valueOf(w));
         canvas.getTarget().attr("height", String.valueOf(w));
-        
+
         if (w == this.width && h == this.height && image != null) {
             return;
         }

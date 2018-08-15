@@ -1,4 +1,4 @@
-package org.xhtmlrenderer.js.impl;
+package org.xhtmlrenderer.js.html5.canvas.impl;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -22,7 +22,7 @@ public class G2DState implements Cloneable {
     Color strokeColor;
     double lineWidth = 1;
     int fontSize = 12;
-    double globalAlpha = 1.0;
+    float globalAlpha = 1.0f;
 
     void apply(Graphics2D graphics2D) {
         graphics2D.setTransform(transform);
@@ -34,7 +34,7 @@ public class G2DState implements Cloneable {
         apply(graphics2D);
         var color = fill ? fillColor : strokeColor;
         if(globalAlpha != 1.0){
-            color = new Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+            color = new Color(color.getRed(), color.getGreen(), color.getBlue(), globalAlpha);
         }
         graphics2D.setColor(color);
     }
@@ -80,7 +80,7 @@ public class G2DState implements Cloneable {
         return this;
     }
 
-    public G2DState setGlobalAlpha(double globalAlpha) {
+    public G2DState setGlobalAlpha(float globalAlpha) {
         this.globalAlpha = globalAlpha;
         return this;
     }

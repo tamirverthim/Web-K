@@ -3,6 +3,7 @@ package org.xhtmlrenderer.js;
 import jdk.nashorn.api.scripting.AbstractJSObject;
 import jdk.nashorn.api.scripting.JSObject;
 import jdk.nashorn.api.scripting.NashornException;
+import jdk.nashorn.api.scripting.ScriptUtils;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.ClassUtils;
@@ -68,7 +69,7 @@ public class JS {
         context.setAttribute("console", console, ENGINE_SCOPE);
         context.setAttribute("setInterval", new Function<>((ctx, args) -> {
             val fn = (JSObject) args[0];
-            double interval = (double) args[1];
+            double interval =  (double) ScriptUtils.convert(args[1], Double.class);
 
             Timer timer = new Timer();
             timer.schedule(new TimerTask() {
@@ -82,7 +83,7 @@ public class JS {
         
         context.setAttribute("setTimeout", new Function<>((ctx, arg) -> {
             val fn = (JSObject) arg[0];
-            double timeout = (double) arg[1];
+            double timeout = (double) ScriptUtils.convert(arg[1], Double.class);
 
             Timer timer = new Timer();
             timer.schedule(new TimerTask() {

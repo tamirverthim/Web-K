@@ -25,7 +25,7 @@ import org.xhtmlrenderer.extend.ReplacedElement;
 import org.xhtmlrenderer.extend.ReplacedElementFactory;
 import org.xhtmlrenderer.extend.UserAgentCallback;
 import org.xhtmlrenderer.js.Binder;
-import org.xhtmlrenderer.js.impl.HTMLCanvasElementImpl;
+import org.xhtmlrenderer.js.html5.canvas.impl.HTMLCanvasElementImpl;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.DefaultFormSubmissionListener;

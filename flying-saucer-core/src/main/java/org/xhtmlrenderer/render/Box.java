@@ -1094,7 +1094,7 @@ public abstract class Box implements Styleable {
         PageBox page = c.getPage();
         result = page.getStyle().getBackgroundColor();
         if (result == null) {
-            return new FSRGBColor(255, 255, 255);
+            return new FSRGBColor(255, 255, 255, 1);
         } else {
             return result;
         }
