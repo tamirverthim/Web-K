@@ -20,7 +20,7 @@
 package org.xhtmlrenderer.extend;
 
 
-import org.jsoup.nodes.Element;
+import org.xhtmlrenderer.dom.nodes.Element;
 
 /**
  *

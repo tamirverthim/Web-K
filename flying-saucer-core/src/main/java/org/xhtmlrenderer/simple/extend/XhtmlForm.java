@@ -30,9 +30,8 @@ import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JRadioButton;
 
-import org.jsoup.nodes.CDataNode;
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.TextNode;
+import org.xhtmlrenderer.dom.nodes.Element;
+import org.xhtmlrenderer.dom.nodes.TextNode;
 
 import org.xhtmlrenderer.extend.UserAgentCallback;
 import org.xhtmlrenderer.layout.LayoutContext;
@@ -94,7 +93,7 @@ public class XhtmlForm {
         return FS_DEFAULT_GROUP + ++_defaultGroupCount;
     }
 
-    private static boolean isFormField(org.jsoup.nodes.Element e) {
+    private static boolean isFormField(org.xhtmlrenderer.dom.nodes.Element e) {
         String nodeName = e.nodeName();
         
         if (nodeName.equals("input") || nodeName.equals("select") || nodeName.equals("textarea")) {
@@ -104,7 +103,7 @@ public class XhtmlForm {
         return false;
     }
 
-    public FormField addComponent(org.jsoup.nodes.Element e, LayoutContext context, BlockBox box) {
+    public FormField addComponent(org.xhtmlrenderer.dom.nodes.Element e, LayoutContext context, BlockBox box) {
         FormField field = null;
 
         if (_componentCache.containsKey(e)) {
@@ -174,10 +173,10 @@ public class XhtmlForm {
         if(_formSubmissionListener !=null) _formSubmissionListener.submit(data.toString());
     }
 
-    public static String collectText(org.jsoup.nodes.Element e) {
+    public static String collectText(org.xhtmlrenderer.dom.nodes.Element e) {
         StringBuffer result = new StringBuffer();
         if (e.childNodeSize() > 0) {
-            org.jsoup.nodes.Node node = e.childNodeSize() > 0 ? e.childNode(0) : null;
+            org.xhtmlrenderer.dom.nodes.Node node = e.childNodeSize() > 0 ? e.childNode(0) : null;
 
             do {
 //                short nodeType = node.getNodeType();

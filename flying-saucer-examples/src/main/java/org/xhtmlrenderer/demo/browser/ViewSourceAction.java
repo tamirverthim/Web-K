@@ -6,10 +6,7 @@ import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.Element;
 import org.xhtmlrenderer.simple.XHTMLPanel;
 
 /**
@@ -31,7 +28,7 @@ public class ViewSourceAction extends AbstractAction {
             serializer.setOutputProperty(OutputKeys.INDENT, "yes");
             serializer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 
-            org.jsoup.nodes.Element document = panel.getRootBox().getElement();
+            org.xhtmlrenderer.dom.nodes.Element document = panel.getRootBox().getElement();
 //            DOMSource source = new DOMSource(document);
 //            StreamResult output = new StreamResult(System.out);
 //            serializer.transform(

@@ -23,16 +23,13 @@ package org.xhtmlrenderer.simple;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
-import org.jsoup.nodes.*;
-import org.jsoup.select.Elements;
+import org.xhtmlrenderer.dom.nodes.*;
 
 import org.xhtmlrenderer.css.extend.StylesheetFactory;
-import org.xhtmlrenderer.css.extend.TreeResolver;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo;
 import org.xhtmlrenderer.extend.NamespaceHandler;
 
@@ -49,58 +46,58 @@ public class NoNamespaceHandler implements NamespaceHandler {
         return _namespace;
     }
 
-    public String getAttributeValue(org.jsoup.nodes.Element e, String attrName) {
+    public String getAttributeValue(org.xhtmlrenderer.dom.nodes.Element e, String attrName) {
         return e.attr(attrName);
     }
     
-    public String getAttributeValue(org.jsoup.nodes.Element e, String namespaceURI, String attrName) {
+    public String getAttributeValue(org.xhtmlrenderer.dom.nodes.Element e, String namespaceURI, String attrName) {
         return e.attr(attrName);
     }
 
-    public String getClass(org.jsoup.nodes.Element e) {
+    public String getClass(org.xhtmlrenderer.dom.nodes.Element e) {
         return null;
     }
 
-    public String getID(org.jsoup.nodes.Element e) {
+    public String getID(org.xhtmlrenderer.dom.nodes.Element e) {
         return null;
     }
 
-    public String getLang(org.jsoup.nodes.Element e) {
+    public String getLang(org.xhtmlrenderer.dom.nodes.Element e) {
         if(e == null) {
             return "";
         }
         return e.attr("lang");
     }
 
-    public String getElementStyling(org.jsoup.nodes.Element e) {
+    public String getElementStyling(org.xhtmlrenderer.dom.nodes.Element e) {
         return null;
     }
 
-    public String getNonCssStyling(org.jsoup.nodes.Element e) {
+    public String getNonCssStyling(org.xhtmlrenderer.dom.nodes.Element e) {
         return null;
     }
 
-    public String getLinkUri(org.jsoup.nodes.Element e) {
+    public String getLinkUri(org.xhtmlrenderer.dom.nodes.Element e) {
         return null;
     }
 
-    public String getDocumentTitle(org.jsoup.nodes.Document doc) {
+    public String getDocumentTitle(org.xhtmlrenderer.dom.nodes.Document doc) {
         return null;
     }
     
-    public String getAnchorName(org.jsoup.nodes.Element e) {
+    public String getAnchorName(org.xhtmlrenderer.dom.nodes.Element e) {
         return null;
     }
 
-    public boolean isImageElement(org.jsoup.nodes.Element e) {
+    public boolean isImageElement(org.xhtmlrenderer.dom.nodes.Element e) {
         return false;
     }
 
-    public String getImageSourceURI(org.jsoup.nodes.Element e) {
+    public String getImageSourceURI(org.xhtmlrenderer.dom.nodes.Element e) {
         return null;
     }
     
-    public boolean isFormElement(org.jsoup.nodes.Element e) {
+    public boolean isFormElement(org.xhtmlrenderer.dom.nodes.Element e) {
         return false;
     }
 
@@ -111,7 +108,7 @@ public class NoNamespaceHandler implements NamespaceHandler {
     private Pattern _mediaPattern = Pattern.compile("media\\s?=\\s?");
 
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    public StylesheetInfo[] getStylesheets(org.jsoup.nodes.Document doc) {
+    public StylesheetInfo[] getStylesheets(org.xhtmlrenderer.dom.nodes.Document doc) {
         List<StylesheetInfo> list = new ArrayList<>();
         //get the processing-instructions (actually for XmlDocuments)
         //type and href are required to be set
@@ -198,7 +195,7 @@ public class NoNamespaceHandler implements NamespaceHandler {
     }
 
     @Override
-    public boolean isCanvasElement(org.jsoup.nodes.Element e) {
+    public boolean isCanvasElement(org.xhtmlrenderer.dom.nodes.Element e) {
         return (e != null && e.nodeName().equalsIgnoreCase("canvas"));
     }
 }

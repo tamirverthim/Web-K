@@ -28,7 +28,7 @@ import org.xhtmlrenderer.simple.extend.XhtmlForm;
 import org.xhtmlrenderer.util.GeneralUtil;
 
 class PasswordField extends InputField {
-    public PasswordField(org.jsoup.nodes.Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
+    public PasswordField(org.xhtmlrenderer.dom.nodes.Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }
 

@@ -27,9 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jsoup.nodes.DataNode;
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.TextNode;
+import org.xhtmlrenderer.dom.nodes.DataNode;
+import org.xhtmlrenderer.dom.nodes.Element;
+import org.xhtmlrenderer.dom.nodes.TextNode;
 import org.xhtmlrenderer.css.extend.StylesheetFactory;
 import org.xhtmlrenderer.css.sheet.Stylesheet;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo;
@@ -197,9 +197,9 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
         return null;
     }
 
-    private static String readTextContent(org.jsoup.nodes.Element element) {
+    private static String readTextContent(org.xhtmlrenderer.dom.nodes.Element element) {
         StringBuffer result = new StringBuffer();
-        org.jsoup.nodes.Node current = element.childNode(0);
+        org.xhtmlrenderer.dom.nodes.Node current = element.childNode(0);
         while (current != null) {
 //            short nodeType = current.getNodeType();
             if (current instanceof TextNode) {
@@ -238,13 +238,13 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
      * @param doc the document to search for a title
      * @return The document's title, or "" if none found
      */
-    public String getDocumentTitle(org.jsoup.nodes.Document doc) {
+    public String getDocumentTitle(org.xhtmlrenderer.dom.nodes.Document doc) {
         String title = "";
 
-        org.jsoup.nodes.Element html = doc;
-        org.jsoup.nodes.Element head = findFirstChild(html, "head");
+        org.xhtmlrenderer.dom.nodes.Element html = doc;
+        org.xhtmlrenderer.dom.nodes.Element head = findFirstChild(html, "head");
         if (head != null) {
-            org.jsoup.nodes.Element titleElem = findFirstChild(head, "title");
+            org.xhtmlrenderer.dom.nodes.Element titleElem = findFirstChild(head, "title");
             if (titleElem != null) {
                 title = collapseWhiteSpace(readTextContent(titleElem).trim());
             }
@@ -253,19 +253,19 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
         return title;
     }
 
-    private org.jsoup.nodes.Element findFirstChild(org.jsoup.nodes.Element parent, String targetName) {
-        List<org.jsoup.nodes.Node> children = parent.childNodes();
+    private org.xhtmlrenderer.dom.nodes.Element findFirstChild(org.xhtmlrenderer.dom.nodes.Element parent, String targetName) {
+        List<org.xhtmlrenderer.dom.nodes.Node> children = parent.childNodes();
         for (int i = 0; i < children.size(); i++) {
-            org.jsoup.nodes.Node n = children.get(i);
-            if (n instanceof org.jsoup.nodes.Element && n.nodeName().equals(targetName)) {
-                return (org.jsoup.nodes.Element)n;
+            org.xhtmlrenderer.dom.nodes.Node n = children.get(i);
+            if (n instanceof org.xhtmlrenderer.dom.nodes.Element && n.nodeName().equals(targetName)) {
+                return (org.xhtmlrenderer.dom.nodes.Element)n;
             }
         }
 
         return null;
     }
 
-    protected StylesheetInfo readStyleElement(org.jsoup.nodes.Element style) {
+    protected StylesheetInfo readStyleElement(org.xhtmlrenderer.dom.nodes.Element style) {
         String media = style.attr("media");
         if ("".equals(media)) {
             media = "all";
@@ -277,7 +277,7 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
         info.setOrigin(StylesheetInfo.AUTHOR);
 
         StringBuffer buf = new StringBuffer();
-        org.jsoup.nodes.Node current = style.childNodeSize() > 0 ? style.childNode(0) : null;
+        org.xhtmlrenderer.dom.nodes.Node current = style.childNodeSize() > 0 ? style.childNode(0) : null;
         while (current != null) {
             if (current instanceof DataNode) {
                 buf.append(((DataNode)current).getWholeData());
@@ -295,7 +295,7 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
         }
     }
 
-    protected StylesheetInfo readLinkElement(org.jsoup.nodes.Element link) {
+    protected StylesheetInfo readLinkElement(org.xhtmlrenderer.dom.nodes.Element link) {
         String rel = link.attr("rel").toLowerCase();
         if (rel.indexOf("alternate") != -1) {
             return null;
@@ -337,19 +337,19 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
      * @param doc PARAM
      * @return The stylesheetLinks value
      */
-    public StylesheetInfo[] getStylesheets(org.jsoup.nodes.Document doc) {
+    public StylesheetInfo[] getStylesheets(org.xhtmlrenderer.dom.nodes.Document doc) {
         List result = new ArrayList();
         //get the processing-instructions (actually for XmlDocuments)
         result.addAll(Arrays.asList(super.getStylesheets(doc)));
 
         //get the link elements
-        org.jsoup.nodes.Element html = doc.child(0);
-        org.jsoup.nodes.Element head = findFirstChild(html, "head");
+        org.xhtmlrenderer.dom.nodes.Element html = doc.child(0);
+        org.xhtmlrenderer.dom.nodes.Element head = findFirstChild(html, "head");
         if (head != null) {
-            org.jsoup.nodes.Node current = head.childNodeSize() > 0 ? head.childNode(0) : null;
+            org.xhtmlrenderer.dom.nodes.Node current = head.childNodeSize() > 0 ? head.childNode(0) : null;
             while (current != null) {
-                if (current instanceof org.jsoup.nodes.Element) {
-                    org.jsoup.nodes.Element elem = (org.jsoup.nodes.Element)current;
+                if (current instanceof org.xhtmlrenderer.dom.nodes.Element) {
+                    org.xhtmlrenderer.dom.nodes.Element elem = (org.xhtmlrenderer.dom.nodes.Element)current;
                     StylesheetInfo info = null;
                     String elemName = elem.nodeName();
                     if (elemName == null)
@@ -433,19 +433,19 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
         return stream;
     }
 
-    private Map getMetaInfo(org.jsoup.nodes.Document doc) {
+    private Map getMetaInfo(org.xhtmlrenderer.dom.nodes.Document doc) {
         if(this._metadata != null) {
             return this._metadata;
         }
 
         Map metadata = new HashMap();
 
-        org.jsoup.nodes.Element html = doc;//();
-        org.jsoup.nodes.Element head = findFirstChild(html, "head");
+        org.xhtmlrenderer.dom.nodes.Element html = doc;//();
+        org.xhtmlrenderer.dom.nodes.Element head = findFirstChild(html, "head");
         if (head != null) {
-            org.jsoup.nodes.Node current = head.children().size() > 0 ? head.children().get(0): null;
+            org.xhtmlrenderer.dom.nodes.Node current = head.children().size() > 0 ? head.children().get(0): null;
             while (current != null) {
-                if (current instanceof org.jsoup.nodes.Element) {
+                if (current instanceof org.xhtmlrenderer.dom.nodes.Element) {
                     Element elem = (Element)current;
                     String elemName;// = elem.getLocalName();
 //                    if (elemName == null)
@@ -468,7 +468,7 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
         return metadata;
     }
 
-    public String getLang(org.jsoup.nodes.Element e) {
+    public String getLang(org.xhtmlrenderer.dom.nodes.Element e) {
         if(e == null) {
             return "";
         }

@@ -20,7 +20,7 @@ package org.xhtmlrenderer.simple.extend.form;
 
 import javax.swing.JComponent;
 
-import org.jsoup.nodes.Element;
+import org.xhtmlrenderer.dom.nodes.Element;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.css.style.FSDerivedValue;

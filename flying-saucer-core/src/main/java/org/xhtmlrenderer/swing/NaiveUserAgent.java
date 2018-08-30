@@ -36,12 +36,15 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import javax.imageio.ImageIO;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.io.IOUtils;
-import org.jsoup.nodes.Document;
+import org.xhtmlrenderer.dom.nodes.Document;
 import org.xhtmlrenderer.event.DocumentListener;
 import org.xhtmlrenderer.extend.UserAgentCallback;
+import org.xhtmlrenderer.script.ScriptContext;
 import org.xhtmlrenderer.resource.CSSResource;
 import org.xhtmlrenderer.resource.ImageResource;
 import org.xhtmlrenderer.resource.XMLResource;
@@ -66,21 +69,24 @@ import org.xhtmlrenderer.util.XRLog;
  * @author Torbjoern Gannholm
  */
 @Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class NaiveUserAgent implements UserAgentCallback, DocumentListener {
 
     private static final int DEFAULT_IMAGE_CACHE_SIZE = 16;
     /**
      * a (simple) LRU cache
      */
-    protected LinkedHashMap _imageCache;
-    private int _imageCacheCapacity;
-    private String _baseURL;
-
+    LinkedHashMap _imageCache;
+    int _imageCacheCapacity;
+    String _baseURL;
+    ScriptContext scriptContext;
+    
     /**
      * Creates a new instance of NaiveUserAgent with a max image cache of 16 images.
      */
     public NaiveUserAgent() {
         this(DEFAULT_IMAGE_CACHE_SIZE);
+//        scriptContext = new ScriptContext();
     }
 
     /**
@@ -348,6 +354,11 @@ public class NaiveUserAgent implements UserAgentCallback, DocumentListener {
         }
     }
 
+//    @Override
+//    public ScriptContext getScriptContext() {
+//        return scriptContext;
+//    }
+
     /**
      * Returns true if the given URI was visited, meaning it was requested at some point since initialization.
      *
@@ -434,7 +445,9 @@ public class NaiveUserAgent implements UserAgentCallback, DocumentListener {
         shrinkImageCache();
     }
 
-    public void documentLoaded() { /* ignore*/ }
+    public void documentLoaded() { /* ignore*/
+        scriptContext.onload();
+    }
 
     public void onLayoutException(Throwable t) { /* ignore*/ }
 

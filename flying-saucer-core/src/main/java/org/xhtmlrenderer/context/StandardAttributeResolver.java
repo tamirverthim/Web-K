@@ -19,7 +19,7 @@
  */
 package org.xhtmlrenderer.context;
 
-import org.jsoup.nodes.Element;
+import org.xhtmlrenderer.dom.nodes.Element;
 import org.xhtmlrenderer.css.extend.AttributeResolver;
 import org.xhtmlrenderer.extend.NamespaceHandler;
 import org.xhtmlrenderer.extend.UserAgentCallback;
@@ -66,11 +66,11 @@ public class StandardAttributeResolver implements AttributeResolver {
      * @return The attributeValue value
      */
     public String getAttributeValue(Object e, String attrName) {
-        return nsh.getAttributeValue((org.jsoup.nodes.Element) e, attrName);
+        return nsh.getAttributeValue((org.xhtmlrenderer.dom.nodes.Element) e, attrName);
     }
     
     public String getAttributeValue(Object e, String namespaceURI, String attrName) {
-        return nsh.getAttributeValue((org.jsoup.nodes.Element)e, namespaceURI, attrName);
+        return nsh.getAttributeValue((org.xhtmlrenderer.dom.nodes.Element)e, namespaceURI, attrName);
     }
 
     /**
@@ -80,7 +80,7 @@ public class StandardAttributeResolver implements AttributeResolver {
      * @return The class value
      */
     public String getClass(Object e) {
-        return nsh.getClass((org.jsoup.nodes.Element) e);
+        return nsh.getClass((org.xhtmlrenderer.dom.nodes.Element) e);
     }
 
     /**
@@ -90,11 +90,11 @@ public class StandardAttributeResolver implements AttributeResolver {
      * @return The iD value
      */
     public String getID(Object e) {
-        return nsh.getID((org.jsoup.nodes.Element) e);
+        return nsh.getID((org.xhtmlrenderer.dom.nodes.Element) e);
     }
 
     public String getNonCssStyling(Object e) {
-        return nsh.getNonCssStyling((org.jsoup.nodes.Element) e);
+        return nsh.getNonCssStyling((org.xhtmlrenderer.dom.nodes.Element) e);
     }
 
     /**
@@ -104,7 +104,7 @@ public class StandardAttributeResolver implements AttributeResolver {
      * @return The elementStyling value
      */
     public String getElementStyling(Object e) {
-        return nsh.getElementStyling((org.jsoup.nodes.Element) e);
+        return nsh.getElementStyling((org.xhtmlrenderer.dom.nodes.Element) e);
     }
 
     /**
@@ -114,7 +114,7 @@ public class StandardAttributeResolver implements AttributeResolver {
      * @return The lang value
      */
     public String getLang(Object e) {
-        return nsh.getLang((org.jsoup.nodes.Element) e);
+        return nsh.getLang((org.xhtmlrenderer.dom.nodes.Element) e);
     }
 
     /**
@@ -124,7 +124,7 @@ public class StandardAttributeResolver implements AttributeResolver {
      * @return The link value
      */
     public boolean isLink(Object e) {
-        return nsh.getLinkUri((org.jsoup.nodes.Element) e) != null;
+        return nsh.getLinkUri((org.xhtmlrenderer.dom.nodes.Element) e) != null;
     }
 
     /**
@@ -134,7 +134,7 @@ public class StandardAttributeResolver implements AttributeResolver {
      * @return The visited value
      */
     public boolean isVisited(Object e) {
-        return isLink(e) && uac.isVisited(nsh.getLinkUri((org.jsoup.nodes.Element) e));
+        return isLink(e) && uac.isVisited(nsh.getLinkUri((org.xhtmlrenderer.dom.nodes.Element) e));
     }
 
     /**

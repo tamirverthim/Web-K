@@ -23,9 +23,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
-import org.jsoup.nodes.TextNode;
+import org.xhtmlrenderer.dom.nodes.Element;
+import org.xhtmlrenderer.dom.nodes.Node;
+import org.xhtmlrenderer.dom.nodes.TextNode;
 import org.xhtmlrenderer.simple.xhtml.FormControl;
 import org.xhtmlrenderer.simple.xhtml.FormControlListener;
 import org.xhtmlrenderer.simple.xhtml.FormListener;

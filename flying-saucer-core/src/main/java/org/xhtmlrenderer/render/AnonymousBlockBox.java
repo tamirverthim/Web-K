@@ -38,7 +38,7 @@ import org.xhtmlrenderer.layout.Styleable;
 public class AnonymousBlockBox extends BlockBox {
     private List _openInlineBoxes;
     
-    public AnonymousBlockBox(org.jsoup.nodes.Element element) {
+    public AnonymousBlockBox(org.xhtmlrenderer.dom.nodes.Element element) {
         setElement(element);
     }
 

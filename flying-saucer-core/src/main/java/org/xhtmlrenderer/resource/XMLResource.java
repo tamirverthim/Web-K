@@ -30,14 +30,13 @@ import java.util.logging.Level;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.ReaderInputStream;
-import org.jsoup.Jsoup;
+import org.xhtmlrenderer.dom.Jsoup;
 import org.w3c.dom.Document;
 import org.xhtmlrenderer.util.Configuration;
 import org.xhtmlrenderer.util.XRLog;
@@ -78,7 +77,7 @@ public class XMLResource extends AbstractResource {
 
     // region draft
     
-    private static org.jsoup.nodes.Document getJsoup(InputStream stream){
+    private static org.xhtmlrenderer.dom.nodes.Document getJsoup(InputStream stream){
         try {
             String source = IOUtils.toString(stream, "UTF-8");
             return Jsoup.parse(source);
@@ -87,26 +86,26 @@ public class XMLResource extends AbstractResource {
         }
     }
     
-    private static org.jsoup.nodes.Document getJsoup(InputSource source){
+    private static org.xhtmlrenderer.dom.nodes.Document getJsoup(InputSource source){
         return getJsoup(source.getByteStream());
     }
     
     
-    private static org.jsoup.nodes.Document getJsoup(Reader reader){
+    private static org.xhtmlrenderer.dom.nodes.Document getJsoup(Reader reader){
         return getJsoup(new ReaderInputStream(reader, Charset.forName("UTF-8")));
     }
     
     // endregion
     
-    public static org.jsoup.nodes.Document load(InputStream stream) {
+    public static org.xhtmlrenderer.dom.nodes.Document load(InputStream stream) {
         return getJsoup(stream);
     }
 
-    public static org.jsoup.nodes.Document load(InputSource source) {
+    public static org.xhtmlrenderer.dom.nodes.Document load(InputSource source) {
         return getJsoup(source);
     }
 
-    public static org.jsoup.nodes.Document load(Reader reader) {
+    public static org.xhtmlrenderer.dom.nodes.Document load(Reader reader) {
         return getJsoup(reader);
     }
 
@@ -235,7 +234,7 @@ public class XMLResource extends AbstractResource {
 //            return target;
 //        }
 
-        private org.jsoup.nodes.Document transform(org.jsoup.nodes.Document source) {
+        private org.xhtmlrenderer.dom.nodes.Document transform(org.xhtmlrenderer.dom.nodes.Document source) {
             return source;
         }
 

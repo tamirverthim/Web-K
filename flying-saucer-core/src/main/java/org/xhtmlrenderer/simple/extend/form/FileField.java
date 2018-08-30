@@ -27,7 +27,7 @@ import org.xhtmlrenderer.simple.extend.XhtmlForm;
 
 class FileField extends InputField {
     
-    public FileField(org.jsoup.nodes.Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
+    public FileField(org.xhtmlrenderer.dom.nodes.Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }
 

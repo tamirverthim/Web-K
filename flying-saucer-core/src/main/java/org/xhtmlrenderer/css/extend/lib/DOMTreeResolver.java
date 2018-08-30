@@ -20,8 +20,8 @@
 package org.xhtmlrenderer.css.extend.lib;
 
 
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
+import org.xhtmlrenderer.dom.nodes.Element;
+import org.xhtmlrenderer.dom.nodes.Node;
 import org.xhtmlrenderer.css.extend.TreeResolver;
 
 import java.util.List;
@@ -33,14 +33,14 @@ import java.util.List;
  */
 public class DOMTreeResolver implements TreeResolver {
     public Object getParentElement(Object element) {
-        org.jsoup.nodes.Node parent = ((org.jsoup.nodes.Element) element).parentNode();
-        if (!(parent instanceof org.jsoup.nodes.Element)) parent = null;
+        org.xhtmlrenderer.dom.nodes.Node parent = ((org.xhtmlrenderer.dom.nodes.Element) element).parentNode();
+        if (!(parent instanceof org.xhtmlrenderer.dom.nodes.Element)) parent = null;
         return parent;
     }
 
     public Object getPreviousSiblingElement(Object element) {
-        org.jsoup.nodes.Node sibling = ((org.jsoup.nodes.Element) element).previousSibling();
-        while (sibling != null && !(sibling instanceof org.jsoup.nodes.Element)) {
+        org.xhtmlrenderer.dom.nodes.Node sibling = ((org.xhtmlrenderer.dom.nodes.Element) element).previousSibling();
+        while (sibling != null && !(sibling instanceof org.xhtmlrenderer.dom.nodes.Element)) {
             sibling = sibling.previousSibling();
         }
         if (sibling == null) {

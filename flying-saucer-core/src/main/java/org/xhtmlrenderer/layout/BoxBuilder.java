@@ -29,13 +29,8 @@ import java.util.List;
 import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.nodes.CDataNode;
-import org.jsoup.nodes.TextNode;
+import org.xhtmlrenderer.dom.nodes.TextNode;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.Text;
-import org.w3c.dom.EntityReference;
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.constants.IdentValue;
@@ -85,8 +80,8 @@ public class BoxBuilder {
     private static final int CONTENT_LIST_DOCUMENT = 1;
     private static final int CONTENT_LIST_MARGIN_BOX = 2;
 
-    public static BlockBox createRootBox(LayoutContext c, org.jsoup.nodes.Document document) {
-        org.jsoup.nodes.Element root = document.child(0); // "html" element
+    public static BlockBox createRootBox(LayoutContext c, org.xhtmlrenderer.dom.nodes.Document document) {
+        org.xhtmlrenderer.dom.nodes.Element root = document.child(0); // "html" element
 
         CalculatedStyle style = c.getSharedContext().getStyle(root);
 
@@ -146,7 +141,7 @@ public class BoxBuilder {
             return null;
         }
 
-        org.jsoup.nodes.Element source = c.getRootLayer().getMaster().getElement(); // HACK
+        org.xhtmlrenderer.dom.nodes.Element source = c.getRootLayer().getMaster().getElement(); // HACK
 
         ChildBoxInfo info = new ChildBoxInfo();
         CalculatedStyle pageStyle = new EmptyStyle().deriveStyle(pageInfo.getPageStyle());
@@ -390,7 +385,7 @@ public class BoxBuilder {
             Styleable styleable = (Styleable) i.next();
             if (styleable instanceof InlineBox) {
                 InlineBox iB = (InlineBox) styleable;
-                org.jsoup.nodes.Element elem = iB.getElement();
+                org.xhtmlrenderer.dom.nodes.Element elem = iB.getElement();
 
                 if (!boxesByElement.containsKey(elem)) {
                     iB.setStartsHere(true);
@@ -788,13 +783,13 @@ public class BoxBuilder {
         }
     }
 
-    private static String getAttributeValue(FSFunction attrFunc, org.jsoup.nodes.Element e) {
+    private static String getAttributeValue(FSFunction attrFunc, org.xhtmlrenderer.dom.nodes.Element e) {
         PropertyValue value = (PropertyValue) attrFunc.getParameters().get(0);
         return e.attr(value.getStringValue());
     }
 
     private static List createGeneratedContentList(
-            LayoutContext c, org.jsoup.nodes.Element element, PropertyValue propValue,
+            LayoutContext c, org.xhtmlrenderer.dom.nodes.Element element, PropertyValue propValue,
             String peName, CalculatedStyle style, int mode, ChildBoxInfo info) {
         List values = propValue.getValues();
 
@@ -901,7 +896,7 @@ public class BoxBuilder {
     }
 
     private static void insertGeneratedContent(
-            LayoutContext c, org.jsoup.nodes.Element element, CalculatedStyle parentStyle,
+            LayoutContext c, org.xhtmlrenderer.dom.nodes.Element element, CalculatedStyle parentStyle,
             String peName, List children, ChildBoxInfo info) {
         CascadedStyle peStyle = c.getCss().getPseudoElementStyle(element, peName);
         if (peStyle != null) {
@@ -938,7 +933,7 @@ public class BoxBuilder {
     }
 
     private static List createGeneratedContent(
-            LayoutContext c, org.jsoup.nodes.Element element, String peName,
+            LayoutContext c, org.xhtmlrenderer.dom.nodes.Element element, String peName,
             CalculatedStyle style, PropertyValue property, ChildBoxInfo info) {
         if (style.isDisplayNone() || style.isIdent(CSSName.DISPLAY, IdentValue.TABLE_COLUMN)
                 || style.isIdent(CSSName.DISPLAY, IdentValue.TABLE_COLUMN_GROUP)) {
@@ -980,7 +975,7 @@ public class BoxBuilder {
     }
 
     private static List createGeneratedMarginBoxContent(
-            LayoutContext c, org.jsoup.nodes.Element element, PropertyValue property,
+            LayoutContext c, org.xhtmlrenderer.dom.nodes.Element element, PropertyValue property,
             CalculatedStyle style, ChildBoxInfo info) {
         List result = createGeneratedContentList(
                 c, element, property, null, style, CONTENT_LIST_MARGIN_BOX, info);
@@ -1034,11 +1029,11 @@ public class BoxBuilder {
     private static void addColumns(LayoutContext c, TableBox table, TableColumn parent) {
         SharedContext sharedContext = c.getSharedContext();
 
-        org.jsoup.nodes.Node working = parent.getElement().childNodeSize() > 0 ? parent.getElement().childNode(0) : null;
+        org.xhtmlrenderer.dom.nodes.Node working = parent.getElement().childNodeSize() > 0 ? parent.getElement().childNode(0) : null;
         boolean found = false;
         while (working != null) {
-            if (working instanceof org.jsoup.nodes.Element) {
-                org.jsoup.nodes.Element element = (org.jsoup.nodes.Element) working;
+            if (working instanceof org.xhtmlrenderer.dom.nodes.Element) {
+                org.xhtmlrenderer.dom.nodes.Element element = (org.xhtmlrenderer.dom.nodes.Element) working;
                 CalculatedStyle style = sharedContext.getStyle(element);
 
                 if (style.isIdent(CSSName.DISPLAY, IdentValue.TABLE_COLUMN)) {
@@ -1056,7 +1051,7 @@ public class BoxBuilder {
     }
 
     private static void addColumnOrColumnGroup(
-            LayoutContext c, TableBox table, org.jsoup.nodes.Element e, CalculatedStyle style) {
+            LayoutContext c, TableBox table, org.xhtmlrenderer.dom.nodes.Element e, CalculatedStyle style) {
         if (style.isIdent(CSSName.DISPLAY, IdentValue.TABLE_COLUMN)) {
             table.addStyleColumn(new TableColumn(e, style));
         } else { /* style.isIdent(CSSName.DISPLAY, IdentValue.TABLE_COLUMN_GROUP) */
@@ -1065,7 +1060,7 @@ public class BoxBuilder {
     }
 
     private static InlineBox createInlineBox(
-            String text, org.jsoup.nodes.Element parent, CalculatedStyle parentStyle, TextNode node) {
+            String text, org.xhtmlrenderer.dom.nodes.Element parent, CalculatedStyle parentStyle, TextNode node) {
         InlineBox result = new InlineBox(text, node);
 
         if (parentStyle.isInline() && ! (parent.parentNode() instanceof Document)) {
@@ -1081,7 +1076,7 @@ public class BoxBuilder {
     }
 
     private static void createChildren(
-            LayoutContext c, BlockBox blockParent, org.jsoup.nodes.Element parent,
+            LayoutContext c, BlockBox blockParent, org.xhtmlrenderer.dom.nodes.Element parent,
             List children, ChildBoxInfo info, boolean inline) {
         SharedContext sharedContext = c.getSharedContext();
 
@@ -1089,7 +1084,7 @@ public class BoxBuilder {
 
         insertGeneratedContent(c, parent, parentStyle, "before", children, info);
 
-        org.jsoup.nodes.Node working = parent.childNodeSize() > 0 ? parent.childNode(0) : null;
+        org.xhtmlrenderer.dom.nodes.Node working = parent.childNodeSize() > 0 ? parent.childNode(0) : null;
         boolean needStartText = inline;
         boolean needEndText = inline;
         if (working != null) {
@@ -1097,8 +1092,8 @@ public class BoxBuilder {
             do {
                 Styleable child = null;
 //                short nodeType = working.getNodeType();
-                if (working instanceof org.jsoup.nodes.Element) {
-                    org.jsoup.nodes.Element element = (org.jsoup.nodes.Element) working;
+                if (working instanceof org.xhtmlrenderer.dom.nodes.Element) {
+                    org.xhtmlrenderer.dom.nodes.Element element = (org.xhtmlrenderer.dom.nodes.Element) working;
                     CalculatedStyle style = sharedContext.getStyle(element);
 
                     if (style.isDisplayNone()) {

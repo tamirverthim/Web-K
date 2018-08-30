@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
+import org.xhtmlrenderer.dom.nodes.Element;
+import org.xhtmlrenderer.dom.nodes.Node;
 import org.xhtmlrenderer.simple.xhtml.XhtmlForm;
 
 public class SelectControl extends AbstractControl {

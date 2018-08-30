@@ -18,8 +18,8 @@
  */
 package org.xhtmlrenderer.simple.xhtml;
 
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
+import org.xhtmlrenderer.dom.nodes.Element;
+import org.xhtmlrenderer.dom.nodes.Node;
 import org.xhtmlrenderer.simple.extend.XhtmlCssOnlyNamespaceHandler;
 
 
@@ -263,7 +263,7 @@ public class XhtmlNamespaceHandler extends XhtmlCssOnlyNamespaceHandler {
     }
 
     @Override
-    public boolean isCanvasElement(org.jsoup.nodes.Element e) {
+    public boolean isCanvasElement(org.xhtmlrenderer.dom.nodes.Element e) {
         return (e != null && e.nodeName().equalsIgnoreCase("canvas"));
     }
 }

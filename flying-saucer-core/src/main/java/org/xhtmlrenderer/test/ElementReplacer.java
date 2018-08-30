@@ -13,7 +13,7 @@ public abstract class ElementReplacer {
 
     public abstract String getElementNameMatch();
 
-    public abstract boolean accept(LayoutContext context, org.jsoup.nodes.Element element);
+    public abstract boolean accept(LayoutContext context, org.xhtmlrenderer.dom.nodes.Element element);
 
     public abstract ReplacedElement replace(final LayoutContext context,
                                    final BlockBox box,
@@ -22,7 +22,7 @@ public abstract class ElementReplacer {
                                    final int cssHeight
     );
 
-    public abstract void clear(final org.jsoup.nodes.Element element);
+    public abstract void clear(final org.xhtmlrenderer.dom.nodes.Element element);
 
     public abstract void reset();
 }

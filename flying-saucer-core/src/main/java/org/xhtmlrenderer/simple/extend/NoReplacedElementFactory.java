@@ -13,7 +13,7 @@ public class NoReplacedElementFactory implements ReplacedElementFactory {
         return null;
     }
 
-    public void remove(org.jsoup.nodes.Element e) {
+    public void remove(org.xhtmlrenderer.dom.nodes.Element e) {
 
     }
 

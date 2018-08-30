@@ -44,19 +44,15 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 
-import lombok.val;
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.TextNode;
-import org.jsoup.select.Elements;
+import org.xhtmlrenderer.dom.nodes.Element;
+import org.xhtmlrenderer.dom.nodes.TextNode;
 import org.w3c.dom.ranges.Range;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.layout.LayoutContext;
-import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.render.Box;
 import org.xhtmlrenderer.render.InlineLayoutBox;
 import org.xhtmlrenderer.render.InlineText;
 import org.xhtmlrenderer.simple.XHTMLPanel;
-import org.xhtmlrenderer.util.Util;
 import org.xhtmlrenderer.util.XRLog;
 
 /**
@@ -112,7 +108,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
 
     private TransferHandler handler;
 
-    private org.jsoup.nodes.Document document;
+    private org.xhtmlrenderer.dom.nodes.Document document;
 
     public void addChangeListener(ChangeListener l) {
         listenerList.add(ChangeListener.class, l);
@@ -491,7 +487,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
         s.push(panel.getRootBox());
         while (!s.empty()) {
             Box b = (Box) s.pop();
-            org.jsoup.nodes.Element element = b.getElement();
+            org.xhtmlrenderer.dom.nodes.Element element = b.getElement();
             if (element != null && !elementBoxMap.containsKey(element)) {
                 elementBoxMap.put(element, b);
             }
@@ -689,7 +685,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
             }
         }
 
-        org.jsoup.nodes.Node node = fndTxt.getTextNode();
+        org.xhtmlrenderer.dom.nodes.Node node = fndTxt.getTextNode();
 //        try {
 //            r.setStart(node, offset);
 //        } catch (Exception ex) {

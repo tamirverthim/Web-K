@@ -22,8 +22,8 @@ package org.xhtmlrenderer.layout.breaker;
 
 import java.text.BreakIterator;
 
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.TextNode;
+import org.xhtmlrenderer.dom.nodes.Element;
+import org.xhtmlrenderer.dom.nodes.TextNode;
 
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
@@ -117,7 +117,7 @@ public class Breaker {
     	return c.getTextRenderer().getWidth(c.getFontContext(), f, text);
     }
 
-    public static BreakPointsProvider getBreakPointsProvider(String text, LayoutContext c, org.jsoup.nodes.Element element, CalculatedStyle style) {
+    public static BreakPointsProvider getBreakPointsProvider(String text, LayoutContext c, org.xhtmlrenderer.dom.nodes.Element element, CalculatedStyle style) {
     	return c.getSharedContext().getLineBreakingStrategy().getBreakPointsProvider(text, getLanguage(c, element), style);
     }
 
@@ -125,7 +125,7 @@ public class Breaker {
     	return c.getSharedContext().getLineBreakingStrategy().getBreakPointsProvider(text, getLanguage(c, textNode), style);
     }
 
-    private static String getLanguage(LayoutContext c, org.jsoup.nodes.Element element) {
+    private static String getLanguage(LayoutContext c, org.xhtmlrenderer.dom.nodes.Element element) {
     	String language = c.getNamespaceHandler().getLang(element);
     	if (language == null || language.isEmpty()) {
     		language = DEFAULT_LANGUAGE;
@@ -135,9 +135,9 @@ public class Breaker {
 
     private static String getLanguage(LayoutContext c, TextNode textNode) {
         if (textNode != null) {
-            org.jsoup.nodes.Node parentNode = textNode.parentNode();
+            org.xhtmlrenderer.dom.nodes.Node parentNode = textNode.parentNode();
             if (parentNode instanceof Element) {
-                return getLanguage(c, (org.jsoup.nodes.Element) parentNode);
+                return getLanguage(c, (org.xhtmlrenderer.dom.nodes.Element) parentNode);
             }
         }
         return DEFAULT_LANGUAGE;

@@ -20,7 +20,7 @@
 package org.xhtmlrenderer.simple.xhtml.controls;
 
 //import org.w3c.dom.Element;
-import org.jsoup.nodes.Element;
+import org.xhtmlrenderer.dom.nodes.Element;
 import org.xhtmlrenderer.simple.xhtml.XhtmlForm;
 
 public class TextControl extends AbstractControl {

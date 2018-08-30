@@ -1,7 +1,7 @@
 package org.xhtmlrenderer.util;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jsoup.nodes.Element;
+import org.xhtmlrenderer.dom.nodes.Element;
 
 import java.util.Objects;
 import java.util.Optional;

@@ -79,7 +79,7 @@ public class PageBox {
     
     private MarginAreaContainer[] _marginAreas = new MarginAreaContainer[MARGIN_AREA_DEFS.length];
     
-    private org.jsoup.nodes.Element _metadata;
+    private org.xhtmlrenderer.dom.nodes.Element _metadata;
     
     public int getWidth(CssContext cssCtx) {
         resolvePageDimensions(cssCtx);
@@ -358,7 +358,7 @@ public class PageBox {
         _pageInfo = pageInfo;
     }
     
-    public org.jsoup.nodes.Element getMetadata() {
+    public org.xhtmlrenderer.dom.nodes.Element getMetadata() {
         return _metadata;
     }
     

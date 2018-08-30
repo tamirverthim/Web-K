@@ -27,7 +27,7 @@ import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.XhtmlForm;
 
 class RadioButtonField extends InputField {
-    public RadioButtonField(org.jsoup.nodes.Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
+    public RadioButtonField(org.xhtmlrenderer.dom.nodes.Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }
 

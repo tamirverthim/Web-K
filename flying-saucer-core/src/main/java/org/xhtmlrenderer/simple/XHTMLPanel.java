@@ -164,7 +164,7 @@ public class XHTMLPanel extends BasicPanel {
      *
      * @param doc The document to render.
      */
-    public void setDocument(org.jsoup.nodes.Document doc) {
+    public void setDocument(org.xhtmlrenderer.dom.nodes.Document doc) {
         setDocument(doc, "");
     }
 
@@ -175,7 +175,7 @@ public class XHTMLPanel extends BasicPanel {
      * @param doc The new document value
      * @param url The new document value
      */
-    public void setDocument(org.jsoup.nodes.Document doc, String url) {
+    public void setDocument(org.xhtmlrenderer.dom.nodes.Document doc, String url) {
         resetListeners();
         setDocument(doc, url, new XhtmlNamespaceHandler());
     }

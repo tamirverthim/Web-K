@@ -19,10 +19,9 @@
  */
 package org.xhtmlrenderer.extend;
 
-import org.jsoup.nodes.Document;
+import org.xhtmlrenderer.dom.nodes.Document;
 import org.xhtmlrenderer.resource.CSSResource;
 import org.xhtmlrenderer.resource.ImageResource;
-import org.xhtmlrenderer.resource.XMLResource;
 
 
 /**
@@ -112,5 +111,7 @@ public interface UserAgentCallback {
     String resolveURI(String uri);
 
     String getScriptResource(String scriptUri);
+    
+//    ScriptContext getScriptContext();
 }
 

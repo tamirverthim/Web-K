@@ -17,12 +17,10 @@
  */
 
 
-import org.jsoup.select.Elements;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
+import org.xhtmlrenderer.dom.select.Elements;
 import org.xhtmlrenderer.event.DefaultDocumentListener;
 import org.xhtmlrenderer.extend.UserAgentCallback;
-import org.xhtmlrenderer.js.JS;
+import org.xhtmlrenderer.script.ScriptContext;
 import org.xhtmlrenderer.resource.XMLResource;
 import org.xhtmlrenderer.simple.FSScrollPane;
 import org.xhtmlrenderer.simple.XHTMLPanel;
@@ -31,7 +29,6 @@ import org.xhtmlrenderer.swing.ImageResourceLoader;
 import org.xhtmlrenderer.swing.SwingReplacedElementFactory;
 import org.xhtmlrenderer.util.GeneralUtil;
 
-import javax.script.ScriptException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -52,7 +49,7 @@ public class BrowsePanel {
     private XHTMLPanel panel;
     private JFrame frame;
     private UserAgentCallback uac;
-    private JS js;
+    private ScriptContext js;
 
     public static void main(String[] args) throws Exception {
         try {
@@ -121,7 +118,7 @@ public class BrowsePanel {
                 if(js == null) {
                     panel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                     frame.setTitle(panel.getDocumentTitle());
-                    js = new JS(panel);
+                    js = new ScriptContext(panel);
                     Elements scripts = panel.getDocument().getElementsByTag("script");
                     for (int i = 0; i < scripts.size(); i++) {
                         js.eval(scripts.get(i).text());
@@ -142,8 +139,8 @@ public class BrowsePanel {
         });
     }
 
-    private org.jsoup.nodes.Document getErrorDocument(String reason) {
-        org.jsoup.nodes.Document xr;
+    private org.xhtmlrenderer.dom.nodes.Document getErrorDocument(String reason) {
+        org.xhtmlrenderer.dom.nodes.Document xr;
         String cleanUri = GeneralUtil.escapeHTML(uri);
         String notFound = "<html><h1>Document not found</h1><p>Could not load URI <pre>" + cleanUri + "</pre>, because: " + reason + "</p></html>";
         xr = XMLResource.load(new StringReader(notFound));
@@ -154,7 +151,7 @@ public class BrowsePanel {
     private void launchLoad() {
         new Thread(new Runnable() {
             public void run() {
-                final org.jsoup.nodes.Document doc;
+                final org.xhtmlrenderer.dom.nodes.Document doc;
                 try {
                     if (panel != null ) panel.setCursor(new Cursor(Cursor.WAIT_CURSOR));
                     doc = getUAC().getXMLResource(uri);
@@ -179,7 +176,7 @@ public class BrowsePanel {
         return uac;
     }
 
-    private void startRender(final org.jsoup.nodes.Document document) {
+    private void startRender(final org.xhtmlrenderer.dom.nodes.Document document) {
         // first, load the document, so we can trap any parse errors
         // in loading;
 

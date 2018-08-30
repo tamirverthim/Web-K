@@ -12,6 +12,6 @@
         <appender-ref ref="STDOUT" />
     </root>
 
-    <logger name="org.xhtmlrenderer.js.impl" level="debug" />
+    <logger name="org.xhtmlrenderer.script.html5.canvas" level="debug" />
     
 </configuration>

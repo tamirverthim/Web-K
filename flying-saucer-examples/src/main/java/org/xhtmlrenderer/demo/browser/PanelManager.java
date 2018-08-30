@@ -19,15 +19,13 @@
  */
 package org.xhtmlrenderer.demo.browser;
 
-import org.jsoup.nodes.Document;
+import org.xhtmlrenderer.dom.nodes.Document;
 import org.xhtmlrenderer.resource.XMLResource;
 import org.xhtmlrenderer.swing.DelegatingUserAgent;
 import org.xhtmlrenderer.util.Uu;
 import org.xhtmlrenderer.util.XRLog;
 import org.xhtmlrenderer.util.GeneralUtil;
-import org.xml.sax.InputSource;
 
-import javax.xml.transform.sax.SAXSource;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;

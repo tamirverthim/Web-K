@@ -79,7 +79,7 @@ public class DelegatingReplacedElementFactory implements ReplacedElementFactory 
         }
     }
 
-    public void remove(final org.jsoup.nodes.Element element) {
+    public void remove(final org.xhtmlrenderer.dom.nodes.Element element) {
         final int idx = elementReplacements.indexOf(element);
         ERItem item = (ERItem) elementReplacements.get(idx);
         elementReplacements.remove(idx);
@@ -104,11 +104,11 @@ public class DelegatingReplacedElementFactory implements ReplacedElementFactory 
     }
 
     private static class ERItem {
-        private final org.jsoup.nodes.Element element;
+        private final org.xhtmlrenderer.dom.nodes.Element element;
         private final ReplacedElement replacedElement;
         private final ElementReplacer elementReplacer;
 
-        private ERItem(final org.jsoup.nodes.Element e, final ReplacedElement re, final ElementReplacer er) {
+        private ERItem(final org.xhtmlrenderer.dom.nodes.Element e, final ReplacedElement re, final ElementReplacer er) {
             element = e;
             replacedElement = re;
             elementReplacer = er;

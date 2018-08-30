@@ -40,7 +40,7 @@ import javax.swing.JViewport;
 import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
 
-import org.jsoup.nodes.Element;
+import org.xhtmlrenderer.dom.nodes.Element;
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.constants.IdentValue;
@@ -83,14 +83,14 @@ public class RootPanel extends JPanel implements Scrollable, UserInterface, FSCa
     // initialize to JViewport default mode
     private int default_scroll_mode = JViewport.BLIT_SCROLL_MODE;
 
-    protected org.jsoup.nodes.Document doc = null;
+    protected org.xhtmlrenderer.dom.nodes.Document doc = null;
 
     /*
      * ========= UserInterface implementation ===============
      */
-    public org.jsoup.nodes.Element hovered_element = null;
-    public org.jsoup.nodes.Element active_element = null;
-    public org.jsoup.nodes.Element focus_element = null;
+    public org.xhtmlrenderer.dom.nodes.Element hovered_element = null;
+    public org.xhtmlrenderer.dom.nodes.Element active_element = null;
+    public org.xhtmlrenderer.dom.nodes.Element focus_element = null;
 
     // On-demand repaint requests for async image loading
     private long lastRepaintRunAt = System.currentTimeMillis();
@@ -109,7 +109,7 @@ public class RootPanel extends JPanel implements Scrollable, UserInterface, FSCa
         return layoutContext;
     }
 
-    public void setDocument(org.jsoup.nodes.Document doc, String url, NamespaceHandler nsh) {
+    public void setDocument(org.xhtmlrenderer.dom.nodes.Document doc, String url, NamespaceHandler nsh) {
         fireDocumentStarted();
         resetScrollPosition();
         setRootBox(null);

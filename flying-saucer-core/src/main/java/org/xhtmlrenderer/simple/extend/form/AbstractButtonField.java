@@ -19,7 +19,7 @@ import java.awt.*;
 
 public abstract class AbstractButtonField extends InputField {
 
-    public AbstractButtonField(org.jsoup.nodes.Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
+    public AbstractButtonField(org.xhtmlrenderer.dom.nodes.Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }
 

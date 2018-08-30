@@ -31,7 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.jsoup.nodes.Document;
+import org.xhtmlrenderer.dom.nodes.Document;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.parser.FSColor;
@@ -40,6 +40,7 @@ import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.css.style.CssContext;
 import org.xhtmlrenderer.css.style.derived.BorderPropertySet;
 import org.xhtmlrenderer.css.style.derived.RectPropertySet;
+import org.xhtmlrenderer.dom.nodes.Element;
 import org.xhtmlrenderer.layout.Layer;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.layout.PaintingInfo;
@@ -49,7 +50,7 @@ import org.xhtmlrenderer.util.XRLog;
 public abstract class Box implements Styleable {
     protected static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
-    private org.jsoup.nodes.Element _element;
+    private org.xhtmlrenderer.dom.nodes.Element _element;
 
     private int _x;
     private int _y;
@@ -495,7 +496,7 @@ public abstract class Box implements Styleable {
         }
     }
 
-    public List getElementBoxes(org.jsoup.nodes.Element elem) {
+    public List getElementBoxes(org.xhtmlrenderer.dom.nodes.Element elem) {
         List result = new ArrayList();
         for (int i = 0; i < getChildCount(); i++) {
             Box child = getChild(i);
@@ -526,7 +527,7 @@ public abstract class Box implements Styleable {
             c.removeBoxId(anchorName);
         }
 
-        org.jsoup.nodes.Element e = getElement();
+        org.xhtmlrenderer.dom.nodes.Element e = getElement();
         if (e != null) {
             String id = c.getNamespaceHandler().getID(e);
             if (id != null) {
@@ -699,14 +700,18 @@ public abstract class Box implements Styleable {
         return getParent() != null && getParent().isRoot();
     }
 
-    public org.jsoup.nodes.Element getElement() {
+    public org.xhtmlrenderer.dom.nodes.Element getElement() {
         return _element;
     }
 
-    public void setElement(org.jsoup.nodes.Element element) {
-        BoxBinder.BINDINGS.remove(_element);
-        BoxBinder.BINDINGS.put(element, this);
+    public void setElement(org.xhtmlrenderer.dom.nodes.Element element) {
+        if(_element != null) {
+            _element.setView(null);
+        }
         _element = element;
+        if(_element != null) {
+            _element.setView(this);
+        }
     }
 
     public void setMarginTop(CssContext cssContext, int marginTop) {
@@ -843,7 +848,7 @@ public abstract class Box implements Styleable {
     }
 
     public void restyle(LayoutContext c) {
-        org.jsoup.nodes.Element e = getElement();
+        org.xhtmlrenderer.dom.nodes.Element e = getElement();
         CalculatedStyle style = null;
 
         String pe = getPseudoElementOrClass();

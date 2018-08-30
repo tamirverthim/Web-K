@@ -21,7 +21,7 @@ package org.xhtmlrenderer.swing;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import org.jsoup.nodes.Document;
+import org.xhtmlrenderer.dom.nodes.Document;
 import org.xhtmlrenderer.event.DocumentListener;
 import org.xhtmlrenderer.extend.UserAgentCallback;
 import org.xhtmlrenderer.resource.CSSResource;

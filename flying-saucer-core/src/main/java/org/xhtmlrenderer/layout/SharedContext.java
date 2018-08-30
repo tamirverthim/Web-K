@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.nodes.Element;
+import org.xhtmlrenderer.dom.nodes.Element;
 import org.xhtmlrenderer.context.AWTFontResolver;
 import org.xhtmlrenderer.context.StyleReference;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
@@ -41,7 +41,7 @@ import org.xhtmlrenderer.extend.NamespaceHandler;
 import org.xhtmlrenderer.extend.ReplacedElementFactory;
 import org.xhtmlrenderer.extend.TextRenderer;
 import org.xhtmlrenderer.extend.UserAgentCallback;
-import org.xhtmlrenderer.js.JS;
+import org.xhtmlrenderer.script.ScriptContext;
 import org.xhtmlrenderer.layout.breaker.DefaultLineBreakingStrategy;
 import org.xhtmlrenderer.layout.breaker.LineBreakingStrategy;
 import org.xhtmlrenderer.render.Box;
@@ -100,7 +100,7 @@ public class SharedContext {
     
     private LineBreakingStrategy lineBreakingStrategy = new DefaultLineBreakingStrategy();
     
-    private JS js;
+    private ScriptContext scriptContext;
 
     public SharedContext() {
     }
@@ -551,11 +551,11 @@ public class SharedContext {
         this.dotsPerPixel = pixelsPerDot;
     }
 
-    public CalculatedStyle getStyle(org.jsoup.nodes.Element e) {
+    public CalculatedStyle getStyle(org.xhtmlrenderer.dom.nodes.Element e) {
         return getStyle(e, false);
     }
 
-    public CalculatedStyle getStyle(org.jsoup.nodes.Element e, boolean restyle) {
+    public CalculatedStyle getStyle(org.xhtmlrenderer.dom.nodes.Element e, boolean restyle) {
         if (styleMap == null) {
             styleMap = new HashMap<>(1024, 0.75f);
         }
@@ -565,15 +565,15 @@ public class SharedContext {
             result = (CalculatedStyle)styleMap.get(e);
         }
         if (result == null) {
-            org.jsoup.nodes.Node parent = e.parentNode();
+            org.xhtmlrenderer.dom.nodes.Node parent = e.parentNode();
             CalculatedStyle parentCalculatedStyle;
-            if (parent instanceof org.jsoup.nodes.Document) {
+            if (parent instanceof org.xhtmlrenderer.dom.nodes.Document) {
                 parentCalculatedStyle = new EmptyStyle();
             } else {
-                parentCalculatedStyle = getStyle((org.jsoup.nodes.Element)parent, false);
+                parentCalculatedStyle = getStyle((org.xhtmlrenderer.dom.nodes.Element)parent, false);
             }  
 
-            result = parentCalculatedStyle.deriveStyle(getCss().getCascadedStyle((org.jsoup.nodes.Element)e, restyle));
+            result = parentCalculatedStyle.deriveStyle(getCss().getCascadedStyle((org.xhtmlrenderer.dom.nodes.Element)e, restyle));
 
             styleMap.put(e, result);
         }
@@ -602,7 +602,7 @@ public class SharedContext {
         this.replacedElementFactory = ref;
     }
 
-    public void removeElementReferences(org.jsoup.nodes.Element e) {
+    public void removeElementReferences(org.xhtmlrenderer.dom.nodes.Element e) {
         String id = namespaceHandler.getID(e);
         if (id != null && id.length() > 0) {
             removeBoxId(id);
@@ -616,11 +616,11 @@ public class SharedContext {
         getReplacedElementFactory().remove(e);
 
         if (e.childNodeSize() > 0) {
-            List<org.jsoup.nodes.Node> children = e.childNodes();
+            List<org.xhtmlrenderer.dom.nodes.Node> children = e.childNodes();
             for (int i = 0; i < children.size(); i++) {
-                org.jsoup.nodes.Node child = children.get(i);
-                if (child instanceof org.jsoup.nodes.Element) {
-                    removeElementReferences((org.jsoup.nodes.Element)child);
+                org.xhtmlrenderer.dom.nodes.Node child = children.get(i);
+                if (child instanceof org.xhtmlrenderer.dom.nodes.Element) {
+                    removeElementReferences((org.xhtmlrenderer.dom.nodes.Element)child);
                 }
             }
         }
@@ -634,8 +634,8 @@ public class SharedContext {
 		this.lineBreakingStrategy = lineBreakingStrategy;
 	}
 
-    public JS getJS() {
-        return JS.getInstance(); // todo pass correctly
+    public ScriptContext getJS() {
+        return ScriptContext.getInstance(); // todo pass correctly
     }
 }
 

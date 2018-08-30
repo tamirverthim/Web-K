@@ -19,7 +19,7 @@
  */
 package org.xhtmlrenderer.layout;
 
-import org.jsoup.nodes.TextNode;
+import org.xhtmlrenderer.dom.nodes.TextNode;
 
 /**
  * A bean which serves as a way for the layout code to pass information to the

@@ -19,9 +19,8 @@
  */
 package org.xhtmlrenderer.demo.browser;
 
-import org.w3c.dom.Document;
 import org.xhtmlrenderer.event.DocumentListener;
-import org.xhtmlrenderer.js.JS;
+import org.xhtmlrenderer.script.ScriptContext;
 import org.xhtmlrenderer.layout.SharedContext;
 //import org.xhtmlrenderer.pdf.ITextRenderer;
 //import org.xhtmlrenderer.pdf.PDFCreationListener;
@@ -37,15 +36,10 @@ import org.xhtmlrenderer.util.XRLog;
 import org.xhtmlrenderer.util.XRRuntimeException;
 
 import javax.swing.*;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.io.StringReader;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -126,7 +120,7 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 	private PanelManager manager;
 	JButton goToPage;
 	public JToolBar toolbar;
-	private JS js;
+	private ScriptContext js;
 
 	/**
 	 * Constructor for the BrowserPanel object
@@ -192,7 +186,7 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 		setLayout(new BorderLayout());
 		this.add(scroll, BorderLayout.CENTER);
 		
-		js = new JS(view);
+		js = new ScriptContext(view);
 	}
 
 	private void initToolbar() {
@@ -413,7 +407,7 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 	}
 
     private void handlePageLoadFailed(String url_text, XRRuntimeException ex) {
-        final org.jsoup.nodes.Document xr;
+        final org.xhtmlrenderer.dom.nodes.Document xr;
         final String rootCause = getRootCause(ex);
         final String msg = GeneralUtil.escapeHTML(addLineBreaks(rootCause, 80));
         String notFound =

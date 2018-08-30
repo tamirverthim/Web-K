@@ -27,9 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
-import org.jsoup.select.Elements;
+import org.xhtmlrenderer.dom.nodes.Element;
+import org.xhtmlrenderer.dom.nodes.Node;
+import org.xhtmlrenderer.dom.select.Elements;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.XhtmlForm;
@@ -38,7 +38,7 @@ import org.xhtmlrenderer.util.XHTMLUtils;
 
 class SelectField extends FormField {
 
-    public SelectField(org.jsoup.nodes.Element e, XhtmlForm form, LayoutContext context, BlockBox box)
+    public SelectField(org.xhtmlrenderer.dom.nodes.Element e, XhtmlForm form, LayoutContext context, BlockBox box)
     {
         super(e, form, context, box);
     }
@@ -156,14 +156,14 @@ class SelectField extends FormField {
         return list;
     }
 
-    private void addChildren(List<NameValuePair> list, org.jsoup.nodes.Element e)
+    private void addChildren(List<NameValuePair> list, org.xhtmlrenderer.dom.nodes.Element e)
     {
         List<Node> children = e.childNodes();
         for (int i = 0; i < children.size(); i++)
         {
-            if (!(children.get(i) instanceof org.jsoup.nodes.Element))
+            if (!(children.get(i) instanceof org.xhtmlrenderer.dom.nodes.Element))
                 continue;
-            org.jsoup.nodes.Element child = (org.jsoup.nodes.Element) children.get(i);
+            org.xhtmlrenderer.dom.nodes.Element child = (org.xhtmlrenderer.dom.nodes.Element) children.get(i);
 
             if ("option".equals(child.nodeName()))
             {

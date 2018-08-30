@@ -128,7 +128,7 @@ public class DocumentDiffTest {
      */
     public static String xhtmlToDiff(String xhtml, int width, int height)
             throws Exception {
-        org.jsoup.nodes.Document doc = null;//XMLUtil.documentFromFile(xhtml);
+        org.xhtmlrenderer.dom.nodes.Document doc = null;//XMLUtil.documentFromFile(xhtml);
         Graphics2DRenderer renderer = new Graphics2DRenderer();
         renderer.setDocument(doc, new File(xhtml).toURL().toString());
 

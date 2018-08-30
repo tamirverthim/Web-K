@@ -27,7 +27,7 @@ import org.xhtmlrenderer.layout.Styleable;
  * <code>display: table-column-group</code>.
  */
 public class TableColumn implements Styleable {
-    private org.jsoup.nodes.Element _element;
+    private org.xhtmlrenderer.dom.nodes.Element _element;
     private CalculatedStyle _style;
     
     private TableColumn _parent;
@@ -35,12 +35,12 @@ public class TableColumn implements Styleable {
     public TableColumn() {
     }
     
-    public TableColumn(org.jsoup.nodes.Element element, CalculatedStyle style) {
+    public TableColumn(org.xhtmlrenderer.dom.nodes.Element element, CalculatedStyle style) {
         _element = element;
         _style = style;
     }
     
-    public org.jsoup.nodes.Element getElement() {
+    public org.xhtmlrenderer.dom.nodes.Element getElement() {
         return _element;
     }
 
@@ -52,7 +52,7 @@ public class TableColumn implements Styleable {
         return _style;
     }
 
-    public void setElement(org.jsoup.nodes.Element e) {
+    public void setElement(org.xhtmlrenderer.dom.nodes.Element e) {
         _element = e;
     }
 

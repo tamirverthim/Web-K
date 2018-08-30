@@ -25,7 +25,7 @@ public class CanvasElementReplacer extends ElementReplacer {
     }
 
     @Override
-    public boolean accept(LayoutContext context, org.jsoup.nodes.Element element) {
+    public boolean accept(LayoutContext context, org.xhtmlrenderer.dom.nodes.Element element) {
         return context.getNamespaceHandler().isCanvasElement(element);
     }
 
@@ -35,7 +35,7 @@ public class CanvasElementReplacer extends ElementReplacer {
     }
 
     @Override
-    public void clear(org.jsoup.nodes.Element element) {
+    public void clear(org.xhtmlrenderer.dom.nodes.Element element) {
         log.warn("clear");
     }
 

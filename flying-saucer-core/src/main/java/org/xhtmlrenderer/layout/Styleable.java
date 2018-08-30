@@ -33,8 +33,8 @@ public interface Styleable {
     public CalculatedStyle getStyle();
     public void setStyle(CalculatedStyle style);
     
-    public org.jsoup.nodes.Element getElement();
-    public void setElement(org.jsoup.nodes.Element e);
+    public org.xhtmlrenderer.dom.nodes.Element getElement();
+    public void setElement(org.xhtmlrenderer.dom.nodes.Element e);
     
     public String getPseudoElementOrClass();
 }

@@ -19,7 +19,7 @@
  */
 package org.xhtmlrenderer.swing;
 
-import org.jsoup.nodes.Element;
+import org.xhtmlrenderer.dom.nodes.Element;
 import org.xhtmlrenderer.extend.NamespaceHandler;
 import org.xhtmlrenderer.extend.UserAgentCallback;
 import org.xhtmlrenderer.extend.UserInterface;
@@ -73,7 +73,7 @@ public class BoxRenderer {
     private SharedContext sharedContext;
 	private Java2DOutputDevice outputDevice;
 
-	private org.jsoup.nodes.Document doc;
+	private org.xhtmlrenderer.dom.nodes.Document doc;
 	private Box root;
 
 	private float dotsPerPoint;
@@ -274,7 +274,7 @@ public class BoxRenderer {
 		return image;
 	}
 
-	private void setDocument(org.jsoup.nodes.Document doc, String url, NamespaceHandler nsh) {
+	private void setDocument(org.xhtmlrenderer.dom.nodes.Document doc, String url, NamespaceHandler nsh) {
 		this.doc = doc;
 
 		sharedContext.reset();
@@ -302,7 +302,7 @@ public class BoxRenderer {
 		this.root = root;
 	}
 
-	private org.jsoup.nodes.Document loadDocument(final String uri) {
+	private org.xhtmlrenderer.dom.nodes.Document loadDocument(final String uri) {
 		return sharedContext.getUac().getXMLResource(uri);
 	}
 

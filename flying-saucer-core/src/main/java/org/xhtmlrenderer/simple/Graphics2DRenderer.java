@@ -112,7 +112,7 @@ public class Graphics2DRenderer {
      * @param doc      the Document to render
      * @param base_url base URL for relative links within the Document.
      */
-    public void setDocument(org.jsoup.nodes.Document doc, String base_url) {
+    public void setDocument(org.xhtmlrenderer.dom.nodes.Document doc, String base_url) {
         panel.setDocument(doc, base_url);
     }
 

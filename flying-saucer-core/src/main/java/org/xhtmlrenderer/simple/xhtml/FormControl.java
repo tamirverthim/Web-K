@@ -20,7 +20,7 @@
 package org.xhtmlrenderer.simple.xhtml;
 
 
-import org.jsoup.nodes.Element;
+import org.xhtmlrenderer.dom.nodes.Element;
 
 /**
  * Interface describing a form control.

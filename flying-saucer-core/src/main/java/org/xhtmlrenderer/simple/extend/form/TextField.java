@@ -22,12 +22,6 @@ package org.xhtmlrenderer.simple.extend.form;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 
-import org.xhtmlrenderer.css.constants.CSSName;
-import org.xhtmlrenderer.css.style.CalculatedStyle;
-import org.xhtmlrenderer.css.style.FSDerivedValue;
-import org.xhtmlrenderer.css.style.derived.BorderPropertySet;
-import org.xhtmlrenderer.css.style.derived.LengthValue;
-import org.xhtmlrenderer.css.style.derived.RectPropertySet;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.XhtmlForm;
@@ -35,7 +29,7 @@ import org.xhtmlrenderer.util.XHTMLUtils;
 
 class TextField extends AbstractTextField {
 
-    public TextField(org.jsoup.nodes.Element e, XhtmlForm form, LayoutContext context, BlockBox box)
+    public TextField(org.xhtmlrenderer.dom.nodes.Element e, XhtmlForm form, LayoutContext context, BlockBox box)
     {
         super(e, form, context, box);
     }

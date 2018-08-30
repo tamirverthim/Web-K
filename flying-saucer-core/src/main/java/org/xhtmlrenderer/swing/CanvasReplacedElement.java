@@ -1,7 +1,7 @@
 package org.xhtmlrenderer.swing;
 
 import lombok.AllArgsConstructor;
-import org.xhtmlrenderer.js.html5.canvas.impl.HTMLCanvasElementImpl;
+import org.xhtmlrenderer.script.html5.canvas.impl.HTMLCanvasElementImpl;
 
 import javax.swing.*;
 import java.awt.*;

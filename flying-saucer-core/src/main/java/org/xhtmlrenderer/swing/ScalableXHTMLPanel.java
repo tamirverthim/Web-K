@@ -81,7 +81,7 @@ public class ScalableXHTMLPanel extends XHTMLPanel {
 	 * @param doc The new document value
 	 * @param url The new document value
 	 */
-	public void setDocument(org.jsoup.nodes.Document doc, String url) {
+	public void setDocument(org.xhtmlrenderer.dom.nodes.Document doc, String url) {
 		resetScaleAccordingToPolicy();
 		lastLayoutSize = null;
 		super.setDocument(doc, url);

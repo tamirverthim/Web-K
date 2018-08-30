@@ -19,8 +19,8 @@
 package org.xhtmlrenderer.simple.extend;
 
 
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
+import org.xhtmlrenderer.dom.nodes.Element;
+import org.xhtmlrenderer.dom.nodes.Node;
 
 /**
  * Handles xhtml documents, including presentational html attributes (see css 2.1 spec, 6.4.4).
@@ -269,7 +269,7 @@ public class XhtmlNamespaceHandler extends XhtmlCssOnlyNamespaceHandler {
     }
 
     @Override
-    public boolean isCanvasElement(org.jsoup.nodes.Element e) {
+    public boolean isCanvasElement(org.xhtmlrenderer.dom.nodes.Element e) {
         return (e != null && e.nodeName().equalsIgnoreCase("canvas"));
     }
 }

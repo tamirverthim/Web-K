@@ -75,9 +75,6 @@ public class LineBox extends Box implements InlinePaintable {
     
     private JustificationInfo _justificationInfo;
     
-    public LineBox() {
-    }
-    
     public String dump(LayoutContext c, String indent, int which) {
         if (which != Box.DUMP_RENDER) {
             throw new IllegalArgumentException();
@@ -537,7 +534,7 @@ public class LineBox extends Box implements InlinePaintable {
     
     public void restyle(LayoutContext c) {
         Box parent = getParent();
-        org.jsoup.nodes.Element e = parent.getElement();
+        org.xhtmlrenderer.dom.nodes.Element e = parent.getElement();
         if (e != null) {
             CalculatedStyle style = c.getSharedContext().getStyle(e, true);
             setStyle(style.createAnonymousStyle(IdentValue.BLOCK));

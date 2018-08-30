@@ -20,7 +20,6 @@
 package org.xhtmlrenderer.swing;
 
 import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
 
 
 import org.xhtmlrenderer.context.StyleReference;
@@ -57,7 +56,7 @@ public class HoverListener extends DefaultFSMouseListener {
 
         boolean needRepaint = false;
 
-        org.jsoup.nodes.Element currentlyHovered = getHoveredElement(c.getCss(), box);
+        org.xhtmlrenderer.dom.nodes.Element currentlyHovered = getHoveredElement(c.getCss(), box);
 
         if (currentlyHovered == panel.hovered_element) {
             return;
@@ -116,17 +115,17 @@ public class HoverListener extends DefaultFSMouseListener {
     }
     
     // look up the Element that corresponds to the Box we are hovering over
-    private org.jsoup.nodes.Element getHoveredElement(StyleReference style, Box ib) {
+    private org.xhtmlrenderer.dom.nodes.Element getHoveredElement(StyleReference style, Box ib) {
         if (ib == null) {
             return null;
         }
 
-        org.jsoup.nodes.Element element = ib.getElement();
+        org.xhtmlrenderer.dom.nodes.Element element = ib.getElement();
 
         while (element != null && !style.isHoverStyled(element)) {
-            org.jsoup.nodes.Node node = element.parentNode();
-            if (node instanceof org.jsoup.nodes.Element) {
-                element = (org.jsoup.nodes.Element) node;
+            org.xhtmlrenderer.dom.nodes.Node node = element.parentNode();
+            if (node instanceof org.xhtmlrenderer.dom.nodes.Element) {
+                element = (org.xhtmlrenderer.dom.nodes.Element) node;
             } else {
                 element = null;
             }

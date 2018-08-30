@@ -31,7 +31,7 @@ public class FormFieldFactory {
     public static FormField create(XhtmlForm form, LayoutContext context, BlockBox box) {
         String typeKey = null;
 
-        org.jsoup.nodes.Element e = box.getElement();
+        org.xhtmlrenderer.dom.nodes.Element e = box.getElement();
 
         if (e.nodeName().equalsIgnoreCase("input")) {
             typeKey = e.attr("type");  

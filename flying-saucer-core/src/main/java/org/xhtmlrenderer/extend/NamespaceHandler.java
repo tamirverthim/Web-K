@@ -20,7 +20,7 @@
 package org.xhtmlrenderer.extend;
 
 
-import org.jsoup.nodes.Element;
+import org.xhtmlrenderer.dom.nodes.Element;
 import org.xhtmlrenderer.css.extend.StylesheetFactory;
 import org.xhtmlrenderer.css.sheet.StylesheetInfo;
 
@@ -46,14 +46,14 @@ public interface NamespaceHandler {
      * @param doc
      * @return the title for this document, if any exists
      */
-    String getDocumentTitle(org.jsoup.nodes.Document doc);
+    String getDocumentTitle(org.xhtmlrenderer.dom.nodes.Document doc);
 
     /**
      * @param doc
      * @return all links to CSS stylesheets (type="text/css") in this
      *         document
      */
-    StylesheetInfo[] getStylesheets(org.jsoup.nodes.Document doc);
+    StylesheetInfo[] getStylesheets(org.xhtmlrenderer.dom.nodes.Document doc);
 
     /**
      * may return null. Required to return null if attribute does not exist and
@@ -73,7 +73,7 @@ public interface NamespaceHandler {
      * @param e PARAM
      * @return The class value
      */
-    String getClass(org.jsoup.nodes.Element e);
+    String getClass(org.xhtmlrenderer.dom.nodes.Element e);
 
     /**
      * may return null
@@ -81,7 +81,7 @@ public interface NamespaceHandler {
      * @param e PARAM
      * @return The iD value
      */
-    String getID(org.jsoup.nodes.Element e);
+    String getID(org.xhtmlrenderer.dom.nodes.Element e);
 
     /**
      * may return null
@@ -89,7 +89,7 @@ public interface NamespaceHandler {
      * @param e PARAM
      * @return The elementStyling value (style attribute)
      */
-    String getElementStyling(org.jsoup.nodes.Element e);
+    String getElementStyling(org.xhtmlrenderer.dom.nodes.Element e);
 
     /**
      * may return null
@@ -97,7 +97,7 @@ public interface NamespaceHandler {
      * @param e
      * @return The corresponding css properties for styling that is obtained in other ways.
      */
-    String getNonCssStyling(org.jsoup.nodes.Element e);
+    String getNonCssStyling(org.xhtmlrenderer.dom.nodes.Element e);
 
     /**
      * may return null
@@ -105,7 +105,7 @@ public interface NamespaceHandler {
      * @param e PARAM
      * @return The lang value
      */
-    String getLang(org.jsoup.nodes.Element e);
+    String getLang(org.xhtmlrenderer.dom.nodes.Element e);
 
     /**
      * should return null if element is not a link
@@ -113,18 +113,18 @@ public interface NamespaceHandler {
      * @param e PARAM
      * @return The linkUri value
      */
-    String getLinkUri(org.jsoup.nodes.Element e);
+    String getLinkUri(org.xhtmlrenderer.dom.nodes.Element e);
 
     /**
      * 
      * @param e
      */
-    String getAnchorName(org.jsoup.nodes.Element e);
+    String getAnchorName(org.xhtmlrenderer.dom.nodes.Element e);
 
     /**
      * @return Returns true if the Element represents an image.
      */
-    boolean isImageElement(org.jsoup.nodes.Element e);
+    boolean isImageElement(org.xhtmlrenderer.dom.nodes.Element e);
 
     /**
      * Determines whether or not the specified Element represents a
@@ -133,7 +133,7 @@ public interface NamespaceHandler {
      * @param e The Element to evaluate.
      * @return true if the Element is a &lt;form&gt; element, false otherwise.
      */
-    boolean isFormElement(org.jsoup.nodes.Element e);
+    boolean isFormElement(org.xhtmlrenderer.dom.nodes.Element e);
 
     /**
      * For an element where isImageElement returns true, retrieves the URI associated with that Image, as
@@ -145,8 +145,8 @@ public interface NamespaceHandler {
      * @param e The element to extract image info from.
      * @return String containing the URI for the image.
      */
-    String getImageSourceURI(org.jsoup.nodes.Element e);
+    String getImageSourceURI(org.xhtmlrenderer.dom.nodes.Element e);
 
-    boolean isCanvasElement(org.jsoup.nodes.Element element);
+    boolean isCanvasElement(org.xhtmlrenderer.dom.nodes.Element element);
 }
 

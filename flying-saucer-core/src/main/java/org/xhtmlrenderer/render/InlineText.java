@@ -22,8 +22,7 @@ package org.xhtmlrenderer.render;
 
 import java.awt.Rectangle;
 
-import org.jsoup.nodes.TextNode;
-import org.w3c.dom.Text;
+import org.xhtmlrenderer.dom.nodes.TextNode;
 import org.xhtmlrenderer.extend.FSGlyphVector;
 import org.xhtmlrenderer.layout.FunctionData;
 import org.xhtmlrenderer.layout.LayoutContext;

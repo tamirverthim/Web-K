@@ -49,7 +49,7 @@ public interface ReplacedElementFactory {
      * Removes any reference to <code>Element</code> <code>e</code>.
      * @param e
      */
-    public void remove(org.jsoup.nodes.Element e);
+    public void remove(org.xhtmlrenderer.dom.nodes.Element e);
 
     /**
      * Identifies the FSL which will be used for callbacks when a form submit action is executed; you can use a

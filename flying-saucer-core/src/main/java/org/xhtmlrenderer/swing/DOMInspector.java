@@ -20,10 +20,10 @@
 package org.xhtmlrenderer.swing;
 
 
-import org.jsoup.nodes.Comment;
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
-import org.jsoup.nodes.TextNode;
+import org.xhtmlrenderer.dom.nodes.Comment;
+import org.xhtmlrenderer.dom.nodes.Element;
+import org.xhtmlrenderer.dom.nodes.Node;
+import org.xhtmlrenderer.dom.nodes.TextNode;
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.xhtmlrenderer.context.StyleReference;
 import org.xhtmlrenderer.css.constants.ValueConstants;
@@ -81,7 +81,7 @@ public class DOMInspector extends JPanel {
     /**
      * Description of the Field
      */
-    org.jsoup.nodes.Document doc;
+    org.xhtmlrenderer.dom.nodes.Document doc;
     /**
      * Description of the Field
      */
@@ -101,7 +101,7 @@ public class DOMInspector extends JPanel {
      *
      * @param doc PARAM
      */
-    public DOMInspector(org.jsoup.nodes.Document doc) {
+    public DOMInspector(org.xhtmlrenderer.dom.nodes.Document doc) {
         this(doc, null, null);
     }
 
@@ -112,7 +112,7 @@ public class DOMInspector extends JPanel {
      * @param context PARAM
      * @param sr      PARAM
      */
-    public DOMInspector(org.jsoup.nodes.Document doc, SharedContext context, StyleReference sr) {
+    public DOMInspector(org.xhtmlrenderer.dom.nodes.Document doc, SharedContext context, StyleReference sr) {
         super();
 
         this.setLayout(new java.awt.BorderLayout());
@@ -165,7 +165,7 @@ public class DOMInspector extends JPanel {
      *
      * @param doc The new forDocument value
      */
-    public void setForDocument(org.jsoup.nodes.Document doc) {
+    public void setForDocument(org.xhtmlrenderer.dom.nodes.Document doc) {
         setForDocument(doc, null, null);
     }
 
@@ -176,7 +176,7 @@ public class DOMInspector extends JPanel {
      * @param context The new forDocument value
      * @param sr      The new forDocument value
      */
-    public void setForDocument(org.jsoup.nodes.Document doc, SharedContext context, StyleReference sr) {
+    public void setForDocument(org.xhtmlrenderer.dom.nodes.Document doc, SharedContext context, StyleReference sr) {
         this.doc = doc;
         this.styleReference = sr;
         this.context = context;
@@ -272,7 +272,7 @@ class ElementPropertiesPanel extends JPanel {
      *
      * @param node The new forElement value
      */
-    public void setForElement(org.jsoup.nodes.Node node) {
+    public void setForElement(org.xhtmlrenderer.dom.nodes.Node node) {
         try {
             _properties.setModel(tableModel(node));
             TableColumnModel model = _properties.getColumnModel();
@@ -291,12 +291,12 @@ class ElementPropertiesPanel extends JPanel {
      * @return Returns
      * @throws Exception Throws
      */
-    private TableModel tableModel(org.jsoup.nodes.Node node) {
+    private TableModel tableModel(org.xhtmlrenderer.dom.nodes.Node node) {
         if (!(node instanceof Element)) {
             Toolkit.getDefaultToolkit().beep();
             return _defaultTableModel;
         }
-        Map props = _sr.getCascadedPropertiesMap((org.jsoup.nodes.Element) node);
+        Map props = _sr.getCascadedPropertiesMap((org.xhtmlrenderer.dom.nodes.Element) node);
         return new PropertiesTableModel(props);
     }
 
@@ -499,7 +499,7 @@ class DOMSelectionListener implements TreeSelectionListener {
      * @param e PARAM
      */
     public void valueChanged(TreeSelectionEvent e) {
-        org.jsoup.nodes.Node node = (org.jsoup.nodes.Node) _tree.getLastSelectedPathComponent();
+        org.xhtmlrenderer.dom.nodes.Node node = (org.xhtmlrenderer.dom.nodes.Node) _tree.getLastSelectedPathComponent();
 
         if (node == null) {
             return;
@@ -521,12 +521,12 @@ class DOMTreeModel implements TreeModel {
     /**
      * Description of the Field
      */
-    org.jsoup.nodes.Document doc;
+    org.xhtmlrenderer.dom.nodes.Document doc;
 
     /**
      * Our root for display
      */
-    org.jsoup.nodes.Node root;
+    org.xhtmlrenderer.dom.nodes.Node root;
 
     /**
      * Description of the Field
@@ -543,15 +543,15 @@ class DOMTreeModel implements TreeModel {
      *
      * @param doc PARAM
      */
-    public DOMTreeModel(org.jsoup.nodes.Document doc) {
+    public DOMTreeModel(org.xhtmlrenderer.dom.nodes.Document doc) {
         this.displayableNodes = new HashMap();
         this.doc = doc;
         setRoot("body");
     }
 
     private void setRoot(String rootNodeName) {
-        org.jsoup.nodes.Node tempRoot = doc;
-        List<org.jsoup.nodes.Node> nl = tempRoot.childNodes();
+        org.xhtmlrenderer.dom.nodes.Node tempRoot = doc;
+        List<org.xhtmlrenderer.dom.nodes.Node> nl = tempRoot.childNodes();
         for (int i = 0; i < nl.size(); i++) {
             if (nl.get(i).nodeName().toLowerCase().equals(rootNodeName)) {
                 this.root = nl.get(i);
@@ -619,14 +619,14 @@ class DOMTreeModel implements TreeModel {
      */
     public Object getChild(Object parent, int index) {
 
-        org.jsoup.nodes.Node node = (org.jsoup.nodes.Node) parent;
+        org.xhtmlrenderer.dom.nodes.Node node = (org.xhtmlrenderer.dom.nodes.Node) parent;
 
         List children = (List) this.displayableNodes.get(parent);
         if (children == null) {
             children = addDisplayable(node);
         }
 
-        return (org.jsoup.nodes.Node) children.get(index);
+        return (org.xhtmlrenderer.dom.nodes.Node) children.get(index);
     }
 
 
@@ -640,7 +640,7 @@ class DOMTreeModel implements TreeModel {
      */
     public int getChildCount(Object parent) {
 
-        org.jsoup.nodes.Node node = (org.jsoup.nodes.Node) parent;
+        org.xhtmlrenderer.dom.nodes.Node node = (org.xhtmlrenderer.dom.nodes.Node) parent;
         List children = (List) this.displayableNodes.get(parent);
         if (children == null) {
             children = addDisplayable(node);
@@ -697,7 +697,7 @@ class DOMTreeModel implements TreeModel {
      */
     public boolean isLeaf(Object nd) {
 
-        org.jsoup.nodes.Node node = (org.jsoup.nodes.Node) nd;
+        org.xhtmlrenderer.dom.nodes.Node node = (org.xhtmlrenderer.dom.nodes.Node) nd;
 
         return node.childNodeSize() == 0;
     }
@@ -709,7 +709,7 @@ class DOMTreeModel implements TreeModel {
      * @param parent The feature to be added to the Displayable attribute
      * @return Returns
      */
-    private List addDisplayable(org.jsoup.nodes.Node parent) {
+    private List addDisplayable(org.xhtmlrenderer.dom.nodes.Node parent) {
         List children = (List) this.displayableNodes.get(parent);
         if (children == null) {
             children = new ArrayList();

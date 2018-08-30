@@ -60,7 +60,7 @@ public class StyleReference {
     /**
      * Description of the Field
      */
-    private org.jsoup.nodes.Document _doc;
+    private org.xhtmlrenderer.dom.nodes.Document _doc;
 
     /**
      * Description of the Field
@@ -94,7 +94,7 @@ public class StyleReference {
      * @param doc     The new documentContext value
      * @param ui
      */
-    public void setDocumentContext(SharedContext context, NamespaceHandler nsh, org.jsoup.nodes.Document doc, UserInterface ui) {
+    public void setDocumentContext(SharedContext context, NamespaceHandler nsh, org.xhtmlrenderer.dom.nodes.Document doc, UserInterface ui) {
         _context = context;
         _nsh = nsh;
         _doc = doc;
@@ -142,7 +142,7 @@ public class StyleReference {
      * @param e PARAM
      * @return Returns
      */
-    public boolean isHoverStyled(org.jsoup.nodes.Element e) {
+    public boolean isHoverStyled(org.xhtmlrenderer.dom.nodes.Element e) {
         return _matcher.isHoverStyled(e);
     }
 
@@ -158,7 +158,7 @@ public class StyleReference {
      * @param e The DOM Element for which to find properties
      * @return Map of CSS property names to CSSValue instance assigned to it.
      */
-    public java.util.Map getCascadedPropertiesMap(org.jsoup.nodes.Element e) {
+    public java.util.Map getCascadedPropertiesMap(org.xhtmlrenderer.dom.nodes.Element e) {
         CascadedStyle cs = _matcher.getCascadedStyle(e, false);//this is only for debug, I think
         java.util.LinkedHashMap props = new java.util.LinkedHashMap();
         for (java.util.Iterator i = cs.getCascadedPropertyDeclarations(); i.hasNext();) {
@@ -178,12 +178,12 @@ public class StyleReference {
      * @param pseudoElement PARAM
      * @return The pseudoElementStyle value
      */
-    public CascadedStyle getPseudoElementStyle(org.jsoup.nodes.Node node, String pseudoElement) {
-        org.jsoup.nodes.Element e = null;
-        if (node instanceof org.jsoup.nodes.Element) {
-            e = (org.jsoup.nodes.Element) node;
+    public CascadedStyle getPseudoElementStyle(org.xhtmlrenderer.dom.nodes.Node node, String pseudoElement) {
+        org.xhtmlrenderer.dom.nodes.Element e = null;
+        if (node instanceof org.xhtmlrenderer.dom.nodes.Element) {
+            e = (org.xhtmlrenderer.dom.nodes.Element) node;
         } else {
-            e = (org.jsoup.nodes.Element) node.parent();
+            e = (org.xhtmlrenderer.dom.nodes.Element) node.parent();
         }
         return _matcher.getPECascadedStyle(e, pseudoElement);
     }
@@ -196,7 +196,7 @@ public class StyleReference {
      * @param restyle
      * @return The style value
      */
-    public CascadedStyle getCascadedStyle(org.jsoup.nodes.Element e, boolean restyle) {
+    public CascadedStyle getCascadedStyle(org.xhtmlrenderer.dom.nodes.Element e, boolean restyle) {
         if (e == null) return CascadedStyle.emptyCascadedStyle;
         return _matcher.getCascadedStyle(e, restyle);
     }
@@ -271,7 +271,7 @@ public class StyleReference {
         return infos;
     }
     
-    public void removeStyle(org.jsoup.nodes.Element e) {
+    public void removeStyle(org.xhtmlrenderer.dom.nodes.Element e) {
         if (_matcher != null) {
             _matcher.removeStyle(e);
         }

@@ -31,7 +31,7 @@ public class ButtonControl extends AbstractControl {
     private boolean _extended;
     private List _listeners = new ArrayList();
 
-    public ButtonControl(XhtmlForm form, org.jsoup.nodes.Element e) {
+    public ButtonControl(XhtmlForm form, org.xhtmlrenderer.dom.nodes.Element e) {
         super(form, e);
 
         _extended = e.nodeName().equalsIgnoreCase("button");

@@ -20,7 +20,7 @@ package org.xhtmlrenderer.render;
 
 import java.text.BreakIterator;
 
-import org.jsoup.nodes.TextNode;
+import org.xhtmlrenderer.dom.nodes.TextNode;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.extend.ContentFunction;
 import org.xhtmlrenderer.css.parser.FSFunction;
@@ -48,7 +48,7 @@ import org.xhtmlrenderer.layout.breaker.Breaker;
  * @see InlineLayoutBox
  */
 public class InlineBox implements Styleable {
-    private org.jsoup.nodes.Element _element;
+    private org.xhtmlrenderer.dom.nodes.Element _element;
 
     private String _originalText;
     private String _text;
@@ -123,11 +123,11 @@ public class InlineBox implements Styleable {
         _style = style;
     }
 
-    public org.jsoup.nodes.Element getElement() {
+    public org.xhtmlrenderer.dom.nodes.Element getElement() {
         return _element;
     }
 
-    public void setElement(org.jsoup.nodes.Element element) {
+    public void setElement(org.xhtmlrenderer.dom.nodes.Element element) {
         _element = element;
     }
 

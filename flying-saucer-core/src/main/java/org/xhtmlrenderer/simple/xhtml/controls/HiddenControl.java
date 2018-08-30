@@ -19,7 +19,7 @@
  */
 package org.xhtmlrenderer.simple.xhtml.controls;
 
-import org.jsoup.nodes.Element;
+import org.xhtmlrenderer.dom.nodes.Element;
 import org.xhtmlrenderer.simple.xhtml.XhtmlForm;
 
 public class HiddenControl extends AbstractControl {

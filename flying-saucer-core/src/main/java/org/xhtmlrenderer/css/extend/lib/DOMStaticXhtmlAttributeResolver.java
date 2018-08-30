@@ -24,9 +24,8 @@ package org.xhtmlrenderer.css.extend.lib;
 
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
-import org.jsoup.nodes.Element;
+import org.xhtmlrenderer.dom.nodes.Element;
 import org.xhtmlrenderer.css.extend.AttributeResolver;
-import org.xhtmlrenderer.css.extend.TreeResolver;
 
 /**
  * Works for Xhtml in a DOM tree
