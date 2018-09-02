@@ -266,5 +266,10 @@ public class XhtmlNamespaceHandler extends XhtmlCssOnlyNamespaceHandler {
     public boolean isCanvasElement(org.xhtmlrenderer.dom.nodes.Element e) {
         return (e != null && e.nodeName().equalsIgnoreCase("canvas"));
     }
+
+    @Override
+    public boolean isSvgElement(Element element) {
+        return (element != null && element.nodeName().equalsIgnoreCase("svg"));
+    }
 }
 

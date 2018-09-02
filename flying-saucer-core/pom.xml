@@ -94,6 +94,12 @@
       <version>9.2.22.v20170606</version>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>com.kitfox</groupId>
+      <artifactId>kitfox-svg-salamander</artifactId>
+      <version>1.0.8</version>
+    </dependency>
     
   </dependencies>
 

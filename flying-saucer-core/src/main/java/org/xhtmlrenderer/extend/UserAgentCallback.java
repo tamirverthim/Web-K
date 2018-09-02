@@ -112,6 +112,6 @@ public interface UserAgentCallback {
 
     String getScriptResource(String scriptUri);
     
-//    ScriptContext getScriptContext();
+    void clearCaches();
 }
 

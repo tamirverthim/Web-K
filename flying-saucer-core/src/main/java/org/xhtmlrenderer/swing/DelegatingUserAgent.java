@@ -19,6 +19,7 @@
  */
 package org.xhtmlrenderer.swing;
 
+import com.kitfox.svg.SVGCache;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.xhtmlrenderer.dom.nodes.Document;
@@ -223,5 +224,10 @@ public class DelegatingUserAgent implements UserAgentCallback, DocumentListener 
 
     public void setRepaintListener(RepaintListener listener) {
         //_imageResourceLoader.setRepaintListener(listener);
+    }
+
+    @Override
+    public void clearCaches() {
+        SVGCache.getSVGUniverse().clear();
     }
 }

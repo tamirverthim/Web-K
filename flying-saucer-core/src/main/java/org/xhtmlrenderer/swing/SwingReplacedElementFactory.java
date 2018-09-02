@@ -143,7 +143,10 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
         } else if(context.getNamespaceHandler().isCanvasElement(e)){
             HTMLCanvasElementImpl canvasElement = (HTMLCanvasElementImpl) Binder.get(e, context.getSharedContext().getJS().getPanel()); // todo better pass
             return new CanvasReplacedElement(canvasElement);
-        } else {
+        } else if (context.getNamespaceHandler().isSvgElement(e)) {
+            return new SVGReplacedElement(e);
+        } 
+        else {
             //form components
             Element parentForm = getParentForm(e, context);
             //parentForm may be null! No problem! Assume action is this document and method is get.

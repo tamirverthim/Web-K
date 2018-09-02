@@ -75,14 +75,6 @@ img {
     padding: 0px;
 }
 
-/* don't handle all replaced things yet, besides xml should do this via entities!*/
-canvas {
-    display: inline-block;
-    border-width: 1px 1px 1px 1px;
-    margin: 0px;
-    padding: 0px;
-}
-
 a {
     color: #0000ff;
 }
@@ -206,4 +198,15 @@ hr[size="1"] {
 /* Quirk: give form margin for compat (b=41806) (from Firefox) */
 form{
  margin: 0 0 1em 0;
+}
+
+canvas {
+  display: inline-block;
+  border-width: 1px 1px 1px 1px;
+  margin: 0px;
+  padding: 0px;
+}
+
+svg {
+  display: inline-block;
 }

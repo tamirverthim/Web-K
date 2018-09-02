@@ -73,7 +73,7 @@ public interface NamespaceHandler {
      * @param e PARAM
      * @return The class value
      */
-    String getClass(org.xhtmlrenderer.dom.nodes.Element e);
+    String getClass(Element e);
 
     /**
      * may return null
@@ -81,7 +81,7 @@ public interface NamespaceHandler {
      * @param e PARAM
      * @return The iD value
      */
-    String getID(org.xhtmlrenderer.dom.nodes.Element e);
+    String getID(Element e);
 
     /**
      * may return null
@@ -89,7 +89,7 @@ public interface NamespaceHandler {
      * @param e PARAM
      * @return The elementStyling value (style attribute)
      */
-    String getElementStyling(org.xhtmlrenderer.dom.nodes.Element e);
+    String getElementStyling(Element e);
 
     /**
      * may return null
@@ -97,7 +97,7 @@ public interface NamespaceHandler {
      * @param e
      * @return The corresponding css properties for styling that is obtained in other ways.
      */
-    String getNonCssStyling(org.xhtmlrenderer.dom.nodes.Element e);
+    String getNonCssStyling(Element e);
 
     /**
      * may return null
@@ -105,7 +105,7 @@ public interface NamespaceHandler {
      * @param e PARAM
      * @return The lang value
      */
-    String getLang(org.xhtmlrenderer.dom.nodes.Element e);
+    String getLang(Element e);
 
     /**
      * should return null if element is not a link
@@ -113,18 +113,18 @@ public interface NamespaceHandler {
      * @param e PARAM
      * @return The linkUri value
      */
-    String getLinkUri(org.xhtmlrenderer.dom.nodes.Element e);
+    String getLinkUri(Element e);
 
     /**
      * 
      * @param e
      */
-    String getAnchorName(org.xhtmlrenderer.dom.nodes.Element e);
+    String getAnchorName(Element e);
 
     /**
      * @return Returns true if the Element represents an image.
      */
-    boolean isImageElement(org.xhtmlrenderer.dom.nodes.Element e);
+    boolean isImageElement(Element e);
 
     /**
      * Determines whether or not the specified Element represents a
@@ -133,7 +133,7 @@ public interface NamespaceHandler {
      * @param e The Element to evaluate.
      * @return true if the Element is a &lt;form&gt; element, false otherwise.
      */
-    boolean isFormElement(org.xhtmlrenderer.dom.nodes.Element e);
+    boolean isFormElement(Element e);
 
     /**
      * For an element where isImageElement returns true, retrieves the URI associated with that Image, as
@@ -145,8 +145,10 @@ public interface NamespaceHandler {
      * @param e The element to extract image info from.
      * @return String containing the URI for the image.
      */
-    String getImageSourceURI(org.xhtmlrenderer.dom.nodes.Element e);
+    String getImageSourceURI(Element e);
 
-    boolean isCanvasElement(org.xhtmlrenderer.dom.nodes.Element element);
+    boolean isCanvasElement(Element element);
+    
+    boolean isSvgElement(Element element);
 }
 

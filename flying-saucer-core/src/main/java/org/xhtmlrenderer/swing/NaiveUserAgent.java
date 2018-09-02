@@ -36,6 +36,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import javax.imageio.ImageIO;
 
+import com.kitfox.svg.SVGCache;
+import com.kitfox.svg.SVGUniverse;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -354,10 +356,10 @@ public class NaiveUserAgent implements UserAgentCallback, DocumentListener {
         }
     }
 
-//    @Override
-//    public ScriptContext getScriptContext() {
-//        return scriptContext;
-//    }
+    @Override
+    public void clearCaches() {
+        SVGCache.getSVGUniverse().clear();
+    }
 
     /**
      * Returns true if the given URI was visited, meaning it was requested at some point since initialization.
