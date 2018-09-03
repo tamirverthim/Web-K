@@ -40,6 +40,8 @@ import java.util.logging.Level;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+
+import lombok.extern.slf4j.Slf4j;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.css.style.derived.RectPropertySet;
 import org.xhtmlrenderer.extend.NamespaceHandler;
@@ -53,7 +55,6 @@ import org.xhtmlrenderer.resource.XMLResource;
 import org.xhtmlrenderer.simple.NoNamespaceHandler;
 import org.xhtmlrenderer.simple.extend.FormSubmissionListener;
 import org.xhtmlrenderer.util.Configuration;
-import org.xhtmlrenderer.util.Uu;
 import org.xhtmlrenderer.util.XRLog;
 import org.xml.sax.InputSource;
 
@@ -66,6 +67,7 @@ import org.xml.sax.InputSource;
  *
  * @author Joshua Marinacci
  */
+@Slf4j
 public abstract class BasicPanel extends RootPanel implements FormSubmissionListener {
     private static final int PAGE_PAINTING_CLEARANCE_WIDTH = 10;
     private static final int PAGE_PAINTING_CLEARANCE_HEIGHT = 10;
@@ -150,7 +152,7 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
             }
             long after = System.currentTimeMillis();
             if (Configuration.isTrue("xr.incremental.repaint.print-timing", false)) {
-                Uu.p("repaint took ms: " + (after - start));
+                log.trace("repaint took ms: " + (after - start));
             }
         } catch (ThreadDeath t) {
             throw t;

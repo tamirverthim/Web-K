@@ -19,6 +19,8 @@
  */
 package org.xhtmlrenderer.util;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.swing.*;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -32,7 +34,8 @@ import java.util.*;
  *
  * @author empty
  */
-public class Util {
+@Slf4j
+public final class Util {
     /**
      * Description of the Field
      */
@@ -543,7 +546,7 @@ public class Util {
         try {
             Thread.sleep(msec);
         } catch (InterruptedException ex) {
-            org.xhtmlrenderer.util.Uu.p(stack_to_string(ex));
+            log.debug(stack_to_string(ex));
         }
     }
 
@@ -570,22 +573,7 @@ public class Util {
         frame.setLocation((int) ((screen_size.getWidth() - frame.getWidth()) / 2),
                 (int) ((screen_size.getHeight() - frame.getHeight()) / 2));
     }
-
-
-    /**
-     * Gets the number attribute of the Util class
-     *
-     * @param str PARAM
-     * @return The number value
-     */
-    public static boolean isNumber(String str) {
-        try {
-            Integer.parseInt(str);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
+    
 
     public static boolean isNullOrEmpty(String str) {
         return str == null || str.length() == 0;
@@ -594,13 +582,10 @@ public class Util {
     public static boolean isNullOrEmpty(String str, boolean trim) {
         return str == null || str.length() == 0 || (trim && str.trim().length() == 0);
     }
+    
 
-    public static boolean isEqual(String str1, String str2) {
-        return str1 == str2 || (str1 != null && str1.equals(str2));
-    }
-
-    public static boolean isEqual(String str1, String str2, boolean ignoreCase) {
-        return str1 == str2 || (str1 != null && (ignoreCase ? str1.equalsIgnoreCase(str2) : str1.equals(str2)));
+    public static void dump_stack() {
+        log.debug(stack_to_string(new Exception()));
     }
 }
 

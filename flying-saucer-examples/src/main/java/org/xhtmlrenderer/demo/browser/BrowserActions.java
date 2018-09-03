@@ -19,12 +19,10 @@
  */
 package org.xhtmlrenderer.demo.browser;
 
-import org.xhtmlrenderer.demo.browser.actions.CopySelectionAction;
+import lombok.extern.slf4j.Slf4j;
 import org.xhtmlrenderer.demo.browser.actions.FontSizeAction;
-import org.xhtmlrenderer.demo.browser.actions.GenerateDiffAction;
 import org.xhtmlrenderer.layout.SharedContext;
 import org.xhtmlrenderer.simple.XHTMLPanel;
-import org.xhtmlrenderer.util.Uu;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,7 +30,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Logger;
 
@@ -41,6 +38,7 @@ import java.util.logging.Logger;
  *
  * @author empty
  */
+@Slf4j
 public class BrowserActions {
     /**
      * Description of the Field
@@ -51,7 +49,7 @@ public class BrowserActions {
      */
     public Action forward, backward, refresh, reload, load, stop, print_preview, goHome;
 
-    public Action generate_diff, usersManual, aboutPage;
+    public Action usersManual, aboutPage;
     /**
      * Description of the Field
      */
@@ -146,7 +144,7 @@ public class BrowserActions {
                     root.panel.goBack();
                     root.panel.view.repaint();
                 } catch (Exception ex) {
-                    Uu.p(ex);
+                    throw new RuntimeException(ex);
                 }
             }
         };
@@ -164,7 +162,7 @@ public class BrowserActions {
                     root.panel.goForward();
                     root.panel.view.repaint();
                 } catch (Exception ex) {
-                    Uu.p(ex);
+                    throw new RuntimeException(ex);
                 }
             }
         };
@@ -180,7 +178,7 @@ public class BrowserActions {
                     root.panel.view.invalidate();
                     root.panel.view.repaint();
                 } catch (Exception ex) {
-                    Uu.p(ex);
+                    throw new RuntimeException(ex);
                 }
             }
         };
@@ -194,7 +192,7 @@ public class BrowserActions {
                     root.panel.reloadPage();
                     root.panel.view.repaint();
                 } catch (Exception ex) {
-                    Uu.p(ex);
+                    throw new RuntimeException(ex);
                 }
             }
         };
@@ -217,7 +215,7 @@ public class BrowserActions {
                     root.panel.loadPage(url_text);
                     root.panel.view.repaint();
                 } catch (Exception ex) {
-                    Uu.p(ex);
+                    throw new RuntimeException(ex);
                 }
             }
         };
@@ -230,7 +228,7 @@ public class BrowserActions {
                     root.panel.loadPage(url_text);
                     root.panel.view.repaint();
                 } catch (Exception ex) {
-                    Uu.p(ex);
+                    throw new RuntimeException(ex);
                 }
             }
         };
@@ -242,7 +240,7 @@ public class BrowserActions {
                     root.panel.loadPage(root.startPage);
                     root.panel.view.repaint();
                 } catch (Exception ex) {
-                    Uu.p(ex);
+                    throw new RuntimeException(ex);
                 }
             }
         };
@@ -253,7 +251,7 @@ public class BrowserActions {
                     root.panel.loadPage("/users-guide-r8.html");
                     root.panel.view.repaint();
                 } catch (Exception ex) {
-                    Uu.p(ex);
+                    throw new RuntimeException(ex);
                 }
             }
         };
@@ -263,12 +261,10 @@ public class BrowserActions {
                 try {
                     showAboutDialog();
                 } catch (Exception ex) {
-                    Uu.p(ex);
+                    throw new RuntimeException(ex);
                 }
             }
         };
-
-        generate_diff = new GenerateDiffAction(root);
 
         increase_font = new FontSizeAction(root, FontSizeAction.INCREMENT);
         increase_font.putValue(Action.ACCELERATOR_KEY,
@@ -349,7 +345,7 @@ public class BrowserActions {
             root.panel.reloadPage();
             root.panel.view.repaint();
         } catch (Exception ex) {
-            Uu.p(ex);
+            throw new RuntimeException(ex);
         }
     }
 

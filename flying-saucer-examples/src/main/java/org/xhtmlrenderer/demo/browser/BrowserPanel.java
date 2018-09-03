@@ -19,6 +19,7 @@
  */
 package org.xhtmlrenderer.demo.browser;
 
+import lombok.extern.slf4j.Slf4j;
 import org.xhtmlrenderer.event.DocumentListener;
 import org.xhtmlrenderer.script.ScriptContext;
 import org.xhtmlrenderer.layout.SharedContext;
@@ -31,7 +32,6 @@ import org.xhtmlrenderer.swing.ImageResourceLoader;
 import org.xhtmlrenderer.swing.ScalableXHTMLPanel;
 import org.xhtmlrenderer.swing.SwingReplacedElementFactory;
 import org.xhtmlrenderer.util.GeneralUtil;
-import org.xhtmlrenderer.util.Uu;
 import org.xhtmlrenderer.util.XRLog;
 import org.xhtmlrenderer.util.XRRuntimeException;
 
@@ -49,6 +49,7 @@ import java.util.logging.Logger;
  *
  * @author empty
  */
+@Slf4j
 public class BrowserPanel extends JPanel implements DocumentListener {
 	private static final long serialVersionUID = 1L;
 
@@ -207,9 +208,9 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 		SharedContext rc = view.getSharedContext();
 		try {
 			rc.setFontMapping("Fuzz", Font.createFont(Font.TRUETYPE_FONT,
-					new DemoMarker().getClass().getResourceAsStream("/demos/fonts/fuzz.ttf")));
+					DemoMarker.class.getClass().getResourceAsStream("/demos/fonts/fuzz.ttf")));
 		} catch (Exception ex) {
-			Uu.p(ex);
+			log.error("loadCustomFonts", ex);
 		}
 	}
 

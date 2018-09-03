@@ -19,9 +19,8 @@
  */
 package org.xhtmlrenderer.swing;
 
-import org.xhtmlrenderer.extend.TextRenderer;
+import lombok.extern.slf4j.Slf4j;
 import org.xhtmlrenderer.simple.XHTMLPanel;
-import org.xhtmlrenderer.util.Uu;
 import org.xhtmlrenderer.util.XRLog;
 
 import javax.swing.*;
@@ -37,6 +36,7 @@ import java.net.URL;
  *
  * @author empty
  */
+@Slf4j
 public class HTMLTest extends JFrame {
     private static final long serialVersionUID = 1L;
 
@@ -164,7 +164,7 @@ public class HTMLTest extends JFrame {
                             panel.getDocumentTitle() + "  " +
                             "(" + url.toString() + ")");
                 } catch (Exception ex) {
-                    Uu.p(ex);
+                    log.trace("loadDocument", ex);
                 }
                 panel.repaint();
             }

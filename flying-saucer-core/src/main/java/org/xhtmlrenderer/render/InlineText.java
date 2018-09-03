@@ -22,18 +22,19 @@ package org.xhtmlrenderer.render;
 
 import java.awt.Rectangle;
 
+import lombok.extern.slf4j.Slf4j;
 import org.xhtmlrenderer.dom.nodes.TextNode;
 import org.xhtmlrenderer.extend.FSGlyphVector;
 import org.xhtmlrenderer.layout.FunctionData;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.layout.WhitespaceStripper;
-import org.xhtmlrenderer.util.Uu;
 
 /**
  * A lightweight object which contains a chunk of text from an inline element.  
  * It will never extend across a line break nor will it extend across an element 
  * nested within its inline element.
  */
+@Slf4j
 public class InlineText {
     private InlineLayoutBox _parent;
     
@@ -87,7 +88,7 @@ public class InlineText {
     
     public void setSubstring(int start, int end) {
         if (end < start) {
-            Uu.p("setting substring to: " + start + " " + end);
+            log.trace("setting substring to: " + start + " " + end);
             throw new RuntimeException("set substring length too long: " + this);
         } else if (end < 0 || start < 0) {
             throw new RuntimeException("Trying to set negative index to inline box");

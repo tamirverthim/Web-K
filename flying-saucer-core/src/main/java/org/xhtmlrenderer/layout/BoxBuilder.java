@@ -1238,10 +1238,6 @@ public class BoxBuilder {
 //                    }
 //                    previousIB = iB;
 //                }
-                
-                else {
-                    log.error("Unknown node {}", working);
-                }
 
                 if (child != null) {
                     children.add(child);

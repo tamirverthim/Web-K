@@ -19,10 +19,10 @@
  */
 package org.xhtmlrenderer.layout;
 
+import lombok.extern.slf4j.Slf4j;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
-import org.xhtmlrenderer.util.Uu;
 
 
 /**
@@ -30,6 +30,7 @@ import org.xhtmlrenderer.util.Uu;
  *
  * @author   empty
  */
+@Slf4j
 public class TextUtil {
 
     /**
@@ -163,7 +164,7 @@ public class TextUtil {
 
         //Uu.p("final = -"+sb.toString()+"-");
         if ( sb.toString().length() != text.length() ) {
-            Uu.p( "error! to strings arent the same length = -" + sb.toString() + "-" + text + "-" );
+            log.trace( "error! to strings arent the same length = -" + sb.toString() + "-" + text + "-" );
         }
         return sb.toString();
     }

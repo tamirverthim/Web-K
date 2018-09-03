@@ -25,6 +25,7 @@ import java.awt.geom.Area;
 import java.util.Iterator;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.constants.IdentValue;
@@ -41,12 +42,12 @@ import org.xhtmlrenderer.css.value.FontSpecification;
 import org.xhtmlrenderer.extend.FSImage;
 import org.xhtmlrenderer.extend.OutputDevice;
 import org.xhtmlrenderer.util.Configuration;
-import org.xhtmlrenderer.util.Uu;
 
 /**
  * An abstract implementation of an {@link OutputDevice}.  It provides complete
  * implementations for many <code>OutputDevice</code> methods.
  */
+@Slf4j
 public abstract class AbstractOutputDevice implements OutputDevice {
 
     private FontSpecification _fontSpec;
@@ -176,7 +177,7 @@ public abstract class AbstractOutputDevice implements OutputDevice {
             try {
                 return c.getUac().getImageResource(uri).getImage();
             } catch (Exception ex) {
-                Uu.p(ex);
+                log.trace("getBackgroundImage", ex);
             }
         }
         return null;

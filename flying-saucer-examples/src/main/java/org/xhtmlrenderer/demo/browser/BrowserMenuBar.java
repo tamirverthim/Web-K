@@ -19,10 +19,11 @@
  */
 package org.xhtmlrenderer.demo.browser;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xhtmlrenderer.demo.browser.actions.ZoomAction;
 import org.xhtmlrenderer.swing.*;
 import org.xhtmlrenderer.util.Configuration;
-import org.xhtmlrenderer.util.Uu;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,6 +41,9 @@ import java.util.List;
  * @author empty
  */
 public class BrowserMenuBar extends JMenuBar {
+    
+    private final static Logger log = LoggerFactory.getLogger(BrowserMenuBar.class);
+    
     /**
      * Description of the Field
      */
@@ -238,7 +242,6 @@ public class BrowserMenuBar extends JMenuBar {
             }
         });
 
-        debug.add(root.actions.generate_diff);
         add(debug);
 
         help.add(root.actions.usersManual);
@@ -525,7 +528,7 @@ public class BrowserMenuBar extends JMenuBar {
             root.panel.loadPage((String) allDemos.get(nextPage));
             lastDemoOpened = nextPage;
         } catch (Exception ex) {
-            Uu.p(ex);
+            log.error("", ex);
         }
     }
 
@@ -533,7 +536,7 @@ public class BrowserMenuBar extends JMenuBar {
 
         public PriorDemoAction() {
             super("Prior Demo Page");
-            putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_P));
+            putValue(MNEMONIC_KEY, KeyEvent.VK_P);
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         }
 
@@ -566,7 +569,7 @@ public class BrowserMenuBar extends JMenuBar {
             root.panel.loadPage((String) allDemos.get(priorPage));
             lastDemoOpened = priorPage;
         } catch (Exception ex) {
-            Uu.p(ex);
+            log.info("navigateToPriorDemo", ex);
         }
     }
 
@@ -605,7 +608,7 @@ public class BrowserMenuBar extends JMenuBar {
                 root.panel.loadPage(url);
                 lastDemoOpened = pageName;
             } catch (Exception ex) {
-                Uu.p(ex);
+                log.error("actionPerformed", ex);
             }
         }
 

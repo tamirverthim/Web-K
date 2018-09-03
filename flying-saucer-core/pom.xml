@@ -157,7 +157,6 @@
 
             <annotationProcessors>
               <annotationProcessor>lombok.launch.AnnotationProcessorHider$AnnotationProcessor</annotationProcessor>
-              <!--<annotationProcessor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</annotationProcessor>-->
             </annotationProcessors>
           </configuration>
         </plugin>

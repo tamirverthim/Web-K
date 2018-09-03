@@ -19,10 +19,10 @@
  */
 package org.xhtmlrenderer.demo.browser;
 
+import lombok.extern.slf4j.Slf4j;
 import org.xhtmlrenderer.dom.nodes.Document;
 import org.xhtmlrenderer.resource.XMLResource;
 import org.xhtmlrenderer.swing.DelegatingUserAgent;
-import org.xhtmlrenderer.util.Uu;
 import org.xhtmlrenderer.util.XRLog;
 import org.xhtmlrenderer.util.GeneralUtil;
 
@@ -40,6 +40,7 @@ import java.util.ArrayList;
  * events (like a RootPanel subclass).
  *  
  */
+@Slf4j
 public class PanelManager extends DelegatingUserAgent {
     private int index = -1;
     private ArrayList history = new ArrayList();
@@ -63,7 +64,7 @@ public class PanelManager extends DelegatingUserAgent {
                 short_url = "/" + short_url;
             }
             ref = marker.getClass().getResource(short_url);
-            Uu.p("ref = " + ref);
+            log.trace("ref = " + ref);
         } else if (uri.startsWith("demoNav:")) {
             DemoMarker marker = new DemoMarker();
             String short_url = uri.substring("demoNav:".length());
@@ -71,11 +72,11 @@ public class PanelManager extends DelegatingUserAgent {
                 short_url = "/" + short_url;
             }
             ref = marker.getClass().getResource(short_url);
-            Uu.p("Demo navigation URI, ref = " + ref);
+            log.trace("Demo navigation URI, ref = " + ref);
         } else if (uri.startsWith("javascript")) {
-            Uu.p("Javascript URI, ignoring: " + uri);
+            log.trace("Javascript URI, ignoring: " + uri);
         } else if (uri.startsWith("news")) {
-            Uu.p("News URI, ignoring: " + uri);
+            log.trace("News URI, ignoring: " + uri);
         } else {
             try {
                 URL base;
@@ -86,7 +87,7 @@ public class PanelManager extends DelegatingUserAgent {
                 }
                 ref = new URL(base, uri);
             } catch (MalformedURLException e) {
-                Uu.p("URI/URL is malformed: " + burl + " or " + uri);
+                log.error("URI/URL is malformed: " + burl + " or " + uri);
             }
         }
 

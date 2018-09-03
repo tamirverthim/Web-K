@@ -64,7 +64,7 @@ public class DefaultSwingComponentFactory extends SwingComponentFactory
     @Override
     public JTable createMultipleOptionsList(FormField field, List<NameValuePair> optionList, int size)
     {
-        TableModel tableModel = new DefaultTableModel(0, 1);
+        TableModel tableModel = new DefaultTableModel(size, 1);
         int row = 0;
         for (NameValuePair nameValuePair : optionList) {
             tableModel.setValueAt(nameValuePair.getName(), row, 0); 

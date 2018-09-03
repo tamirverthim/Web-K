@@ -1,7 +1,7 @@
 package org.xhtmlrenderer.simple;
 
-import org.xhtmlrenderer.extend.TextRenderer;
-import org.xhtmlrenderer.util.Uu;
+
+import lombok.extern.slf4j.Slf4j;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -30,7 +30,7 @@ import java.awt.print.Printable;
  * }
  * </pre>
  */
-
+@Slf4j
 public class XHTMLPrintable implements Printable {
 
     protected XHTMLPanel panel;
@@ -79,7 +79,7 @@ public class XHTMLPrintable implements Printable {
             
             return Printable.PAGE_EXISTS;
         } catch (Exception ex) {
-            Uu.p(ex);
+            log.trace("print", ex);
             return Printable.NO_SUCH_PAGE;
         }
     }
