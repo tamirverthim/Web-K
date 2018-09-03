@@ -16,7 +16,7 @@ public class RendererTests {
     
     @Test
     public void regression() throws IOException {
-        ReferenceComparison rc = new ReferenceComparison(1024, false);
+        ReferenceComparison rc = new ReferenceComparison(1024);
         File source = new File("tests/regress/xhtml");
         File reference = new File("tests/regress/snapshots/1.0");
         File failed = new File("target/regression-failed");

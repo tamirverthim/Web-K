@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.Box;
 import org.xhtmlrenderer.swing.BoxRenderer;
+import org.xhtmlrenderer.swing.RootPanel;
 import org.xhtmlrenderer.util.IOUtil;
 
 import java.io.*;
@@ -11,6 +12,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 
 
 /**
@@ -19,12 +21,11 @@ import java.util.Map;
 @Slf4j
 public class ReferenceComparison {
     private int width;
-    private boolean isVerbose;
     private static final String LINE_SEPARATOR = "\n";
 
     public static void main(String[] args) throws IOException {
         // TODO: check args
-        ReferenceComparison rc = new ReferenceComparison(1024, false);
+        ReferenceComparison rc = new ReferenceComparison(1024);
         File source = new File(args[0]);
         File reference = new File(args[1]);
         File failed = new File(args[2]);
@@ -36,11 +37,9 @@ public class ReferenceComparison {
      * Initializes (does not launch) the reference comparison.
      *
      * @param width width at which pages should be rendered
-     * @param verbose
      */
-    public ReferenceComparison(int width, boolean verbose) {
+    public ReferenceComparison(int width) {
         this.width = width;
-        this.isVerbose = verbose;
     }
 
     /**
@@ -95,17 +94,10 @@ public class ReferenceComparison {
         }
     }
 
-    private boolean verbose() {
-        return isVerbose;
-    }
-
     private Iterator listSourceFiles(File sourceDirectory) {
         return Arrays.asList(
-                sourceDirectory.listFiles(new FilenameFilter() {
-                    public boolean accept(File file, String s) {
-                        return Regress.EXTENSIONS.contains(s.substring(s.lastIndexOf(".") + 1));
-                    }
-                })
+                Objects.requireNonNull(
+                        sourceDirectory.listFiles((file, s) -> RegressionGenerator.EXTENSIONS.contains(s.substring(s.lastIndexOf(".") + 1))))
         ).iterator();
     }
 
@@ -114,6 +106,7 @@ public class ReferenceComparison {
         stat.checking(source);
         // TODO: reuse code from Regress
         BoxRenderer renderer = new BoxRenderer(source, width);
+        renderer.getSharedContext().setCanvas(new RootPanel());
         Box box;
         try {
             log("rendering");
@@ -128,16 +121,16 @@ public class ReferenceComparison {
         }
         LayoutContext layoutContext = renderer.getLayoutContext();
         String inputFileName = source.getName();
-        String refRendered = trimTrailingLS(readReference(referenceDir, inputFileName, Regress.RENDER_SFX));
+        String refRendered = trimTrailingLS(readReference(referenceDir, inputFileName, RegressionGenerator.RENDER_SFX));
         String rendered = trimTrailingLS(box.dump(layoutContext, "", Box.DUMP_RENDER));
         if (!compareLines(refRendered, rendered, stat)) {
-            storeFailed(failedDirectory, new File(referenceDir, inputFileName), Regress.RENDER_SFX, rendered);
+            storeFailed(failedDirectory, new File(referenceDir, inputFileName), RegressionGenerator.RENDER_SFX, rendered);
         }
 
-        final String refLaidOut = trimTrailingLS(readReference(referenceDir, inputFileName, Regress.LAYOUT_SFX));
+        final String refLaidOut = trimTrailingLS(readReference(referenceDir, inputFileName, RegressionGenerator.LAYOUT_SFX));
         final String laidOut = trimTrailingLS(box.dump(layoutContext, "", Box.DUMP_LAYOUT));
         if (!compareLines(refLaidOut, laidOut, stat)) {
-            storeFailed(failedDirectory, new File(referenceDir, inputFileName), Regress.LAYOUT_SFX, laidOut);
+            storeFailed(failedDirectory, new File(referenceDir, inputFileName), RegressionGenerator.LAYOUT_SFX, laidOut);
         }
     }
 
@@ -150,7 +143,7 @@ public class ReferenceComparison {
 
     private void storeFailed(File failedDirectory, File refFile, String suffix, String compareTo) {
         copyToFailed(failedDirectory, refFile, "");
-        copyToFailed(failedDirectory, refFile, Regress.PNG_SFX);
+        copyToFailed(failedDirectory, refFile, RegressionGenerator.PNG_SFX);
         copyToFailed(failedDirectory, refFile, suffix);
 
         OutputStreamWriter fw = null;
@@ -250,9 +243,7 @@ public class ReferenceComparison {
     }
 
     private void log(final String msg) {
-        if (verbose()) {
-            System.out.println(msg);
-        }
+        log.info(msg);
     }
 
     private static class CompareStatistics {
@@ -305,11 +296,11 @@ public class ReferenceComparison {
 
                 if (result instanceof FailedResult) {
                     failed++;
-                    System.out.println(result.describe(file));
+                    log.error(result.describe(file));
                 }
             }
             
-            System.out.println("Checked " + files.keySet().size() + " files, " + (failed > 0 ? failed + " failed." : "all OK."));
+            log.info("Checked " + files.keySet().size() + " files, " + (failed > 0 ? failed + " failed." : "all OK."));
             return failed;
         }
 

@@ -144,7 +144,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
             HTMLCanvasElementImpl canvasElement = (HTMLCanvasElementImpl) Binder.get(e, context.getSharedContext().getJS().getPanel()); // todo better pass
             return new CanvasReplacedElement(canvasElement);
         } else if (context.getNamespaceHandler().isSvgElement(e)) {
-            return new SVGReplacedElement(e);
+            return new SVGReplacedElement(e, cssWidth, cssHeight);
         } 
         else {
             //form components

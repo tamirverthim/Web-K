@@ -18,11 +18,13 @@ package org.xhtmlrenderer.tools;/*
  * }}}
  */
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.Box;
 import org.xhtmlrenderer.swing.BoxRenderer;
 import org.xhtmlrenderer.swing.Java2DRenderer;
+import org.xhtmlrenderer.swing.RootPanel;
 import org.xhtmlrenderer.util.FSImageWriter;
 
 import java.awt.image.BufferedImage;
@@ -57,8 +59,9 @@ import java.util.List;
  * org.xhtmlrenderer.test.Regress ./regress/input-html/ ./regress/output.zip
  * </pre>
  */
-public class Regress {
-    public static final List EXTENSIONS = Arrays.asList(new String[]{"htm", "html", "xht", "xhtml", "xml",});
+@Slf4j
+public class RegressionGenerator {
+    public static final List EXTENSIONS = Arrays.asList("htm", "html", "xht", "xhtml", "xml");
     public static final String RENDER_SFX = ".render.txt";
     public static final String LAYOUT_SFX = ".layout.txt";
     public static final String PNG_SFX = ".png";
@@ -86,7 +89,7 @@ public class Regress {
         final int width = 1024;
 
         System.out.println("Running regression against files in " + sourceDir);
-        Regress regress = new Regress(sourceDir, outputDir, width);
+        RegressionGenerator regress = new RegressionGenerator(sourceDir, outputDir, width);
         regress.snapshot();
         System.out.println("Ran regressions against " + regress.getFileCount() + " files in source directory; " + regress.getFailedCount() + " failed to generate");
     }
@@ -104,7 +107,7 @@ public class Regress {
      * @param outputDir directory to write to
      * @param width     width to constrain layou to
      */
-    public Regress(File sourceDir, File outputDir, int width) {
+    public RegressionGenerator(File sourceDir, File outputDir, int width) {
         this.sourceDir = sourceDir;
         this.outputDir = outputDir;
         this.width = width;
@@ -146,6 +149,7 @@ public class Regress {
     private void saveImage(File page, File outputDir, int width) throws IOException {
         try {
             Java2DRenderer j2d = new Java2DRenderer(page, width);
+            j2d.getSharedContext().setCanvas(new RootPanel());
 
             // this renders and returns the image, which is stored in the J2R; will not
             // be re-rendered, calls to getImage() return the same instance
@@ -165,17 +169,18 @@ public class Regress {
             String fileName = outputFile.getPath();
             imageWriter.write(img, fileName);
         } catch (Exception e) {
-            System.err.println("Could not render input file to image, skipping: " + page + " err: " + e.getMessage());
+            log.error("Could not render input file to image, skipping: " + page, e);
         }
     }
 
     private void saveBoxModel(File page, File outputDir, int width) throws IOException {
         BoxRenderer renderer = new BoxRenderer(page, width);
+        renderer.getSharedContext().setCanvas(new RootPanel());
         Box box;
         try {
             box = renderer.render();
         } catch (Exception e) {
-            System.err.println("Could not render input file, skipping: " + page + " err: " + e.getMessage());
+            log.error("Could not render input file, skipping: " + page + " err: " + e.getMessage());
             failedCount++;
             return;
         }
