@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.var;
 import lombok.val;
+import org.xhtmlrenderer.script.html5.canvas.CanvasLineCap;
+import org.xhtmlrenderer.script.html5.canvas.CanvasLineJoin;
 import org.xhtmlrenderer.script.html5.canvas.CanvasTextBaseline;
 
 import java.awt.*;
@@ -24,12 +26,37 @@ public class G2DState implements Cloneable {
     double lineWidth = 1;
     int fontSize = 12;
     float globalAlpha = 1.0f;
-    private CanvasTextBaseline canvasTextBaseline;
+    CanvasTextBaseline canvasTextBaseline;
+    CanvasLineCap lineCap;
+    CanvasLineJoin lineJoin;
+    double miterLimit;
+    List lineDash;
 
     void apply(Graphics2D graphics2D) {
         graphics2D.setTransform(transform);
-        graphics2D.setStroke(new BasicStroke((float) lineWidth));
+        graphics2D.setStroke(createStroke());
         graphics2D.setFont(new Font("sans-serif", Font.PLAIN, fontSize)); // todo cache
+    }
+    
+    
+    private Stroke createStroke(){
+        
+        final int swingCap;
+        switch (lineCap) {
+            case butt:
+                swingCap = BasicStroke.CAP_BUTT;
+                break;
+            case round: 
+                swingCap = BasicStroke.CAP_ROUND;
+                break;
+            case square:
+                swingCap = BasicStroke.CAP_SQUARE;
+                break;
+            default:
+                swingCap = BasicStroke.CAP_BUTT;
+        }
+        
+        return new BasicStroke((float) lineWidth, swingCap, BasicStroke.JOIN_MITER);
     }
     
     void apply(Graphics2D graphics2D, boolean fill) {
@@ -96,6 +123,7 @@ public class G2DState implements Cloneable {
             res.globalAlpha = globalAlpha;
             res.transform = new AffineTransform(this.transform);
             res.canvasTextBaseline = canvasTextBaseline;
+            res.lineCap = lineCap;
             return res;
         } catch (CloneNotSupportedException e){
             throw new RuntimeException(e);
@@ -106,4 +134,13 @@ public class G2DState implements Cloneable {
     public void setTextBaseline(CanvasTextBaseline canvasTextBaseline) {
         this.canvasTextBaseline = canvasTextBaseline;
     }
+
+    public void setLineCap(CanvasLineCap canvasLineCap) {
+        this.lineCap = canvasLineCap;    
+    }
+    
+    public CanvasLineCap getLineCap(){
+        return lineCap;
+    }
+    
 }

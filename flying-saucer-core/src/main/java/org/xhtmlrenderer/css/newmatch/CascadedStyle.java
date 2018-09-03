@@ -59,7 +59,7 @@ public class CascadedStyle {
     /**
      * Map of PropertyDeclarations, keyed by {@link CSSName}
      */
-    private Map cascadedProperties;
+    private Map<Object, PropertyDeclaration> cascadedProperties;
     
     private String fingerprint;
     

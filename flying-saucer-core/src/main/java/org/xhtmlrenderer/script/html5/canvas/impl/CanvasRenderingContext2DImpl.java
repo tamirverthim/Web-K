@@ -431,12 +431,13 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
             @Override
             public CanvasLineCap get() {
                 log.trace("lineCap get");
-                return CanvasLineCap.butt;
+                return state().getLineCap();
             }
 
             @Override
             public void set(CanvasLineCap canvasLineCap) {
                 log.trace("lineCap set");
+                state().setLineCap(canvasLineCap);
             }
 
         };
@@ -455,7 +456,6 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
             @Override
             public void set(CanvasLineJoin canvasLineJoin) {
                 log.trace("lineJoin set");
-
             }
         };
     }
