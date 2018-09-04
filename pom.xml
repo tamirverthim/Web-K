@@ -5,7 +5,7 @@
 
   <groupId>org.xhtmlrenderer</groupId>
   <artifactId>flying-saucer-parent</artifactId>
-  <version>9.1.13.2_earnix-SNAPSHOT</version>
+  <version>9.1.13.2_earnix_next</version>
 
   <packaging>pom</packaging>
 
@@ -31,7 +31,7 @@
     <connection>scm:git:ssh://git@gitcore/earnix/flyingsaucer.git</connection>
     <developerConnection>scm:git:ssh://git@gitcore/earnix/flyingsaucer.git</developerConnection>
     <url>http://gitcore/earnix/flyingsaucer.git</url>
-    <tag>HEAD</tag>
+    <tag>flying-saucer-parent-9.1.13.2_earnix_next</tag>
   </scm>
 
   <repositories>
