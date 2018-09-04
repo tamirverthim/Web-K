@@ -211,7 +211,9 @@ public class ScriptContext {
             }
             throw new RuntimeException(e);
         }
+//        panel.setDocument(panel.getDocument());
         panel.relayout();
+        panel.setDocument(panel.getDocument());
         return res;
     }
 

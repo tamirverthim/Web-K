@@ -5,6 +5,7 @@ import com.helger.css.reader.CSSReaderDeclarationList;
 import jdk.nashorn.api.scripting.AbstractJSObject;
 import lombok.val;
 import netscape.javascript.JSException;
+import org.xhtmlrenderer.dom.nodes.Element;
 import org.xhtmlrenderer.script.Function;
 
 import java.util.HashMap;
@@ -16,43 +17,21 @@ import java.util.HashMap;
 public class CSSStyleAttribute extends AbstractJSObject {
 
     HashMap<String, String> map = new HashMap<>();
-
+    Element model;
+    
+    public CSSStyleAttribute(Element model) {
+        this(model.attr("style"));
+        this.model = model;
+    }
+    
     public CSSStyleAttribute(String css) {
         val declarations = CSSReaderDeclarationList.readFromString(css, ECSSVersion.CSS30);
-        
-        declarations.forEach(d -> {
-            map.put(d.getProperty(), d.getExpressionAsCSSString());
-        });
-        
-//        val declaration = declarations.getDeclarationAtIndex(0);
-
-        
-        
-        // Get the Shorthand descriptor for "border"    
-//        final CSSShortHandDescriptor aSHD = CSSShortHandRegistry.getShortHandDescriptor (ECSSProperty.FONT);
-//
-//        // And now split it into pieces
-//        final List<CSSDeclaration> aSplittedDecls = aSHD.getSplitIntoPieces (declaration);
-//        for (CSSDeclaration aSplittedDecl : aSplittedDecls) {
-//
-//            val fontSize = aSplittedDecl.getExpression().getAsCSSString();
-//            if(fontSize.endsWith("px")){
-//                state().setFontSize((int) Math.round(Double.parseDouble(fontSize.substring(0, 2))));
-//                stateDirty = true;
-//            }
-//
-//        }
+       if(declarations != null) {
+           declarations.forEach(d -> {
+               map.put(d.getProperty(), d.getExpressionAsCSSString());
+           });
+       }
     }
-
-    //    @Override
-//    public Object call(String methodName, Object... args) throws JSException {
-//        return null;
-//    }
-
-//    @Override
-//    public Object eval(String s) throws JSException {
-//        return null;
-//    }
 
     @Override
     public Object getMember(String name) throws JSException {
@@ -64,12 +43,15 @@ public class CSSStyleAttribute extends AbstractJSObject {
 
     @Override
     public void setMember(String name, Object value) throws JSException {
-        map.put(name, value.toString());
+        
+        map.put(toKebabCase(name), value.toString());
+        synchronize();
     }
 
     @Override
     public void removeMember(String name) throws JSException {
-        map.remove(name);
+        map.remove(toKebabCase(name));
+        synchronize();
     }
 
     @Override
@@ -81,8 +63,29 @@ public class CSSStyleAttribute extends AbstractJSObject {
     public void setSlot(int index, Object value) throws JSException {
 
     }
+    
+    private void synchronize(){
+        if(model != null){
+            model.attr("style", toCSSString());
+        }
+    } 
 
     public String toCSSString() {
         return map.entrySet().stream().map(e -> e.getKey() + ": " + e.getValue() + ";").reduce("", (a, b) -> a + " \n " + b);
+    }
+    
+    private String toKebabCase(String camel){
+        StringBuilder result = new StringBuilder();
+        for (char c : camel.toCharArray()) {
+            if(Character.isUpperCase(c)){
+                if(result.length() > 0){
+                    result.append("-");
+                }
+                result.append(Character.toLowerCase(c));
+            } else {
+                result.append(c);
+            }
+        }
+        return result.toString();
     }
 }

@@ -2,7 +2,11 @@ package org.xhtmlrenderer.script.html5.impl;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import lombok.val;
+import org.xhtmlrenderer.dom.nodes.Node;
+import org.xhtmlrenderer.script.Binder;
 import org.xhtmlrenderer.script.html5.*;
+import org.xhtmlrenderer.script.impl.ElementImpl;
 import org.xhtmlrenderer.script.web_idl.Attribute;
 import org.xhtmlrenderer.script.web_idl.DOMString;
 import org.xhtmlrenderer.script.web_idl.USVString;
@@ -20,10 +24,13 @@ import org.xhtmlrenderer.simple.XHTMLPanel;
 public class DocumentImpl extends org.xhtmlrenderer.script.impl.DocumentImpl implements Document {
     
     Location location;
+    org.xhtmlrenderer.dom.nodes.Document document;
+    
     
     public DocumentImpl(XHTMLPanel panel) {
         super(panel);
         location = new LocationImpl(panel);
+        document = panel.getDocument();
     }
 
     @Override
@@ -74,7 +81,25 @@ public class DocumentImpl extends org.xhtmlrenderer.script.impl.DocumentImpl imp
 
     @Override
     public Attribute<HTMLElement> body() {
-        return null;
+        return new Attribute<HTMLElement>() {
+            @Override
+            public HTMLElement get() {
+                val bodyModel = document.getElementsByTag("body");
+                if(bodyModel.isEmpty()){
+                    return null;
+                }
+                return (HTMLElement) Binder.getElement(bodyModel.get(0), panel);
+            }
+
+            @Override
+            public void set(HTMLElement htmlElement) {
+                val bodyModel = document.getElementsByTag("body");
+                if(!bodyModel.isEmpty()){
+                    bodyModel.forEach(Node::remove);
+                }
+                document.appendChild(((ElementImpl)htmlElement).getTarget());
+            }
+        };
     }
 
     @Override

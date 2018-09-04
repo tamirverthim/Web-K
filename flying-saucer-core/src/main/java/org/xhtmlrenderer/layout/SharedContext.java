@@ -100,8 +100,6 @@ public class SharedContext {
     
     private LineBreakingStrategy lineBreakingStrategy = new DefaultLineBreakingStrategy();
     
-    private ScriptContext scriptContext;
-
     public SharedContext() {
     }
 
@@ -573,7 +571,7 @@ public class SharedContext {
                 parentCalculatedStyle = getStyle((org.xhtmlrenderer.dom.nodes.Element)parent, false);
             }  
 
-            result = parentCalculatedStyle.deriveStyle(getCss().getCascadedStyle((org.xhtmlrenderer.dom.nodes.Element)e, restyle));
+            result = parentCalculatedStyle.deriveStyle(getCss().getCascadedStyle(e, restyle));
 
             styleMap.put(e, result);
         }

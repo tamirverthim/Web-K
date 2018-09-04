@@ -8,6 +8,7 @@ import org.xhtmlrenderer.script.Binder;
 import org.xhtmlrenderer.script.cssom_view.ScrollToOptions;
 import org.xhtmlrenderer.script.geom.DOMRect;
 import org.xhtmlrenderer.script.geom.DOMRectList;
+import org.xhtmlrenderer.script.html5.HTMLElement;
 import org.xhtmlrenderer.script.html5.canvas.HTMLSlotElement;
 import org.xhtmlrenderer.script.web_idl.Attribute;
 import org.xhtmlrenderer.script.web_idl.DOMString;
@@ -25,7 +26,7 @@ import java.util.HashSet;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Slf4j
-public class ElementImpl extends NodeImpl implements Element {
+public class ElementImpl extends NodeImpl implements HTMLElement {
     
     final org.xhtmlrenderer.dom.nodes.Element target;
     final ChildNodeImpl childNodeMixin;
@@ -392,7 +393,7 @@ public class ElementImpl extends NodeImpl implements Element {
     @Override
     public Attribute<CSSStyleAttribute> style() {
         return Attribute.<CSSStyleAttribute>receive((a) -> target.attr("style", a.toCSSString()))
-                .give(() -> new CSSStyleAttribute(target.attr("style")));
+                .give(() -> new CSSStyleAttribute(target));
     }
 
     @Override

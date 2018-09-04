@@ -171,7 +171,6 @@ public class NodeImpl implements Node {
     public Node appendChild(Node node) {
         NodeImpl impl = (NodeImpl) node;
         ((org.xhtmlrenderer.dom.nodes.Element)target).appendChild(impl.target);
-//        panel.reloadDocument(panel.getDocument());
         return node;
     }
 

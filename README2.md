@@ -1,0 +1,1 @@
+SwingBrowser is a for of Flying Saucer if some JS support, HTML parsing capabilities and embedded SVG support

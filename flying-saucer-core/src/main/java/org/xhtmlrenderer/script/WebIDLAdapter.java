@@ -137,7 +137,12 @@ public class WebIDLAdapter<T> implements JSObject {
 //        log.trace("Getting member {} of {}", s, target);
         val member = members.get(s);
         if (member instanceof WebIDLAdapter.AttributeLink) {
-            return wrapIfNeeded((((AttributeLink) member).attribute).get());
+            try {
+                return wrapIfNeeded((((AttributeLink) member).attribute).get());
+            } catch (Exception e){
+                System.err.println();
+                throw e;
+            }
         } else if (readonlyAttributeMark.equals(member)) {
             try {
                 return wrapIfNeeded(MethodUtils.invokeMethod(target, s));
