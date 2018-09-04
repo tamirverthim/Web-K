@@ -70,6 +70,11 @@
       <version>6.1.1</version>
     </dependency>
 
+    <dependency>
+      <groupId>com.kitfox.svg</groupId>
+      <artifactId>svgSalamander</artifactId>
+      <version>d6b6fe9a8ece7d0e0e7aeb3de82f027a38a6fe25</version>
+    </dependency>
 
     <dependency>
       <!-- gson, to fetch entities from w3.org -->
@@ -94,13 +99,6 @@
       <version>9.2.22.v20170606</version>
       <scope>test</scope>
     </dependency>
-
-    <dependency>
-      <groupId>com.kitfox</groupId>
-      <artifactId>kitfox-svg-salamander</artifactId>
-      <version>1.0.8</version>
-    </dependency>
-    
   </dependencies>
 
   <build>
@@ -160,6 +158,42 @@
             </annotationProcessors>
           </configuration>
         </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.1.1</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <artifactSet>
+                <includes>
+                  <include>com.kitfox.svg:svgSalamander</include>
+                </includes>
+              </artifactSet>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
+    
   </build>
+  
+  <repositories>
+    <repository>
+      <releases>
+        <enabled>true</enabled>
+        <checksumPolicy>ignore</checksumPolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>project</id>
+      <url>${project.baseUri}maven-repository</url>
+    </repository>
+  </repositories>
+  
 </project>

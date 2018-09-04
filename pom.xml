@@ -54,11 +54,6 @@
       <name>libs-snapshot</name>
       <url>http://factory.earnix.local:8081/artifactory/libs-snapshot</url>
     </repository>
-    
-    <repository>
-      <id>atlassian</id>
-      <url>https://packages.atlassian.com/maven-public/</url>
-    </repository>
   </repositories>
 
   <pluginRepositories>
