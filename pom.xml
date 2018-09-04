@@ -28,9 +28,9 @@
   </modules>
 
   <scm>
-    <connection>scm:git:ssh://git@gitcore/eli.rosenblum/flyingsaucer.git</connection>
-    <developerConnection>scm:git:ssh://git@gitcore/eli.rosenblum/flyingsaucer.git</developerConnection>
-    <url>http://gitcore/eli.rosenblum/flyingsaucer.git</url>
+    <connection>scm:git:ssh://git@gitcore/earnix/flyingsaucer.git</connection>
+    <developerConnection>scm:git:ssh://git@gitcore/earnix/flyingsaucer.git</developerConnection>
+    <url>http://gitcore/earnix/flyingsaucer.git</url>
     <tag>HEAD</tag>
   </scm>
 
