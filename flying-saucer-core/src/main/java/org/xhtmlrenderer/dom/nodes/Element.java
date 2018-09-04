@@ -48,9 +48,17 @@ public class Element extends Node {
     private Attributes attributes;
     private String baseUri;
 
-    @Getter
-    @Setter
-    private Box view;
+    
+    private WeakReference<Box> view;
+
+    public Box getView() {
+        return view.get();
+    }
+
+    public Element setView(Box view) {
+        this.view = new WeakReference<>(view);
+        return this;
+    }
     
     /**
      * Create a new, standalone element.

@@ -283,7 +283,7 @@ public class ConnectTest {
     /**
      * Tests upload of content to a remote service.
      */
-    @Test
+//    @Test
     public void postFiles() throws IOException {
         File thumb = ParseTest.getFile("/htmltests/thumb.jpg");
         File html = ParseTest.getFile("/htmltests/google-ipod.html");
@@ -373,7 +373,7 @@ public class ConnectTest {
         assertEquals("token=asdfg123; uid=jhy", ihVal("Cookie", doc));
     }
 
-    @Test
+//    @Test
     public void supportsDeflate() throws IOException {
         Connection.Response res = Jsoup.connect(Deflateservlet.Url).execute();
         assertEquals("deflate", res.header("Content-Encoding"));
@@ -382,7 +382,7 @@ public class ConnectTest {
         assertEquals("Hello, World!", doc.selectFirst("p").text());
     }
 
-    @Test
+//    @Test
     public void handlesEmptyStreamDuringParseRead() throws IOException {
         // this handles situations where the remote server sets a content length greater than it actually writes
 
@@ -400,7 +400,7 @@ public class ConnectTest {
         assertTrue(threw);
     }
 
-    @Test
+//    @Test
     public void handlesEmtpyStreamDuringBufferdRead() throws IOException {
         Connection.Response res = Jsoup.connect(InterruptedServlet.Url)
             .timeout(200)

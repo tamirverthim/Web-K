@@ -18,7 +18,7 @@ public class HamletSpeedTest {
         for (int i = 0; i < 10; i++) {
             Date start = new Date();
             Graphics2DRenderer.renderToImage(
-                    new File("../tests/profiling/xhtml/hamlet.xhtml").toURL().toExternalForm(),
+                    new File("tests/profiling/xhtml/hamlet.xhtml").toURL().toExternalForm(),
                     700, 
                     700
             );

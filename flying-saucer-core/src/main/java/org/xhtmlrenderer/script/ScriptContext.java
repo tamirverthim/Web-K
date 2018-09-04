@@ -16,17 +16,14 @@ import org.xhtmlrenderer.script.html5.canvas.impl.CanvasPatternImpl;
 import org.xhtmlrenderer.script.impl.ElementImpl;
 import org.xhtmlrenderer.script.web_idl.Exposed;
 import org.xhtmlrenderer.script.whatwg_dom.css_style_attribute.CSSStyleAttribute;
-import org.xhtmlrenderer.simple.XHTMLPanel;
 import org.xhtmlrenderer.swing.BasicPanel;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import java.net.URISyntaxException;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.function.Consumer;
 
 import static javax.script.ScriptContext.ENGINE_SCOPE;
 
@@ -220,11 +217,8 @@ public class ScriptContext implements DocumentListener {
             throw new RuntimeException(e);
         }
 //        panel.setDocument(panel.getDocument());
+        panel.setRootBox(null);
         panel.relayout();
-        if(documentChanged) {
-            panel.setDocument(panel.getDocument(), panel.getSharedContext().getBaseURL());
-            documentChanged = false;
-        }
         return res;
     }
 

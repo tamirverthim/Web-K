@@ -94,12 +94,6 @@ public class RegressionGenerator {
         System.out.println("Ran regressions against " + regress.getFileCount() + " files in source directory; " + regress.getFailedCount() + " failed to generate");
     }
     
-    
-    @Test
-    public void test(){
-        
-    }
-
     /**
      * Initialize to read from sourceDir and generate files to outputDir, using width points to constrain layout.
      *
