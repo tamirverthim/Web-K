@@ -3,10 +3,13 @@ package org.xhtmlrenderer.script.whatwg_dom.css_style_attribute;
 import com.helger.css.ECSSVersion;
 import com.helger.css.reader.CSSReaderDeclarationList;
 import jdk.nashorn.api.scripting.AbstractJSObject;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import lombok.val;
 import netscape.javascript.JSException;
 import org.xhtmlrenderer.dom.nodes.Element;
 import org.xhtmlrenderer.script.Function;
+import org.xhtmlrenderer.swing.BasicPanel;
 
 import java.util.HashMap;
 
@@ -14,17 +17,20 @@ import java.util.HashMap;
  * @author Taras Maslov
  * 7/25/2018
  */
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CSSStyleAttribute extends AbstractJSObject {
 
+    final BasicPanel panel;
     HashMap<String, String> map = new HashMap<>();
     Element model;
     
-    public CSSStyleAttribute(Element model) {
-        this(model.attr("style"));
+    public CSSStyleAttribute(Element model, BasicPanel panel) {
+        this(model.attr("style"), panel);
         this.model = model;
     }
     
-    public CSSStyleAttribute(String css) {
+    public CSSStyleAttribute(String css, BasicPanel panel) {
+        this.panel = panel;
         val declarations = CSSReaderDeclarationList.readFromString(css, ECSSVersion.CSS30);
        if(declarations != null) {
            declarations.forEach(d -> {
@@ -36,7 +42,7 @@ public class CSSStyleAttribute extends AbstractJSObject {
     @Override
     public Object getMember(String name) throws JSException {
         if(name.equals("getPropertyValue")){
-            return new Function<>((Function.Callback<Object>) (ctx, arg) -> map.get(arg[0]), "getPropertyValue");
+            return new Function<>(panel.getScriptContext(), (Function.Callback<Object>) (ctx, arg) -> map.get(arg[0]), "getPropertyValue");
         }
         return map.get(name);
     }

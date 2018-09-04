@@ -24,6 +24,7 @@ import org.xhtmlrenderer.script.web_idl.Attribute;
 import org.xhtmlrenderer.script.web_idl.DOMString;
 import org.xhtmlrenderer.script.web_idl.Sequence;
 import org.xhtmlrenderer.script.whatwg_dom.Element;
+import org.xhtmlrenderer.util.GeneralUtil;
 
 import java.awt.*;
 import java.awt.geom.*;
@@ -57,16 +58,16 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     HTMLCanvasElementImpl canvas;
     boolean wasFill;
     String fontStyle;
+    private CanvasTextAlign textAlign = CanvasTextAlign.start;
+
 
     // region external WebIDL attributes implementations
 
     Attribute<Double> globalAlpha = new Attribute<Double>() {
-
-
         @Override
         public Double get() {
             log.trace("globalAlpha get");
-            return Double.valueOf(state().getGlobalAlpha());
+            return (double) state().getGlobalAlpha();
         }
 
 
@@ -79,14 +80,13 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
 
     };
-    private CanvasTextAlign textAlign = CanvasTextAlign.start;
 
 
     // endregion
 
     CanvasRenderingContext2DImpl(HTMLCanvasElementImpl canvas, int width, int height) {
         this.canvas = canvas;
-        resize(width, height);
+        resize();
     }
 
     @Override
@@ -371,24 +371,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
         log.trace("rect");
         path2D.append(new Rectangle2D.Double(x, y, w, h), false);
     }
-
-    //  boolean ccw = arcAngle > 0;
-    //    ctx.beginPath();
-    //    ctx.arc(cx, cy, r, -startAngle, -(startAngle + arcAngle), ccw);
-    //    ctx.stroke();
-
-    // x = -startAngle - arcAngle
-
-    // arcA = - startAngle - x
-
-    //  int top = (int) (cx - r);
-    //    int left = (int) (cy - r);
-    //    int diam = (int) (2*r);
-    //    currentState().prepareStroke(g2d);
-    //    g2d.drawArc(top, left, diam, diam,
-    //                FloatMath.round(FloatMath.toDegrees(startAngle)),
-    //                FloatMath.round(FloatMath.toDegrees(arcAngle)));
-
+    
     @Override
     public void arc(double x, double y, double r, double startAngle, double endAngle, boolean anticlockwise) {
         log.trace("arc");
@@ -632,7 +615,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
         return new TextMetricsImpl(g2d.getFontMetrics().stringWidth(text));
     }
 
-    private Color parseCSSColor(String string) {
+    public static Color parseCSSColor(String string) {
         val parsed = new CSSParser(new CSSErrorHandler() {
             @Override
             public void error(String uri, String message) {
@@ -653,13 +636,20 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
             fontStyle = style;
             val styleString = style.toString();
             val declarations = CSSReaderDeclarationList.readFromString("font: " + styleString, ECSSVersion.CSS30);
+            
+            if(declarations == null){
+                return;
+            }
             val declaration = declarations.getDeclarationAtIndex(0);
 
             // Get the Shorthand descriptor for "border"    
-            final CSSShortHandDescriptor aSHD = CSSShortHandRegistry.getShortHandDescriptor(ECSSProperty.FONT);
+            final CSSShortHandDescriptor descriptor = CSSShortHandRegistry.getShortHandDescriptor(ECSSProperty.FONT);
 
+            if(descriptor == null){
+                return;
+            }
             // And now split it into pieces
-            final List<CSSDeclaration> aSplittedDecls = aSHD.getSplitIntoPieces(declaration);
+            final List<CSSDeclaration> aSplittedDecls = descriptor.getSplitIntoPieces(declaration);
             for (CSSDeclaration aSplittedDecl : aSplittedDecls) {
 
                 val fontSize = aSplittedDecl.getExpression().getAsCSSString();
@@ -825,9 +815,9 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     }
 
 
-    public void resize(int w, int h) {
-        canvas.getTarget().attr("width", String.valueOf(w));
-        canvas.getTarget().attr("height", String.valueOf(w));
+    public void resize() {
+        int w = GeneralUtil.parseIntRelaxed(canvas.getModel().attr("width"));
+        int h = GeneralUtil.parseIntRelaxed(canvas.getModel().attr("height"));
 
         if (w == this.width && h == this.height && image != null) {
             return;

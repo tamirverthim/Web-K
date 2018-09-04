@@ -7,7 +7,7 @@ import org.xhtmlrenderer.script.html5.canvas.impl.HTMLCanvasElementImpl;
 import org.xhtmlrenderer.script.impl.*;
 import org.xhtmlrenderer.script.whatwg_dom.Element;
 import org.xhtmlrenderer.script.whatwg_dom.Node;
-import org.xhtmlrenderer.simple.XHTMLPanel;
+import org.xhtmlrenderer.swing.BasicPanel;
 import org.xhtmlrenderer.util.GeneralUtil;
 
 import java.util.HashMap;
@@ -26,7 +26,7 @@ public class Binder {
     private static HashMap<String, NodeCreator> elementsCreators = new HashMap<>();
     
     private interface NodeCreator {
-        Node createNode(org.xhtmlrenderer.dom.nodes.Node parsedNode, XHTMLPanel panel);
+        Node createNode(org.xhtmlrenderer.dom.nodes.Node parsedNode, BasicPanel panel);
     }
     
     static {
@@ -38,7 +38,7 @@ public class Binder {
         ));
     }
     
-    public static Node get(org.xhtmlrenderer.dom.nodes.Node key, XHTMLPanel panel) {
+    public static Node get(org.xhtmlrenderer.dom.nodes.Node key, BasicPanel panel) {
         if(key == null){
             return null;
         }
@@ -51,7 +51,7 @@ public class Binder {
         return result;
     }
     
-    public static Element getElement(org.xhtmlrenderer.dom.nodes.Element key, XHTMLPanel panel){
+    public static Element getElement(org.xhtmlrenderer.dom.nodes.Element key, BasicPanel panel){
         return (Element) get(key, panel);
     }
 
@@ -64,7 +64,7 @@ public class Binder {
 //        registry.remove(key);
 //    }
     
-    public static Node createJSNode(org.xhtmlrenderer.dom.nodes.Node parsedNode, XHTMLPanel panel){
+    public static Node createJSNode(org.xhtmlrenderer.dom.nodes.Node parsedNode, BasicPanel panel){
         assertNotNull(parsedNode);
         
         Node result;

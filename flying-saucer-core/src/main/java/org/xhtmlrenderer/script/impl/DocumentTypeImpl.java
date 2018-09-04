@@ -1,8 +1,7 @@
 package org.xhtmlrenderer.script.impl;
 
-import org.xhtmlrenderer.script.web_idl.DOMString;
 import org.xhtmlrenderer.script.whatwg_dom.DocumentType;
-import org.xhtmlrenderer.simple.XHTMLPanel;
+import org.xhtmlrenderer.swing.BasicPanel;
 
 /**
  * @author Taras Maslov
@@ -12,7 +11,7 @@ public class DocumentTypeImpl extends NodeImpl implements DocumentType {
     
     private org.xhtmlrenderer.dom.nodes.DocumentType target;
 
-    public DocumentTypeImpl(org.xhtmlrenderer.dom.nodes.DocumentType target, XHTMLPanel panel) {
+    public DocumentTypeImpl(org.xhtmlrenderer.dom.nodes.DocumentType target, BasicPanel panel) {
         super(target, panel);
         this.target = target;
     }

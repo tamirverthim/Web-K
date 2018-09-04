@@ -6,9 +6,8 @@ import lombok.val;
 import org.xhtmlrenderer.dom.nodes.CDataNode;
 import org.xhtmlrenderer.script.web_idl.Attribute;
 import org.xhtmlrenderer.script.web_idl.DOMException;
-import org.xhtmlrenderer.script.web_idl.DOMString;
 import org.xhtmlrenderer.script.whatwg_dom.*;
-import org.xhtmlrenderer.simple.XHTMLPanel;
+import org.xhtmlrenderer.swing.BasicPanel;
 
 /**
  * @author Taras Maslov
@@ -23,7 +22,7 @@ public class CharacterDataImpl extends NodeImpl implements CharacterData {
     
     Attribute<String> dataAttribute = Attribute.<String>receive(val -> target.text(val)).give(() -> target.getWholeText());
     
-    public CharacterDataImpl(CDataNode target, XHTMLPanel panel) {
+    public CharacterDataImpl(CDataNode target, BasicPanel panel) {
         super(target, panel);
         this.target = target;
         childNodeMixin = new ChildNodeImpl(target);

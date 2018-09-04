@@ -11,20 +11,17 @@ import org.xhtmlrenderer.script.web_idl.*;
 public interface ParentNode {
     
     @SameObject
-    @Readonly
-    Attribute<HTMLCollection> children();
+    @ReadonlyAttribute HTMLCollection children();
 
     @Readonly
     @Optional
-    Attribute<Element> firstElementChild();
-
-    @Readonly
+    @ReadonlyAttribute Element firstElementChild();
+    
     @Optional
-    Attribute<Element> lastElementChild();
-
-    @Readonly
+    @ReadonlyAttribute Element lastElementChild();
+    
     @Unsigned
-    Attribute<Long> childElementCount();
+    @ReadonlyAttribute Integer childElementCount();
 
     @CEReactions
     @Unscopable

@@ -8,20 +8,21 @@ import org.xhtmlrenderer.script.web_idl.DOMString;
 import org.xhtmlrenderer.script.web_idl.USVString;
 import org.xhtmlrenderer.script.whatwg_dom.*;
 import org.xhtmlrenderer.simple.XHTMLPanel;
+import org.xhtmlrenderer.swing.BasicPanel;
 
 /**
  * @author Taras Maslov
  * 7/31/2018
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AttrImpl implements Attr  {
-    
+public class AttrImpl implements Attr {
+
     org.xhtmlrenderer.dom.nodes.Attribute model;
     org.xhtmlrenderer.dom.nodes.Element modelNode;
-    XHTMLPanel panel;
-    
-    
-    public AttrImpl(org.xhtmlrenderer.dom.nodes.Element modelNode, org.xhtmlrenderer.dom.nodes.Attribute attribute, XHTMLPanel panel) {
+    BasicPanel panel;
+
+
+    public AttrImpl(org.xhtmlrenderer.dom.nodes.Element modelNode, org.xhtmlrenderer.dom.nodes.Attribute attribute, BasicPanel panel) {
         super();
         this.modelNode = modelNode;
         this.model = attribute;
@@ -59,7 +60,7 @@ public class AttrImpl implements Attr  {
 
             @Override
             public void set(String string) {
-                modelNode.attr(model.getKey(), string.toString());
+                modelNode.attr(model.getKey(), string);
                 model.setValue(string);
             }
         };
@@ -86,7 +87,8 @@ public class AttrImpl implements Attr  {
     }
 
     @Override
-    public @USVString String baseURI() {
+    public @USVString
+    String baseURI() {
         return null;
     }
 
@@ -147,7 +149,7 @@ public class AttrImpl implements Attr  {
 
     @Override
     public Attribute<String> nodeValue() {
-        return new Attribute<String>(){
+        return new Attribute<String>() {
             @Override
             public String get() {
                 return model.getValue();
@@ -244,5 +246,10 @@ public class AttrImpl implements Attr  {
     @Override
     public boolean dispatchEvent(Event event) {
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return model.getKey() + "=" + model.getValue();
     }
 }

@@ -11,7 +11,7 @@ import org.xhtmlrenderer.script.web_idl.DOMException;
 import org.xhtmlrenderer.script.web_idl.DOMString;
 import org.xhtmlrenderer.script.whatwg_dom.Element;
 import org.xhtmlrenderer.script.whatwg_dom.Text;
-import org.xhtmlrenderer.simple.XHTMLPanel;
+import org.xhtmlrenderer.swing.BasicPanel;
 
 /**
  * @author Taras Maslov
@@ -26,7 +26,7 @@ public class TextImpl extends NodeImpl implements Text {
 
     // text
     
-    public TextImpl(TextNode target, XHTMLPanel panel) {
+    public TextImpl(TextNode target, BasicPanel panel) {
         super(target, panel);
         this.target = target;
         this.childNodeMixin = new ChildNodeImpl(target);

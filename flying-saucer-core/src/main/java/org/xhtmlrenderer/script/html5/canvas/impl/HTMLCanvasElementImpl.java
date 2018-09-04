@@ -9,7 +9,8 @@ import org.xhtmlrenderer.script.impl.ElementImpl;
 import org.xhtmlrenderer.script.web_idl.Attribute;
 import org.xhtmlrenderer.script.web_idl.DOMString;
 import org.xhtmlrenderer.script.web_idl.USVString;
-import org.xhtmlrenderer.simple.XHTMLPanel;
+import org.xhtmlrenderer.swing.BasicPanel;
+import org.xhtmlrenderer.util.GeneralUtil;
 
 /**
  * @author Taras Maslov
@@ -20,7 +21,7 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
 
     private final CanvasRenderingContext2DImpl context;
 
-    public HTMLCanvasElementImpl(Element target, int width, int heigth, XHTMLPanel panel) {
+    public HTMLCanvasElementImpl(Element target, int width, int heigth, BasicPanel panel) {
         super(target, panel);
         context = new CanvasRenderingContext2DImpl(this, width, heigth);
     }
@@ -30,12 +31,13 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
         return new Attribute<Integer>() {
             @Override
             public Integer get() {
-                return context.getWidth();
+                return GeneralUtil.parseIntRelaxed(getModel().attr("width"));
             }
 
             @Override
             public void set(Integer integer) {
-                context.resize(integer, context.getHeight());
+                getModel().attr("width", String.valueOf(integer));
+                context.resize();
             }
         };
     }
@@ -45,16 +47,25 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
         return new Attribute<Integer>() {
             @Override
             public Integer get() {
-                return context.getHeight();
+                return GeneralUtil.parseIntRelaxed(getModel().attr("height"));
             }
 
             @Override
             public void set(Integer integer) {
-                context.resize(context.getWidth(), integer);
+                getModel().attr("height", String.valueOf(integer));
+                context.resize();
             }
         };    
     }
 
+    @Override
+    public void setAttribute(@DOMString String qualifiedName, @DOMString String value) {
+        super.setAttribute(qualifiedName, value);
+        if(qualifiedName.equalsIgnoreCase("width") || qualifiedName.equalsIgnoreCase("height")){
+            context.resize();
+        }
+    }
+    
     @Override
     public RenderingContext getContext(@DOMString String contextId, Object options) {
         return context;

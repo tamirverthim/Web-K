@@ -6,7 +6,7 @@ import org.xhtmlrenderer.dom.nodes.Node;
 import org.xhtmlrenderer.script.Binder;
 import org.xhtmlrenderer.script.whatwg_dom.Element;
 import org.xhtmlrenderer.script.whatwg_dom.NonDocumentTypeChildNode;
-import org.xhtmlrenderer.simple.XHTMLPanel;
+import org.xhtmlrenderer.swing.BasicPanel;
 
 /**
  * @author Taras Maslov
@@ -16,9 +16,9 @@ import org.xhtmlrenderer.simple.XHTMLPanel;
 public class NonDocumentTypeChildNodeImpl implements NonDocumentTypeChildNode {
     
     Node target;
-    XHTMLPanel panel;
+    BasicPanel panel;
     
-    public NonDocumentTypeChildNodeImpl(Node target, XHTMLPanel panel) {
+    public NonDocumentTypeChildNodeImpl(Node target, BasicPanel panel) {
         this.target = target;
         this.panel = panel;
     }

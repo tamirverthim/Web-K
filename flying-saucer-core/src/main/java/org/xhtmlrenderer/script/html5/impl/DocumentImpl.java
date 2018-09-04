@@ -14,7 +14,7 @@ import org.xhtmlrenderer.script.whatwg_dom.Element;
 import org.xhtmlrenderer.script.whatwg_dom.EventHandler;
 import org.xhtmlrenderer.script.whatwg_dom.HTMLCollection;
 import org.xhtmlrenderer.script.whatwg_dom.NodeList;
-import org.xhtmlrenderer.simple.XHTMLPanel;
+import org.xhtmlrenderer.swing.BasicPanel;
 
 /**
  * @author Taras Maslov
@@ -27,7 +27,7 @@ public class DocumentImpl extends org.xhtmlrenderer.script.impl.DocumentImpl imp
     org.xhtmlrenderer.dom.nodes.Document document;
     
     
-    public DocumentImpl(XHTMLPanel panel) {
+    public DocumentImpl(BasicPanel panel) {
         super(panel);
         location = new LocationImpl(panel);
         document = panel.getDocument();
@@ -97,7 +97,7 @@ public class DocumentImpl extends org.xhtmlrenderer.script.impl.DocumentImpl imp
                 if(!bodyModel.isEmpty()){
                     bodyModel.forEach(Node::remove);
                 }
-                document.appendChild(((ElementImpl)htmlElement).getTarget());
+                document.appendChild(((ElementImpl)htmlElement).getModel());
             }
         };
     }
@@ -174,7 +174,7 @@ public class DocumentImpl extends org.xhtmlrenderer.script.impl.DocumentImpl imp
 
     @Override
     public @WindowProxy Object defaultView() {
-        return panel.getSharedContext().getJS().getWindow();
+        return panel.getScriptContext().getWindow();
     }
 
     @Override

@@ -63,6 +63,7 @@ import org.xhtmlrenderer.render.Box;
 import org.xhtmlrenderer.render.PageBox;
 import org.xhtmlrenderer.render.RenderingContext;
 import org.xhtmlrenderer.render.ViewportBox;
+import org.xhtmlrenderer.script.ScriptContext;
 import org.xhtmlrenderer.util.Configuration;
 import org.xhtmlrenderer.util.XRLog;
 
@@ -79,6 +80,7 @@ public class RootPanel extends JPanel implements Scrollable, UserInterface, FSCa
     private volatile LayoutContext layoutContext;
     private JScrollPane enclosingScrollPane;
     private boolean viewportMatchWidth = true;
+    protected ScriptContext scriptContext;
 
     // initialize to JViewport default mode
     private int default_scroll_mode = JViewport.BLIT_SCROLL_MODE;
@@ -97,7 +99,7 @@ public class RootPanel extends JPanel implements Scrollable, UserInterface, FSCa
     private final long maxRepaintRequestWaitMs = 50;
     private boolean repaintRequestPending = false;
     private long pendingRepaintCount = 0;
-
+    
     public RootPanel() {
     }
 
@@ -109,6 +111,8 @@ public class RootPanel extends JPanel implements Scrollable, UserInterface, FSCa
         return layoutContext;
     }
 
+    public ScriptContext getScriptContext() { return scriptContext; }
+    
     public void setDocument(org.xhtmlrenderer.dom.nodes.Document doc, String url, NamespaceHandler nsh) {
         fireDocumentStarted();
         resetScrollPosition();
@@ -535,7 +539,7 @@ public class RootPanel extends JPanel implements Scrollable, UserInterface, FSCa
         return e == focus_element;
     }
 
-    protected void relayout() {
+    public void relayout() {
         if (doc != null) {
             setNeedRelayout(true);
             repaint();

@@ -17,7 +17,7 @@ import org.xhtmlrenderer.script.whatwg_dom.*;
 import org.xhtmlrenderer.script.whatwg_dom.css_style_attribute.CSSStyleAttribute;
 import org.xhtmlrenderer.script.whatwg_dom.impl.HTMLCollectionImpl;
 import org.xhtmlrenderer.script.whatwg_dom.impl.NamedNodeMapImpl;
-import org.xhtmlrenderer.simple.XHTMLPanel;
+import org.xhtmlrenderer.swing.BasicPanel;
 
 import java.util.HashSet;
 /**
@@ -28,19 +28,19 @@ import java.util.HashSet;
 @Slf4j
 public class ElementImpl extends NodeImpl implements HTMLElement {
     
-    final org.xhtmlrenderer.dom.nodes.Element target;
+    final org.xhtmlrenderer.dom.nodes.Element model;
     final ChildNodeImpl childNodeMixin;
-    final XHTMLPanel panel;
+    final BasicPanel panel;
 
-    public ElementImpl(org.xhtmlrenderer.dom.nodes.Element target, XHTMLPanel panel) {
-        super(target, panel);
-        this.target = target;
+    public ElementImpl(org.xhtmlrenderer.dom.nodes.Element model, BasicPanel panel) {
+        super(model, panel);
+        this.model = model;
         this.panel = panel;
-        childNodeMixin = new ChildNodeImpl(target);
+        childNodeMixin = new ChildNodeImpl(model);
     }
 
-    public org.xhtmlrenderer.dom.nodes.Element getTarget() {
-        return target;
+    public org.xhtmlrenderer.dom.nodes.Element getModel() {
+        return model;
     }
 
     @Override
@@ -60,22 +60,22 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public @DOMString String tagName() {
-        return target.nodeName();
+        return model.nodeName();
     }
 
     @Override
     public Attribute<String> id() {
-        return Attribute.forNode(target, "id");
+        return Attribute.forNode(model, "id");
     }
 
     @Override
     public Attribute<String> className() {
-        return Attribute.forNode(target, "className");
+        return Attribute.forNode(model, "className");
     }
 
     @Override
     public DOMTokenList classList() {
-        return new DOMTokenListImpl(target.classNames(), strings -> target.classNames(new HashSet<>(strings)));
+        return new DOMTokenListImpl(model.classNames(), strings -> model.classNames(new HashSet<>(strings)));
     }
 
     @Override
@@ -85,12 +85,12 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public boolean hasAttributes() {
-        return target.attributes().size() > 0;
+        return model.attributes().size() > 0;
     }
 
     @Override
     public NamedNodeMap attributes() {
-        return new NamedNodeMapImpl(target, panel);
+        return new NamedNodeMapImpl(model, panel);
     }
 
     @Override
@@ -110,7 +110,7 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public void setAttribute(@DOMString String qualifiedName, @DOMString String value) {
-
+        model.attr(qualifiedName, value);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public void removeAttribute(@DOMString String qualifiedName) {
-
+        model.removeAttr(qualifiedName);
     }
 
     @Override
@@ -129,12 +129,18 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public boolean toggleAttribute(@DOMString String qualifiedName, Boolean force) {
-        return false;
+        if(model.hasAttr(qualifiedName)) {
+            model.removeAttr(qualifiedName);
+            return true;
+        } else {
+            model.attr(qualifiedName, "");
+            return true;
+        }
     }
 
     @Override
     public boolean hasAttribute(@DOMString String qualifiedName) {
-        return false;
+        return model.hasAttr(qualifiedName);
     }
 
     @Override
@@ -194,7 +200,7 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public HTMLCollection getElementsByTagName(@DOMString String qualifiedName) {
-        return new HTMLCollectionImpl(target.getElementsByTag(qualifiedName.toString()), panel);
+        return new HTMLCollectionImpl(model.getElementsByTag(qualifiedName.toString()), panel);
     }
 
     @Override
@@ -204,7 +210,7 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public HTMLCollection getElementsByClassName(@DOMString String classNames) {
-        return new HTMLCollectionImpl(target.getElementsByClass(classNames), panel);
+        return new HTMLCollectionImpl(model.getElementsByClass(classNames), panel);
     }
 
     @Override
@@ -243,44 +249,32 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public Element previousElementSibling() {
-        return Binder.getElement(target.previousElementSibling(), panel);
+        return Binder.getElement(model.previousElementSibling(), panel);
     }
 
     @Override
     public Element nextElementSibling() {
-        return Binder.getElement(target.nextElementSibling(), panel);
+        return Binder.getElement(model.nextElementSibling(), panel);
     }
 
     @Override
-    public Attribute<HTMLCollection> children() {
-        return new Attribute<HTMLCollection>() {
-            @Override
-            public HTMLCollection get() {
-                return new HTMLCollectionImpl(target.children(), panel);
-            }
-
-            @Override
-            public void set(HTMLCollection htmlCollection) {
-                val impl = (HTMLCollectionImpl)htmlCollection;
-                target.children().forEach(org.xhtmlrenderer.dom.nodes.Node::remove);
-                impl.getModel().forEach(target::appendChild);
-            }
-        };
+    public HTMLCollection children() {
+        return new HTMLCollectionImpl(model.children(), panel);
     }
 
     @Override
-    public Attribute<Element> firstElementChild() {
+    public Element firstElementChild() {
         return null;
     }
 
     @Override
-    public Attribute<Element> lastElementChild() {
+    public Element lastElementChild() {
         return null;
     }
 
     @Override
-    public Attribute<Long> childElementCount() {
-        return null;
+    public Integer childElementCount() {
+        return model.children().size();
     }
 
     @Override
@@ -392,8 +386,8 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public Attribute<CSSStyleAttribute> style() {
-        return Attribute.<CSSStyleAttribute>receive((a) -> target.attr("style", a.toCSSString()))
-                .give(() -> new CSSStyleAttribute(target));
+        return Attribute.<CSSStyleAttribute>receive((a) -> model.attr("style", a.toCSSString()))
+                .give(() -> new CSSStyleAttribute(model, panel));
     }
 
     @Override
@@ -412,7 +406,7 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
     }
     
     private Attribute<String> bindAttribute(String name){
-        return Attribute.<String>receive((s) -> target.attr(name, s)).give(() -> target.attr(name));
+        return Attribute.<String>receive((s) -> model.attr(name, s)).give(() -> model.attr(name));
     }
 
     @Override
@@ -421,13 +415,13 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
         return new Attribute<String>() {
             @Override
             public String get() {
-                return target.html();
+                return model.html();
             }
 
             @Override
             public void set(String string) {
-                target.outerHtml();
-                target.html(string);
+                model.outerHtml();
+                model.html(string);
             }
         };
         
@@ -438,7 +432,7 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
         return new Attribute<String>() {
             @Override
             public String get() {
-                return target.outerHtml();
+                return model.outerHtml();
             }
 
             @Override
@@ -532,7 +526,7 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
     
     @Override
     public int clientWidth() {
-        val box = target.getView();
+        val box = model.getView();
         if (box != null) {
             val paddingStyle = box.getPadding(panel.getLayoutContext());
             return  (int) (box.getContentWidth() + paddingStyle.left() + paddingStyle.right());

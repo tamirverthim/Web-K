@@ -7,7 +7,7 @@ import org.xhtmlrenderer.script.Binder;
 import org.xhtmlrenderer.script.web_idl.DOMException;
 import org.xhtmlrenderer.script.whatwg_dom.Node;
 import org.xhtmlrenderer.script.whatwg_dom.NodeList;
-import org.xhtmlrenderer.simple.XHTMLPanel;
+import org.xhtmlrenderer.swing.BasicPanel;
 
 import java.util.List;
 
@@ -19,9 +19,9 @@ import java.util.List;
 public class NodeListImpl implements NodeList {
     
     List<org.xhtmlrenderer.dom.nodes.Node> parserNodes;
-    XHTMLPanel panel;
+    BasicPanel panel;
 
-    public NodeListImpl(List<org.xhtmlrenderer.dom.nodes.Node> parserNodes, XHTMLPanel panel) {
+    public NodeListImpl(List<org.xhtmlrenderer.dom.nodes.Node> parserNodes, BasicPanel panel) {
         this.parserNodes = parserNodes;
         this.panel = panel;
     }

@@ -8,10 +8,9 @@ import lombok.val;
 import org.xhtmlrenderer.script.Binder;
 import org.xhtmlrenderer.script.web_idl.Attribute;
 import org.xhtmlrenderer.script.web_idl.DOMString;
-import org.xhtmlrenderer.script.web_idl.USVString;
 import org.xhtmlrenderer.script.whatwg_dom.*;
 import org.xhtmlrenderer.script.whatwg_dom.impl.EventImpl;
-import org.xhtmlrenderer.simple.XHTMLPanel;
+import org.xhtmlrenderer.swing.BasicPanel;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -26,9 +25,9 @@ import java.util.List;
 public class NodeImpl implements Node {
     
     org.xhtmlrenderer.dom.nodes.Node target;
-    XHTMLPanel panel;
+    BasicPanel panel;
 
-    public NodeImpl(org.xhtmlrenderer.dom.nodes.Node target, XHTMLPanel panel) {
+    public NodeImpl(org.xhtmlrenderer.dom.nodes.Node target, BasicPanel panel) {
         this.target = target;
         this.panel = panel;
     }

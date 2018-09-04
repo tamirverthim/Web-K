@@ -7,7 +7,7 @@ import org.xhtmlrenderer.script.Binder;
 import org.xhtmlrenderer.script.web_idl.DOMString;
 import org.xhtmlrenderer.script.whatwg_dom.Element;
 import org.xhtmlrenderer.script.whatwg_dom.HTMLCollection;
-import org.xhtmlrenderer.simple.XHTMLPanel;
+import org.xhtmlrenderer.swing.BasicPanel;
 
 /**
  * @author Taras Maslov
@@ -17,9 +17,9 @@ import org.xhtmlrenderer.simple.XHTMLPanel;
 public class HTMLCollectionImpl implements HTMLCollection {
     
     Elements elements;
-    XHTMLPanel panel;
+    BasicPanel panel;
     
-    public HTMLCollectionImpl(Elements elements, XHTMLPanel panel) {
+    public HTMLCollectionImpl(Elements elements, BasicPanel panel) {
         this.elements = elements;
         this.panel = panel;
     }  

@@ -11,7 +11,7 @@ import org.xhtmlrenderer.script.web_idl.USVString;
 import org.xhtmlrenderer.script.whatwg_dom.*;
 import org.xhtmlrenderer.script.whatwg_dom.impl.HTMLCollectionImpl;
 import org.xhtmlrenderer.script.whatwg_dom.impl.TextImpl;
-import org.xhtmlrenderer.simple.XHTMLPanel;
+import org.xhtmlrenderer.swing.BasicPanel;
 
 import java.util.ArrayList;
 
@@ -25,9 +25,9 @@ public class DocumentImpl implements Document {
     org.xhtmlrenderer.dom.nodes.Document document;
     DOMImplementation implementation = new DOMImplementationImpl();
     
-    protected XHTMLPanel panel;
+    protected BasicPanel panel;
     
-    public DocumentImpl(XHTMLPanel panel) {
+    public DocumentImpl(BasicPanel panel) {
         this.document = panel.getDocument();
         this.panel = panel;
     }
@@ -189,23 +189,23 @@ public class DocumentImpl implements Document {
     }
 
     @Override
-    public Attribute<HTMLCollection> children() {
+    public HTMLCollection children() {
         return null;
     }
 
     @Override
-    public Attribute<Element> firstElementChild() {
+    public Element firstElementChild() {
         return null;
     }
 
     @Override
-    public Attribute<Element> lastElementChild() {
+    public Element lastElementChild() {
         return null;
     }
 
     @Override
-    public Attribute<Long> childElementCount() {
-        return null;
+    public Integer childElementCount() {
+        return document.children().size();
     }
 
     @Override

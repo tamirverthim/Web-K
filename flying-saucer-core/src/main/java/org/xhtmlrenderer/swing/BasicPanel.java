@@ -52,6 +52,7 @@ import org.xhtmlrenderer.render.Box;
 import org.xhtmlrenderer.render.PageBox;
 import org.xhtmlrenderer.render.RenderingContext;
 import org.xhtmlrenderer.resource.XMLResource;
+import org.xhtmlrenderer.script.ScriptContext;
 import org.xhtmlrenderer.simple.NoNamespaceHandler;
 import org.xhtmlrenderer.simple.extend.FormSubmissionListener;
 import org.xhtmlrenderer.util.Configuration;
@@ -101,6 +102,8 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
 
         };
         sharedContext.setFormSubmissionListener(formSubmissionListener);
+        scriptContext = new ScriptContext(this);
+        addDocumentListener(scriptContext);
         init();
     }
 
@@ -566,6 +569,8 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
         this.formSubmissionListener =fsl;
         sharedContext.setFormSubmissionListener(formSubmissionListener);
     }
+    
+    
 }
 
 /*

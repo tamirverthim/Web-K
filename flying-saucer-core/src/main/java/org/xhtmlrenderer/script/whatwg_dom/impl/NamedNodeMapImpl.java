@@ -7,7 +7,7 @@ import org.xhtmlrenderer.dom.nodes.Element;
 import org.xhtmlrenderer.script.web_idl.DOMString;
 import org.xhtmlrenderer.script.whatwg_dom.Attr;
 import org.xhtmlrenderer.script.whatwg_dom.NamedNodeMap;
-import org.xhtmlrenderer.simple.XHTMLPanel;
+import org.xhtmlrenderer.swing.BasicPanel;
 
 /**
  * @author Taras Maslov
@@ -17,9 +17,9 @@ import org.xhtmlrenderer.simple.XHTMLPanel;
 public class NamedNodeMapImpl implements NamedNodeMap {
     
     Element modelElement;
-    XHTMLPanel panel;
+    BasicPanel panel;
 
-    public NamedNodeMapImpl(Element modelElement, XHTMLPanel panel) {
+    public NamedNodeMapImpl(Element modelElement, BasicPanel panel) {
         this.modelElement = modelElement;
         this.panel = panel;
     }

@@ -1,6 +1,8 @@
 package org.xhtmlrenderer.script;
 
 import jdk.nashorn.api.scripting.JSObject;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 
 import java.util.Collection;
 import java.util.Set;
@@ -9,9 +11,11 @@ import java.util.Set;
  * @author Taras Maslov
  * 6/1/2018
  */
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Function<T> implements JSObject {
 
     final String id;
+    final ScriptContext scriptContext;
 
     @FunctionalInterface
     public interface Callback<T> {
@@ -20,9 +24,10 @@ public class Function<T> implements JSObject {
 
     private Callback<T> callback;
 
-    public Function(Callback<T> callback, String id) {
+    public Function(ScriptContext scriptContext, Callback<T> callback, String id) {
         this.callback = callback;
         this.id = id;
+        this.scriptContext = scriptContext;
     }
 
     @Override
@@ -32,18 +37,18 @@ public class Function<T> implements JSObject {
 
     @Override
     public Object newObject(Object... objects) {
-        return new Function<>(callback, id);
+        return new Function<>(scriptContext, callback, id);
     }
 
     @Override
     public Object eval(String s) {
-        return ScriptContext.getInstance().eval(s);
+        return scriptContext.eval(s);
     }
 
     @Override
     public Object getMember(String s) {
         if ("toString".equals(s)) {
-            return new Function<>((Callback<Object>) (ctx, arg) -> id, id + ".toString");
+            return new Function<>(scriptContext, (Callback<Object>) (ctx, arg) -> id, id + ".toString");
         }
         return null;
     }

@@ -631,10 +631,6 @@ public class SharedContext {
 	public void setLineBreakingStrategy(LineBreakingStrategy lineBreakingStrategy) {
 		this.lineBreakingStrategy = lineBreakingStrategy;
 	}
-
-    public ScriptContext getJS() {
-        return ScriptContext.getInstance(); // todo pass correctly
-    }
 }
 
 /*

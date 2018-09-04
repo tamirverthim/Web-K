@@ -9,7 +9,7 @@ import org.xhtmlrenderer.script.web_idl.DOMString;
 import org.xhtmlrenderer.script.whatwg_dom.Comment;
 import org.xhtmlrenderer.script.whatwg_dom.Element;
 import org.xhtmlrenderer.script.whatwg_dom.NonDocumentTypeChildNode;
-import org.xhtmlrenderer.simple.XHTMLPanel;
+import org.xhtmlrenderer.swing.BasicPanel;
 
 /**
  * @author Taras Maslov
@@ -29,7 +29,7 @@ public class CommentImpl extends NodeImpl implements Comment {
 //        Binder.remove(target);
     }).give(() -> target.getData());
 
-    public CommentImpl(org.xhtmlrenderer.dom.nodes.Comment target, XHTMLPanel panel) {
+    public CommentImpl(org.xhtmlrenderer.dom.nodes.Comment target, BasicPanel panel) {
         super(target, panel);
         this.target = target;
         childNodeMixin = new ChildNodeImpl(target);

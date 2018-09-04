@@ -4,22 +4,26 @@ import jdk.nashorn.api.scripting.AbstractJSObject;
 import jdk.nashorn.api.scripting.JSObject;
 import jdk.nashorn.api.scripting.NashornException;
 import jdk.nashorn.api.scripting.ScriptUtils;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.xhtmlrenderer.event.DefaultDocumentListener;
+import org.xhtmlrenderer.event.DocumentListener;
 import org.xhtmlrenderer.script.html5.canvas.impl.CanvasGradientImpl;
 import org.xhtmlrenderer.script.html5.canvas.impl.CanvasPatternImpl;
 import org.xhtmlrenderer.script.impl.ElementImpl;
 import org.xhtmlrenderer.script.web_idl.Exposed;
 import org.xhtmlrenderer.script.whatwg_dom.css_style_attribute.CSSStyleAttribute;
 import org.xhtmlrenderer.simple.XHTMLPanel;
+import org.xhtmlrenderer.swing.BasicPanel;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import java.net.URISyntaxException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.function.Consumer;
@@ -31,20 +35,26 @@ import static javax.script.ScriptContext.ENGINE_SCOPE;
  * 5/21/2018
  */
 @Slf4j
-public class ScriptContext {
-    private static ScriptContext instance;
-    private ScriptEngine engine;
-    private javax.script.ScriptContext context;
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class ScriptContext implements DocumentListener {
+//    static ScriptContext instance;
+    ScriptEngine engine;
+    javax.script.ScriptContext context;
 
-    private XHTMLPanel panel;
-    private JsConsole console = new JsConsole();
-    private org.xhtmlrenderer.dom.nodes.Document document;
+    BasicPanel panel;
+    JsConsole console = new JsConsole();
+    org.xhtmlrenderer.dom.nodes.Document document;
+    private boolean documentChanged;
 
+    public ScriptContext(BasicPanel panel){
+        this.panel = panel;
+    }
+    
     public void onload() {
         eval("window.onload && window.onload()");
     }
 
-    public XHTMLPanel getPanel() {
+    public BasicPanel getPanel() {
         return panel;
     }
 
@@ -56,16 +66,29 @@ public class ScriptContext {
         }
     }
 
-    @FunctionalInterface
-    public interface SetInterval {
-        void setInterval(Consumer<Object> fn, int interval);
+    @Override
+    public void documentStarted() {
     }
+
+    @Override
+    public void documentLoaded() {
+        handleNewDocument();
+    }
+
+    @Override
+    public void onLayoutException(Throwable t) {
+    }
+
+    @Override
+    public void onRenderException(Throwable t) {
+    }
+    
     private void initEngine() {
         engine = new ScriptEngineManager().getEngineByName("nashorn");
         context = engine.getContext();
         context.setAttribute("document", WebIDLAdapter.obtain(this, new org.xhtmlrenderer.script.html5.impl.DocumentImpl(panel)), ENGINE_SCOPE);
         context.setAttribute("console", console, ENGINE_SCOPE);
-        context.setAttribute("setInterval", new Function<>((ctx, args) -> {
+        context.setAttribute("setInterval", new Function<>(this, (ctx, args) -> {
             val fn = (JSObject) args[0];
             double interval =  (double) ScriptUtils.convert(args[1], Double.class);
 
@@ -80,7 +103,7 @@ public class ScriptContext {
             return null;
         }, "setInterval"), ENGINE_SCOPE);
         
-        context.setAttribute("setTimeout", new Function<>((ctx, arg) -> {
+        context.setAttribute("setTimeout", new Function<>(this, (ctx, arg) -> {
             val fn = (JSObject) arg[0];
             double timeout = (double) ScriptUtils.convert(arg[1], Double.class);
 
@@ -99,7 +122,7 @@ public class ScriptContext {
         
         context.setAttribute("HTMLCanvasElement", new Location(), ENGINE_SCOPE);
         
-        context.setAttribute("addEventListener", new Function<>((ctx, arg) -> {
+        context.setAttribute("addEventListener", new Function<>(this, (ctx, arg) -> {
             log.trace("addEventListener");
             return null;
         }, "addEventListener"), ENGINE_SCOPE);
@@ -114,9 +137,9 @@ public class ScriptContext {
         
         // https://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSview-getComputedStyle
         
-        context.setAttribute("getComputedStyle", new Function<>((ctx, arg) -> {
+        context.setAttribute("getComputedStyle", new Function<>(this, (ctx, arg) -> {
             val element = (ElementImpl) ((WebIDLAdapter)arg[0]).getTarget();
-            return new CSSStyleAttribute(panel.getSharedContext().getStyle(element.getTarget()).toString());
+            return new CSSStyleAttribute(panel.getSharedContext().getStyle(element.getModel()).toString(), panel);
         }, "getComputedStyle"), ENGINE_SCOPE);
         
         expose(CanvasGradientImpl.class);
@@ -185,21 +208,6 @@ public class ScriptContext {
             document = nextDocument;
         }
     }
-    
-    public ScriptContext(XHTMLPanel panel) {
-        instance = this; // todo rem
-        this.panel = panel;
-
-//        panel.getSharedContext()
-//        eval("this.setInterval = __rebind.setInterval;");
-        panel.addDocumentListener(new DefaultDocumentListener() {
-
-            @Override
-            public void documentLoaded() {
-                handleNewDocument();
-            }
-        });
-    }
 
     public Object eval(String scr) {
         Object res;
@@ -213,13 +221,16 @@ public class ScriptContext {
         }
 //        panel.setDocument(panel.getDocument());
         panel.relayout();
-        panel.setDocument(panel.getDocument());
+        if(documentChanged) {
+            panel.setDocument(panel.getDocument(), panel.getSharedContext().getBaseURL());
+            documentChanged = false;
+        }
         return res;
     }
 
+    public void trackDocumentChange(){
+        documentChanged = true;
+    }
 
     // temp
-    public static ScriptContext getInstance() {
-        return instance;
-    }
 }

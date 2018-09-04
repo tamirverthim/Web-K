@@ -98,7 +98,7 @@ public class WebIDLAdapter<T> implements JSObject {
 
                     // Function member
 
-                    members.put(m.getName(), new Function<>((ctx, args) -> {
+                    members.put(m.getName(), new Function<>(js, (ctx, args) -> {
                         final Object res;
 
                         try {
@@ -111,8 +111,8 @@ public class WebIDLAdapter<T> implements JSObject {
                     }, m.getName()));
                 });
 
-        members.put("toString", new Function<>((ctx, arg) -> WebIDLAdapter.this.toString() + " " + target.toString(), "toString"));
-        members.put("equals", new Function<>((ctx, arg) ->
+        members.put("toString", new Function<>(js, (ctx, arg) -> WebIDLAdapter.this.toString() + " " + target.toString(), "toString"));
+        members.put("equals", new Function<>(js, (ctx, arg) ->
                 WebIDLAdapter.this.equals(arg[0]), "equals"));
     }
 
@@ -149,6 +149,8 @@ public class WebIDLAdapter<T> implements JSObject {
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
+        } else if (target instanceof LegacyUnenumerableNamedProperties){
+            return wrapIfNeeded(((LegacyUnenumerableNamedProperties) target).namedItem(s));
         } else {
             return member;
         }
@@ -274,7 +276,7 @@ public class WebIDLAdapter<T> implements JSObject {
     }
 
 
-    public static Object wrapIfNeeded(Object res) {
+    public Object wrapIfNeeded(Object res) {
 
         if (res instanceof JSObject) {
             return res;
@@ -290,7 +292,7 @@ public class WebIDLAdapter<T> implements JSObject {
 //        }
 
         if (res.getClass().getPackage().getName().startsWith("org.xhtmlrenderer.script")) {
-            return WebIDLAdapter.obtain(ScriptContext.getInstance(), res);
+            return WebIDLAdapter.obtain(js, res);
         } else {
             return res;
         }
@@ -479,5 +481,10 @@ public class WebIDLAdapter<T> implements JSObject {
         }
 
         return java.util.Optional.ofNullable(result);
+    }
+
+    @Override
+    public String toString() {
+        return target.toString();
     }
 }

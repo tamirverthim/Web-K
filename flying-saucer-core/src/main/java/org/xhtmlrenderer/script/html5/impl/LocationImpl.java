@@ -6,7 +6,7 @@ import org.xhtmlrenderer.script.html5.DOMStringList;
 import org.xhtmlrenderer.script.html5.Location;
 import org.xhtmlrenderer.script.web_idl.Attribute;
 import org.xhtmlrenderer.script.web_idl.USVString;
-import org.xhtmlrenderer.simple.XHTMLPanel;
+import org.xhtmlrenderer.swing.BasicPanel;
 
 /**
  * @author Taras Maslov
@@ -15,7 +15,7 @@ import org.xhtmlrenderer.simple.XHTMLPanel;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LocationImpl implements Location {
 
-    XHTMLPanel panel;
+    BasicPanel panel;
 
     Attribute<String> href = new Attribute<String>() {
         
@@ -31,7 +31,7 @@ public class LocationImpl implements Location {
         
     };
 
-    LocationImpl(XHTMLPanel panel) {
+    LocationImpl(BasicPanel panel) {
         this.panel = panel;
     }
 
