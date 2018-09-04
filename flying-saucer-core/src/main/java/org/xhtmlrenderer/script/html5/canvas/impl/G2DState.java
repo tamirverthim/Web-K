@@ -27,7 +27,7 @@ public class G2DState implements Cloneable {
     int fontSize = 12;
     float globalAlpha = 1.0f;
     CanvasTextBaseline canvasTextBaseline;
-    CanvasLineCap lineCap;
+    CanvasLineCap lineCap = CanvasLineCap.butt;
     CanvasLineJoin lineJoin;
     double miterLimit;
     List lineDash;

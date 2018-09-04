@@ -106,7 +106,7 @@ public class DocumentImpl implements Document {
 
     @Override
     public Element createElement(String localName, Object options) {
-        return new ElementImpl(new org.xhtmlrenderer.dom.nodes.Element(localName.toString()), panel);
+        return Binder.getElement(new org.xhtmlrenderer.dom.nodes.Element(localName), panel);
     }
 
     @Override
