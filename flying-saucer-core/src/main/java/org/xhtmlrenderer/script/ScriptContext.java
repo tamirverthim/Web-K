@@ -216,8 +216,7 @@ public class ScriptContext implements DocumentListener {
             }
             throw new RuntimeException(e);
         }
-//        panel.setDocument(panel.getDocument());
-        panel.setRootBox(null);
+        panel.reset();
         panel.relayout();
         return res;
     }

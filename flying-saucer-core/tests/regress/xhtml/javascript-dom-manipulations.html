@@ -1,6 +1,9 @@
 <html>
 <head>
     <style>
+        .white-text {
+            color: white;
+        }
     </style>
     <script>
         
@@ -41,7 +44,7 @@
             ctx.lineTo(300, 300);
             ctx.stroke();
             ctx.restore();
-            ctx.stroke()
+            ctx.stroke();
             
             
             // Element.attributes, Attr.value
@@ -49,8 +52,14 @@
             console.log(canvas.attributes["width"].value);
         
             // Document.querySelectorAll
-            console.log("divs number: " + document.querySelectorAll("div").length)
+            console.log("divs number: " + document.querySelectorAll("div").length);
             
+            // Document.getElementsByClassName();
+            var blueElements = document.getElementsByClassName("blue");
+            console.log("elements number: " + blueElements.length);
+            
+            // Element.classList
+            blueElements[0].classList.add("white-text");
             
         }
         
@@ -59,5 +68,6 @@
 <body>
 <div id="main">
 </div>
+<span class="blue">Span</span>
 </body>
 </html>

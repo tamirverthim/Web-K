@@ -133,6 +133,22 @@ public class RootPanel extends JPanel implements Scrollable, UserInterface, FSCa
 
         repaint();
     }
+    
+    public void reset(){
+
+        setRootBox(null);
+        
+        //have to do this first
+        if (Configuration.isTrue("xr.cache.stylesheets", true)) {
+            getSharedContext().getCss().flushStyleSheets();
+        } else {
+            getSharedContext().getCss().flushAllStyleSheets();
+        }
+
+        getSharedContext().reset();
+        getSharedContext().getCss().setDocumentContext(getSharedContext(), getSharedContext().getNamespaceHandler(), doc, this);
+        repaint();
+    }
 
     // iterates over all boxes and, if they have a BG url assigned, makes a call to the UAC
     // to request it. when running with async image loading, this means BG images will start
