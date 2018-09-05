@@ -84,7 +84,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
     // endregion
 
-    CanvasRenderingContext2DImpl(HTMLCanvasElementImpl canvas, int width, int height) {
+    CanvasRenderingContext2DImpl(HTMLCanvasElementImpl canvas) {
         this.canvas = canvas;
         resize();
     }

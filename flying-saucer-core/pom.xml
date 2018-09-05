@@ -56,13 +56,6 @@
       <version>3.7</version>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/org.reflections/reflections -->
-    <dependency>
-      <groupId>org.reflections</groupId>
-      <artifactId>reflections</artifactId>
-      <version>0.9.11</version>
-    </dependency>
-
     <!-- https://mvnrepository.com/artifact/com.helger/ph-css -->
     <dependency>
       <groupId>com.helger</groupId>
@@ -174,6 +167,16 @@
                   <include>com.kitfox.svg:svgSalamander</include>
                 </includes>
               </artifactSet>
+              <filters>
+                <filter>
+                  <artifact>com.kitfox.svg:svgSalamander</artifact>
+                  <excludes>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/*.DSA</exclude>
+                    <exclude>META-INF/*.MF</exclude>
+                  </excludes>
+                </filter>
+              </filters>
             </configuration>
           </execution>
         </executions>

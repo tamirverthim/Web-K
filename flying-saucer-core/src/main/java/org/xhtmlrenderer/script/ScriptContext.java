@@ -217,13 +217,7 @@ public class ScriptContext implements DocumentListener {
             throw new RuntimeException(e);
         }
         panel.reset();
-        panel.relayout();
         return res;
     }
-
-    public void trackDocumentChange(){
-        documentChanged = true;
-    }
-
     // temp
 }

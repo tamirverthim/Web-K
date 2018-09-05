@@ -31,9 +31,7 @@ public class Binder {
     
     static {
         elementsCreators.put("canvas", (element, panel) -> new HTMLCanvasElementImpl(
-                (org.xhtmlrenderer.dom.nodes.Element) element, 
-                GeneralUtil.parseInt(element.attr("width"), 300), 
-                GeneralUtil.parseInt(element.attr("height"), 150),
+                (org.xhtmlrenderer.dom.nodes.Element) element,
                 panel
         ));
     }

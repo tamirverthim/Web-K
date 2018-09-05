@@ -21,9 +21,15 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
 
     private final CanvasRenderingContext2DImpl context;
 
-    public HTMLCanvasElementImpl(Element target, int width, int heigth, BasicPanel panel) {
+    public HTMLCanvasElementImpl(Element target, BasicPanel panel) {
         super(target, panel);
-        context = new CanvasRenderingContext2DImpl(this, width, heigth);
+        if(!target.hasAttr("width")){
+            target.attr("width", String.valueOf(300));
+        }
+        if(!target.hasAttr("height")){
+            target.attr("height", String.valueOf(150));
+        }
+        context = new CanvasRenderingContext2DImpl(this);
     }
 
     @Override

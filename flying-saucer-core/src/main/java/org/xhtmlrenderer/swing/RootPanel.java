@@ -147,7 +147,7 @@ public class RootPanel extends JPanel implements Scrollable, UserInterface, FSCa
 
         getSharedContext().reset();
         getSharedContext().getCss().setDocumentContext(getSharedContext(), getSharedContext().getNamespaceHandler(), doc, this);
-        repaint();
+        relayout();
     }
 
     // iterates over all boxes and, if they have a BG url assigned, makes a call to the UAC
