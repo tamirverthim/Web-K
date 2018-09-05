@@ -199,7 +199,7 @@ public class WebIDLAdapter<T> implements JSObject {
         if (member instanceof WebIDLAdapter.AttributeLink) {
             try {
                 val att = ((AttributeLink) member).attribute;
-                val unwrapped = unwrapIfNeeded(o);
+                val unwrapped = autoCast(o);
                 val adapted = autoCast(unwrapped, ((AttributeLink) member).attributeClass);
 
                 att.set(adapted);
@@ -298,16 +298,6 @@ public class WebIDLAdapter<T> implements JSObject {
         }
     }
 
-    public static Object unwrapIfNeeded(Object object) {
-//        if (object instanceof String) {
-//            return DOMStringImpl.of((String) object);
-//        }
-        if (object instanceof WebIDLAdapter) {
-            return ((WebIDLAdapter) object).target;
-        }
-        return object;
-    }
-
     private Object[] prepareArguments(Method method, Object[] rawArgs) {
         Object[] result = new Object[method.getParameterTypes().length];
         if (log.isDebugEnabled()) {
@@ -323,6 +313,8 @@ public class WebIDLAdapter<T> implements JSObject {
             Object rawArg;
             val parameter = method.getParameters()[i];
             val parameterType = method.getParameterTypes()[i];
+            val genericParameterType = method.getGenericParameterTypes()[i];
+            val genericType = (Class) (genericParameterType instanceof ParameterizedType ? ((ParameterizedType) genericParameterType).getActualTypeArguments()[0] : null);
 
             if (i == method.getParameterCount() - 1 && method.isVarArgs()) {
                 // all next args are targeted to vararg parameter
@@ -344,7 +336,7 @@ public class WebIDLAdapter<T> implements JSObject {
 
                 if (rawArg != null) {
 
-                    arg = convertToJava(parameterType, rawArg);
+                    arg = autoCast(rawArg, parameterType, genericType);
 
                 } else {
                     // null parameter
@@ -370,7 +362,7 @@ public class WebIDLAdapter<T> implements JSObject {
                 }
             }
 
-            result[i] = autoCast(unwrapIfNeeded(arg), parameterType);
+            result[i] = autoCast(arg, parameterType);
 
         }
         
@@ -379,7 +371,7 @@ public class WebIDLAdapter<T> implements JSObject {
             val varArgsArrayType = method.getParameterTypes()[method.getParameterCount() - 1];
             val varArgsElementType = varArgsArrayType.getComponentType();
             for (int i = varargFromIndex; i < rawArgs.length; i++) {
-                varArgs.add(unwrapIfNeeded(convertToJava(varArgsElementType, rawArgs[i])));
+                varArgs.add(autoCast(rawArgs[i], varArgsElementType));
             }
             result[varargFromIndex] = varArgs.toArray((Object[]) Array.newInstance(varArgsElementType, rawArgs.length - varargFromIndex));
         }
@@ -387,69 +379,92 @@ public class WebIDLAdapter<T> implements JSObject {
         return result;
     }
 
-    Object convertToJava(Class parameterType, Object rawArg) {
-
-        Object arg;
-
-        // auto DOMString support
-
-//        if (parameterType.equals(DOMString.class)) {
-//            if (rawArg instanceof String) {
-//                arg = DOMStringImpl.of((String) rawArg);
-//            } else {
-//                arg = rawArg.toString();
+//    Object convertToJava(Class parameterType, Object rawArg) {
+//
+//        Object arg;
+//
+//        // auto DOMString support
+//
+////        if (parameterType.equals(DOMString.class)) {
+////            if (rawArg instanceof String) {
+////                arg = DOMStringImpl.of((String) rawArg);
+////            } else {
+////                arg = rawArg.toString();
+////            }
+////        } else if (parameterType.equals(USVString.class)) {
+////            if (rawArg instanceof String) {
+////                arg = USVStringImpl.of((String) rawArg);
+////            } else {
+////                arg = rawArg.toString();
+////            }
+////        } else 
+//            
+//        if (parameterType.equals(Sequence.class) && rawArg instanceof NativeArray) {
+//            val sequenceComponentType = getTypeOfInterfaceGeneric(parameterType);
+//            val array = (NativeArray) rawArg;
+//            val objectsArray = array.asObjectArray();
+//            arg = new SequenceImpl<>(Stream.of(objectsArray).map(obj -> autoCast(obj, (Class)sequenceComponentType)).collect(Collectors.toList()));
+//        } else if (parameterType.equals(Sequence.class) && rawArg instanceof ScriptObjectMirror) {
+//            val sequenceComponentType = getTypeOfInterfaceGeneric(parameterType);
+//            val mirror = (ScriptObjectMirror) rawArg;
+//            
+//            val objects = new ArrayList<>();
+//            for (int i = 0; i < mirror.size(); i++) {
+//                objects.add(autoCast(mirror.getSlot(i), sequenceComponentType));
 //            }
-//        } else if (parameterType.equals(USVString.class)) {
-//            if (rawArg instanceof String) {
-//                arg = USVStringImpl.of((String) rawArg);
-//            } else {
-//                arg = rawArg.toString();
-//            }
-//        } else 
-            
-        if (parameterType.equals(Sequence.class) && rawArg instanceof NativeArray) {
-            val sequenceComponentType = getTypeOfInterfaceGeneric(parameterType);
-            val array = (NativeArray) rawArg;
-            val objectsArray = array.asObjectArray();
-            arg = new SequenceImpl<>(Stream.of(objectsArray).map(obj -> convertToJava(sequenceComponentType, obj)).collect(Collectors.toList()));
-        } else {
-            arg = rawArg;
-        }
+//            
+//            arg = new SequenceImpl<>(Stream.of(objects).map(obj -> autoCast(obj, sequenceComponentType), sequenceComponentType)).collect(Collectors.toList()));
+//        } else {
+//            arg = rawArg;
+//        }
+//
+//        // other special conversion should be here
+//        return arg;
+//    }
 
-        // other special conversion should be here
-        return arg;
+
+
+    private Object autoCast(Object object) {
+        return autoCast(object, null, null);
     }
 
     private Object autoCast(Object object, Class target) {
+        return autoCast(object, target, null);
+    }
+
+        private Object autoCast(Object object, Class target, @Nullable Class targetClassGeneric) {
         Object result;
-        if (target.isEnum() && (object instanceof String /*|| object instanceof DOMString || object instanceof USVString*/)) {
-            result = Enum.valueOf((Class<Enum>) target, object.toString());
-        } else if (object instanceof ScriptObjectMirror && target.equals(Sequence.class)) {
-            val scriptObjectMirror = ((ScriptObjectMirror) object);
-            val size = scriptObjectMirror.size();
-            List<Object> items = new ArrayList<>();
-            for (int i = 0; i < size; i++) {
-                items.add(scriptObjectMirror.getSlot(i));
+        if (object instanceof WebIDLAdapter) {
+                object = ((WebIDLAdapter) object).target; 
+        }
+        
+        if(target != null) {
+            if (target.isEnum() && (object instanceof String /*|| object instanceof DOMString || object instanceof USVString*/)) {
+                result = Enum.valueOf((Class<Enum>) target, object.toString());
+            } else if (object instanceof ScriptObjectMirror && target.equals(Sequence.class)) {
+                val scriptObjectMirror = ((ScriptObjectMirror) object);
+                val size = scriptObjectMirror.size();
+                List<Object> items = new ArrayList<>();
+                for (int i = 0; i < size; i++) {
+                    items.add(autoCast(scriptObjectMirror.getSlot(i), targetClassGeneric == null ? Object.class : targetClassGeneric));
+                }
+                return new SequenceImpl<>(items);
+            } else {
+                try {
+                    result = ScriptUtils.convert(object, target);
+                } catch (ClassCastException e) {
+                    e.printStackTrace();
+                    return null;
+                }
             }
-            return new SequenceImpl<>(items);
         } else {
-            try {
-                result = ScriptUtils.convert(object, target);
-            } catch (ClassCastException e) {
-                e.printStackTrace();
-                return null;
-            }
+            result = object;
         }
         return result;
     }
 
     private boolean hasAnnotation(Parameter parameter, Class<? extends Annotation> annotation) {
         return parameter.isAnnotationPresent(annotation);
-    }
-
-    private Class getTypeOfInterfaceGeneric(Class clazz) {
-        ParameterizedType parameterizedType = (ParameterizedType) clazz.getGenericInterfaces()[0];
-        return (Class) parameterizedType.getActualTypeArguments()[0];
     }
 
     private boolean isDefaultNull(Parameter parameter) {

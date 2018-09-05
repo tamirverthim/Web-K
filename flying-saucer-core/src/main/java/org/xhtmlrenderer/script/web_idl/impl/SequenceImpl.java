@@ -13,6 +13,10 @@ public class SequenceImpl<T> implements Sequence<T> {
     
     List<T> items = new ArrayList<>();
 
+
+    public SequenceImpl() {
+    }
+    
     public SequenceImpl(List<T> items) {
         this.items = items;
     }
@@ -25,5 +29,9 @@ public class SequenceImpl<T> implements Sequence<T> {
     @Override
     public int length() {
         return items.size();
+    }
+    
+    public List<T> getList(){
+        return items;
     }
 }

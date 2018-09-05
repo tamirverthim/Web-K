@@ -23,6 +23,7 @@ import org.xhtmlrenderer.script.impl.TextMetricsImpl;
 import org.xhtmlrenderer.script.web_idl.Attribute;
 import org.xhtmlrenderer.script.web_idl.DOMString;
 import org.xhtmlrenderer.script.web_idl.Sequence;
+import org.xhtmlrenderer.script.web_idl.impl.SequenceImpl;
 import org.xhtmlrenderer.script.whatwg_dom.Element;
 import org.xhtmlrenderer.util.GeneralUtil;
 
@@ -58,7 +59,6 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     HTMLCanvasElementImpl canvas;
     boolean wasFill;
     String fontStyle;
-    private CanvasTextAlign textAlign = CanvasTextAlign.start;
 
 
     // region external WebIDL attributes implementations
@@ -420,7 +420,10 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
             @Override
             public void set(CanvasLineCap canvasLineCap) {
                 log.trace("lineCap set");
-                state().setLineCap(canvasLineCap);
+                if(canvasLineCap != null) {
+                    state().setLineCap(canvasLineCap);
+                    stateDirty = true;
+                }
             }
 
         };
@@ -433,12 +436,16 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
             @Override
             public CanvasLineJoin get() {
                 log.trace("lineJoin get");
-                return CanvasLineJoin.miter;
+                return state().getLineJoin();
             }
 
             @Override
             public void set(CanvasLineJoin canvasLineJoin) {
                 log.trace("lineJoin set");
+                if(canvasLineJoin != null){
+                    state().setLineJoin(canvasLineJoin);
+                    stateDirty = true;
+                }
             }
         };
     }
@@ -449,12 +456,14 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
             @Override
             public Double get() {
                 log.trace("miterLimit get");
-                return null;
+                return state().getMiterLimit();
             }
 
             @Override
             public void set(Double aDouble) {
                 log.trace("miterLimit set");
+                state().setMiterLimit(aDouble);
+                stateDirty = true;
             }
         };
     }
@@ -462,12 +471,14 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     @Override
     public void setLineDash(Sequence<Double> segments) {
         log.trace("setLineDash");
+        state().setLineDash((SequenceImpl<Double>)segments);
+        stateDirty = true;
     }
 
     @Override
     public Sequence<Double> getLineDash() {
         log.trace("getLineDash");
-        return null;
+        return state().getLineDash();
     }
 
     @Override
@@ -482,6 +493,8 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
             @Override
             public void set(Double aDouble) {
                 log.trace("lineDashOffset set");
+                state().setLineDashOffset(aDouble);
+                stateDirty = true;
             }
         };
     }
@@ -591,11 +604,11 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
         
         
         var floatX = (float)x;
-        if(textAlign == CanvasTextAlign.center) {
+        if(state().getTextAlign() == CanvasTextAlign.center) {
             floatX -= metrix.getWidth() / 2;
         }
         
-        if (textAlign == CanvasTextAlign.end || textAlign == CanvasTextAlign.right) {
+        if (state().getTextAlign() == CanvasTextAlign.end || state().getTextAlign() == CanvasTextAlign.right) {
             floatX -= metrix.getWidth();
         }
         
@@ -606,6 +619,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     @Override
     public void strokeText(@DOMString String text, double x, double y, Double maxWidth) {
         log.trace("strokeText");
+        fillText(text, x, y, maxWidth);
     }
 
     @Override
@@ -616,11 +630,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     }
 
     public static Color parseCSSColor(String string) {
-        val parsed = new CSSParser(new CSSErrorHandler() {
-            @Override
-            public void error(String uri, String message) {
-                
-            }
+        val parsed = new CSSParser((uri, message) -> {
         }).parsePropertyValue(CSSName.COLOR, 0, string);
         if (parsed.getFSColor() instanceof FSRGBColor) {
             val rgbColor = (FSRGBColor)parsed.getFSColor();
@@ -674,13 +684,14 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
             @Override
             public CanvasTextAlign get() {
                 log.trace("textAlign get");
-                return textAlign;
+                return state().getTextAlign();
             }
 
             @Override
             public void set(CanvasTextAlign canvasTextAlign) {
                 log.trace("textAlign set");
-                textAlign = canvasTextAlign;
+                state().setTextAlign(canvasTextAlign);
+                stateDirty = true;
             }
         };
     }
@@ -697,7 +708,8 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
             @Override
             public void set(CanvasTextBaseline canvasTextBaseline) {
-                state().setTextBaseline(canvasTextBaseline);
+                state().setCanvasTextBaseline(canvasTextBaseline);
+                stateDirty = true;
                 log.trace("textBaseline set");
             }
         };
