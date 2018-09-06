@@ -379,7 +379,7 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
      *
      * @param filename The new document to load
      */
-    protected void setDocumentRelative(String filename) {
+    public void setDocumentRelative(String filename) {
         String url = getSharedContext().getUac().resolveURI(filename);
         if (isAnchorInCurrentDocument(filename)) {
             String id = getAnchorId(filename);

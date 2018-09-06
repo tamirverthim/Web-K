@@ -20,6 +20,7 @@
 package org.xhtmlrenderer.swing;
 
 
+import org.xhtmlrenderer.dom.nodes.Document;
 import org.xhtmlrenderer.dom.nodes.Element;
 import org.xhtmlrenderer.extend.ReplacedElement;
 import org.xhtmlrenderer.extend.ReplacedElementFactory;
@@ -320,10 +321,10 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
 
         do {
             node = node.parentNode();
-        } while (node instanceof org.xhtmlrenderer.dom.nodes.Element &&
-                !context.getNamespaceHandler().isFormElement((org.xhtmlrenderer.dom.nodes.Element) node));
+        } while (node instanceof Element &&
+                !context.getNamespaceHandler().isFormElement((Element) node));
 
-        if ((node instanceof org.xhtmlrenderer.dom.nodes.Element)) {
+        if (!(node instanceof Element) || node instanceof Document) {
             return null;
         }
 

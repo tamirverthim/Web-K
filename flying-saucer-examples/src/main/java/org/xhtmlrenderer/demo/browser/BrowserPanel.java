@@ -28,6 +28,8 @@ import org.xhtmlrenderer.layout.SharedContext;
 //import org.xhtmlrenderer.pdf.util.XHtmlMetaToPdfInfoAdapter;
 import org.xhtmlrenderer.resource.XMLResource;
 import org.xhtmlrenderer.simple.FSScrollPane;
+import org.xhtmlrenderer.simple.XHTMLPanel;
+import org.xhtmlrenderer.simple.extend.FormSubmissionListener;
 import org.xhtmlrenderer.swing.ImageResourceLoader;
 import org.xhtmlrenderer.swing.ScalableXHTMLPanel;
 import org.xhtmlrenderer.swing.SwingReplacedElementFactory;
@@ -186,7 +188,13 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 
 		setLayout(new BorderLayout());
 		this.add(scroll, BorderLayout.CENTER);
-		
+
+
+		view.setFormSubmissionListener(new FormSubmissionListener() {
+			public void submit(String query) {
+				view.setDocumentRelative(query);
+			}
+		});
 		js = new ScriptContext(view);
 	}
 
