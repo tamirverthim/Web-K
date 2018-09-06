@@ -379,7 +379,7 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
      *
      * @param filename The new document to load
      */
-    public void setDocumentRelative(String filename) {
+    protected void setDocumentRelative(String filename) {
         String url = getSharedContext().getUac().resolveURI(filename);
         if (isAnchorInCurrentDocument(filename)) {
             String id = getAnchorId(filename);
@@ -402,6 +402,13 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
         setDocument(dom, url);
     }
 
+    public void setDocument(String url, boolean relative) {
+        if (relative) {
+            setDocumentRelative(url);
+        } else {
+            setDocument(url);
+        }
+    }
 
     /**
      * Reloads the document using the same base URL and namespace handler. Reloading will pick up changes to styles

@@ -192,7 +192,7 @@ public class BrowserPanel extends JPanel implements DocumentListener {
 
 		view.setFormSubmissionListener(new FormSubmissionListener() {
 			public void submit(String query) {
-				view.setDocumentRelative(query);
+				view.setDocument(query, true);
 			}
 		});
 		js = new ScriptContext(view);
