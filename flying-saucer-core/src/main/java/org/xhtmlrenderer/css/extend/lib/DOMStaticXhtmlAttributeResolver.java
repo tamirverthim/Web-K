@@ -23,7 +23,6 @@ package org.xhtmlrenderer.css.extend.lib;
 
 
 import lombok.val;
-import org.apache.commons.lang3.StringUtils;
 import org.xhtmlrenderer.dom.nodes.Element;
 import org.xhtmlrenderer.css.extend.AttributeResolver;
 
@@ -31,28 +30,25 @@ import org.xhtmlrenderer.css.extend.AttributeResolver;
  * Works for Xhtml in a DOM tree
  */
 public class DOMStaticXhtmlAttributeResolver implements AttributeResolver {
-    
-    private static String toNullIfEmpty(String value) {
-        return StringUtils.isNotBlank(value) ? value : null;
-    }
-    
+
     public String getAttributeValue(Object e, String attrName) {
-        val value = ((Element) e).attr(attrName);
-        return toNullIfEmpty(value);
+        val element = (Element) e;
+        return element.attr(attrName);
+
     }
-    
+
     public String getAttributeValue(Object o, String namespaceURI, String attrName) {
-        Element e = (Element)o;
-        val value = e.attr(attrName);
-        return toNullIfEmpty(value);
+        Element e = (Element) o;
+        return e.attr(attrName);
+
     }
 
     public String getClass(Object e) {
-        return toNullIfEmpty(((Element) e).attr("class"));
+        return getAttributeValue(e, "class");
     }
 
     public String getID(Object e) {
-        return toNullIfEmpty(((Element) e).id());
+        return getAttributeValue(e, "id");
     }
 
     public String getNonCssStyling(Object e) {
@@ -60,21 +56,20 @@ public class DOMStaticXhtmlAttributeResolver implements AttributeResolver {
     }
 
     public String getLang(Object e) {
-        return toNullIfEmpty(((Element) e).attr("lang"));
+        return getAttributeValue(e, "lang");
     }
 
     public String getElementStyling(Object el) {
         Element e = ((Element) el);
-        StringBuilder style = new StringBuilder();
+        StringBuffer style = new StringBuffer();
         if (e.nodeName().equals("td")) {
-            String s = toNullIfEmpty(e.attr("colspan"));
-            if (s != null) {
+            String s;
+            if (!(s = e.attr("colspan")).equals("")) {
                 style.append("-fs-table-cell-colspan: ");
                 style.append(s);
                 style.append(";");
             }
-            s = toNullIfEmpty(e.attr("rowspan"));
-            if (s != null) {
+            if (!(s = e.attr("rowspan")).equals("")) {
                 style.append("-fs-table-cell-rowspan: ");
                 style.append(s);
                 style.append(";");

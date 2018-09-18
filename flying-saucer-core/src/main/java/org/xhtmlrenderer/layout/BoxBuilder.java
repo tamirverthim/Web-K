@@ -57,8 +57,6 @@ import org.xhtmlrenderer.render.Box;
 import org.xhtmlrenderer.render.FloatedBoxData;
 import org.xhtmlrenderer.render.InlineBox;
 
-import static org.xhtmlrenderer.util.StringHelper.nullIfEmpty;
-
 /**
  * This class is responsible for creating the box tree from the DOM.  This is
  * mostly just a one-to-one translation from the <code>Element</code> to an
@@ -1102,7 +1100,7 @@ public class BoxBuilder {
 
                     Integer start = null;
 					if ("ol".equalsIgnoreCase(working.nodeName())) {
-                        String startAttribute = nullIfEmpty(working.attr("start"));
+                        String startAttribute = working.hasAttr("start") ? working.attr("start") : null;
 						if (startAttribute != null) {
 							try {
 								start = Integer.parseInt(startAttribute) - 1;
@@ -1111,7 +1109,7 @@ public class BoxBuilder {
 							}
 						}
 					} else if ("li".equalsIgnoreCase(working.nodeName())) {
-						String valueAttribute = nullIfEmpty(working.attr("value"));
+						String valueAttribute = working.hasAttr("value") ? working.attr("value") : null;
 						if (valueAttribute != null) {
 							try {
 								start = Integer.parseInt(valueAttribute) - 1;

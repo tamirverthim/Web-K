@@ -40,7 +40,7 @@ public class XHTMLUtils
 		Objects.requireNonNull(attr);
 
 		String attValue = el.attr(attr);
-		return StringUtils.isNotBlank(attValue) && !attValue.equalsIgnoreCase("false");
+		return el.hasAttr(attr) && !attValue.equalsIgnoreCase("false");
 	}
 
 	public static int getIntValue(Element el, String attr, int defaultValue)

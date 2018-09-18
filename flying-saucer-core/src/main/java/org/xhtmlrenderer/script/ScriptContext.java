@@ -1,9 +1,6 @@
 package org.xhtmlrenderer.script;
 
-import jdk.nashorn.api.scripting.AbstractJSObject;
-import jdk.nashorn.api.scripting.JSObject;
-import jdk.nashorn.api.scripting.NashornException;
-import jdk.nashorn.api.scripting.ScriptUtils;
+import jdk.nashorn.api.scripting.*;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -35,13 +32,12 @@ import static javax.script.ScriptContext.ENGINE_SCOPE;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ScriptContext implements DocumentListener {
 //    static ScriptContext instance;
-    ScriptEngine engine;
+    NashornScriptEngine engine;
     javax.script.ScriptContext context;
 
     BasicPanel panel;
     JsConsole console = new JsConsole();
     org.xhtmlrenderer.dom.nodes.Document document;
-    private boolean documentChanged;
 
     public ScriptContext(BasicPanel panel){
         this.panel = panel;
@@ -81,7 +77,9 @@ public class ScriptContext implements DocumentListener {
     }
     
     private void initEngine() {
-        engine = new ScriptEngineManager().getEngineByName("nashorn");
+        String[] options = { "--language=es6" };
+        NashornScriptEngineFactory jsFactory = new NashornScriptEngineFactory();
+        engine =  (NashornScriptEngine) jsFactory.getScriptEngine(options);
         context = engine.getContext();
         context.setAttribute("document", WebIDLAdapter.obtain(this, new org.xhtmlrenderer.script.html5.impl.DocumentImpl(panel)), ENGINE_SCOPE);
         context.setAttribute("console", console, ENGINE_SCOPE);
@@ -99,7 +97,7 @@ public class ScriptContext implements DocumentListener {
             }, 0, (long) interval);
             return null;
         }, "setInterval"), ENGINE_SCOPE);
-        
+
         context.setAttribute("setTimeout", new Function<>(this, (ctx, arg) -> {
             val fn = (JSObject) arg[0];
             double timeout = (double) ScriptUtils.convert(arg[1], Double.class);
@@ -114,31 +112,31 @@ public class ScriptContext implements DocumentListener {
             }, (long) timeout);
             return null;
         }, "setTimeout"), ENGINE_SCOPE);
-        
+
         context.setAttribute("location", new Location(), ENGINE_SCOPE);
-        
+
         context.setAttribute("HTMLCanvasElement", new Location(), ENGINE_SCOPE);
-        
+
         context.setAttribute("addEventListener", new Function<>(this, (ctx, arg) -> {
             log.trace("addEventListener");
             return null;
         }, "addEventListener"), ENGINE_SCOPE);
-        
-        
+
+
         try {
             context.setAttribute("window", engine.eval("this"), ENGINE_SCOPE);
             context.setAttribute("self", engine.eval("this"), ENGINE_SCOPE);
         } catch (ScriptException e) {
             throw new RuntimeException(e);
         }
-        
+
         // https://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSview-getComputedStyle
-        
+
         context.setAttribute("getComputedStyle", new Function<>(this, (ctx, arg) -> {
             val element = (ElementImpl) ((WebIDLAdapter)arg[0]).getTarget();
             return new CSSStyleAttribute(panel.getSharedContext().getStyle(element.getModel()).toString(), panel);
         }, "getComputedStyle"), ENGINE_SCOPE);
-        
+
         expose(CanvasGradientImpl.class);
         expose(CanvasPatternImpl.class);
     }

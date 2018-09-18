@@ -71,7 +71,7 @@ class SelectField extends FormField {
         Elements options = getElement().getElementsByTag("option");
         for (int i = 0; i < options.size(); i++)
         {
-            Element option = (Element) options.get(i);
+            Element option = options.get(i);
             if (XHTMLUtils.isTrue(option, "selected"))
             {
                 selectedIndices.add(new Integer(i));
@@ -171,7 +171,7 @@ class SelectField extends FormField {
                 String optionText = XhtmlForm.collectText(child);
                 String optionValue = optionText;
                 
-                if (StringUtils.isNotBlank(child.attr("value"))) {
+                if (child.hasAttr("value")) {
                     optionValue = child.attr("value");
                 }
                 list.add(new NameValuePair(optionText, optionValue));

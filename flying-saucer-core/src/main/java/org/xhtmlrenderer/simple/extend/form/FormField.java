@@ -96,7 +96,7 @@ public abstract class FormField {
     }
     
     protected boolean hasAttribute(String attributeName) {
-        return getElement().hasAttr(attributeName);
+        return getElement().attr(attributeName).length() > 0;
     }
 
     protected String getAttribute(String attributeName) {
