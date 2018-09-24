@@ -19,6 +19,7 @@
  */
 package org.xhtmlrenderer.demo.browser;
 
+import lombok.experimental.var;
 import lombok.extern.slf4j.Slf4j;
 import org.xhtmlrenderer.dom.nodes.Document;
 import org.xhtmlrenderer.resource.XMLResource;
@@ -29,6 +30,7 @@ import org.xhtmlrenderer.util.GeneralUtil;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 
 /**
@@ -108,7 +110,13 @@ public class PanelManager extends DelegatingUserAgent {
                 StringBuffer sbURI = GeneralUtil.htmlEscapeSpace(uri);
 
                 XRLog.general("Encoded URI: " + sbURI);
-                file = new File(new URI(sbURI.toString()));
+                var uriObject = new URI(sbURI.toString());
+                if(uriObject.getRawQuery() != null) {
+                    XRLog.load(Level.WARNING, "File URL contains query parameters, omitting.");
+                    uriObject = new URI(sbURI.substring(0, sbURI.length() - uriObject.getRawQuery().length() - 1));
+                }
+                uri = uriObject.toString();
+                file = new File(uriObject);
             } catch (URISyntaxException
                     e) {
                 XRLog.exception("Invalid file URI " + uri, e);

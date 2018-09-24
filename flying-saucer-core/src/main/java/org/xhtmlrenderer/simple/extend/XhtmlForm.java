@@ -30,6 +30,8 @@ import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JRadioButton;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.xhtmlrenderer.dom.nodes.Element;
 import org.xhtmlrenderer.dom.nodes.TextNode;
 
@@ -37,6 +39,7 @@ import org.xhtmlrenderer.extend.UserAgentCallback;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.form.FormField;
+import org.xhtmlrenderer.simple.extend.form.DefaultFormFieldFactory;
 import org.xhtmlrenderer.simple.extend.form.FormFieldFactory;
 import org.xhtmlrenderer.util.XRLog;
 
@@ -46,23 +49,30 @@ import org.xhtmlrenderer.util.XRLog;
  * @author Torbjoern Gannholm
  * @author Sean Bright
  */
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class XhtmlForm {
+    public static FormFieldFactory fieldFactory = new DefaultFormFieldFactory();
     private static final String FS_DEFAULT_GROUP = "__fs_default_group_";
+    private static int defaultGroupCount = 1;
 
-    private static int _defaultGroupCount = 1;
+    
+    UserAgentCallback userAgentCallback;
+    LinkedHashMap<Element, FormField> componentCache;
+    HashMap<String, ButtonGroupWrapper> buttonGroups;
+    Element parentFormElement;
+    FormSubmissionListener formSubmissionListener;
 
-    private UserAgentCallback _userAgentCallback;
-    private Map _componentCache;
-    private Map _buttonGroups;
-    private Element _parentFormElement;
-    private FormSubmissionListener _formSubmissionListener;
+
+    public static void setFieldFactory(FormFieldFactory fieldFactory) {
+        XhtmlForm.fieldFactory = fieldFactory;
+    }
 
     public XhtmlForm(UserAgentCallback uac, Element e, FormSubmissionListener fsListener) {
-        _userAgentCallback = uac;
-        _buttonGroups = new HashMap();
-        _componentCache = new LinkedHashMap();
-        _parentFormElement = e;
-        _formSubmissionListener = fsListener;
+        userAgentCallback = uac;
+        buttonGroups = new HashMap<>();
+        componentCache = new LinkedHashMap<>();
+        parentFormElement = e;
+        formSubmissionListener = fsListener;
     }
 
     public XhtmlForm(UserAgentCallback uac, Element e) {
@@ -70,70 +80,70 @@ public class XhtmlForm {
     }
 
     public UserAgentCallback getUserAgentCallback() {
-        return _userAgentCallback;
+        return userAgentCallback;
     }
-    
+
     public void addButtonToGroup(String groupName, AbstractButton button) {
         if (groupName == null) {
             groupName = createNewDefaultGroupName();
         }
 
-        ButtonGroupWrapper group = (ButtonGroupWrapper) _buttonGroups.get(groupName);
-        
+        ButtonGroupWrapper group = buttonGroups.get(groupName);
+
         if (group == null) {
             group = new ButtonGroupWrapper();
 
-            _buttonGroups.put(groupName, group);
+            buttonGroups.put(groupName, group);
         }
 
         group.add(button);
     }
-    
+
     private static String createNewDefaultGroupName() {
-        return FS_DEFAULT_GROUP + ++_defaultGroupCount;
+        return FS_DEFAULT_GROUP + ++defaultGroupCount;
     }
 
-    private static boolean isFormField(org.xhtmlrenderer.dom.nodes.Element e) {
+    private static boolean isFormField(Element e) {
         String nodeName = e.nodeName();
-        
+
         if (nodeName.equals("input") || nodeName.equals("select") || nodeName.equals("textarea")) {
             return true;
         }
-        
+
         return false;
     }
 
-    public FormField addComponent(org.xhtmlrenderer.dom.nodes.Element e, LayoutContext context, BlockBox box) {
-        FormField field = null;
+    public FormField addComponent(Element e, LayoutContext context, BlockBox box) {
+        FormField field;
 
-        if (_componentCache.containsKey(e)) {
-            field = (FormField) _componentCache.get(e);
+        if (componentCache.containsKey(e)) {
+            field = componentCache.get(e);
         } else {
             if (!isFormField(e)) {
                 return null;
             }
 
-            field = FormFieldFactory.create(this, context, box);
-    
+            field = fieldFactory.create(this, context, box);
+
             if (field == null) {
                 XRLog.layout("Unknown field type: " + e.nodeName());
 
                 return null;
             }
-            
-            _componentCache.put(e, field);
+
+            componentCache.put(e, field);
         }
 
         return field;
     }
-    
+
     public void reset() {
-        Iterator buttonGroups = _buttonGroups.values().iterator();
+        Iterator buttonGroups = this.buttonGroups.values().iterator();
         while (buttonGroups.hasNext()) {
             ((ButtonGroupWrapper) buttonGroups.next()).clearSelection();
         }
 
-        Iterator fields = _componentCache.values().iterator();
+        Iterator fields = componentCache.values().iterator();
         while (fields.hasNext()) {
             ((FormField) fields.next()).reset();
         }
@@ -142,39 +152,45 @@ public class XhtmlForm {
     public void submit(JComponent source) {
         // If we don't have a <form> to tell us what to do, don't
         // do anything.
-        if (_parentFormElement == null) {
+        if (parentFormElement == null) {
             return;
         }
 
-        StringBuffer data = new StringBuffer();
-        String action = _parentFormElement.attr("action");
+        StringBuilder data = new StringBuilder();
+        String action = parentFormElement.attr("action");
         data.append(action).append("?");
-        Iterator fields = _componentCache.entrySet().iterator();
-        boolean first=true;
+        Iterator fields = componentCache.entrySet().iterator();
+        boolean first = true;
+        boolean valid = true;
         while (fields.hasNext()) {
             Map.Entry entry = (Map.Entry) fields.next();
 
             FormField field = (FormField) entry.getValue();
-            
-            if (field.includeInSubmission(source)) {
-                String [] dataStrings = field.getFormDataStrings();
-                
-                for (int i = 0; i < dataStrings.length; i++) {
-                    if (!first) {
-                        data.append('&');
+
+            if (!field.isValid()) {
+                valid = false;
+            } else {
+
+                if (field.includeInSubmission(source)) {
+                    String[] dataStrings = field.getFormDataStrings();
+
+                    for (int i = 0; i < dataStrings.length; i++) {
+                        if (!first) {
+                            data.append('&');
+                        }
+
+                        data.append(dataStrings[i]);
+                        first = false;
                     }
-    
-                    data.append(dataStrings[i]);
-                    first=false;
                 }
             }
         }
-        
-        if(_formSubmissionListener !=null) _formSubmissionListener.submit(data.toString());
+
+        if (valid && formSubmissionListener != null) formSubmissionListener.submit(data.toString());
     }
 
-    public static String collectText(org.xhtmlrenderer.dom.nodes.Element e) {
-        StringBuffer result = new StringBuffer();
+    public static String collectText(Element e) {
+        StringBuilder result = new StringBuilder();
         if (e.childNodeSize() > 0) {
             org.xhtmlrenderer.dom.nodes.Node node = e.childNodeSize() > 0 ? e.childNode(0) : null;
 
@@ -188,14 +204,14 @@ public class XhtmlForm {
         }
         return result.toString().trim();
     }
-    
+
     private static class ButtonGroupWrapper {
-        private ButtonGroup _group;
-        private AbstractButton _dummy;
-        
+        private ButtonGroup group;
+        private AbstractButton dummy;
+
         public ButtonGroupWrapper() {
-            _group = new ButtonGroup();
-            _dummy = new JRadioButton();
+            group = new ButtonGroup();
+            dummy = new JRadioButton();
 
             // We need a dummy button to have the appearance of all of
             // the radio buttons being in an unselected state.
@@ -209,15 +225,15 @@ public class XhtmlForm {
             // programmatically select that button to turn off all the displayed
             // radio buttons. For example, a normal button with the label 'none'
             // could be wired to select the invisible radio button.
-            _group.add(_dummy);
+            group.add(dummy);
         }
-        
+
         public void add(AbstractButton b) {
-            _group.add(b);
+            group.add(b);
         }
 
         public void clearSelection() {
-            _group.setSelected(_dummy.getModel(), true);
+            group.setSelected(dummy.getModel(), true);
         }
     }
 }
