@@ -25,10 +25,12 @@ import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.XhtmlForm;
 
 public class FormFieldFactory {
+    
     private FormFieldFactory() {
     }
 
     public static FormField create(XhtmlForm form, LayoutContext context, BlockBox box) {
+        
         String typeKey = null;
 
         org.xhtmlrenderer.dom.nodes.Element e = box.getElement();
@@ -68,5 +70,6 @@ public class FormFieldFactory {
         } else {
             return new TextField(e, form, context, box);
         }
+        
     }
 }

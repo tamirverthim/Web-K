@@ -26,7 +26,6 @@ import javax.swing.JTable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.xhtmlrenderer.dom.nodes.Element;
 import org.xhtmlrenderer.dom.nodes.Node;
 import org.xhtmlrenderer.dom.select.Elements;

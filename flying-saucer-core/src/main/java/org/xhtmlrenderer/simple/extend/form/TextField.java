@@ -21,7 +21,9 @@ package org.xhtmlrenderer.simple.extend.form;
 
 import javax.swing.JComponent;
 import javax.swing.JTextField;
+import javax.swing.text.AbstractDocument;
 
+import org.xhtmlrenderer.dom.nodes.Element;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.XhtmlForm;
@@ -29,21 +31,22 @@ import org.xhtmlrenderer.util.XHTMLUtils;
 
 class TextField extends AbstractTextField {
 
-    public TextField(org.xhtmlrenderer.dom.nodes.Element e, XhtmlForm form, LayoutContext context, BlockBox box)
-    {
+    public TextField(Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }
 
-    public JComponent create()
-    {
+    public JComponent create() {
         JTextField textfield = SwingComponentFactory.getInstance().createTextField(this);
         textfield.setColumns(XHTMLUtils.getIntValue(getElement(), "size", 15));
 
         XHTMLUtils.getOptionalIntValue(getElement(), "maxlength").ifPresent(m ->
                 textfield.setDocument(new SizeLimitedDocument(m)));
 
-        if (XHTMLUtils.isTrue(getElement(), "readonly"))
-        {
+        if (getElement().attr("type").equals("number")) {
+            ((AbstractDocument) textfield.getDocument()).setDocumentFilter(new NumberDocumentFilter());
+        }
+
+        if (XHTMLUtils.isTrue(getElement(), "readonly")) {
             textfield.setEditable(false);
         }
         applyComponentStyle(textfield);
@@ -51,18 +54,16 @@ class TextField extends AbstractTextField {
         return textfield;
     }
 
-    protected void applyOriginalState()
-    {
+    protected void applyOriginalState() {
         JTextField textfield = (JTextField) getComponent();
         textfield.setText(getOriginalState().getValue());
         // Make sure we are showing the front of 'value' instead of the end.
         textfield.setCaretPosition(0);
     }
 
-    protected String[] getFieldValues()
-    {
+    protected String[] getFieldValues() {
         JTextField textfield = (JTextField) getComponent();
-        return new String[] { textfield.getText() };
+        return new String[]{textfield.getText()};
     }
 
 }

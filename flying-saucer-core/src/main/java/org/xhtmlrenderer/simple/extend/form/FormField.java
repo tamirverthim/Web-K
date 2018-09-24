@@ -21,12 +21,15 @@ package org.xhtmlrenderer.simple.extend.form;
 
 import javax.swing.JComponent;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.parser.FSColor;
 import org.xhtmlrenderer.css.parser.FSRGBColor;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.css.style.FSDerivedValue;
 import org.xhtmlrenderer.css.style.derived.LengthValue;
+import org.xhtmlrenderer.dom.nodes.Element;
 import org.xhtmlrenderer.extend.UserAgentCallback;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
@@ -37,43 +40,45 @@ import org.xhtmlrenderer.swing.AWTFSFont;
 
 import java.awt.*;
 
-
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class FormField {
-    private XhtmlForm _parentForm;
-    private org.xhtmlrenderer.dom.nodes.Element _element;
-    private FormFieldState _originalState;
-    private JComponent _component;
-    private LayoutContext context;
-    private BlockBox box;
+    
+    XhtmlForm parentForm;
+    Element element;
+    FormFieldState originalState;
+    JComponent component;
+    LayoutContext context;
+    BlockBox box;
+    
     protected Integer intrinsicWidth;
     protected Integer intrinsicHeight;
     
 
-    public FormField(org.xhtmlrenderer.dom.nodes.Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
-        _element = e;
-        _parentForm = form;
+    public FormField(Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
+        element = e;
+        parentForm = form;
         this.context = context;
         this.box = box;
         
         initialize();
     }
 
-    protected org.xhtmlrenderer.dom.nodes.Element getElement() {
-        return _element;
+    protected Element getElement() {
+        return element;
     }
     
     public JComponent getComponent() {
-        return _component;
+        return component;
     }
     
     public XhtmlForm getParentForm() {
-        return _parentForm;
+        return parentForm;
     }
 
     public Dimension getIntrinsicSize(){
 
-        int width = intrinsicWidth == null ? 0 : intrinsicWidth.intValue();
-        int height = intrinsicHeight == null ? 0 : intrinsicHeight.intValue();
+        int width = intrinsicWidth == null ? 0 : intrinsicWidth;
+        int height = intrinsicHeight == null ? 0 : intrinsicHeight;
 
         return new Dimension(width, height);
     }
@@ -84,15 +89,15 @@ public abstract class FormField {
     }
 
     protected UserAgentCallback getUserAgentCallback() {
-        return _parentForm.getUserAgentCallback();
+        return parentForm.getUserAgentCallback();
     }
 
     protected FormFieldState getOriginalState() {
-        if (_originalState == null) {
-            _originalState = loadOriginalState();
+        if (originalState == null) {
+            originalState = loadOriginalState();
         }
 
-        return _originalState;
+        return originalState;
     }
     
     protected boolean hasAttribute(String attributeName) {
@@ -104,17 +109,17 @@ public abstract class FormField {
     }
     
     private void initialize() {
-        _component = create();
+        component = create();
         
-        if (_component != null) {
+        if (component != null) {
 
-            Dimension ps = _component.getPreferredSize();
+            Dimension preferredSize = component.getPreferredSize();
             if (intrinsicWidth == null)
-                intrinsicWidth = new Integer(ps.width);
+                intrinsicWidth = preferredSize.width;
             if (intrinsicHeight == null)
-                intrinsicHeight = new Integer(ps.height);
+                intrinsicHeight = preferredSize.height;
 
-            _component.setSize(getIntrinsicSize());
+            component.setSize(getIntrinsicSize());
         }
 
         applyOriginalState();
@@ -216,9 +221,19 @@ public abstract class FormField {
     protected static Integer getLengthValue(CalculatedStyle style, CSSName cssName) {
         FSDerivedValue widthValue = style.valueByName(cssName);
         if (widthValue instanceof LengthValue) {
-            return new Integer((int)widthValue.asFloat());
+            return (int) widthValue.asFloat();
         }
 
         return null;
+    }
+    
+    // todo
+    public boolean isValid(){
+        return true;
+    }
+    
+    // todo    
+    public boolean isRequired(){
+        return element.hasAttr("required");
     }
 }
