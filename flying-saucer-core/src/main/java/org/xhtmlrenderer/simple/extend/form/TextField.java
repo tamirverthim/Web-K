@@ -33,11 +33,10 @@ import org.xhtmlrenderer.simple.extend.XhtmlForm;
 import org.xhtmlrenderer.util.XHTMLUtils;
 
 import java.awt.*;
-import java.awt.event.*;
-import java.util.ArrayList;
+import java.util.Optional;
 import java.util.OptionalDouble;
 
-class TextField extends AbstractTextField {
+public class TextField extends AbstractTextField {
 
     private Popup validationErrorPopup;
     private final Color BACKGROUND_INVALID = new Color(0xff9999);
@@ -53,42 +52,12 @@ class TextField extends AbstractTextField {
 
         XHTMLUtils.getOptionalIntValue(getElement(), "maxlength").ifPresent(m ->
                 textfield.setDocument(new SizeLimitedDocument(m)));
-
-        if (getElement().attr("type").equals("number")) {
-            ((AbstractDocument) textfield.getDocument()).setDocumentFilter(new NumberDocumentFilter());
-        }
-
+        
         if (XHTMLUtils.isTrue(getElement(), "readonly")) {
             textfield.setEditable(false);
         }
         applyComponentStyle(textfield);
-
-        textfield.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                updated();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                updated();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                updated();
-            }
-
-            private void updated() {
-                hideValidationError();
-            }
-        });
-        textfield.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                hideValidationError();
-            }
-        });
+        
         return textfield;
     }
 
@@ -98,54 +67,7 @@ class TextField extends AbstractTextField {
         // Make sure we are showing the front of 'value' instead of the end.
         textfield.setCaretPosition(0);
     }
-
-    private void showValidationError(String message) {
-        val locationOnScreen = getComponent().getLocationOnScreen();
-        val popupContent = new JLabel(message);
-        popupContent.setOpaque(true);
-        popupContent.setBackground(BACKGROUND_INVALID);
-        popupContent.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                hideValidationError();
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                hideValidationError();
-            }
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                hideValidationError();
-            }
-        });
-        validationErrorPopup = PopupFactory.getSharedInstance().getPopup(
-                getComponent(), 
-                popupContent, 
-                (int)locationOnScreen.getX(), 
-                (int)locationOnScreen.getY()
-        );
-        val componentListener = new ComponentAdapter() {
-            @Override
-            public void componentHidden(ComponentEvent e) {
-                hideValidationError();
-                getComponent().removeComponentListener(this);
-            }
-        };
-        getComponent().addComponentListener(componentListener);
-        validationErrorPopup.show();
-    }
-
-    private void hideValidationError() {
-        if (validationErrorPopup != null) {
-            validationErrorPopup.hide();
-            validationErrorPopup = null;
-        }
-    }
-
-    ;
-
+    
     protected String[] getFieldValues() {
         JTextField textfield = (JTextField) getComponent();
         return new String[]{textfield.getText()};
@@ -172,42 +94,37 @@ class TextField extends AbstractTextField {
     }
 
     @Override
-    public boolean isValid() {
-        boolean result = true;
-        val validationErrors = new ArrayList<String>();
+    public Optional<String> validateInternal () {
         
-        if(isRequired() && getFieldValues()[0].length() == 0) {
-            result = false;
-            validationErrors.add("Field is required.");
+        if(getFieldValues()[0].length() == 0) {
+            if (isRequired()) {
+                return Optional.of("Field value is required");
+            } else {
+                return Optional.empty();
+            }
         }
         
         if (isNumeric()) {
             try {
                 val doubleValue = Double.parseDouble(getFieldValues()[0]);
-
+                
                 val min = getMin();
                 if (min.isPresent() && min.getAsDouble() > doubleValue) {
-                    result = false;
-                    validationErrors.add("Value must be greater or equal " + getAttribute("min"));
+                    return Optional.of("Value must be greater or equal " + getAttribute("min") + ".");
                 }
 
                 val max = getMax();
                 if (max.isPresent() && max.getAsDouble() > doubleValue) {
-                    result = false;
-                    validationErrors.add("Value must be lower or equal " + getAttribute("max"));
+                    return Optional.of("Value must be lower or equal " + getAttribute("max") + ".");
                 }
 
             } catch (NumberFormatException e) {
                 // multiple dots
-                validationErrors.add("Value must be numeric");
-                result = false;
+                return Optional.of("Value must be numeric.");
             }
         }
-        if (!result) {
-            showValidationError("<html>" + StringUtils.join(validationErrors, "<br>") + "</html>");
-        }
 
-        return result;
+        return Optional.empty();
     }
 
     public boolean isNumeric() {

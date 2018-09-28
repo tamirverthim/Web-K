@@ -30,7 +30,7 @@ import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.XhtmlForm;
 import org.xhtmlrenderer.util.XRLog;
 
-class ResetField extends AbstractButtonField {
+public class ResetField extends AbstractButtonField {
     public ResetField(org.xhtmlrenderer.dom.nodes.Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }

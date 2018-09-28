@@ -28,7 +28,7 @@ import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.XhtmlForm;
 import org.xhtmlrenderer.util.XHTMLUtils;
 
-class TextAreaField extends AbstractTextField {
+public class TextAreaField extends AbstractTextField {
 
     public TextAreaField(org.xhtmlrenderer.dom.nodes.Element e, XhtmlForm form, LayoutContext context, BlockBox box)
     {

@@ -27,6 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.xhtmlrenderer.dom.nodes.Element;
 import org.xhtmlrenderer.context.AWTFontResolver;
@@ -49,6 +52,7 @@ import org.xhtmlrenderer.render.FSFont;
 import org.xhtmlrenderer.render.FSFontMetrics;
 import org.xhtmlrenderer.render.RenderingContext;
 import org.xhtmlrenderer.simple.extend.FormSubmissionListener;
+import org.xhtmlrenderer.simple.extend.form.FormFieldFactory;
 import org.xhtmlrenderer.swing.Java2DTextRenderer;
 import org.xhtmlrenderer.swing.SwingReplacedElementFactory;
 import org.xhtmlrenderer.util.XRLog;
@@ -59,14 +63,15 @@ import org.xhtmlrenderer.util.XRLog;
  * @author empty
  */
 @Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class SharedContext {
-    private TextRenderer text_renderer;
-    private String media;
-    private UserAgentCallback uac;
+    TextRenderer text_renderer;
+    String media;
+    UserAgentCallback uac;
 
-    private boolean interactive = true;
+    boolean interactive = true;
 
-    private Map idMap;
+    Map idMap;
 
     /*
      * used to adjust fonts, ems, points, into screen resolution
@@ -74,31 +79,33 @@ public class SharedContext {
     /**
      * Description of the Field
      */
-    private float dpi;
+    float dpi;
     /**
      * Description of the Field
      */
-    private final static int MM__PER__CM = 10;
+    final static int MM__PER__CM = 10;
     /**
      * Description of the Field
      */
-    private final static float CM__PER__IN = 2.54F;
+    final static float CM__PER__IN = 2.54F;
     /**
      * dpi in a more usable way
      */
-    private float mm_per_dot;
+    float mm_per_dot;
 
-    private final static float DEFAULT_DPI = 72;
-    private boolean print;
+    final static float DEFAULT_DPI = 72;
+    boolean print;
 
-    private int dotsPerPixel = 1;
+    int dotsPerPixel = 1;
 
-    private Map<Element, CalculatedStyle> styleMap;
+    Map<Element, CalculatedStyle> styleMap;
 
-    private ReplacedElementFactory replacedElementFactory;
-    private Rectangle temp_canvas;
+    ReplacedElementFactory replacedElementFactory;
+    @Getter
+    FormFieldFactory formFieldFactory;
+    Rectangle temp_canvas;
     
-    private LineBreakingStrategy lineBreakingStrategy = new DefaultLineBreakingStrategy();
+    LineBreakingStrategy lineBreakingStrategy = new DefaultLineBreakingStrategy();
     
     public SharedContext() {
     }
@@ -109,6 +116,7 @@ public class SharedContext {
     public SharedContext(UserAgentCallback uac) {
         font_resolver = new AWTFontResolver();
         replacedElementFactory = new SwingReplacedElementFactory();
+        formFieldFactory = uac.createFormFieldFactory();
         setMedia("screen");
         this.uac = uac;
         setCss(new StyleReference(uac));
@@ -141,13 +149,11 @@ public class SharedContext {
     }
 
     public LayoutContext newLayoutContextInstance() {
-        LayoutContext c = new LayoutContext(this);
-        return c;
+        return new LayoutContext(this);
     }
 
     public RenderingContext newRenderingContextInstance() {
-        RenderingContext c = new RenderingContext(this);
-        return c;
+        return new RenderingContext(this);
     }
 
     /*
@@ -631,6 +637,8 @@ public class SharedContext {
 	public void setLineBreakingStrategy(LineBreakingStrategy lineBreakingStrategy) {
 		this.lineBreakingStrategy = lineBreakingStrategy;
 	}
+	
+	
 }
 
 /*

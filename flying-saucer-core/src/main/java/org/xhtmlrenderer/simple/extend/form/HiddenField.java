@@ -26,7 +26,7 @@ import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.XhtmlForm;
 
-class HiddenField extends InputField {
+public class HiddenField extends InputField {
     
     public HiddenField(org.xhtmlrenderer.dom.nodes.Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);

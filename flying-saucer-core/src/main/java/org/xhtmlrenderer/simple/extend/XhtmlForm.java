@@ -32,6 +32,7 @@ import javax.swing.JRadioButton;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import lombok.val;
 import org.xhtmlrenderer.dom.nodes.Element;
 import org.xhtmlrenderer.dom.nodes.TextNode;
 
@@ -41,6 +42,7 @@ import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.form.FormField;
 import org.xhtmlrenderer.simple.extend.form.DefaultFormFieldFactory;
 import org.xhtmlrenderer.simple.extend.form.FormFieldFactory;
+import org.xhtmlrenderer.simple.extend.form.SwingComponentFactory;
 import org.xhtmlrenderer.util.XRLog;
 
 /**
@@ -51,7 +53,6 @@ import org.xhtmlrenderer.util.XRLog;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class XhtmlForm {
-    public static FormFieldFactory fieldFactory = new DefaultFormFieldFactory();
     private static final String FS_DEFAULT_GROUP = "__fs_default_group_";
     private static int defaultGroupCount = 1;
 
@@ -62,10 +63,6 @@ public class XhtmlForm {
     Element parentFormElement;
     FormSubmissionListener formSubmissionListener;
 
-
-    public static void setFieldFactory(FormFieldFactory fieldFactory) {
-        XhtmlForm.fieldFactory = fieldFactory;
-    }
 
     public XhtmlForm(UserAgentCallback uac, Element e, FormSubmissionListener fsListener) {
         userAgentCallback = uac;
@@ -123,7 +120,7 @@ public class XhtmlForm {
                 return null;
             }
 
-            field = fieldFactory.create(this, context, box);
+            field = context.getSharedContext().getFormFieldFactory().create(this, context, box);
 
             if (field == null) {
                 XRLog.layout("Unknown field type: " + e.nodeName());
@@ -161,14 +158,15 @@ public class XhtmlForm {
         data.append(action).append("?");
         Iterator fields = componentCache.entrySet().iterator();
         boolean first = true;
-        boolean valid = true;
         while (fields.hasNext()) {
             Map.Entry entry = (Map.Entry) fields.next();
 
             FormField field = (FormField) entry.getValue();
-
-            if (!field.isValid()) {
-                valid = false;
+            val validationError = field.validate();
+            if (validationError.isPresent()) {
+                field.getComponent().requestFocus();
+                SwingComponentFactory.getInstance().showErrorDialog(validationError.get(), field.getComponent().getRootPane());
+                return;
             } else {
 
                 if (field.includeInSubmission(source)) {
@@ -186,7 +184,7 @@ public class XhtmlForm {
             }
         }
 
-        if (valid && formSubmissionListener != null) formSubmissionListener.submit(data.toString());
+        if (formSubmissionListener != null) formSubmissionListener.submit(data.toString());
     }
 
     public static String collectText(Element e) {

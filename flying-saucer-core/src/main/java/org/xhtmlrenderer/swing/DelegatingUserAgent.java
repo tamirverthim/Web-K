@@ -28,6 +28,8 @@ import org.xhtmlrenderer.extend.UserAgentCallback;
 import org.xhtmlrenderer.resource.CSSResource;
 import org.xhtmlrenderer.resource.ImageResource;
 import org.xhtmlrenderer.resource.XMLResource;
+import org.xhtmlrenderer.simple.extend.form.DefaultFormFieldFactory;
+import org.xhtmlrenderer.simple.extend.form.FormFieldFactory;
 import org.xhtmlrenderer.util.IOUtil;
 import org.xhtmlrenderer.util.StreamResource;
 
@@ -229,5 +231,10 @@ public class DelegatingUserAgent implements UserAgentCallback, DocumentListener 
     @Override
     public void clearCaches() {
         SVGCache.getSVGUniverse().clear();
+    }
+
+    @Override
+    public FormFieldFactory createFormFieldFactory() {
+        return new DefaultFormFieldFactory();
     }
 }

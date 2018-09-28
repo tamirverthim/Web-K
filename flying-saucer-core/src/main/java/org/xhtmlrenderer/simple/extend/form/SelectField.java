@@ -35,7 +35,7 @@ import org.xhtmlrenderer.simple.extend.XhtmlForm;
 import org.xhtmlrenderer.util.GeneralUtil;
 import org.xhtmlrenderer.util.XHTMLUtils;
 
-class SelectField extends FormField {
+public class SelectField extends FormField {
 
     public SelectField(org.xhtmlrenderer.dom.nodes.Element e, XhtmlForm form, LayoutContext context, BlockBox box)
     {

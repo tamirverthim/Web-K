@@ -39,7 +39,7 @@ import org.xhtmlrenderer.simple.extend.XhtmlForm;
 import org.xhtmlrenderer.swing.AWTFSImage;
 import org.xhtmlrenderer.util.XRLog;
 
-class ImageField extends InputField {
+public class ImageField extends InputField {
     public ImageField(org.xhtmlrenderer.dom.nodes.Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }

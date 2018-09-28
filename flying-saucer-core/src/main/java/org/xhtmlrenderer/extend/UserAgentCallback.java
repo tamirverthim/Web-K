@@ -22,6 +22,7 @@ package org.xhtmlrenderer.extend;
 import org.xhtmlrenderer.dom.nodes.Document;
 import org.xhtmlrenderer.resource.CSSResource;
 import org.xhtmlrenderer.resource.ImageResource;
+import org.xhtmlrenderer.simple.extend.form.FormFieldFactory;
 
 
 /**
@@ -113,5 +114,7 @@ public interface UserAgentCallback {
     String getScriptResource(String scriptUri);
     
     void clearCaches();
+    
+    FormFieldFactory createFormFieldFactory();
 }
 

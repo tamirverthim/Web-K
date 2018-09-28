@@ -30,7 +30,7 @@ import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.XhtmlForm;
 
-class ButtonField extends AbstractButtonField {
+public class ButtonField extends AbstractButtonField {
     public ButtonField(org.xhtmlrenderer.dom.nodes.Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }

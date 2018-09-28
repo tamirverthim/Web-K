@@ -2,6 +2,7 @@
 package org.xhtmlrenderer.simple.extend.form;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -12,7 +13,7 @@ import java.util.List;
 public class DefaultSwingComponentFactory extends SwingComponentFactory
 {
     @Override
-    public JTextField createTextField(FormField field)
+    public JTextField createTextField(TextField formTextField)
     {
         return new JTextField();
     }
@@ -41,8 +42,7 @@ public class DefaultSwingComponentFactory extends SwingComponentFactory
     @Override
     public JScrollPane createScrollPane(FormField field)
     {
-        JScrollPane scrollPane = new JScrollPane();
-        return scrollPane;
+        return new JScrollPane();
     }
 
     @Override
@@ -86,6 +86,7 @@ public class DefaultSwingComponentFactory extends SwingComponentFactory
     public FileInputComponent createFileInputComponent(FormField field)
     {
         return new FileInputComponent() {
+            
             @Override
             public String getFilePath() {
                 log.warn("getFilePath unimplemented");
@@ -96,7 +97,12 @@ public class DefaultSwingComponentFactory extends SwingComponentFactory
             public void setFilePath(String path) {
                 log.warn("setFilePath unimplemented");
             }
+            
         };
     }
 
+    @Override
+    public void showErrorDialog(String message, JComponent parent) {
+        JOptionPane.showMessageDialog(parent, message, "Error", JOptionPane.WARNING_MESSAGE);
+    }
 }

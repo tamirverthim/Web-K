@@ -50,6 +50,8 @@ import org.xhtmlrenderer.script.ScriptContext;
 import org.xhtmlrenderer.resource.CSSResource;
 import org.xhtmlrenderer.resource.ImageResource;
 import org.xhtmlrenderer.resource.XMLResource;
+import org.xhtmlrenderer.simple.extend.form.DefaultFormFieldFactory;
+import org.xhtmlrenderer.simple.extend.form.FormFieldFactory;
 import org.xhtmlrenderer.util.ImageUtil;
 import org.xhtmlrenderer.util.XRLog;
 
@@ -454,6 +456,11 @@ public class NaiveUserAgent implements UserAgentCallback, DocumentListener {
     public void onLayoutException(Throwable t) { /* ignore*/ }
 
     public void onRenderException(Throwable t) { /* ignore*/ }
+
+    @Override
+    public FormFieldFactory createFormFieldFactory() {
+        return new DefaultFormFieldFactory();
+    }
 }
 
 /*

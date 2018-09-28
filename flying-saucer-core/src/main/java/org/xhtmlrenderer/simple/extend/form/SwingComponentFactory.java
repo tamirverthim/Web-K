@@ -1,14 +1,7 @@
 package org.xhtmlrenderer.simple.extend.form;
 
 
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.*;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,7 +19,7 @@ public abstract class SwingComponentFactory
 		instance = Objects.requireNonNull(f);
 	}
 
-	public abstract JTextField createTextField(FormField field);
+	public abstract JTextField createTextField(TextField formTextField);
 
 	public abstract JTextArea createTextArea(FormField field, int rows, int cols);
 
@@ -43,4 +36,6 @@ public abstract class SwingComponentFactory
 	public abstract JRadioButton createRadioButton(FormField field);
 
 	public abstract FileInputComponent createFileInputComponent(FormField field);
+	
+	public abstract void showErrorDialog(String message, JComponent parent);
 }

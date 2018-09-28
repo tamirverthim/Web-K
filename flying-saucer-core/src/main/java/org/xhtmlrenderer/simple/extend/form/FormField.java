@@ -22,6 +22,8 @@ package org.xhtmlrenderer.simple.extend.form;
 import javax.swing.JComponent;
 
 import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.xhtmlrenderer.css.constants.CSSName;
 import org.xhtmlrenderer.css.parser.FSColor;
@@ -39,6 +41,8 @@ import org.xhtmlrenderer.simple.extend.XhtmlForm;
 import org.xhtmlrenderer.swing.AWTFSFont;
 
 import java.awt.*;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class FormField {
@@ -49,6 +53,9 @@ public abstract class FormField {
     JComponent component;
     LayoutContext context;
     BlockBox box;
+    @Getter
+    @Setter
+    Supplier<String> validationProvider;
     
     protected Integer intrinsicWidth;
     protected Integer intrinsicHeight;
@@ -226,13 +233,22 @@ public abstract class FormField {
 
         return null;
     }
-    
-    // todo
-    public boolean isValid(){
-        return true;
+
+
+    /**
+     * @return validation error
+     */
+    public final Optional<String> validate(){
+        if(validationProvider != null){
+            return Optional.of(validationProvider.get());
+        }
+        return validateInternal();
     }
     
-    // todo    
+    protected Optional<String> validateInternal(){
+        return Optional.empty();
+    }
+    
     public boolean isRequired(){
         return element.hasAttr("required");
     }
