@@ -114,7 +114,5 @@ public interface UserAgentCallback {
     String getScriptResource(String scriptUri);
     
     void clearCaches();
-    
-    FormFieldFactory createFormFieldFactory();
 }
 

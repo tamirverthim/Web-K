@@ -35,6 +35,8 @@ import org.xhtmlrenderer.util.XHTMLUtils;
 import java.awt.*;
 import java.util.Optional;
 import java.util.OptionalDouble;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class TextField extends AbstractTextField {
 
@@ -81,6 +83,19 @@ public class TextField extends AbstractTextField {
         return getDoubleAttribute("max");
     }
 
+    public Optional<Pattern> getPattern() {
+        try {
+            if (hasAttribute("pattern")) {
+                val pattern = Pattern.compile(getAttribute("pattern"));
+                return Optional.of(pattern);
+            } else {
+                return Optional.empty();
+            }
+        } catch (PatternSyntaxException ex) {
+            return Optional.empty();
+        }
+    }
+
     protected OptionalDouble getDoubleAttribute(String attribute) {
         if (hasAttribute(attribute)) {
             try {
@@ -96,11 +111,20 @@ public class TextField extends AbstractTextField {
     @Override
     public Optional<String> validateInternal () {
         
-        if(getFieldValues()[0].length() == 0) {
+        String textContent = getFieldValues()[0];
+        
+        if(textContent.length() == 0) {
             if (isRequired()) {
                 return Optional.of("Field value is required");
             } else {
                 return Optional.empty();
+            }
+        }
+        
+        if(getPattern().isPresent()){
+            val pattern = getPattern().get();
+            if(!pattern.matcher(textContent).matches()) {
+                return Optional.of(String.format("Field value must match pattern: %s.", pattern));
             }
         }
         

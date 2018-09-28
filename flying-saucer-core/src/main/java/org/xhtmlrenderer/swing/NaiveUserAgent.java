@@ -456,11 +456,6 @@ public class NaiveUserAgent implements UserAgentCallback, DocumentListener {
     public void onLayoutException(Throwable t) { /* ignore*/ }
 
     public void onRenderException(Throwable t) { /* ignore*/ }
-
-    @Override
-    public FormFieldFactory createFormFieldFactory() {
-        return new DefaultFormFieldFactory();
-    }
 }
 
 /*

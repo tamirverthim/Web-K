@@ -29,6 +29,7 @@ import java.util.Map;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.xhtmlrenderer.dom.nodes.Element;
@@ -52,6 +53,7 @@ import org.xhtmlrenderer.render.FSFont;
 import org.xhtmlrenderer.render.FSFontMetrics;
 import org.xhtmlrenderer.render.RenderingContext;
 import org.xhtmlrenderer.simple.extend.FormSubmissionListener;
+import org.xhtmlrenderer.simple.extend.form.DefaultFormFieldFactory;
 import org.xhtmlrenderer.simple.extend.form.FormFieldFactory;
 import org.xhtmlrenderer.swing.Java2DTextRenderer;
 import org.xhtmlrenderer.swing.SwingReplacedElementFactory;
@@ -101,7 +103,9 @@ public class SharedContext {
     Map<Element, CalculatedStyle> styleMap;
 
     ReplacedElementFactory replacedElementFactory;
-    @Getter
+    
+    @Getter 
+    @Setter
     FormFieldFactory formFieldFactory;
     Rectangle temp_canvas;
     
@@ -116,7 +120,7 @@ public class SharedContext {
     public SharedContext(UserAgentCallback uac) {
         font_resolver = new AWTFontResolver();
         replacedElementFactory = new SwingReplacedElementFactory();
-        formFieldFactory = uac.createFormFieldFactory();
+        formFieldFactory = new DefaultFormFieldFactory();
         setMedia("screen");
         this.uac = uac;
         setCss(new StyleReference(uac));

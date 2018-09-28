@@ -232,9 +232,4 @@ public class DelegatingUserAgent implements UserAgentCallback, DocumentListener 
     public void clearCaches() {
         SVGCache.getSVGUniverse().clear();
     }
-
-    @Override
-    public FormFieldFactory createFormFieldFactory() {
-        return new DefaultFormFieldFactory();
-    }
 }
