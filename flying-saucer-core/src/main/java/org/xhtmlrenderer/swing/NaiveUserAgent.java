@@ -37,7 +37,6 @@ import java.util.LinkedHashMap;
 import javax.imageio.ImageIO;
 
 import com.kitfox.svg.SVGCache;
-import com.kitfox.svg.SVGUniverse;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -50,8 +49,7 @@ import org.xhtmlrenderer.script.ScriptContext;
 import org.xhtmlrenderer.resource.CSSResource;
 import org.xhtmlrenderer.resource.ImageResource;
 import org.xhtmlrenderer.resource.XMLResource;
-import org.xhtmlrenderer.simple.extend.form.DefaultFormFieldFactory;
-import org.xhtmlrenderer.simple.extend.form.FormFieldFactory;
+import org.xhtmlrenderer.util.FontUtil;
 import org.xhtmlrenderer.util.ImageUtil;
 import org.xhtmlrenderer.util.XRLog;
 
