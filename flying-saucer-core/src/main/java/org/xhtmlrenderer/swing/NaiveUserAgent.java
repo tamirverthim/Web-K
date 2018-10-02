@@ -137,7 +137,11 @@ public class NaiveUserAgent implements UserAgentCallback, DocumentListener {
         java.io.InputStream is = null;
         String resolvedUri = resolveURI(uri);
         try {
-            is = openStream(resolvedUri);
+            if (FontUtil.isEmbeddedBase64Font(uri)) {
+                is = FontUtil.getEmbeddedBase64Data(uri);
+            } else {
+                is = openStream(resolvedUri);
+            }
         } catch (java.net.MalformedURLException e) {
             XRLog.exception("bad URL given: " + resolvedUri, e);
         } catch (java.io.FileNotFoundException e) {
