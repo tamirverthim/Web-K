@@ -115,7 +115,7 @@ public class TextField extends AbstractTextField {
         
         if(textContent.length() == 0) {
             if (isRequired()) {
-                return Optional.of("Field value is required");
+                return Optional.of("Value must be specified.");
             } else {
                 return Optional.empty();
             }
@@ -124,7 +124,7 @@ public class TextField extends AbstractTextField {
         if(getPattern().isPresent()){
             val pattern = getPattern().get();
             if(!pattern.matcher(textContent).matches()) {
-                return Optional.of(String.format("Field value must match pattern: %s.", pattern));
+                return Optional.of("The specified value is invalid.");
             }
         }
         
@@ -134,17 +134,17 @@ public class TextField extends AbstractTextField {
                 
                 val min = getMin();
                 if (min.isPresent() && min.getAsDouble() > doubleValue) {
-                    return Optional.of("Value must be greater or equal " + getAttribute("min") + ".");
+                    return Optional.of("The specified value must be equal to or greater than " + getAttribute("min") + ".");
                 }
 
                 val max = getMax();
                 if (max.isPresent() && max.getAsDouble() < doubleValue) {
-                    return Optional.of("Value must be lower or equal " + getAttribute("max") + ".");
+                    return Optional.of("The specified value must be equal to or less than " + getAttribute("max") + ".");
                 }
 
             } catch (NumberFormatException e) {
                 // multiple dots
-                return Optional.of("Value must be numeric.");
+                return Optional.of("The specified value must be numeric.");
             }
         }
 

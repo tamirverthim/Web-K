@@ -160,9 +160,9 @@ public abstract class FormField {
     public String[] getFormDataStrings() {
         // Fields MUST have at least a name attribute to get sent.  The attr
         // can be empty, or just white space, but it must be present
-//        if (!hasAttribute("name")) {
-//            return new String[] {};
-//        }
+        if (!hasAttribute("name")) {
+            return new String[] {};
+        }
 
         String name = getAttribute("name");
         String[] values = getFieldValues();
