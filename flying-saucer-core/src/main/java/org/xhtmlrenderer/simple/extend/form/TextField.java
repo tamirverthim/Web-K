@@ -138,7 +138,7 @@ public class TextField extends AbstractTextField {
                 }
 
                 val max = getMax();
-                if (max.isPresent() && max.getAsDouble() > doubleValue) {
+                if (max.isPresent() && max.getAsDouble() < doubleValue) {
                     return Optional.of("Value must be lower or equal " + getAttribute("max") + ".");
                 }
 

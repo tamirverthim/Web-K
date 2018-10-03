@@ -19,12 +19,10 @@
  */
 package org.xhtmlrenderer.simple.extend.form;
 
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.xhtmlrenderer.dom.nodes.Element;
 import org.xhtmlrenderer.dom.nodes.Node;
@@ -190,4 +188,11 @@ public class SelectField extends FormField {
         return XHTMLUtils.isTrue(getElement(), "multiple");
     }
 
+    @Override
+    protected Optional<String> validateInternal() {
+        if (shouldRenderAsList() && getFieldValues().length == 0){
+            return Optional.of("At least one option must be selected");
+        }
+        return Optional.empty();
+    }
 }
