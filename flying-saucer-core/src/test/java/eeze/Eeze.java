@@ -41,64 +41,24 @@ import org.xhtmlrenderer.util.XRLog;
 /**
  * Eeze is a mini-application to test the Flying Saucer renderer across a set of
  * XML/CSS files.
- *
- * @author Who?
  */
 public class Eeze {
-    /**
-     * Description of the Field
-     */
+    
     List testFiles;
-    /**
-     * Description of the Field
-     */
     JFrame eezeFrame;
-
-    /**
-     * Description of the Field
-     */
     File currentDisplayed;
-    /**
-     * Description of the Field
-     */
     Action growAction;
-    /**
-     * Description of the Field
-     */
     Action shrinkAction;
-    /**
-     * Description of the Field
-     */
     Action nextDemoAction;
-
     Action chooseDemoAction;
-
-    /**
-     * Description of the Field
-     */
     Action increase_font, reset_font, decrease_font, showHelp, showGrid, saveAsImg, overlayImage;
-
-    /**
-     * Description of the Field
-     */
+    
     private XHTMLPanel html;
-
     private FSScrollPane scroll;
-
     private JSplitPane split;
-
     private ImagePanel imagePanel;
-
     private boolean comparingWithImage;
-
-    /**
-     * Description of the Field
-     */
     private File directory;
-
-    /**
-     * Description of the Field
-     */
     private final static FileFilter HTML_FILE_FILTER =
             new FileFilter() {
                 public boolean accept(File f) {
@@ -110,10 +70,7 @@ public class Eeze {
             };
     private ReloadPageAction reloadPageAction;
     private ReloadFileListAction reloadFileList;
-
-    /**
-     * Constructor for the Eeze object
-     */
+    
     private Eeze() {
     }
 
@@ -172,12 +129,7 @@ public class Eeze {
             showUsageAndExit("Please specify a directory", -1);
         }
     }
-
-    /**
-     * Description of the Method
-     *
-     * @return Returns
-     */
+    
     private List buildFileList() {
         List fileList = null;
         try {
@@ -188,10 +140,7 @@ public class Eeze {
         }
         return fileList;
     }
-
-    /**
-     * Description of the Method
-     */
+    
     private void buildFrame() {
         try {
             eezeFrame = new JFrame("FS Eeze");
@@ -254,12 +203,7 @@ public class Eeze {
             ex.printStackTrace();
         }
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param file PARAM
-     */
+    
     private void switchPage(File file, boolean reload) {
         eezeFrame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         try {
@@ -284,10 +228,7 @@ public class Eeze {
             eezeFrame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         }
     }
-
-    /**
-     * Description of the Method
-     */
+    
     private void showHelpPage() {
         eezeFrame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         try {
@@ -300,42 +241,21 @@ public class Eeze {
             eezeFrame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         }
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param hdelta PARAM
-     * @param vdelta PARAM
-     */
+    
     private void resizeFrame(float hdelta, float vdelta) {
         Dimension d = eezeFrame.getSize();
         eezeFrame.setSize((int) (d.getWidth() * hdelta),
                 (int) (d.getHeight() * vdelta));
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param newPage PARAM
-     */
+    
     private void changeTitle(String newPage) {
         eezeFrame.setTitle("Eeze:  " + html.getDocumentTitle() + "  (" + newPage + ")");
     }
-
-    /**
-     * Description of the Method
-     *
-     * @return Returns
-     */
+    
     private URL eezeHelp() {
         return this.getClass().getClassLoader().getResource("eeze/eeze_help.html");
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param args PARAM
-     */
+    
     public static void main(String args[]) {
         try {
             if (args.length == 0) {
@@ -348,13 +268,7 @@ public class Eeze {
             ex.printStackTrace();
         }
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param error PARAM
-     * @param i
-     */
+    
     private static void showUsageAndExit(String error, int i) {
         StringBuffer sb = new StringBuffer();
 
@@ -375,20 +289,12 @@ public class Eeze {
         System.out.println(sb.toString());
         System.exit(-1);
     }
-
-    /**
-     * Description of the Class
-     *
-     * @author Who?
-     */
+    
     class ImagePanel extends JPanel {
         private static final long serialVersionUID = 1L;
 
         Image currentPageImg;
-
-        /**
-         * Constructor for the GridGlassPane object
-         */
+        
         public ImagePanel() {
             // intercept mouse and keyboard events and do nothing
             this.addMouseListener(new MouseAdapter() {
@@ -446,12 +352,7 @@ public class Eeze {
             }
             return img;
         }
-
-        /**
-         * Description of the Method
-         *
-         * @param g PARAM
-         */
+        
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             Graphics2D g2d = (Graphics2D) g;
@@ -475,35 +376,14 @@ public class Eeze {
             }
         }
     }
-
-    /**
-     * Description of the Class
-     *
-     * @author Who?
-     */
+    
     static class GridGlassPane extends JPanel {
         private static final long serialVersionUID = 1L;
-
-        /**
-         * Description of the Field
-         */
         private final Color mainUltraLightColor = new Color(128, 192, 255);
-        /**
-         * Description of the Field
-         */
         private final Color mainLightColor = new Color(0, 128, 255);
-        /**
-         * Description of the Field
-         */
         private final Color mainMidColor = new Color(0, 64, 196);
-        /**
-         * Description of the Field
-         */
         private final Color mainDarkColor = new Color(0, 0, 128);
-
-        /**
-         * Constructor for the GridGlassPane object
-         */
+        
         public GridGlassPane() {
             // intercept mouse and keyboard events and do nothing
             this.addMouseListener(new MouseAdapter() {
@@ -514,12 +394,7 @@ public class Eeze {
             });
             this.setOpaque(false);
         }
-
-        /**
-         * Description of the Method
-         *
-         * @param g PARAM
-         */
+        
         protected void paintComponent(Graphics g) {
             Graphics2D graphics = (Graphics2D) g;
             BufferedImage oddLine = createGradientLine(this.getWidth(), mainLightColor,
@@ -537,17 +412,7 @@ public class Eeze {
                 }
             }
         }
-
-
-        /**
-         * Description of the Method
-         *
-         * @param width      PARAM
-         * @param leftColor  PARAM
-         * @param rightColor PARAM
-         * @param opacity    PARAM
-         * @return Returns
-         */
+        
         public BufferedImage createGradientLine(int width, Color leftColor,
                                                 Color rightColor, double opacity) {
             BufferedImage image = new BufferedImage(width, 1,
@@ -572,20 +437,12 @@ public class Eeze {
 
     /**
      * Action to trigger frame to grow in size.
-     *
-     * @author Who?
      */
     class GrowAction extends AbstractAction {
         private static final long serialVersionUID = 1L;
-
-        /**
-         * Description of the Field
-         */
+        
         private float increment = 1.1F;
-
-        /**
-         * Constructor for the GrowAction object
-         */
+        
         public GrowAction() {
             super("Grow Page");
             putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_G));
@@ -594,8 +451,6 @@ public class Eeze {
 
         /**
          * Invoked when an action occurs.
-         *
-         * @param e PARAM
          */
         public void actionPerformed(ActionEvent e) {
             resizeFrame(increment, increment);
@@ -604,8 +459,6 @@ public class Eeze {
 
     /**
      * Action to show a grid over the current page
-     *
-     * @author Who?
      */
     class ShowGridAction extends AbstractAction {
         private static final long serialVersionUID = 1L;
@@ -613,10 +466,7 @@ public class Eeze {
         private boolean on;
         private Component originalGlassPane;
         private GridGlassPane gridGlassPane;
-
-        /**
-         * Constructor for the ShowGridAction object
-         */
+        
         public ShowGridAction() {
             super("Show Grid");
             putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_G));
@@ -626,8 +476,6 @@ public class Eeze {
 
         /**
          * Invoked when an action occurs.
-         *
-         * @param e PARAM
          */
         public void actionPerformed(ActionEvent e) {
             if (on) {
@@ -644,15 +492,10 @@ public class Eeze {
 
     /**
      * Action to show a grid over the current page
-     *
-     * @author Who?
      */
     class CompareImageAction extends AbstractAction {
         private static final long serialVersionUID = 1L;
-
-        /**
-         * Constructor for the ShowGridAction object
-         */
+        
         public CompareImageAction() {
             super("Compare to Reference Image");
             putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_C));
@@ -701,20 +544,12 @@ public class Eeze {
 
     /**
      * Action to trigger frame to shrink in size.
-     *
-     * @author Who?
      */
     class ShrinkAction extends AbstractAction {
         private static final long serialVersionUID = 1L;
-
-        /**
-         * Description of the Field
-         */
+        
         private float increment = 1 / 1.1F;
-
-        /**
-         * Constructor for the ShrinkAction object
-         */
+        
         public ShrinkAction() {
             super("Shrink Page");
             putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_S));
@@ -723,25 +558,15 @@ public class Eeze {
 
         /**
          * Invoked when an action occurs.
-         *
-         * @param e PARAM
          */
         public void actionPerformed(ActionEvent e) {
             resizeFrame(increment, increment);
         }
     }
-
-    /**
-     * Description of the Class
-     *
-     * @author Who?
-     */
+    
     class ShowHelpAction extends AbstractAction {
         private static final long serialVersionUID = 1L;
-
-        /**
-         * Constructor for the ShowHelpAction object
-         */
+        
         public ShowHelpAction() {
             super("Show Help Page");
             putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_H));
@@ -757,29 +582,16 @@ public class Eeze {
             showHelpPage();
         }
     }
-
-    /**
-     * Description of the Class
-     *
-     * @author Who?
-     */
+    
     class NextDemoAction extends AbstractAction {
         private static final long serialVersionUID = 1L;
-
-        /**
-         * Constructor for the ReloadPageAction object
-         */
+        
         public NextDemoAction() {
             super("Next Demo Page");
             putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_N));
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.ALT_MASK));
         }
-
-        /**
-         * Invoked when an action occurs.
-         *
-         * @param e PARAM
-         */
+        
         public void actionPerformed(ActionEvent e) {
             File nextPage = null;
             for (Iterator iter = testFiles.iterator(); iter.hasNext();) {
@@ -807,21 +619,13 @@ public class Eeze {
 
     class SaveAsImageAction extends AbstractAction {
         private static final long serialVersionUID = 1L;
-
-        /**
-         * Constructor for the SaveAsImageAction object
-         */
+        
         public SaveAsImageAction() {
             super("Save Page as PNG Image");
             putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_S));
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK));
         }
-
-        /**
-         * Invoked when an action occurs.
-         *
-         * @param e PARAM
-         */
+        
         public void actionPerformed(ActionEvent e) {
             try {
                 File file = currentDisplayed;
@@ -870,29 +674,16 @@ public class Eeze {
             }
         }
     }
-
-    /**
-     * Description of the Class
-     *
-     * @author Who?
-     */
+    
     class ReloadPageAction extends AbstractAction {
         private static final long serialVersionUID = 1L;
-
-        /**
-         * Constructor for the ReloadPageAction object
-         */
+        
         public ReloadPageAction() {
             super("Reload Page");
             putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_R));
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.ALT_MASK));
         }
-
-        /**
-         * Invoked when an action occurs.
-         *
-         * @param e PARAM
-         */
+        
         public void actionPerformed(ActionEvent e) {
             try {
                 switchPage(currentDisplayed, true);
@@ -901,29 +692,16 @@ public class Eeze {
             }
         }
     }
-
-    /**
-     * Description of the Class
-     *
-     * @author Who?
-     */
+    
     class ChooseDemoAction extends AbstractAction {
         private static final long serialVersionUID = 1L;
 
-        /**
-         * Constructor for the ReloadPageAction object
-         */
         public ChooseDemoAction() {
             super("Choose Demo Page");
             putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_C));
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.ALT_MASK));
         }
-
-        /**
-         * Invoked when an action occurs.
-         *
-         * @param e PARAM
-         */
+        
         public void actionPerformed(ActionEvent e) {
             File nextPage = (File) JOptionPane.showInputDialog(eezeFrame,
                     "Choose a demo file",
@@ -957,61 +735,25 @@ public class Eeze {
         }
     }
 
-    /**
-     * Description of the Class
-     *
-     * @author Who?
-     */
     class FontSizeAction extends AbstractAction {
         private static final long serialVersionUID = 1L;
-
-        /**
-         * Description of the Field
-         */
+        
         private int whichDirection;
-
-        /**
-         * Description of the Field
-         */
         final static int DECREMENT = 0;
-        /**
-         * Description of the Field
-         */
         final static int INCREMENT = 1;
-        /**
-         * Description of the Field
-         */
         final static int RESET = 2;
-
-        /**
-         * Constructor for the FontSizeAction object
-         *
-         * @param which PARAM
-         * @param ks    PARAM
-         */
+        
         public FontSizeAction(int which, KeyStroke ks) {
             super("FontSize");
             this.whichDirection = which;
             this.putValue(Action.ACCELERATOR_KEY, ks);
         }
-
-        /**
-         * Constructor for the FontSizeAction object
-         *
-         * @param scale PARAM
-         * @param which PARAM
-         * @param ks    PARAM
-         */
+        
         public FontSizeAction(float scale, int which, KeyStroke ks) {
             this(which, ks);
             html.setFontScalingFactor(scale);
         }
-
-        /**
-         * Description of the Method
-         *
-         * @param evt PARAM
-         */
+        
         public void actionPerformed(ActionEvent evt) {
             switch (whichDirection) {
                 case INCREMENT:

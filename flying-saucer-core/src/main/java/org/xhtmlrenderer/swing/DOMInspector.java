@@ -46,72 +46,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-/**
- * Description of the Class
- *
- * @author empty
- */
 public class DOMInspector extends JPanel {
     private static final long serialVersionUID = 1L;
 
     // PW
-    /**
-     * Description of the Field
-     */
     StyleReference styleReference;
-    /**
-     * Description of the Field
-     */
     SharedContext context;
-    /**
-     * Description of the Field
-     */
     ElementPropertiesPanel elementPropPanel;
-    /**
-     * Description of the Field
-     */
     DOMSelectionListener nodeSelectionListener;
-    /**
-     * Description of the Field
-     */
     JSplitPane splitPane;
     // PW
-
-    /**
-     * Description of the Field
-     */
+    
     org.xhtmlrenderer.dom.nodes.Document doc;
-    /**
-     * Description of the Field
-     */
     JButton close;
-    /**
-     * Description of the Field
-     */
     JTree tree;
-
-    /**
-     * Description of the Field
-     */
     JScrollPane scroll;
-
-    /**
-     * Constructor for the DOMInspector object
-     *
-     * @param doc PARAM
-     */
+    
     public DOMInspector(org.xhtmlrenderer.dom.nodes.Document doc) {
         this(doc, null, null);
     }
-
-    /**
-     * Constructor for the DOMInspector object
-     *
-     * @param doc     PARAM
-     * @param context PARAM
-     * @param sr      PARAM
-     */
+    
     public DOMInspector(org.xhtmlrenderer.dom.nodes.Document doc, SharedContext context, StyleReference sr) {
         super();
 
@@ -146,12 +100,7 @@ public class DOMInspector extends JPanel {
             }
         });
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param g PARAM
-     */
+    
     public void paintComponent(Graphics g) {
 
         super.paintComponent(g);
@@ -195,10 +144,7 @@ public class DOMInspector extends JPanel {
         }
         return getFrame(comp.getParent());
     }
-
-    /**
-     * Description of the Method
-     */
+    
     private void initForCurrentDocument() {
         // tree stuff
         TreeModel model = new DOMTreeModel(doc);
@@ -225,36 +171,12 @@ public class DOMInspector extends JPanel {
 
 //-{{{ ElementPropertiesPanel
 
-/**
- * Description of the Class
- *
- * @author empty
- */
 class ElementPropertiesPanel extends JPanel {
     private static final long serialVersionUID = 1L;
-
-    /**
-     * Description of the Field
-     */
-    //private SharedContext _context;
-    /**
-     * Description of the Field
-     */
     private StyleReference _sr;
-    /**
-     * Description of the Field
-     */
     private JTable _properties;
-    /**
-     * Description of the Field
-     */
     private TableModel _defaultTableModel;
-
-    /**
-     * Constructor for the ElementPropertiesPanel object
-     *
-     * @param sr PARAM
-     */
+    
     ElementPropertiesPanel(StyleReference sr) {
         super();
         //this._context = context;
@@ -283,14 +205,7 @@ class ElementPropertiesPanel extends JPanel {
             ex.printStackTrace();
         }
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param node PARAM
-     * @return Returns
-     * @throws Exception Throws
-     */
+    
     private TableModel tableModel(org.xhtmlrenderer.dom.nodes.Node node) {
         if (!(node instanceof Element)) {
             Toolkit.getDefaultToolkit().beep();
@@ -299,27 +214,13 @@ class ElementPropertiesPanel extends JPanel {
         Map props = _sr.getCascadedPropertiesMap((org.xhtmlrenderer.dom.nodes.Element) node);
         return new PropertiesTableModel(props);
     }
-
-    /**
-     * Description of the Class
-     *
-     * @author empty
-     */
+    
     static class PropertiesJTable extends JTable {
         private static final long serialVersionUID = 1L;
-
-        /**
-         * Description of the Field
-         */
+        
         Font propLabelFont;
-        /**
-         * Description of the Field
-         */
         Font defaultFont;
-
-        /**
-         * Constructor for the PropertiesJTable object
-         */
+        
         PropertiesJTable() {
             super();
             this.setColumnSelectionAllowed(false);
@@ -355,29 +256,16 @@ class ElementPropertiesPanel extends JPanel {
     }
 
     /**
-     * Description of the Class
-     *
      * @author Patrick Wright
      */
     static class PropertiesTableModel extends AbstractTableModel {
         private static final long serialVersionUID = 1L;
-
-        /**
-         * Description of the Field
-         */
+        
         //String _colNames[] = {"Property Name", "Text", "Value", "Important-Inherit"};
         String _colNames[] = {"Property Name", "Text", "Value"};
-
-        /**
-         * Description of the Field
-         */
+        
         Map _properties;
-
-        /**
-         * Constructor for the PropertiesTableModel object
-         *
-         * @param cssProperties PARAM
-         */
+        
         PropertiesTableModel(Map cssProperties) {
             _properties = cssProperties;
         }
@@ -462,42 +350,18 @@ class ElementPropertiesPanel extends JPanel {
 
 //-{{{ DOMSelectionListener
 
-/**
- * Description of the Class
- *
- * @author empty
- */
 class DOMSelectionListener implements TreeSelectionListener {
-
-    /**
-     * Description of the Field
-     */
     private JTree _tree;
-    /** Description of the Field */
     //private StyleReference _sr;
-    /**
-     * Description of the Field
-     */
     private ElementPropertiesPanel _elemPropPanel;
-
-    /**
-     * Constructor for the DOMSelectionListener object
-     *
-     * @param tree  PARAM
-     * @param panel PARAM
-     */
+    
     //DOMSelectionListener( JTree tree, StyleReference sr, ElementPropertiesPanel panel ) {
     DOMSelectionListener(JTree tree, ElementPropertiesPanel panel) {
         _tree = tree;
         //_sr = sr;
         _elemPropPanel = panel;
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param e PARAM
-     */
+    
     public void valueChanged(TreeSelectionEvent e) {
         org.xhtmlrenderer.dom.nodes.Node node = (org.xhtmlrenderer.dom.nodes.Node) _tree.getLastSelectedPathComponent();
 
@@ -511,38 +375,17 @@ class DOMSelectionListener implements TreeSelectionListener {
 
 //-{{{
 
-/**
- * Description of the Class
- *
- * @author empty
- */
 class DOMTreeModel implements TreeModel {
-
-    /**
-     * Description of the Field
-     */
+    
     org.xhtmlrenderer.dom.nodes.Document doc;
 
     /**
      * Our root for display
      */
     org.xhtmlrenderer.dom.nodes.Node root;
-
-    /**
-     * Description of the Field
-     */
     HashMap displayableNodes;
-
-    /**
-     * Description of the Field
-     */
     List listeners = new ArrayList();
-
-    /**
-     * Constructor for the DOMTreeModel object
-     *
-     * @param doc PARAM
-     */
+    
     public DOMTreeModel(org.xhtmlrenderer.dom.nodes.Document doc) {
         this.displayableNodes = new HashMap();
         this.doc = doc;
@@ -595,13 +438,6 @@ class DOMTreeModel implements TreeModel {
 
 
     //Messaged when the user has altered the value for the item identified by path to newValue.
-
-    /**
-     * Description of the Method
-     *
-     * @param path     PARAM
-     * @param newValue PARAM
-     */
     public void valueForPathChanged(TreePath path, Object newValue) {
 
         // no-op
@@ -733,11 +569,6 @@ class DOMTreeModel implements TreeModel {
 
 //-{{{ DOMTreeCellRenderer
 
-/**
- * Description of the Class
- *
- * @author empty
- */
 class DOMTreeCellRenderer extends DefaultTreeCellRenderer {
     private static final long serialVersionUID = 1L;
 
@@ -792,70 +623,4 @@ class DOMTreeCellRenderer extends DefaultTreeCellRenderer {
         return super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
     }
 }//}}}
-
-/*
- * $Id$
- *
- * $Log$
- * Revision 1.18  2009/05/09 14:15:14  pdoubleya
- * FindBugs: inner class could be static
- *
- * Revision 1.17  2007/05/20 23:25:33  peterbrant
- * Various code cleanups (e.g. remove unused imports)
- *
- * Patch from Sean Bright
- *
- * Revision 1.16  2005/10/27 00:09:08  tobega
- * Sorted out Context into RenderingContext and LayoutContext
- *
- * Revision 1.15  2005/06/22 23:48:46  tobega
- * Refactored the css package to allow a clean separation from the core.
- *
- * Revision 1.14  2005/06/16 07:24:53  tobega
- * Fixed background image bug.
- * Caching images in browser.
- * Enhanced LinkListener.
- * Some house-cleaning, playing with Idea's code inspection utility.
- *
- * Revision 1.13  2005/01/29 20:22:17  pdoubleya
- * Clean/reformat code. Removed commented blocks, checked copyright.
- *
- * Revision 1.12  2005/01/25 14:45:54  pdoubleya
- * Added support for IdentValue mapping on property declarations. On both CascadedStyle and PropertyDeclaration you can now request the value as an IdentValue, for object-object comparisons. Updated 99% of references that used to get the string value of PD to return the IdentValue instead; remaining cases are for pseudo-elements where the PD content needs to be manipulated as a String.
- *
- * Revision 1.11  2005/01/24 14:36:35  pdoubleya
- * Mass commit, includes: updated for changes to property declaration instantiation, and new use of DerivedValue. Removed any references to older XR... classes (e.g. XRProperty). Cleaned imports.
- *
- * Revision 1.10  2005/01/03 23:40:40  tobega
- * Cleaned out unnecessary styling/matching code. styling/matching is now called during boxing/rendering rather than as a separate stage.
- *
- * Revision 1.9  2004/12/29 10:39:35  tobega
- * Separated current state Context into LayoutContext and the rest into SharedContext.
- *
- * Revision 1.8  2004/12/12 04:18:58  tobega
- * Now the core compiles at least. Now we must make it work right. Table layout is one point that really needs to be looked over
- *
- * Revision 1.7  2004/12/11 18:18:12  tobega
- * Still broken, won't even compile at the moment. Working hard to fix it, though. Replace the StyleReference interface with our only concrete implementation, it was a bother changing in two places all the time.
- *
- * Revision 1.6  2004/11/07 01:17:56  tobega
- * DOMInspector now works with any StyleReference
- *
- * Revision 1.5  2004/10/28 13:46:33  joshy
- * removed dead code
- * moved code about specific elements to the layout factory (link and br)
- * fixed form rendering bug
- *
- * Issue number:
- * Obtained from:
- * Submitted by:
- * Reviewed by:
- *
- * Revision 1.4  2004/10/23 13:51:54  pdoubleya
- * Re-formatted using JavaStyle tool.
- * Cleaned imports to resolve wildcards except for common packages (java.io, java.util, etc).
- * Added CVS log comments at bottom.
- *
- *
- */
 

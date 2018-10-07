@@ -3,13 +3,15 @@ package org.xhtmlrenderer.browser.actions;
 import org.xhtmlrenderer.browser.ScaleFactor;
 import org.xhtmlrenderer.swing.ScalableXHTMLPanel;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.JOptionPane;
 import java.awt.event.ActionEvent;
 
 /**
  * Implements zooming of the browser panel.
  */
 public class ZoomAction extends AbstractAction {
+
     private static boolean needsWarning = true;
 
     private ScaleFactor scalingFactor;

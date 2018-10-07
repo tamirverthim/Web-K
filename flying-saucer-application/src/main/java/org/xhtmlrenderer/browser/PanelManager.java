@@ -24,10 +24,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.xhtmlrenderer.dom.nodes.Document;
 import org.xhtmlrenderer.resource.XMLResource;
 import org.xhtmlrenderer.swing.DelegatingUserAgent;
-import org.xhtmlrenderer.util.XRLog;
 import org.xhtmlrenderer.util.GeneralUtil;
+import org.xhtmlrenderer.util.XRLog;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -40,7 +43,6 @@ import java.util.logging.Level;
  * {@link #getBack()}, {@link #getForward()} and {@link #hasForward()} methods to navigate within the history.
  * As a NaiveUserAgent, the PanelManager is also a DocumentListener, but must be added to the source of document
  * events (like a RootPanel subclass).
- *  
  */
 @Slf4j
 public class PanelManager extends DelegatingUserAgent {
@@ -99,10 +101,10 @@ public class PanelManager extends DelegatingUserAgent {
             return ref.toExternalForm();
     }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public Document getXMLResource(String uri) {
+    /**
+     * {@inheritDoc}
+     */
+    public Document getXMLResource(String uri) {
         uri = resolveURI(uri);
         if (uri != null && uri.startsWith("file:")) {
             File file = null;
@@ -111,7 +113,7 @@ public class PanelManager extends DelegatingUserAgent {
 
                 XRLog.general("Encoded URI: " + sbURI);
                 var uriObject = new URI(sbURI.toString());
-                if(uriObject.getRawQuery() != null) {
+                if (uriObject.getRawQuery() != null) {
                     XRLog.load(Level.WARNING, "File URL contains query parameters, omitting.");
                     uriObject = new URI(sbURI.substring(0, sbURI.length() - uriObject.getRawQuery().length() - 1));
                 }
@@ -167,14 +169,13 @@ public class PanelManager extends DelegatingUserAgent {
         return xr;
     }
 
-	/**
-	 * Used internally when a document can't be loaded--returns XHTML as an XMLResource indicating that fact.
-	 *
-	 * @param uri The URI which could not be loaded.
-	 *
-	 * @return An XMLResource containing XML which about the failure.
-	 */
-	private Document getNotFoundDocument(String uri) {
+    /**
+     * Used internally when a document can't be loaded--returns XHTML as an XMLResource indicating that fact.
+     *
+     * @param uri The URI which could not be loaded.
+     * @return An XMLResource containing XML which about the failure.
+     */
+    private Document getNotFoundDocument(String uri) {
         Document xr;
 
         // URI may contain & symbols which can "break" the XHTML we're creating
@@ -185,28 +186,28 @@ public class PanelManager extends DelegatingUserAgent {
         return xr;
     }
 
-	/**
-	 * Returns true if the link has been visited by the user in this session. Visit tracking is not persisted.
-	 */
-	public boolean isVisited(String uri) {
+    /**
+     * Returns true if the link has been visited by the user in this session. Visit tracking is not persisted.
+     */
+    public boolean isVisited(String uri) {
         if (uri == null) return false;
         uri = resolveURI(uri);
         return history.contains(uri);
     }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setBaseURL (String url) {
-		String burl = super.getBaseURL();
-		if(burl !=null &&  burl.startsWith("error:")) burl = null;
-        
+    /**
+     * {@inheritDoc}
+     */
+    public void setBaseURL(String url) {
+        String burl = super.getBaseURL();
+        if (burl != null && burl.startsWith("error:")) burl = null;
+
         burl = resolveURI(url);
         if (burl == null) burl = "error:FileNotFound";
 
-		super.setBaseURL(burl);
+        super.setBaseURL(burl);
 
-		// setBaseURL is called by view when document is loaded
+        // setBaseURL is called by view when document is loaded
         if (index >= 0) {
             String historic = (String) history.get(index);
             if (historic.equals(burl)) return; //moved in history
@@ -217,29 +218,29 @@ public class PanelManager extends DelegatingUserAgent {
     }
 
 
-	/**
-	 * Returns the "next" URI in the history of visiting URIs. Advances the URI tracking (as if browser "forward" was
-	 * used).
-	 */
-	public String getForward() {
+    /**
+     * Returns the "next" URI in the history of visiting URIs. Advances the URI tracking (as if browser "forward" was
+     * used).
+     */
+    public String getForward() {
         index++;
         return (String) history.get(index);
     }
 
-	/**
-	 * Returns the "previous" URI in the history of visiting URIs. Moves the URI tracking back (as if browser "back" was
-	 * used).
-	 */
-	public String getBack() {
+    /**
+     * Returns the "previous" URI in the history of visiting URIs. Moves the URI tracking back (as if browser "back" was
+     * used).
+     */
+    public String getBack() {
         index--;
         return (String) history.get(index);
     }
 
-	/**
-	 * Returns true if there are visited URIs in history "after" the pointer the the current URI. This would be the case
-	 * if multiple URIs were visited and the getBack() had been called at least once.
-	 */
-	public boolean hasForward() {
+    /**
+     * Returns true if there are visited URIs in history "after" the pointer the the current URI. This would be the case
+     * if multiple URIs were visited and the getBack() had been called at least once.
+     */
+    public boolean hasForward() {
         if (index + 1 < history.size() && index >= 0) {
             return true;
         } else {
@@ -247,10 +248,10 @@ public class PanelManager extends DelegatingUserAgent {
         }
     }
 
-	/**
-	 * Returns true if there are visited URIs in history "before" the pointer the the current URI. This would be the case
-	 * if multiple URIs were visited and the current URI pointer was not at the begininnig of the visited URI list. 
-	 */
+    /**
+     * Returns true if there are visited URIs in history "before" the pointer the the current URI. This would be the case
+     * if multiple URIs were visited and the current URI pointer was not at the begininnig of the visited URI list.
+     */
     public boolean hasBack() {
         if (index > 0) {
             return true;

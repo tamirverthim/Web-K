@@ -12,7 +12,6 @@ package org.xhtmlrenderer.simple.extend;
  */
 public class URLUTF8Encoder {
 
-    /** Description of the Field */
     final static String[] hex = {
             "%00", "%01", "%02", "%03", "%04", "%05", "%06", "%07",
             "%08", "%09", "%0a", "%0b", "%0c", "%0d", "%0e", "%0f",
@@ -97,13 +96,7 @@ public class URLUTF8Encoder {
         }
         return sbuf.toString();
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param chars  PARAM
-     * @return       Returns
-     */
+    
     public static String encode( char[] chars ) {
         StringBuffer sbuf = new StringBuffer();
         int len = chars.length;
@@ -113,13 +106,7 @@ public class URLUTF8Encoder {
         }
         return sbuf.toString();
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param sbuf  PARAM
-     * @param ch    PARAM
-     */
+    
     private static void append( StringBuffer sbuf, int ch ) {
         if ( 'A' <= ch && ch <= 'Z' ) {// 'A'..'Z'
             sbuf.append( (char)ch );

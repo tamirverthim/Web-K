@@ -78,17 +78,8 @@ public class SharedContext {
     /*
      * used to adjust fonts, ems, points, into screen resolution
      */
-    /**
-     * Description of the Field
-     */
     float dpi;
-    /**
-     * Description of the Field
-     */
     final static int MM__PER__CM = 10;
-    /**
-     * Description of the Field
-     */
     final static float CM__PER__IN = 2.54F;
     /**
      * dpi in a more usable way
@@ -113,10 +104,7 @@ public class SharedContext {
     
     public SharedContext() {
     }
-
-    /**
-     * Constructor for the Context object
-     */
+    
     public SharedContext(UserAgentCallback uac) {
         font_resolver = new AWTFontResolver();
         replacedElementFactory = new SwingReplacedElementFactory();
@@ -132,11 +120,7 @@ public class SharedContext {
             setDPI(DEFAULT_DPI);
         }
     }
-
-
-    /**
-     * Constructor for the Context object
-     */
+    
     public SharedContext(UserAgentCallback uac, FontResolver fr, ReplacedElementFactory ref, TextRenderer tr, float dpi) {
         font_resolver = fr;
         replacedElementFactory = ref;
@@ -175,10 +159,7 @@ public class SharedContext {
     public void flushFonts() {
         font_resolver.flushCache();
     }
-
-    /**
-     * Description of the Field
-     */
+    
     protected FontResolver font_resolver;
 
     /**
@@ -187,75 +168,33 @@ public class SharedContext {
     public String getMedia() {
         return media;
     }
-
-    /**
-     * Description of the Field
-     */
+    
     protected StyleReference css;
-
-    /**
-     * Description of the Field
-     */
     protected boolean debug_draw_boxes;
-
-    /**
-     * Description of the Field
-     */
     protected boolean debug_draw_line_boxes;
     protected boolean debug_draw_inline_boxes;
     protected boolean debug_draw_font_metrics;
-
-    /**
-     * Description of the Field
-     */
     protected FSCanvas canvas;
 
     /*
      * selection management code
      */
-    /**
-     * Description of the Field
-     */
     protected Box selection_start, selection_end;
-
-    /**
-     * Description of the Field
-     */
     protected int selection_end_x, selection_start_x;
-
-
-    /**
-     * Description of the Field
-     */
     protected boolean in_selection = false;
 
     public TextRenderer getTextRenderer() {
         return text_renderer;
     }
-
-    /**
-     * Description of the Method
-     *
-     * @return Returns
-     */
+    
     public boolean debugDrawBoxes() {
         return debug_draw_boxes;
     }
-
-    /**
-     * Description of the Method
-     *
-     * @return Returns
-     */
+    
     public boolean debugDrawLineBoxes() {
         return debug_draw_line_boxes;
     }
-
-    /**
-     * Description of the Method
-     *
-     * @return Returns
-     */
+    
     public boolean debugDrawInlineBoxes() {
         return debug_draw_inline_boxes;
     }

@@ -1,45 +1,24 @@
 package org.xhtmlrenderer.browser;
 
-import java.awt.event.ActionEvent;
-import javax.swing.*;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-
+import org.xhtmlrenderer.dom.nodes.Element;
 import org.xhtmlrenderer.simple.XHTMLPanel;
+
+import javax.swing.AbstractAction;
+import java.awt.event.ActionEvent;
 
 /**
  * @author pwright
  */
 public class ViewSourceAction extends AbstractAction {
+
     private final XHTMLPanel panel;
 
-    public ViewSourceAction(XHTMLPanel panel) {
+    ViewSourceAction(XHTMLPanel panel) {
         this.panel = panel;
     }
 
     public void actionPerformed(ActionEvent evt) {
-        TransformerFactory tfactory = TransformerFactory.newInstance();
-        Transformer serializer;
-        try {
-            serializer = tfactory.newTransformer();
-            //Setup indenting to "pretty print"
-            serializer.setOutputProperty(OutputKeys.INDENT, "yes");
-            serializer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-
-            org.xhtmlrenderer.dom.nodes.Element document = panel.getRootBox().getElement();
-//            DOMSource source = new DOMSource(document);
-//            StreamResult output = new StreamResult(System.out);
-//            serializer.transform(
-//                    source,
-//                    output
-//            );
-        } catch (TransformerException ex) {
-            // this is fatal, just dump the stack and throw a runtime exception
-            ex.printStackTrace();
-
-            throw new RuntimeException(ex);
-        }
+        Element document = panel.getRootBox().getElement();
+        System.out.println(document.outerHtml());
     }
 }

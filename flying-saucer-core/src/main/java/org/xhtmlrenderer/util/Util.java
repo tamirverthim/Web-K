@@ -21,44 +21,41 @@ package org.xhtmlrenderer.util;
 
 import lombok.extern.slf4j.Slf4j;
 
-import javax.swing.*;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.text.DateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Vector;
 
-
-/**
- * Description of the Class
- *
- * @author empty
- */
 @Slf4j
 public final class Util {
-    /**
-     * Description of the Field
-     */
+    
     private PrintWriter pw = null;
-    /**
-     * Description of the Field
-     */
     private boolean on = true;
-
-    /**
-     * Constructor for the Util object
-     *
-     * @param writer PARAM
-     */
+    
     public Util(PrintWriter writer) {
         this.pw = writer;
     }
-
-    /**
-     * Constructor for the Util object
-     *
-     * @param out PARAM
-     */
+    
     public Util(OutputStream out) {
         this.pw = new PrintWriter(out);
     }
@@ -69,30 +66,15 @@ public final class Util {
     /*
      * ---- general print functions -----
      */
-    /**
-     * Description of the Method
-     *
-     * @param o PARAM
-     */
+
     public void print(Object o) {
         println(o, false);
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param o PARAM
-     */
+    
     public void println(Object o) {
         println(o, true);
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param o    PARAM
-     * @param line PARAM
-     */
+    
     public void println(Object o, boolean line) {
         if (o == null) {
             ps("null");
@@ -138,23 +120,14 @@ public final class Util {
     /*
      * --- data type specific print functions ----
      */
-    /**
-     * Description of the Method
-     *
-     * @param v PARAM
-     */
+
     public void print_vector(Vector v) {
         ps("vector: size=" + v.size());
         for (int i = 0; i < v.size(); i++) {
             ps(v.elementAt(i).toString());
         }
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param array PARAM
-     */
+    
     public void print_array(int[][] array) {
         print("array: size=" + array.length + " by " + array[0].length);
         for (int i = 0; i < array.length; i++) {
@@ -165,36 +138,21 @@ public final class Util {
             print("");
         }
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param array PARAM
-     */
+    
     public void print_array(Object[] array) {
         print("array: size=" + array.length);
         for (int i = 0; i < array.length; i++) {
             ps(" " + array[i].toString(), false);
         }
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param array PARAM
-     */
+    
     public void print_array(int[] array) {
         print("array: size=" + array.length);
         for (int i = 0; i < array.length; i++) {
             ps(" " + array[i], false);
         }
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param h PARAM
-     */
+    
     public void print_hashtable(Hashtable h) {
         print("hashtable size=" + h.size());
         Enumeration keys = h.keys();
@@ -204,81 +162,39 @@ public final class Util {
             print(h.get(key).toString());
         }
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param array PARAM
-     */
+    
     public void print_array(byte[] array) {
         print("byte array: size = " + array.length);
         for (int i = 0; i < array.length; i++) {
             print("" + array[i]);
         }
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param date PARAM
-     */
+    
     public void print_date(Date date) {
         DateFormat date_format = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG);
         print(date_format.format(date));
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param cal PARAM
-     */
+    
     public void print_calendar(Calendar cal) {
         print(cal.getTime());
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param sec PARAM
-     */
+    
     public void printUnixtime(long sec) {
         print(new Date(sec * 1000));
     }
-
-    /**
-     * Sets the on attribute of the Util object
-     *
-     * @param on The new on value
-     */
+    
     public void setOn(boolean on) {
         this.on = on;
     }
-
-
-    /**
-     * Sets the printWriter attribute of the Util object
-     *
-     * @param writer The new printWriter value
-     */
+    
     public void setPrintWriter(PrintWriter writer) {
         this.pw = writer;
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param s PARAM
-     */
+    
     private void ps(String s) {
         ps(s, true);
     }
 
-    /**
-     * Description of the Method
-     *
-     * @param s    PARAM
-     * @param line PARAM
-     */
     private void ps(String s, boolean line) {
         if (!on) {
             return;
@@ -306,27 +222,12 @@ public final class Util {
     /*
      * ----- other stuff ----
      */
-    /**
-     * Description of the Method
-     *
-     * @param filename PARAM
-     * @return Returns
-     * @throws FileNotFoundException Throws
-     * @throws IOException           Throws
-     */
     public static String file_to_string(String filename)
             throws FileNotFoundException, IOException {
         File file = new File(filename);
         return file_to_string(file);
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param text PARAM
-     * @param file PARAM
-     * @throws IOException Throws
-     */
+    
     public static void string_to_file(String text, File file)
             throws IOException {
         FileWriter writer = null;
@@ -348,23 +249,11 @@ public final class Util {
             }
         }
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param str PARAM
-     * @return Returns
-     */
+    
     public static int string_to_int(String str) {
         return Integer.parseInt(str);
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param e PARAM
-     * @return Returns
-     */
+    
     public static String stack_to_string(Exception e) {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
@@ -372,13 +261,7 @@ public final class Util {
         pw.close();
         return sw.toString();
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param e PARAM
-     * @return Returns
-     */
+    
     public static String stack_to_string(Throwable e) {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
@@ -386,14 +269,7 @@ public final class Util {
         pw.close();
         return sw.toString();
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param in PARAM
-     * @return Returns
-     * @throws IOException Throws
-     */
+    
     public static String inputstream_to_string(InputStream in)
             throws IOException {
         Reader reader = new InputStreamReader(in);
@@ -408,15 +284,7 @@ public final class Util {
         }
         return writer.toString();
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param file PARAM
-     * @return Returns
-     * @throws FileNotFoundException Throws
-     * @throws IOException           Throws
-     */
+    
     public static String file_to_string(File file)
             throws IOException {
         FileReader reader = null;
@@ -444,15 +312,7 @@ public final class Util {
         }
         return str;
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param source      PARAM
-     * @param target      PARAM
-     * @param replacement PARAM
-     * @return Returns
-     */
+    
     public static String replace(String source, String target, String replacement) {
         StringBuffer output = new StringBuffer();
         int n = 0;
@@ -470,13 +330,7 @@ public final class Util {
 //        output.append(source.substring(off+target.length()));
         return output.toString();
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param v PARAM
-     * @return Returns
-     */
+    
     public static String[] vector_to_strings(Vector v) {
         int len = v.size();
         String[] ret = new String[len];
@@ -485,13 +339,7 @@ public final class Util {
         }
         return ret;
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param l PARAM
-     * @return Returns
-     */
+    
     public static String[] list_to_strings(List l) {
         int len = l.size();
         String[] ret = new String[len];
@@ -500,23 +348,11 @@ public final class Util {
         }
         return ret;
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param array PARAM
-     * @return Returns
-     */
+    
     public static List toList(Object[] array) {
         return to_list(array);
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param array PARAM
-     * @return Returns
-     */
+    
     public static List to_list(Object[] array) {
         List list = new ArrayList();
         for (int i = 0; i < array.length; i++) {
@@ -536,12 +372,7 @@ public final class Util {
      * pr(cal.getTime());
      * }
      */
-
-    /**
-     * Description of the Method
-     *
-     * @param msec PARAM
-     */
+    
     public static void sleep(long msec) {
         try {
             Thread.sleep(msec);
@@ -549,24 +380,14 @@ public final class Util {
             log.debug(stack_to_string(ex));
         }
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param frame PARAM
-     */
+    
     public static void center(JFrame frame) {
         //p("centering");
         Dimension screen_size = Toolkit.getDefaultToolkit().getScreenSize();
         frame.setLocation((int) ((screen_size.getWidth() - frame.getWidth()) / 2),
                 (int) ((screen_size.getHeight() - frame.getHeight()) / 2));
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param frame PARAM
-     */
+    
     public static void center(JDialog frame) {
         //p("centering");
         Dimension screen_size = Toolkit.getDefaultToolkit().getScreenSize();
@@ -588,33 +409,4 @@ public final class Util {
         log.debug(stack_to_string(new Exception()));
     }
 }
-
-/*
- * $Id$
- *
- * $Log$
- * Revision 1.8  2009/05/09 15:16:43  pdoubleya
- * FindBugs: proper disposal of IO resources
- *
- * Revision 1.7  2009/04/25 11:19:07  pdoubleya
- * Add utility methods to compare strings, patch from Peter Fassev in issue #263.
- *
- * Revision 1.6  2007/05/20 23:25:31  peterbrant
- * Various code cleanups (e.g. remove unused imports)
- *
- * Patch from Sean Bright
- *
- * Revision 1.5  2005/01/29 20:18:38  pdoubleya
- * Clean/reformat code. Removed commented blocks, checked copyright.
- *
- * Revision 1.4  2004/12/12 03:33:05  tobega
- * Renamed x and u to avoid confusing IDE. But that got cvs in a twist. See if this does it
- *
- * Revision 1.3  2004/10/23 14:06:57  pdoubleya
- * Re-formatted using JavaStyle tool.
- * Cleaned imports to resolve wildcards except for common packages (java.io, java.util, etc).
- * Added CVS log comments at bottom.
- *
- *
- */
 

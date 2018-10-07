@@ -32,18 +32,4 @@ public class CSSResource extends AbstractResource {
     public CSSResource(InputStream stream) {
         super(stream);
     }
-
 }
-
-/*
- * $Id$
- *
- * $Log$
- * Revision 1.2  2005/06/25 19:27:47  tobega
- * UAC now supplies Resources
- *
- * Revision 1.1  2005/02/03 20:39:35  pdoubleya
- * Added to CVS.
- *
- *
- */

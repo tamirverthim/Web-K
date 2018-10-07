@@ -62,9 +62,7 @@ public class FSEntityResolver implements EntityResolver2 {
     private final Map entities = new HashMap();
 
     // fill the list of URLs
-    /**
-     * Constructor for the FSEntityResolver object
-     */
+
     private FSEntityResolver() {
         FSCatalog catalog = new FSCatalog();
         
@@ -85,15 +83,7 @@ public class FSEntityResolver implements EntityResolver2 {
 
         // The XHTML 1.1 element sets
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param publicID PARAM
-     * @param systemID PARAM
-     * @return Returns
-     * @throws SAXException Throws
-     */
+    
     public InputSource resolveEntity(String publicID,
                                      String systemID)
             throws SAXException {
@@ -179,38 +169,3 @@ public class FSEntityResolver implements EntityResolver2 {
         return new HashMap(entities);
     }
 }
-
-/*
- * $Id$
- *
- * $Log$
- * Revision 1.8  2008/12/01 20:37:24  pdoubleya
- * Expose copy of parsed entities from catalog.
- *
- * Revision 1.7  2007/05/21 22:13:02  peterbrant
- * Code cleanup (patch from Sean Bright)
- *
- * Revision 1.6  2007/05/20 23:25:34  peterbrant
- * Various code cleanups (e.g. remove unused imports)
- *
- * Patch from Sean Bright
- *
- * Revision 1.5  2005/06/13 06:50:15  tobega
- * Fixed a bug in table content resolution.
- * Various "tweaks" in other stuff.
- *
- * Revision 1.4  2005/03/28 14:24:48  pdoubleya
- * Changed to resolve all entities using simple catalog files.
- *
- * Revision 1.3  2005/03/27 18:36:26  pdoubleya
- * Added separate logging for entity resolution.
- *
- * Revision 1.2  2005/03/21 09:13:50  pdoubleya
- * Added XHTML 1.1 references (Kevin).
- *
- * Revision 1.1  2005/02/03 20:39:34  pdoubleya
- * Added to CVS.
- *
- *
- */
-

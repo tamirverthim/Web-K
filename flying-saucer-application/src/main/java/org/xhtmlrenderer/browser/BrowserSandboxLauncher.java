@@ -10,12 +10,12 @@ package org.xhtmlrenderer.browser;
  */
 public class BrowserSandboxLauncher {
     public static void main(String[] args) {
-        BrowserStartup bs = new BrowserStartup();
+        KBrowserApplication bs = new KBrowserApplication();
         bs.initUI();
 
-        bs.panel.url.setVisible(false);
-        bs.panel.goToPage.setVisible(false);
-        bs.actions.open_file.setEnabled(false);
+        bs.getPanel().getUrl().setVisible(false);
+        bs.getPanel().getGoToPage().setVisible(false);
+        bs.getActions().getOpenFile().setEnabled(false);
 
         bs.launch();
     }

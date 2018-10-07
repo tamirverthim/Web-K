@@ -42,10 +42,7 @@ import org.xhtmlrenderer.util.XRLog;
  * no presentational html attributes (see css 2.1 spec, 6.4.4)
  */
 public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
-
-    /**
-     * Description of the Field
-     */
+    
     final static String _namespace = "http://www.w3.org/1999/xhtml";
 
     private static StylesheetInfo _defaultStylesheet;

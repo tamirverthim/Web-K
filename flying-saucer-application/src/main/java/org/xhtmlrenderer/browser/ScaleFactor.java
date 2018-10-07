@@ -2,10 +2,10 @@ package org.xhtmlrenderer.browser;
 
 /**
  * Date: Jul 13, 2007
-* Time: 12:38:39 PM
-*
-* @author pwright
-*/
+ * Time: 12:38:39 PM
+ *
+ * @author pwright
+ */
 public class ScaleFactor {
     public static final double PAGE_WIDTH = -2.0d;
     public static final double PAGE_HEIGHT = -3.0d;

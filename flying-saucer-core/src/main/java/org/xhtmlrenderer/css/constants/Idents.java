@@ -78,56 +78,18 @@ public final class Idents {
      * Pattern instance for functions (not quite right [e.g no escapes], but good enough)
      */
     private final static Pattern FUNCTION_PATTERN = Pattern.compile("^-?[_a-z][_a-z0-9-]+\\(");
-
-    /**
-     * Description of the Field
-     */
+    
     private final static Map COLOR_MAP;
-    /**
-     * Description of the Field
-     */
     private final static Map FONT_SIZES;
-    /**
-     * Description of the Field
-     */
     private final static Map FONT_WEIGHTS;
-    /**
-     * Description of the Field
-     */
     private final static Map BORDER_WIDTHS;
-    /**
-     * Description of the Field
-     */
     private final static Map BACKGROUND_POSITIONS;
-    /**
-     * Description of the Field
-     */
     private final static List BACKGROUND_REPEATS;
-    /**
-     * Description of the Field
-     */
     private final static List BORDER_STYLES;
-    /**
-     * Description of the Field
-     */
     private final static List LIST_TYPES;
-    /**
-     * Description of the Field
-     */
     private final static List FONT_STYLES;
-
-    /**
-     * Description of the Field
-     */
     private final static List BACKGROUND_POSITIONS_IDENTS;
-
-    /**
-     * Description of the Method
-     *
-     * @param cssName PARAM
-     * @param ident   PARAM
-     * @return Returns
-     */
+    
     public static String convertIdent(CSSName cssName, String ident) {
         if (ident.equals("inherit")) {
             return ident;
@@ -175,44 +137,19 @@ public final class Idents {
         }
         return val;
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param val PARAM
-     * @return Returns
-     */
+    
     public static boolean looksLikeABorderStyle(String val) {
         return BORDER_STYLES.contains(val);
     }
-
-
-    /**
-     * Description of the Method
-     *
-     * @param val PARAM
-     * @return Returns
-     */
+    
     public static boolean looksLikeAColor(String val) {
         return COLOR_MAP.get(val) != null || (val.startsWith("#") && (val.length() == 7 || val.length() == 4)) || val.startsWith("rgb");
     }
-    
-    /**
-     * Description of the Method
-     *
-     * @param val PARAM
-     * @return Returns
-     */
+
     public static boolean looksLikeALength(String val) {
         return CSS_LENGTH_PATTERN.matcher(val).matches();
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param val PARAM
-     * @return Returns
-     */
+    
     public static boolean looksLikeAURI(String val) {
         return val.startsWith("url(") && val.endsWith(")");
     }
@@ -220,23 +157,11 @@ public final class Idents {
     public static boolean looksLikeAFunction(String value) {
         return FUNCTION_PATTERN.matcher(value).find();
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param val PARAM
-     * @return Returns
-     */
+    
     public static boolean looksLikeABGRepeat(String val) {
         return BACKGROUND_REPEATS.indexOf(val) >= 0;
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param val PARAM
-     * @return Returns
-     */
+    
     public static boolean looksLikeABGAttachment(String val) {
         return "scroll".equals(val) || "fixed".equals(val);
     }
@@ -534,63 +459,3 @@ public final class Idents {
         return content.equals("no-open-quote") || content.equals("no-close-quote");
     }
 }// end class
-
-/*
- * $Id$
- *
- * $Log$
- * Revision 1.17  2007/02/19 14:53:36  peterbrant
- * Integrate new CSS parser
- *
- * Revision 1.16  2007/02/07 16:33:36  peterbrant
- * Initial commit of rewritten table support and associated refactorings
- *
- * Revision 1.15  2006/07/28 10:08:55  pdoubleya
- * Additional work for support of parsing content and quotes.
- *
- * Revision 1.14  2006/04/03 00:01:59  peterbrant
- * Fix color: inherit
- *
- * Revision 1.13  2006/04/02 22:22:35  peterbrant
- * Add function interface for generated content / Implement page counters in terms of this, removing previous hack / Add custom page numbering functions
- *
- * Revision 1.12  2005/11/12 21:55:25  tobega
- * Inline enhancements: block box text decorations, correct line-height when it is a number, better first-letter handling
- *
- * Revision 1.11  2005/11/08 22:53:44  tobega
- * added getLineHeight method to CalculatedStyle and hacked in some list-item support
- *
- * Revision 1.10  2005/10/31 16:19:58  pdoubleya
- * Orange is a CSS 2.1 color; double-checked list of color constants.
- *
- * Revision 1.9  2005/10/20 20:48:03  pdoubleya
- * Updates for refactoring to style classes. CalculatedStyle now has lookup methods to cover all general cases, so propertyByName() is private, which means the backing classes for styling were able to be replaced.
- *
- * Revision 1.8  2005/07/04 00:12:11  tobega
- * text-align now works for table-cells too (is done in render, not in layout)
- *
- * Revision 1.7  2005/06/04 12:45:14  tobega
- * Added support for rgb-triples. Added fallback to default for non-css color idents.
- * Fixed some stuff with eeze.
- *
- * Revision 1.6  2005/04/07 16:21:34  pdoubleya
- * Formatting.
- *
- * Revision 1.5  2005/03/17 20:22:32  pdoubleya
- * Added orange (Kevin).
- *
- * Revision 1.4  2005/01/29 20:21:09  pdoubleya
- * Clean/reformat code. Removed commented blocks, checked copyright.
- *
- * Revision 1.3  2005/01/29 12:17:18  pdoubleya
- * .
- *
- * Revision 1.2  2005/01/24 19:01:07  pdoubleya
- * Mass checkin. Changed to use references to CSSName, which now has a Singleton instance for each property, everywhere property names were being used before. Removed commented code. Cascaded and Calculated style now store properties in arrays rather than maps, for optimization.
- *
- * Revision 1.1  2005/01/24 14:27:51  pdoubleya
- * Added to CVS.
- *
- *
- */
-
