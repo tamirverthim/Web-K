@@ -1,10 +1,10 @@
 package org.xhtmlrenderer.demo.svg;
 
-import org.xhtmlrenderer.extend.ReplacedElementFactory;
-import org.xhtmlrenderer.simple.FSScrollPane;
-import org.xhtmlrenderer.simple.XHTMLPanel;
-import org.xhtmlrenderer.swing.SwingReplacedElementFactory;
-import org.xhtmlrenderer.util.XRLog;
+import com.earnix.kbrowser.extend.ReplacedElementFactory;
+import com.earnix.kbrowser.simple.FSScrollPane;
+import com.earnix.kbrowser.simple.XHTMLPanel;
+import com.earnix.kbrowser.swing.SwingReplacedElementFactory;
+import com.earnix.kbrowser.util.XRLog;
 
 import javax.swing.*;
 import java.awt.*;

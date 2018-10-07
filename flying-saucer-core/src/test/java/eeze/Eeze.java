@@ -19,8 +19,42 @@
  */
 package eeze;
 
-import java.awt.*;
-import java.awt.event.*;
+import com.earnix.kbrowser.simple.FSScrollPane;
+import com.earnix.kbrowser.simple.Graphics2DRenderer;
+import com.earnix.kbrowser.simple.XHTMLPanel;
+import com.earnix.kbrowser.util.XRLog;
+
+import javax.imageio.ImageIO;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileFilter;
@@ -29,13 +63,6 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import javax.imageio.ImageIO;
-import javax.swing.*;
-
-import org.xhtmlrenderer.simple.FSScrollPane;
-import org.xhtmlrenderer.simple.Graphics2DRenderer;
-import org.xhtmlrenderer.simple.XHTMLPanel;
-import org.xhtmlrenderer.util.XRLog;
 
 
 /**
@@ -43,7 +70,7 @@ import org.xhtmlrenderer.util.XRLog;
  * XML/CSS files.
  */
 public class Eeze {
-    
+
     List testFiles;
     JFrame eezeFrame;
     File currentDisplayed;
@@ -52,7 +79,7 @@ public class Eeze {
     Action nextDemoAction;
     Action chooseDemoAction;
     Action increase_font, reset_font, decrease_font, showHelp, showGrid, saveAsImg, overlayImage;
-    
+
     private XHTMLPanel html;
     private FSScrollPane scroll;
     private JSplitPane split;
@@ -70,7 +97,7 @@ public class Eeze {
             };
     private ReloadPageAction reloadPageAction;
     private ReloadFileListAction reloadFileList;
-    
+
     private Eeze() {
     }
 
@@ -125,11 +152,11 @@ public class Eeze {
 
             this.directory = f;
         }
-        if ( this.directory == null ) {
+        if (this.directory == null) {
             showUsageAndExit("Please specify a directory", -1);
         }
     }
-    
+
     private List buildFileList() {
         List fileList = null;
         try {
@@ -140,7 +167,7 @@ public class Eeze {
         }
         return fileList;
     }
-    
+
     private void buildFrame() {
         try {
             eezeFrame = new JFrame("FS Eeze");
@@ -203,7 +230,7 @@ public class Eeze {
             ex.printStackTrace();
         }
     }
-    
+
     private void switchPage(File file, boolean reload) {
         eezeFrame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         try {
@@ -228,7 +255,7 @@ public class Eeze {
             eezeFrame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         }
     }
-    
+
     private void showHelpPage() {
         eezeFrame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         try {
@@ -241,21 +268,21 @@ public class Eeze {
             eezeFrame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         }
     }
-    
+
     private void resizeFrame(float hdelta, float vdelta) {
         Dimension d = eezeFrame.getSize();
         eezeFrame.setSize((int) (d.getWidth() * hdelta),
                 (int) (d.getHeight() * vdelta));
     }
-    
+
     private void changeTitle(String newPage) {
         eezeFrame.setTitle("Eeze:  " + html.getDocumentTitle() + "  (" + newPage + ")");
     }
-    
+
     private URL eezeHelp() {
         return this.getClass().getClassLoader().getResource("eeze/eeze_help.html");
     }
-    
+
     public static void main(String args[]) {
         try {
             if (args.length == 0) {
@@ -268,7 +295,7 @@ public class Eeze {
             ex.printStackTrace();
         }
     }
-    
+
     private static void showUsageAndExit(String error, int i) {
         StringBuffer sb = new StringBuffer();
 
@@ -289,12 +316,12 @@ public class Eeze {
         System.out.println(sb.toString());
         System.exit(-1);
     }
-    
+
     class ImagePanel extends JPanel {
         private static final long serialVersionUID = 1L;
 
         Image currentPageImg;
-        
+
         public ImagePanel() {
             // intercept mouse and keyboard events and do nothing
             this.addMouseListener(new MouseAdapter() {
@@ -312,9 +339,9 @@ public class Eeze {
         }
 
         public boolean imageWasLoaded() {
-            if ( Eeze.this.comparingWithImage == false )
+            if (Eeze.this.comparingWithImage == false)
                 return false;
-            
+
             currentPageImg = loadImageForPage();
             if (currentPageImg != null) {
                 this.setPreferredSize(new Dimension(currentPageImg.getWidth(null), currentPageImg.getHeight(null)));
@@ -352,7 +379,7 @@ public class Eeze {
             }
             return img;
         }
-        
+
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             Graphics2D g2d = (Graphics2D) g;
@@ -376,14 +403,14 @@ public class Eeze {
             }
         }
     }
-    
+
     static class GridGlassPane extends JPanel {
         private static final long serialVersionUID = 1L;
         private final Color mainUltraLightColor = new Color(128, 192, 255);
         private final Color mainLightColor = new Color(0, 128, 255);
         private final Color mainMidColor = new Color(0, 64, 196);
         private final Color mainDarkColor = new Color(0, 0, 128);
-        
+
         public GridGlassPane() {
             // intercept mouse and keyboard events and do nothing
             this.addMouseListener(new MouseAdapter() {
@@ -394,13 +421,13 @@ public class Eeze {
             });
             this.setOpaque(false);
         }
-        
+
         protected void paintComponent(Graphics g) {
             Graphics2D graphics = (Graphics2D) g;
             BufferedImage oddLine = createGradientLine(this.getWidth(), mainLightColor,
                     mainDarkColor, 0.6);
             BufferedImage evenLine = createGradientLine(this
-                    .getWidth(), mainUltraLightColor,
+                            .getWidth(), mainUltraLightColor,
                     mainMidColor, 0.6);
 
             int height = this.getHeight();
@@ -412,7 +439,7 @@ public class Eeze {
                 }
             }
         }
-        
+
         public BufferedImage createGradientLine(int width, Color leftColor,
                                                 Color rightColor, double opacity) {
             BufferedImage image = new BufferedImage(width, 1,
@@ -440,9 +467,9 @@ public class Eeze {
      */
     class GrowAction extends AbstractAction {
         private static final long serialVersionUID = 1L;
-        
+
         private float increment = 1.1F;
-        
+
         public GrowAction() {
             super("Grow Page");
             putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_G));
@@ -466,7 +493,7 @@ public class Eeze {
         private boolean on;
         private Component originalGlassPane;
         private GridGlassPane gridGlassPane;
-        
+
         public ShowGridAction() {
             super("Show Grid");
             putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_G));
@@ -495,7 +522,7 @@ public class Eeze {
      */
     class CompareImageAction extends AbstractAction {
         private static final long serialVersionUID = 1L;
-        
+
         public CompareImageAction() {
             super("Compare to Reference Image");
             putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_C));
@@ -547,9 +574,9 @@ public class Eeze {
      */
     class ShrinkAction extends AbstractAction {
         private static final long serialVersionUID = 1L;
-        
+
         private float increment = 1 / 1.1F;
-        
+
         public ShrinkAction() {
             super("Shrink Page");
             putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_S));
@@ -563,10 +590,10 @@ public class Eeze {
             resizeFrame(increment, increment);
         }
     }
-    
+
     class ShowHelpAction extends AbstractAction {
         private static final long serialVersionUID = 1L;
-        
+
         public ShowHelpAction() {
             super("Show Help Page");
             putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_H));
@@ -582,19 +609,19 @@ public class Eeze {
             showHelpPage();
         }
     }
-    
+
     class NextDemoAction extends AbstractAction {
         private static final long serialVersionUID = 1L;
-        
+
         public NextDemoAction() {
             super("Next Demo Page");
             putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_N));
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.ALT_MASK));
         }
-        
+
         public void actionPerformed(ActionEvent e) {
             File nextPage = null;
-            for (Iterator iter = testFiles.iterator(); iter.hasNext();) {
+            for (Iterator iter = testFiles.iterator(); iter.hasNext(); ) {
                 File f = (File) iter.next();
                 if (f.equals(currentDisplayed)) {
                     if (iter.hasNext()) {
@@ -619,13 +646,13 @@ public class Eeze {
 
     class SaveAsImageAction extends AbstractAction {
         private static final long serialVersionUID = 1L;
-        
+
         public SaveAsImageAction() {
             super("Save Page as PNG Image");
             putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_S));
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK));
         }
-        
+
         public void actionPerformed(ActionEvent e) {
             try {
                 File file = currentDisplayed;
@@ -674,16 +701,16 @@ public class Eeze {
             }
         }
     }
-    
+
     class ReloadPageAction extends AbstractAction {
         private static final long serialVersionUID = 1L;
-        
+
         public ReloadPageAction() {
             super("Reload Page");
             putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_R));
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.ALT_MASK));
         }
-        
+
         public void actionPerformed(ActionEvent e) {
             try {
                 switchPage(currentDisplayed, true);
@@ -692,7 +719,7 @@ public class Eeze {
             }
         }
     }
-    
+
     class ChooseDemoAction extends AbstractAction {
         private static final long serialVersionUID = 1L;
 
@@ -701,7 +728,7 @@ public class Eeze {
             putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_C));
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.ALT_MASK));
         }
-        
+
         public void actionPerformed(ActionEvent e) {
             File nextPage = (File) JOptionPane.showInputDialog(eezeFrame,
                     "Choose a demo file",
@@ -737,23 +764,23 @@ public class Eeze {
 
     class FontSizeAction extends AbstractAction {
         private static final long serialVersionUID = 1L;
-        
+
         private int whichDirection;
         final static int DECREMENT = 0;
         final static int INCREMENT = 1;
         final static int RESET = 2;
-        
+
         public FontSizeAction(int which, KeyStroke ks) {
             super("FontSize");
             this.whichDirection = which;
             this.putValue(Action.ACCELERATOR_KEY, ks);
         }
-        
+
         public FontSizeAction(float scale, int which, KeyStroke ks) {
             this(which, ks);
             html.setFontScalingFactor(scale);
         }
-        
+
         public void actionPerformed(ActionEvent evt) {
             switch (whichDirection) {
                 case INCREMENT:

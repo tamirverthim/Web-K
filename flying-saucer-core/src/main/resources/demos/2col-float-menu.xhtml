@@ -3,29 +3,29 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Flying Saucer: 2 Column Fluid Layout with Floating Menu</title>
-    <link rel="stylesheet" type="text/css" href="general.css" title="Style" media="screen" />
+    <link rel="stylesheet" type="text/css" href="general.css" title="Style" media="screen"/>
     <style type="text/css" media="screen">
         .link {
-          position: relative;
-          margin: 0px;
-          font-size: 12pt;
+            position: relative;
+            margin: 0px;
+            font-size: 12pt;
         }
 
         #pageintro {
-          height: 50px;
-          margin: 0px;
-          padding: 0px;
-          font-family: tahoma, verdana, arial;
-          font-size: 16pt;
-          background-color: white;
-          border: none;
-          border-bottom: 1px solid #c0c0ff;
+            height: 50px;
+            margin: 0px;
+            padding: 0px;
+            font-family: tahoma, verdana, arial;
+            font-size: 16pt;
+            background-color: white;
+            border: none;
+            border-bottom: 1px solid #c0c0ff;
         }
 
         #fslogo {
-          margin: 0px;
+            margin: 0px;
         }
-        
+
         html, body {
             padding: 0px;
             margin: 0px;
@@ -43,7 +43,7 @@
         #content {
             border-color: #564b47;
             border-style: solid;
-            border-width: 1px 0px 1px 0px; 
+            border-width: 1px 0px 1px 0px;
             background-color: #fff;
         }
 
@@ -77,16 +77,16 @@
         }
 
         p, h2, pre {
-          padding: 0px 10px 10px 10px;
+            padding: 0px 10px 10px 10px;
         }
 
         a {
-          margin-bottom: 10px;
+            margin-bottom: 10px;
         }
 
         #menu {
-          padding-left: 15px;
-          padding-bottom: 15px;
+            padding-left: 15px;
+            padding-bottom: 15px;
         }
 
         #menu p {
@@ -96,8 +96,8 @@
         }
 
         #menu br {
-          margin-bottom: 20px;
-          font-weight: bold;
+            margin-bottom: 20px;
+            font-weight: bold;
         }
 
     </style>
@@ -105,43 +105,52 @@
 
 <body>
 <div id="pageintro">
-  <div style="padding: 10px;">
-    <p class="link right-link" style="margin: 0px; float: right; font: 9pt normal sans-serif"><a href="demoNav:forward">Next Page</a></p>
-    <p class="link left-link" style="margin: 0px; font: 9pt normal sans-serif"><a href="demoNav:back">Previous Page</a></p>
-  </div>
+    <div style="padding: 10px;">
+        <p class="link right-link" style="margin: 0px; float: right; font: 9pt normal sans-serif"><a
+                href="demoNav:forward">Next Page</a></p>
+        <p class="link left-link" style="margin: 0px; font: 9pt normal sans-serif"><a href="demoNav:back">Previous
+            Page</a></p>
+    </div>
 </div>
 <div id="content">
     <div id="menu">
-    <h2 style="padding-left: 0px;">Pure CSS Layouts</h2>
-    <p><a href="#">
-        Menu Item 1
-    </a></p>
-    <p><a href="#">
-        Menu Item 2
-    </a></p>
-    <p><a href="#">
-        Menu Item 3
-    </a></p>
-    <p><a href="#">
-        Menu Item 4
-    </a></p>
-    <p><a href="#">
-        Menu Item 5
-    </a></p>
+        <h2 style="padding-left: 0px;">Pure CSS Layouts</h2>
+        <p><a href="#">
+            Menu Item 1
+        </a></p>
+        <p><a href="#">
+            Menu Item 2
+        </a></p>
+        <p><a href="#">
+            Menu Item 3
+        </a></p>
+        <p><a href="#">
+            Menu Item 4
+        </a></p>
+        <p><a href="#">
+            Menu Item 5
+        </a></p>
     </div>
 
     <p id="fslogo" style="padding-left: 10px;">Flying Saucer</p>
     <span id="pagebyline" style="padding-left: 10px;">
       Pure CSS Layouts
     </span>
-    <br />
-    <br />
+    <br/>
+    <br/>
 
-    <p><b style="font-size: large">2-column Pure-CSS Fluid Layout with Floating Menu:</b>This sample page, using ideas from <b>Intensiv Station Templates</b> at http://www.intensivstation.ch, shows how to create a "two-column" layout with a floating menu, using just CSS. This is a fluid layout with content and floating menu. The menu is a block within the content that is floated right and given a fixed width and some padding. The "menu" is also given a different color to highlight it.</p>
+    <p><b style="font-size: large">2-column Pure-CSS Fluid Layout with Floating Menu:</b>This sample page, using ideas
+        from <b>Intensiv Station Templates</b> at http://www.intensivstation.ch, shows how to create a "two-column"
+        layout with a floating menu, using just CSS. This is a fluid layout with content and floating menu. The menu is
+        a block within the content that is floated right and given a fixed width and some padding. The "menu" is also
+        given a different color to highlight it.</p>
 
-    <p>As you adjust the size of the containing panel (say, the browser), the page will "reflow" to accomodate. Note in this example the layout will break because of "pre" block below will not overflow nicely--but holds up pretty well till you reduce beyond the minimum necessary for the preserved formatting.</p>
+    <p>As you adjust the size of the containing panel (say, the browser), the page will "reflow" to accomodate. Note in
+        this example the layout will break because of "pre" block below will not overflow nicely--but holds up pretty
+        well till you reduce beyond the minimum necessary for the preserved formatting.</p>
 
-    <p>A limitation with this layout is that we can't force the "content" section to be a minimum size (like % of viewport). It will grow to the size necessary to contain the content you give it.</p>
+    <p>A limitation with this layout is that we can't force the "content" section to be a minimum size (like % of
+        viewport). It will grow to the size necessary to contain the content you give it.</p>
 
     <pre>
         body {

@@ -1,62 +1,62 @@
 <!-- ...................................................................... -->
-<!-- XHTML Inline Structural Module  ...................................... -->
-<!-- file: xhtml-inlstruct-1.mod
+        <!-- XHTML Inline Structural Module  ...................................... -->
+        <!-- file: xhtml-inlstruct-1.mod
+        
+             This is XHTML, a reformulation of HTML as a modular XML application.
+             Copyright 1998-2001 W3C (MIT, INRIA, Keio), All Rights Reserved.
+             Revision: $Id$ SMI
+        
+             This DTD module is identified by the PUBLIC and SYSTEM identifiers:
+        
+               PUBLIC "-//W3C//ELEMENTS XHTML Inline Structural 1.0//EN"
+               SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-inlstruct-1.mod"
+        
+             Revisions:
+             (none)
+             ....................................................................... -->
 
-     This is XHTML, a reformulation of HTML as a modular XML application.
-     Copyright 1998-2001 W3C (MIT, INRIA, Keio), All Rights Reserved.
-     Revision: $Id$ SMI
+        <!-- Inline Structural
+        
+                br, span
+        
+             This module declares the elements and their attributes
+             used to support inline-level structural markup.
+        -->
 
-     This DTD module is identified by the PUBLIC and SYSTEM identifiers:
+        <!-- br: forced line break ............................. -->
 
-       PUBLIC "-//W3C//ELEMENTS XHTML Inline Structural 1.0//EN"
-       SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-inlstruct-1.mod"
+        <!ENTITY % br.element  "INCLUDE" >
+        <![%br.element;[
 
-     Revisions:
-     (none)
-     ....................................................................... -->
+                <!ENTITY % br.content  "EMPTY" >
+                <!ENTITY % br.qname  "br" >
+                <!ELEMENT %br.qname;  %br.content; >
 
-<!-- Inline Structural
+                <!-- end of br.element -->]]>
 
-        br, span
+        <!ENTITY % br.attlist  "INCLUDE" >
+        <![%br.attlist;[
+                <!ATTLIST %br.qname;
+                        %Core.attrib;
+                        >
+                <!-- end of br.attlist -->]]>
 
-     This module declares the elements and their attributes
-     used to support inline-level structural markup.
--->
+        <!-- span: generic inline container .................... -->
 
-<!-- br: forced line break ............................. -->
+        <!ENTITY % span.element  "INCLUDE" >
+        <![%span.element;[
+                <!ENTITY % span.content
+                        "( #PCDATA | %Inline.mix; )*"
+                        >
+                <!ENTITY % span.qname  "span" >
+                <!ELEMENT %span.qname;  %span.content; >
+                <!-- end of span.element -->]]>
 
-<!ENTITY % br.element  "INCLUDE" >
-<![%br.element;[
+        <!ENTITY % span.attlist  "INCLUDE" >
+        <![%span.attlist;[
+                <!ATTLIST %span.qname;
+                        %Common.attrib;
+                        >
+                <!-- end of span.attlist -->]]>
 
-<!ENTITY % br.content  "EMPTY" >
-<!ENTITY % br.qname  "br" >
-<!ELEMENT %br.qname;  %br.content; >
-
-<!-- end of br.element -->]]>
-
-<!ENTITY % br.attlist  "INCLUDE" >
-<![%br.attlist;[
-<!ATTLIST %br.qname;
-      %Core.attrib;
->
-<!-- end of br.attlist -->]]>
-
-<!-- span: generic inline container .................... -->
-
-<!ENTITY % span.element  "INCLUDE" >
-<![%span.element;[
-<!ENTITY % span.content
-     "( #PCDATA | %Inline.mix; )*"
->
-<!ENTITY % span.qname  "span" >
-<!ELEMENT %span.qname;  %span.content; >
-<!-- end of span.element -->]]>
-
-<!ENTITY % span.attlist  "INCLUDE" >
-<![%span.attlist;[
-<!ATTLIST %span.qname;
-      %Common.attrib;
->
-<!-- end of span.attlist -->]]>
-
-<!-- end of xhtml-inlstruct-1.mod -->
+        <!-- end of xhtml-inlstruct-1.mod -->

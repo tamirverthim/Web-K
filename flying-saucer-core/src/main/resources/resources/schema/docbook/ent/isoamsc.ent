@@ -1,4 +1,3 @@
-
 <!--
      File isoamsc.ent produced by the XSL script entities.xsl
      from input data in unicode.xml.
@@ -20,32 +19,32 @@
 -->
 
 
-<!-- 
-     Version: $Id$
+        <!-- 
+             Version: $Id$
+        
+               Public identifier: ISO 8879:1986//ENTITIES Added Math Symbols: Delimiters//EN//XML
+               System identifier: http://www.w3.org/2003/entities/iso8879/isoamsc.ent
+        
+             The public identifier should always be used verbatim.
+             The system identifier may be changed to suit local requirements.
+        
+             Typical invocation:
+        
+               <!ENTITY % isoamsc PUBLIC
+                 "ISO 8879:1986//ENTITIES Added Math Symbols: Delimiters//EN//XML"
+                 "http://www.w3.org/2003/entities/iso8879/isoamsc.ent"
+               >
+               %isoamsc;
+        
+        -->
 
-       Public identifier: ISO 8879:1986//ENTITIES Added Math Symbols: Delimiters//EN//XML
-       System identifier: http://www.w3.org/2003/entities/iso8879/isoamsc.ent
-
-     The public identifier should always be used verbatim.
-     The system identifier may be changed to suit local requirements.
-
-     Typical invocation:
-
-       <!ENTITY % isoamsc PUBLIC
-         "ISO 8879:1986//ENTITIES Added Math Symbols: Delimiters//EN//XML"
-         "http://www.w3.org/2003/entities/iso8879/isoamsc.ent"
-       >
-       %isoamsc;
-
--->
-
-<!ENTITY dlcorn           "&#x0231E;" ><!--BOTTOM LEFT CORNER -->
-<!ENTITY drcorn           "&#x0231F;" ><!--BOTTOM RIGHT CORNER -->
-<!ENTITY lceil            "&#x02308;" ><!--LEFT CEILING -->
-<!ENTITY lfloor           "&#x0230A;" ><!--LEFT FLOOR -->
-<!ENTITY lpargt           "&#x029A0;" ><!--SPHERICAL ANGLE OPENING LEFT -->
-<!ENTITY rceil            "&#x02309;" ><!--RIGHT CEILING -->
-<!ENTITY rfloor           "&#x0230B;" ><!--RIGHT FLOOR -->
-<!ENTITY rpargt           "&#x02994;" ><!--RIGHT ARC GREATER-THAN BRACKET -->
-<!ENTITY ulcorn           "&#x0231C;" ><!--TOP LEFT CORNER -->
-<!ENTITY urcorn           "&#x0231D;" ><!--TOP RIGHT CORNER -->
+        <!ENTITY dlcorn           "&#x0231E;" ><!--BOTTOM LEFT CORNER -->
+        <!ENTITY drcorn           "&#x0231F;" ><!--BOTTOM RIGHT CORNER -->
+        <!ENTITY lceil            "&#x02308;" ><!--LEFT CEILING -->
+        <!ENTITY lfloor           "&#x0230A;" ><!--LEFT FLOOR -->
+        <!ENTITY lpargt           "&#x029A0;" ><!--SPHERICAL ANGLE OPENING LEFT -->
+        <!ENTITY rceil            "&#x02309;" ><!--RIGHT CEILING -->
+        <!ENTITY rfloor           "&#x0230B;" ><!--RIGHT FLOOR -->
+        <!ENTITY rpargt           "&#x02994;" ><!--RIGHT ARC GREATER-THAN BRACKET -->
+        <!ENTITY ulcorn           "&#x0231C;" ><!--TOP LEFT CORNER -->
+        <!ENTITY urcorn           "&#x0231D;" ><!--TOP RIGHT CORNER -->

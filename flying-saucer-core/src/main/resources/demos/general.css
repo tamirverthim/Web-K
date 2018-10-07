@@ -1,23 +1,26 @@
-    body {
+body {
     font-family: Tahoma, Verdana, Arial;
-    }
-    #fslogo {
+}
+
+#fslogo {
     border-style: none;
     text-decoration: none;
     font-family: Tahoma, Verdana, Arial;
     font-size: 20pt;
     font-weight: bold;
-    margin: 0pt;    
-    padding: 0pt;   
+    margin: 0pt;
+    padding: 0pt;
     margin-bottom: 10pt;
-    }
-    #fsimg {
+}
+
+#fsimg {
     float: left;
     border-style: none;
     text-decoration: none;
-    margin: 10pt 15pt 10pt 0pt;    
-    }
-    #pageintro {
+    margin: 10pt 15pt 10pt 0pt;
+}
+
+#pageintro {
     font-family: tahoma, verdana, arial;
     font-size: 16pt;
     background-color: white;
@@ -25,79 +28,79 @@
     padding: 10px;
 
     margin: 5px 5px 20px 5px;
-    }
+}
 
-    #features {
+#features {
     font-size: 0.9em;
-    }
+}
 
-
-    .left-link { 
-    width: 10em; 
+.left-link {
+    width: 10em;
     margin: 10px;
     padding: 5px;
     position: absolute;
     top: 0px;
-    left: 0px; 
-    }
+    left: 0px;
+}
 
-    .right-link {
-    width: 10em; 
+.right-link {
+    width: 10em;
     margin: 10px;
     padding: 5px;
 
     position: absolute;
     top: 0px;
-    right: 0px; 
+    right: 0px;
     text-align: right;
-		cursor: wait;
-	}
+    cursor: wait;
+}
 
-    .left-link, .right-link {
+.left-link, .right-link {
     background-color: white;
     border: 1px dotted blue;
     font-weight: normal;
-    }
+}
 
-    .left-link a, .right-link a {
+.left-link a, .right-link a {
     font-family: sans-serif;
     text-decoration: none;
     font-weight: normal;
     border: 0px solid red;
-    }
+}
 
-    .left-link a:hover, .right-link a:hover {
+.left-link a:hover, .right-link a:hover {
     border-color: black;
     text-decoration: underline;
-    }
+}
 
-    .left-link:hover, .right-link:hover {
-    }
+.left-link:hover, .right-link:hover {
+}
 
-    body {
+body {
     background: white;
     padding: 20px;
     border: 1px solid #c0c0ff;
     margin: 10px;
     margin-top: 50px;
-    }
+}
 
-    html {
-    background: #efefff; 
-    }
+html {
+    background: #efefff;
+}
 
-    #fslogo {
+#fslogo {
     border-style: none;
     text-decoration: none;
     font-family: tahoma, verdana, arial;
     font-size: 20pt;
     font-weight: bold;
-    margin: 0pt;    
-    padding: 0pt;   
+    margin: 0pt;
+    padding: 0pt;
     margin-bottom: 10pt;
-    }
-    #pagebyline {
+}
+
+#pagebyline {
     border-style: none;
     font-family: tahoma, verdana, arial;
     font-size: 16pt;
-    }
+}

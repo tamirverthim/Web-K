@@ -60,7 +60,7 @@ However, the simple use of <code>BasicPanel</code> and <code>XHTMLPanel</code> s
 <p>If you just want to show a webpage in your application then  start
   with the <code>XHTMLPanel</code>, in <code>org.xhtmlrenderer.swing</code>. Here is a simple example: </p>
 <pre>import javax.swing.*;
-import org.xhtmlrenderer.simple.XHTMLPanel;
+import com.earnix.kbrowser.simple.XHTMLPanel;
 public class test {
    public static void main(String[] args) throws Exception {
        
@@ -88,7 +88,7 @@ public class test {
 <p>The  <code>AboutBox </code>is a prefab component which displays an html document and automatically
   scrolls it. It is primarily useful for <em>Help-&gt;About</em> menu items and splash screens.</p>
 <p>Here is an example of adding an about box to a menu item's action listener. </p>
-<pre>import org.xhtmlrenderer.demo.aboutbox.AboutBox;
+<pre>import com.earnix.kbrowser.demo.aboutbox.AboutBox;
 ......
 JMenuItem about = new JMenuItem(&quot;About...&quot;);
 about.addActionListener(new ActionListener() {

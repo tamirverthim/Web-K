@@ -1,57 +1,57 @@
 <!-- ...................................................................... -->
-<!-- XHTML Block Structural Module  ....................................... -->
-<!-- file: xhtml-blkstruct-1.mod
+        <!-- XHTML Block Structural Module  ....................................... -->
+        <!-- file: xhtml-blkstruct-1.mod
+        
+             This is XHTML, a reformulation of HTML as a modular XML application.
+             Copyright 1998-2001 W3C (MIT, INRIA, Keio), All Rights Reserved.
+             Revision: $Id$ SMI
+        
+             This DTD module is identified by the PUBLIC and SYSTEM identifiers:
+        
+               PUBLIC "-//W3C//ELEMENTS XHTML Block Structural 1.0//EN"
+               SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-blkstruct-1.mod"
+        
+             Revisions:
+             (none)
+             ....................................................................... -->
 
-     This is XHTML, a reformulation of HTML as a modular XML application.
-     Copyright 1998-2001 W3C (MIT, INRIA, Keio), All Rights Reserved.
-     Revision: $Id$ SMI
+        <!-- Block Structural
+        
+                div, p
+        
+             This module declares the elements and their attributes used to
+             support block-level structural markup.
+        -->
 
-     This DTD module is identified by the PUBLIC and SYSTEM identifiers:
+        <!ENTITY % div.element  "INCLUDE" >
+        <![%div.element;[
+                <!ENTITY % div.content
+                        "( #PCDATA | %Flow.mix; )*"
+                        >
+                <!ENTITY % div.qname  "div" >
+                <!ELEMENT %div.qname;  %div.content; >
+                <!-- end of div.element -->]]>
 
-       PUBLIC "-//W3C//ELEMENTS XHTML Block Structural 1.0//EN"
-       SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-blkstruct-1.mod"
+        <!ENTITY % div.attlist  "INCLUDE" >
+        <![%div.attlist;[
+                <!ATTLIST %div.qname;
+                        %Common.attrib;
+                        >
+                <!-- end of div.attlist -->]]>
 
-     Revisions:
-     (none)
-     ....................................................................... -->
+        <!ENTITY % p.element  "INCLUDE" >
+        <![%p.element;[
+                <!ENTITY % p.content
+                        "( #PCDATA | %Inline.mix; )*" >
+                <!ENTITY % p.qname  "p" >
+                <!ELEMENT %p.qname;  %p.content; >
+                <!-- end of p.element -->]]>
 
-<!-- Block Structural
+        <!ENTITY % p.attlist  "INCLUDE" >
+        <![%p.attlist;[
+                <!ATTLIST %p.qname;
+                        %Common.attrib;
+                        >
+                <!-- end of p.attlist -->]]>
 
-        div, p
-
-     This module declares the elements and their attributes used to
-     support block-level structural markup.
--->
-
-<!ENTITY % div.element  "INCLUDE" >
-<![%div.element;[
-<!ENTITY % div.content
-     "( #PCDATA | %Flow.mix; )*"
->
-<!ENTITY % div.qname  "div" >
-<!ELEMENT %div.qname;  %div.content; >
-<!-- end of div.element -->]]>
-
-<!ENTITY % div.attlist  "INCLUDE" >
-<![%div.attlist;[
-<!ATTLIST %div.qname;
-      %Common.attrib;
->
-<!-- end of div.attlist -->]]>
-
-<!ENTITY % p.element  "INCLUDE" >
-<![%p.element;[
-<!ENTITY % p.content
-     "( #PCDATA | %Inline.mix; )*" >
-<!ENTITY % p.qname  "p" >
-<!ELEMENT %p.qname;  %p.content; >
-<!-- end of p.element -->]]>
-
-<!ENTITY % p.attlist  "INCLUDE" >
-<![%p.attlist;[
-<!ATTLIST %p.qname;
-      %Common.attrib;
->
-<!-- end of p.attlist -->]]>
-
-<!-- end of xhtml-blkstruct-1.mod -->
+        <!-- end of xhtml-blkstruct-1.mod -->

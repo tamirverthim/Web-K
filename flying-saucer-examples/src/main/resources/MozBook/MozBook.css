@@ -72,110 +72,81 @@ achieve a nicely styled look.
 
 */
 
-
-
 /* Top-level elements */
 
-book
-
-{
-  display: block;
-  /* Do not define global styling here.  See component level elements. */
+book {
+    display: block;
+    /* Do not define global styling here.  See component level elements. */
 }
-
-
-
 
 /* Top-level meta-information */
 
-abstract, para
-
-{
-  display: block;
-  margin-bottom: 12pt;
-  margin-top: 12pt;
+abstract, para {
+    display: block;
+    margin-bottom: 12pt;
+    margin-top: 12pt;
 }
 
-abstract:before
-
-{
-  content: "Abstract";
-  font-weight: bold;
-  margin-bottom: 12pt;
+abstract:before {
+    content: "Abstract";
+    font-weight: bold;
+    margin-bottom: 12pt;
 }
 
-book>title
-
-{
-  display: block;
-  font-size: 24pt;
-  font-family: sans-serif;
-  font-weight: bold;
-  margin: 48pt;
-  text-align: center;
+book > title {
+    display: block;
+    font-size: 24pt;
+    font-family: sans-serif;
+    font-weight: bold;
+    margin: 48pt;
+    text-align: center;
 }
 
-bookinfo
-
-{
-  background-color: lightsteelblue;
-  border: 1px solid black;
-  display: block;
-  font-family: sans-serif;
-  font-size: 12pt;
-  margin: 48pt;
-  padding: 3px;
+bookinfo {
+    background-color: lightsteelblue;
+    border: 1px solid black;
+    display: block;
+    font-family: sans-serif;
+    font-size: 12pt;
+    margin: 48pt;
+    padding: 3px;
 }
 
-author, address, revision
-
-{
-  display: block;
+author, address, revision {
+    display: block;
 }
 
-author:before
-
-{
-  content: "Author";
-  display: block;
-  font-weight: bold;
-  margin-bottom: 12pt;
+author:before {
+    content: "Author";
+    display: block;
+    font-weight: bold;
+    margin-bottom: 12pt;
 }
 
-revhistory
-
-{
-  display: block;
-  margin-bottom: 12pt;
-  margin-top: 12pt;
+revhistory {
+    display: block;
+    margin-bottom: 12pt;
+    margin-top: 12pt;
 }
 
-revhistory:before
-
-{
-  content: "Revision History";
-  display: block;
-  font-weight: bold;
-  margin-bottom: 12pt;
+revhistory:before {
+    content: "Revision History";
+    display: block;
+    font-weight: bold;
+    margin-bottom: 12pt;
 }
 
-revremark
-
-{
-  display: block;
-  margin-left: 24pt;
+revremark {
+    display: block;
+    margin-left: 24pt;
 }
-
-
 
 /* Divisions */
 
 part, reference {
-  display: block;
-  /* Do not define global styling here.  See component level elements */
+    display: block;
+    /* Do not define global styling here.  See component level elements */
 }
-
-
 
 /* Components - the chapters and chapter-like elements
 
@@ -186,194 +157,147 @@ part, reference {
 
 */
 
-appendix, article, bibliography, chapter, glossary, preface
-
-{
-  display: block;
-  font-family: sans-serif;
-  font-size: 12pt;
-  margin: 48pt;
+appendix, article, bibliography, chapter, glossary, preface {
+    display: block;
+    font-family: sans-serif;
+    font-size: 12pt;
+    margin: 48pt;
 }
 
-
-appendix>title,article>title, bibliography>title, chapter>title, glossary>title, preface>title
-
-{
-  display: block;
-  font-size: 24pt;
-  font-weight: bold;
-  margin-bottom: 24pt;
-  text-align: center;
+appendix > title, article > title, bibliography > title, chapter > title, glossary > title, preface > title {
+    display: block;
+    font-size: 24pt;
+    font-weight: bold;
+    margin-bottom: 24pt;
+    text-align: center;
 }
-
-
 
 /* Sections */
 
-sect1, sect2, sect3, sect4, sect5, section
-
-{
-  display: block;
+sect1, sect2, sect3, sect4, sect5, section {
+    display: block;
 }
 
-
-sect1>title
-
-{
-  display: block;
-  font-size: 24pt;
-  margin-bottom: 12pt;
-  padding-top: 24pt;
+sect1 > title {
+    display: block;
+    font-size: 24pt;
+    margin-bottom: 12pt;
+    padding-top: 24pt;
 }
 
-sect2>title
-
-{
-  display: block;
-  font-size: 20pt;
-  margin-bottom: 12pt;
-  padding-top: 24pt;
+sect2 > title {
+    display: block;
+    font-size: 20pt;
+    margin-bottom: 12pt;
+    padding-top: 24pt;
 }
 
-sect3>title
-
-{
-  display: block;
-  font-size: 16pt;
-  margin-bottom: 12pt;
-  padding-top: 24pt;
+sect3 > title {
+    display: block;
+    font-size: 16pt;
+    margin-bottom: 12pt;
+    padding-top: 24pt;
 }
 
-sect4>title
-
-{
-  display: block;
-  font-size: 14pt;
-  margin-bottom: 12pt;
-  padding-top: 24pt;
+sect4 > title {
+    display: block;
+    font-size: 14pt;
+    margin-bottom: 12pt;
+    padding-top: 24pt;
 }
 
-sect5>title
-
-{
-  display: block;
-  font-size: 12pt;
-  margin-bottom: 12pt;
-  padding-top: 24pt;
+sect5 > title {
+    display: block;
+    font-size: 12pt;
+    margin-bottom: 12pt;
+    padding-top: 24pt;
 }
-
-
-
 
 /* Block elements */
 
 /* Paragraphs and paragraph like elements */
 
-blockquote
-
-{
-  display: block;
-  margin-left: 24pt;
-  margin-right: 24pt;
+blockquote {
+    display: block;
+    margin-left: 24pt;
+    margin-right: 24pt;
 }
 
-note
-
-{
-  border: 1px solid black;
-  display: block;
-  margin-bottom: 12pt;
-  margin-left: 24pt;
-  margin-right: 24pt;
-  padding: 6pt;
+note {
+    border: 1px solid black;
+    display: block;
+    margin-bottom: 12pt;
+    margin-left: 24pt;
+    margin-right: 24pt;
+    padding: 6pt;
 }
 
-note:before
-
-{
-  content: "Note: ";
-  font-weight: bold;
+note:before {
+    content: "Note: ";
+    font-weight: bold;
 }
 
-para
-
-{
-  display: block;
-  margin-bottom: 12pt;
-  margin-top: 12pt;
+para {
+    display: block;
+    margin-bottom: 12pt;
+    margin-top: 12pt;
 }
 
 /* Lists */
 
-listitem
-
-{
-  display: list-item;
-  margin-left: 24pt;
+listitem {
+    display: list-item;
+    margin-left: 24pt;
 }
 
-itemizedlist
-
-{
-  list-style: disc outside none;
+itemizedlist {
+    list-style: disc outside none;
 }
 
-orderedlist
-
-{
-  /* Unfortunately this is a bulleted list rather than numbered
-     because of CSS2 counters not being fully implemented in Mozilla */
-  list-style: disc outside none;
+orderedlist {
+    /* Unfortunately this is a bulleted list rather than numbered
+       because of CSS2 counters not being fully implemented in Mozilla */
+    list-style: disc outside none;
 }
 
 /* Pre-formatted block elements */
 
-programlisting, screen
-
-{
-  background-color: lightgrey;
-  display: block;
-  font-family: monospace;
-  font-size: 10pt;
-  margin-left: 24pt;
-  margin-bottom: 12pt;
-  margin-top: 12pt;
-  padding: 3pt;
-  white-space: pre;
+programlisting, screen {
+    background-color: lightgrey;
+    display: block;
+    font-family: monospace;
+    font-size: 10pt;
+    margin-left: 24pt;
+    margin-bottom: 12pt;
+    margin-top: 12pt;
+    padding: 3pt;
+    white-space: pre;
 }
-
-
 
 /* Inline elements */
 
-command
-
-{
-  font-family: monospace;
-  font-size: 10pt;
-  font-weight: bold;
+command {
+    font-family: monospace;
+    font-size: 10pt;
+    font-weight: bold;
 }
 
-emphasis
-
-{
-  font-weight: bold;
+emphasis {
+    font-weight: bold;
 
 }
 
-filename
-
-{
-  font-family: monospace;
-  font-size: 10pt;
+filename {
+    font-family: monospace;
+    font-size: 10pt;
 }
 
 ulink:after
 
-/* Links don't actually work, so the url is printed in brackets. */
+    /* Links don't actually work, so the url is printed in brackets. */
 
 {
-  content: " [" attr(url) "]";
-  font-size: 10pt;
+    content: " [" attr(url) "]";
+    font-size: 10pt;
 }
 

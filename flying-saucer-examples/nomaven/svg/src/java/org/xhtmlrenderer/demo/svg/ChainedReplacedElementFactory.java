@@ -20,18 +20,18 @@
  */
 package org.xhtmlrenderer.demo.svg;
 
-import org.xhtmlrenderer.extend.ReplacedElementFactory;
-import org.xhtmlrenderer.extend.ReplacedElement;
-import org.xhtmlrenderer.extend.UserAgentCallback;
-import org.xhtmlrenderer.layout.LayoutContext;
-import org.xhtmlrenderer.render.BlockBox;
+import com.earnix.kbrowser.extend.ReplacedElementFactory;
+import com.earnix.kbrowser.extend.ReplacedElement;
+import com.earnix.kbrowser.extend.UserAgentCallback;
+import com.earnix.kbrowser.layout.LayoutContext;
+import com.earnix.kbrowser.render.BlockBox;
 
 import org.w3c.dom.Element;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
-import org.xhtmlrenderer.simple.extend.FormSubmissionListener;
+import com.earnix.kbrowser.simple.extend.FormSubmissionListener;
 
 /**
  * 

@@ -1,114 +1,114 @@
 <!-- ...................................................................... -->
-<!-- XHTML Notations Module  .............................................. -->
-<!-- file: xhtml-notations-1.mod
+        <!-- XHTML Notations Module  .............................................. -->
+        <!-- file: xhtml-notations-1.mod
+        
+             This is XHTML, a reformulation of HTML as a modular XML application.
+             Copyright 1998-2001 W3C (MIT, INRIA, Keio), All Rights Reserved.
+             Revision: $Id$
+        
+             This DTD module is identified by the PUBLIC and SYSTEM identifiers:
+        
+               PUBLIC "-//W3C//NOTATIONS XHTML Notations 1.0//EN"
+               SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-notations-1.mod"
+        
+             Revisions:
+             (none)
+             ....................................................................... -->
 
-     This is XHTML, a reformulation of HTML as a modular XML application.
-     Copyright 1998-2001 W3C (MIT, INRIA, Keio), All Rights Reserved.
-     Revision: $Id$
+        <!-- Notations
+        
+             defines the following notations, many of these imported from
+             other specifications and standards. When an existing FPI is
+             known, it is incorporated here.
+        -->
 
-     This DTD module is identified by the PUBLIC and SYSTEM identifiers:
+        <!-- XML Notations ..................................... -->
+        <!-- SGML and XML Notations ............................ -->
 
-       PUBLIC "-//W3C//NOTATIONS XHTML Notations 1.0//EN"
-       SYSTEM "http://www.w3.org/TR/xhtml-modularization/DTD/xhtml-notations-1.mod"
+        <!-- W3C XML 1.0 Recommendation -->
+        <!NOTATION w3c-xml
+                PUBLIC "ISO 8879//NOTATION Extensible Markup Language (XML) 1.0//EN" >
 
-     Revisions:
-     (none)
-     ....................................................................... -->
+        <!-- XML 1.0 CDATA -->
+        <!NOTATION cdata
+                PUBLIC "-//W3C//NOTATION XML 1.0: CDATA//EN" >
 
-<!-- Notations
+        <!-- SGML Formal Public Identifiers -->
+        <!NOTATION fpi
+                PUBLIC "ISO 8879:1986//NOTATION Formal Public Identifier//EN" >
 
-     defines the following notations, many of these imported from
-     other specifications and standards. When an existing FPI is
-     known, it is incorporated here.
--->
+        <!-- XHTML Notations ................................... -->
 
-<!-- XML Notations ..................................... -->
-<!-- SGML and XML Notations ............................ -->
+        <!-- Length defined for cellpadding/cellspacing -->
 
-<!-- W3C XML 1.0 Recommendation -->
-<!NOTATION w3c-xml
-     PUBLIC "ISO 8879//NOTATION Extensible Markup Language (XML) 1.0//EN" >
+        <!-- nn for pixels or nn% for percentage length -->
+        <!NOTATION length
+                PUBLIC "-//W3C//NOTATION XHTML Datatype: Length//EN" >
 
-<!-- XML 1.0 CDATA -->
-<!NOTATION cdata
-     PUBLIC "-//W3C//NOTATION XML 1.0: CDATA//EN" >
+        <!-- space-separated list of link types -->
+        <!NOTATION linkTypes
+                PUBLIC "-//W3C//NOTATION XHTML Datatype: LinkTypes//EN" >
 
-<!-- SGML Formal Public Identifiers -->
-<!NOTATION fpi
-     PUBLIC "ISO 8879:1986//NOTATION Formal Public Identifier//EN" >
+        <!-- single or comma-separated list of media descriptors -->
+        <!NOTATION mediaDesc
+                PUBLIC "-//W3C//NOTATION XHTML Datatype: MediaDesc//EN" >
 
-<!-- XHTML Notations ................................... -->
+        <!-- pixel, percentage, or relative -->
+        <!NOTATION multiLength
+                PUBLIC "-//W3C//NOTATION XHTML Datatype: MultiLength//EN" >
 
-<!-- Length defined for cellpadding/cellspacing -->
+        <!-- one or more digits (NUMBER) -->
+        <!NOTATION number
+                PUBLIC "-//W3C//NOTATION XHTML Datatype: Number//EN" >
 
-<!-- nn for pixels or nn% for percentage length -->
-<!NOTATION length
-    PUBLIC "-//W3C//NOTATION XHTML Datatype: Length//EN" >
+        <!-- integer representing length in pixels -->
+        <!NOTATION pixels
+                PUBLIC "-//W3C//NOTATION XHTML Datatype: Pixels//EN" >
 
-<!-- space-separated list of link types -->
-<!NOTATION linkTypes
-    PUBLIC "-//W3C//NOTATION XHTML Datatype: LinkTypes//EN" >
+        <!-- script expression -->
+        <!NOTATION script
+                PUBLIC "-//W3C//NOTATION XHTML Datatype: Script//EN" >
 
-<!-- single or comma-separated list of media descriptors -->
-<!NOTATION mediaDesc
-    PUBLIC "-//W3C//NOTATION XHTML Datatype: MediaDesc//EN" >
+        <!-- textual content -->
+        <!NOTATION text
+                PUBLIC "-//W3C//NOTATION XHTML Datatype: Text//EN" >
 
-<!-- pixel, percentage, or relative -->
-<!NOTATION multiLength
-    PUBLIC "-//W3C//NOTATION XHTML Datatype: MultiLength//EN" >
+        <!-- Imported Notations ................................ -->
 
-<!-- one or more digits (NUMBER) -->
-<!NOTATION number
-    PUBLIC "-//W3C//NOTATION XHTML Datatype: Number//EN" >
+        <!-- a single character from [ISO10646] -->
+        <!NOTATION character
+                PUBLIC "-//W3C//NOTATION XHTML Datatype: Character//EN" >
 
-<!-- integer representing length in pixels -->
-<!NOTATION pixels
-    PUBLIC "-//W3C//NOTATION XHTML Datatype: Pixels//EN" >
+        <!-- a character encoding, as per [RFC2045] -->
+        <!NOTATION charset
+                PUBLIC "-//W3C//NOTATION XHTML Datatype: Charset//EN" >
 
-<!-- script expression -->
-<!NOTATION script
-    PUBLIC "-//W3C//NOTATION XHTML Datatype: Script//EN" >
+        <!-- a space separated list of character encodings, as per [RFC2045] -->
+        <!NOTATION charsets
+                PUBLIC "-//W3C//NOTATION XHTML Datatype: Charsets//EN" >
 
-<!-- textual content -->
-<!NOTATION text
-    PUBLIC "-//W3C//NOTATION XHTML Datatype: Text//EN" >
+        <!-- media type, as per [RFC2045] -->
+        <!NOTATION contentType
+                PUBLIC "-//W3C//NOTATION XHTML Datatype: ContentType//EN" >
 
-<!-- Imported Notations ................................ -->
+        <!-- comma-separated list of media types, as per [RFC2045] -->
+        <!NOTATION contentTypes
+                PUBLIC "-//W3C//NOTATION XHTML Datatype: ContentTypes//EN" >
 
-<!-- a single character from [ISO10646] -->
-<!NOTATION character
-    PUBLIC "-//W3C//NOTATION XHTML Datatype: Character//EN" >
+        <!-- date and time information. ISO date format -->
+        <!NOTATION datetime
+                PUBLIC "-//W3C//NOTATION XHTML Datatype: Datetime//EN" >
 
-<!-- a character encoding, as per [RFC2045] -->
-<!NOTATION charset
-    PUBLIC "-//W3C//NOTATION XHTML Datatype: Charset//EN" >
+        <!-- a language code, as per [RFC3066] -->
+        <!NOTATION languageCode
+                PUBLIC "-//W3C//NOTATION XHTML Datatype: LanguageCode//EN" >
 
-<!-- a space separated list of character encodings, as per [RFC2045] -->
-<!NOTATION charsets
-    PUBLIC "-//W3C//NOTATION XHTML Datatype: Charsets//EN" >
+        <!-- a Uniform Resource Identifier, see [URI] -->
+        <!NOTATION uri
+                PUBLIC "-//W3C//NOTATION XHTML Datatype: URI//EN" >
 
-<!-- media type, as per [RFC2045] -->
-<!NOTATION contentType
-    PUBLIC "-//W3C//NOTATION XHTML Datatype: ContentType//EN" >
+        <!-- a space-separated list of Uniform Resource Identifiers, see [URI] -->
+        <!NOTATION uris
+                PUBLIC "-//W3C//NOTATION XHTML Datatype: URIs//EN" >
 
-<!-- comma-separated list of media types, as per [RFC2045] -->
-<!NOTATION contentTypes
-    PUBLIC "-//W3C//NOTATION XHTML Datatype: ContentTypes//EN" >
-
-<!-- date and time information. ISO date format -->
-<!NOTATION datetime
-    PUBLIC "-//W3C//NOTATION XHTML Datatype: Datetime//EN" >
-
-<!-- a language code, as per [RFC3066] -->
-<!NOTATION languageCode
-    PUBLIC "-//W3C//NOTATION XHTML Datatype: LanguageCode//EN" >
-
-<!-- a Uniform Resource Identifier, see [URI] -->
-<!NOTATION uri
-    PUBLIC "-//W3C//NOTATION XHTML Datatype: URI//EN" >
-
-<!-- a space-separated list of Uniform Resource Identifiers, see [URI] -->
-<!NOTATION uris
-    PUBLIC "-//W3C//NOTATION XHTML Datatype: URIs//EN" >
-
-<!-- end of xhtml-notations-1.mod -->
+        <!-- end of xhtml-notations-1.mod -->
