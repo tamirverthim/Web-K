@@ -51,12 +51,12 @@ public class CharacterDataImpl extends NodeImpl implements CharacterData {
 
     @Override
     public void appendData(String data) {
-        target.text(target.text() + data);
+        target.text(target.getWholeText() + data);
     }
 
     @Override
     public void insertData(int offset, String data) {
-        StringBuilder stringBuilder = new StringBuilder(target.text());
+        StringBuilder stringBuilder = new StringBuilder(target.getWholeText());
         try {
             stringBuilder.insert(offset, data);
             target.text(stringBuilder.toString());
@@ -67,7 +67,7 @@ public class CharacterDataImpl extends NodeImpl implements CharacterData {
 
     @Override
     public void deleteData(int offset, int count) {
-        val stringBuilder = new StringBuilder(target.text());
+        val stringBuilder = new StringBuilder(target.getWholeText());
         try {
             stringBuilder.delete(offset, offset + count + 1);
             target.text(stringBuilder.toString());
@@ -78,7 +78,7 @@ public class CharacterDataImpl extends NodeImpl implements CharacterData {
 
     @Override
     public void replaceData(int offset, int count, String data) {
-        val stringBuilder = new StringBuilder(target.text());
+        val stringBuilder = new StringBuilder(target.getWholeText());
         try {
             stringBuilder.replace(offset, offset + count + 1, data);
             target.text(stringBuilder.toString());

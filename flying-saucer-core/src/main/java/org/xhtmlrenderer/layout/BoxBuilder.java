@@ -1211,7 +1211,7 @@ public class BoxBuilder {
                     child = createInlineBox(text.toString(), parent, parentStyle, textNode);
                     */
 
-                    child = createInlineBox(textNode.text(), parent, parentStyle, textNode);
+                    child = createInlineBox(textNode.getWholeText(), parent, parentStyle, textNode);
 
                     InlineBox iB = (InlineBox) child;
                     iB.setEndsHere(true);
