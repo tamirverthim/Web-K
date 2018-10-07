@@ -25,6 +25,7 @@
     <module>flying-saucer-core</module>
     <module>flying-saucer-log4j</module>
     <module>flying-saucer-examples</module>
+    <module>flying-saucer-application</module>
   </modules>
 
   <scm>
