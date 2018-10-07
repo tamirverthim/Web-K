@@ -8,18 +8,19 @@
         <homepage href="http://xhtmlrenderer.dev.java.net/"/>
         <description kind="one-line">Flying Saucer About Box Demo</description>
         <description kind="short">A demonstration of the Flying Saucer XHTML
-            renderer. This demo shows off a simple About Box</description>
+            renderer. This demo shows off a simple About Box
+        </description>
         <description kind="tooltip">Flying Saucer About Box</description>
         <icon kind="splash" href="../flyingsaucer.png"/>
         <icon href="../flyingsaucer.png"/>
     </information>
-    
+
     <resources>
         <j2se version="1.4+"/>
         <jar href="aboutbox.jar"/>
         <jar href="../core-renderer.jar"/>
     </resources>
 
-    
+
     <application-desc main-class="org.xhtmlrenderer.demo.aboutbox.AboutBox"/>
 </jnlp>

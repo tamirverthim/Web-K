@@ -2,9 +2,9 @@
 
 #fs h1, #fs h2 {
     border-style: none none solid;
-    border-color: rgb( 0, 0, 0 );
+    border-color: rgb(0, 0, 0);
     border-width: 0px;
-    background: rgb( 255, 255, 255 ) none repeat scroll left top;
+    background: rgb(255, 255, 255) none repeat scroll left top;
     margin-top: 30px;
     padding-bottom: 3px;
     font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -29,7 +29,7 @@
 }
 
 body, #fs {
-    background: rgb( 255, 255, 255 ) none repeat scroll 0% 50%;
+    background: rgb(255, 255, 255) none repeat scroll 0% 50%;
     margin-right: 4px;
     margin-left: 20px;
     font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -98,14 +98,14 @@ body, #fs {
 
 code {
     font-weight: bold;
-    color: rgb( 153, 153, 0 );
+    color: rgb(153, 153, 0);
 }
 
 pre {
-    border: 1px dotted rgb( 255, 204, 0 );
+    border: 1px dotted rgb(255, 204, 0);
     margin: 10px;
     padding: 6px;
-    background: rgb( 255, 255, 204 ) none repeat scroll 0% 50%;
+    background: rgb(255, 255, 204) none repeat scroll 0% 50%;
 }
 
 .invalid {
@@ -130,67 +130,89 @@ hr.news {
     text-align: center;
 }
 
-
-#logo { float: left;
-  }
-.clearit { clear: both;
-  }
-h2 { width: 500px;
-  }
-ul#m2 { border: 1px solid black;
-  float: right;
-  }
-block { border: 0px solid black;
-  display: block;
-  padding-left: 4em;
-  }
-.axial { border: 1px solid black; display: none;}
-p.screenshot { text-align: center; }
-p.screenshot img { border-width: 0px; }
-div.thumbnailx { 
-  float: left; 
-  width: 140px;
-  min-height: 120px;
-  border: 1px solid #999; 
-  margin: 0 15px 15px 0;  
-  padding: 10px 15px 10px 15px;
+#logo {
+    float: left;
 }
 
-.clearboth { clear: both; }
+.clearit {
+    clear: both;
+}
+
+h2 {
+    width: 500px;
+}
+
+ul#m2 {
+    border: 1px solid black;
+    float: right;
+}
+
+block {
+    border: 0px solid black;
+    display: block;
+    padding-left: 4em;
+}
+
+.axial {
+    border: 1px solid black;
+    display: none;
+}
+
+p.screenshot {
+    text-align: center;
+}
+
+p.screenshot img {
+    border-width: 0px;
+}
+
+div.thumbnailx {
+    float: left;
+    width: 140px;
+    min-height: 120px;
+    border: 1px solid #999;
+    margin: 0 15px 15px 0;
+    padding: 10px 15px 10px 15px;
+}
+
+.clearboth {
+    clear: both;
+}
 
 div.thumbnail {
-  float: left;
-  width: 140px;
-  padding: 10px;
-  border: 1px solid #999; 
-  margin: 0 10px 15px 0;  
-  min-height: 120px;
+    float: left;
+    width: 140px;
+    padding: 10px;
+    border: 1px solid #999;
+    margin: 0 10px 15px 0;
+    min-height: 120px;
 }
-  
+
 div.thumbnail p {
-   text-align: center;
+    text-align: center;
 }
 
 div.thumbnail img {
-  border: none;	
+    border: none;
 }
 
 a#fs_logo {
-  background: url('/images/new_saucer.png') no-repeat top left transparent;
-  float: left; 
-  width: 180px; 
-  height: 180px;
-  display: block;  
+    background: url('/images/new_saucer.png') no-repeat top left transparent;
+    float: left;
+    width: 180px;
+    height: 180px;
+    display: block;
 }
 
 a#fs_logo:hover {
-  background: url('/images/acid2.png') no-repeat center center transparent;
+    background: url('/images/acid2.png') no-repeat center center transparent;
 }
 
-table.properties  {
-  border-collapse: collapse;	
+table.properties {
+    border-collapse: collapse;
 }
+
 table.properties td {
-  border: 1px solid black;
-  vertical-align: top;
+    border: 1px solid black;
+    vertical-align: top;
 }
