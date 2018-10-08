@@ -1,4 +1,5 @@
 # Web-K
+[![Build Status](https://travis-ci.org/Earnix/Web-K.svg?branch=master)](https://travis-ci.org/Earnix/Web-K)
 
 Web-K is [FlyingSaucer](https://github.com/flyingsaucerproject/flyingsaucer)-based basic pure java browser and Swing browser component. In addition to FlyingSaucer features it supports:
 * a `<script>` tag with limited set of JS features (see below)
