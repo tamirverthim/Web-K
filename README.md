@@ -1,6 +1,6 @@
-# K-Browser
+# Web-K
 
-K-Browser is [FlyingSaucer](https://github.com/flyingsaucerproject/flyingsaucer)-based basic pure java browser and Swing browser component. In addition to FlyingSaucer features it supports:
+Web-K is [FlyingSaucer](https://github.com/flyingsaucerproject/flyingsaucer)-based basic pure java browser and Swing browser component. In addition to FlyingSaucer features it supports:
 * a `<script>` tag with limited set of JS features (see below)
 * Not strict HTML. Parser replaced with modified [JSoup](https://github.com/jhy/jsoup) library)
 * Embedded `<svg>` elements, implemented with [svgSalamander](https://github.com/blackears/svgSalamander).

@@ -178,7 +178,7 @@ The AboutBox is a prefab component which displays an XHTML document and automati
 Here is an example of adding an about box to a menu item's action listener.
 
 bcx..  
-import com.earnix.kbrowser.demo.aboutbox.AboutBox; 
+import com.earnix.webk.demo.aboutbox.AboutBox; 
 .
 .
 .

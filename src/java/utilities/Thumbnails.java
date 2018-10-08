@@ -8,8 +8,8 @@ import java.awt.*;
 
 import javax.imageio.ImageIO;
 
-import com.earnix.kbrowser.util.FSImageWriter;
-import com.earnix.kbrowser.util.ImageUtil;
+import com.earnix.webk.util.FSImageWriter;
+import com.earnix.webk.util.ImageUtil;
 
 /**
  */

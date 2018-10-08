@@ -4,13 +4,13 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.earnix.kbrowser</groupId>
-    <artifactId>k-browser-parent</artifactId>
+    <groupId>com.earnix.webk</groupId>
+    <artifactId>web-k-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
-    <name>K-Browser</name>
+    <name>Web-K</name>
     <description>Flying Saucer is a CSS 2.1 renderer written in Java. It supports Java2D, PDF, and SWT output.
     </description>
     
@@ -22,9 +22,9 @@
     </licenses>
 
     <modules>
-        <module>k-browser-core</module>
-        <module>k-browser-examples</module>
-        <module>k-browser-application</module>
+        <module>web-k-core</module>
+        <module>web-k-examples</module>
+        <module>web-k-application</module>
     </modules>
 
     <build>
