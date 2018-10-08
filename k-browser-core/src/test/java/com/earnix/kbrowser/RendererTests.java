@@ -14,7 +14,7 @@ import java.io.IOException;
  */
 public class RendererTests {
 
-    @Test
+//    @Test
     public void regression() throws IOException {
         ReferenceComparison rc = new ReferenceComparison(1024);
         File source = new File("tests/regress/xhtml");
