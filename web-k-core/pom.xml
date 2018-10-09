@@ -61,10 +61,11 @@
             <version>6.1.1</version>
         </dependency>
 
+        <!-- Version is a commit revision at https://github.com/blackears/svgSalamander -->
         <dependency>
             <groupId>com.kitfox.svg</groupId>
             <artifactId>svgSalamander</artifactId>
-            <version>d6b6fe9a8ece7d0e0e7aeb3de82f027a38a6fe25</version>
+            <version>d8631188591970d8239cbae2753f3a83e8db5a03</version>
         </dependency>
 
         <!-- region JSoup dependencies -->
