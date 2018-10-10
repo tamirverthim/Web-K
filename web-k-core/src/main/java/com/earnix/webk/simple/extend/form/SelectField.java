@@ -159,7 +159,7 @@ public class SelectField extends FormField {
 
     @Override
     protected Optional<String> validateInternal() {
-        if (shouldRenderAsList() && getFieldValues().length == 0) {
+        if (isRequired() && shouldRenderAsList() && getFieldValues().length == 0) {
             return Optional.of("At least one option must be selected");
         }
         return Optional.empty();
