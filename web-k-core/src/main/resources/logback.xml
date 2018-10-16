@@ -12,6 +12,6 @@
         <appender-ref ref="STDOUT"/>
     </root>
 
-    <logger name="com.earnix.webk.script.html5.canvas" level="debug"/>
+    <logger name="com.earnix.webk.script" level="debug"/>
 
 </configuration>

@@ -18,12 +18,9 @@ package com.earnix.webk.examples;/*
 
 
 import com.earnix.webk.dom.nodes.Document;
-import com.earnix.webk.dom.nodes.Element;
-import com.earnix.webk.dom.select.Elements;
 import com.earnix.webk.event.DefaultDocumentListener;
 import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.resource.XMLResource;
-import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.simple.FSScrollPane;
 import com.earnix.webk.simple.XHTMLPanel;
 import com.earnix.webk.swing.DelegatingUserAgent;
@@ -55,7 +52,6 @@ public class BrowsePanel {
     private XHTMLPanel panel;
     private JFrame frame;
     private UserAgentCallback uac;
-    private ScriptContext js;
 
     public static void main(String[] args) throws Exception {
         try {
@@ -118,17 +114,8 @@ public class BrowsePanel {
             }
 
             public void documentLoaded() {
-                // if document changed internally - js is already initialized
-                if (js == null) {
-                    panel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-                    frame.setTitle(panel.getDocumentTitle());
-                    js = new ScriptContext(panel);
-                    Elements scripts = panel.getDocument().getElementsByTag("script");
-                    for (Element script : scripts) {
-                        js.eval(script.text());
-                    }
-                    js.onload();
-                }
+                panel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                frame.setTitle(panel.getDocumentTitle());
             }
 
             public void onLayoutException(Throwable t) {
