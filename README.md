@@ -1,14 +1,14 @@
 # Web-K
 [![Build Status](https://travis-ci.org/Earnix/Web-K.svg?branch=master)](https://travis-ci.org/Earnix/Web-K)
 
-Web-K is [FlyingSaucer](https://github.com/flyingsaucerproject/flyingsaucer)-based pure java browser and Swing browser component. In addition to FlyingSaucer features it supports:
+Web-K is [FlyingSaucer](https://github.com/flyingsaucerproject/flyingsaucer)-based pure Java browser and Swing browser component. In addition to FlyingSaucer features it supports:
 * a `<script>` tag with limited set of JS features (like Canvas). Nashosh JavaScript runtime is used. See features list below. 
-* Not strict HTML. Standard Java XML parser and DOM replaced with modified [JSoup](https://github.com/jhy/jsoup) library. This provides support of HTML5 at parsing level.
+* Not strict HTML. Standard Java XML parser and DOM replaced with modified [JSoup](https://github.com/jhy/jsoup) library. It provides support of HTML5 at parsing level.
 * Embedded `<svg>` elements, implemented with [svgSalamander](https://github.com/blackears/svgSalamander).
 
 FlyingSaucer PDF and SWT rendering was removed.
 
-Main usecase - pure Java web view component. Not intended to be used as standalone web browser (at leas at this moment).
+Main use case - pure Java web view component. Not intended to be used as standalone web browser (at least at this moment).
 
 ### JavaScript runtime
 JavaScript APIs implementation based on [WHATWG DOM](https://dom.spec.whatwg.org/) and [WHATWG HTML](specification). It is currently very limited. Exapmple of supported library: [ChartJS](http://www.chartjs.org/).
