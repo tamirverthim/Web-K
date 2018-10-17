@@ -1,6 +1,6 @@
 package com.earnix.webk.script.whatwg_dom;
 
-import com.earnix.webk.script.html5.canvas.HTMLSlotElement;
+import com.earnix.webk.script.html.canvas.HTMLSlotElement;
 import com.earnix.webk.script.web_idl.Mixin;
 import com.earnix.webk.script.web_idl.Optional;
 import com.earnix.webk.script.web_idl.ReadonlyAttribute;

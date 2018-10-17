@@ -1,6 +1,6 @@
 package com.earnix.webk.script.impl;
 
-import com.earnix.webk.script.html5.canvas.TextMetrics;
+import com.earnix.webk.script.html.canvas.TextMetrics;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 

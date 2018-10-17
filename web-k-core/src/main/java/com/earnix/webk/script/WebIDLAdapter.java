@@ -42,8 +42,6 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.stream.Stream;
 
-//import com.earnix.webk.script.impl.DOMStringImpl;
-//import com.earnix.webk.script.impl.USVStringImpl;
 
 /**
  * @author Taras Maslov
@@ -95,8 +93,8 @@ public class WebIDLAdapter<T> implements JSObject {
                 .stream()
                 .flatMap(i -> Stream.of(i.getMethods()))
                 .forEach(m -> {
+                    
                     // Attribute member
-
                     try {
                         if (m.getReturnType().equals(Attribute.class)) {
                             members.put(m.getName(), new AttributeLink(

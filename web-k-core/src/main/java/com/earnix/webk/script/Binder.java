@@ -7,7 +7,7 @@ import com.earnix.webk.dom.nodes.Document;
 import com.earnix.webk.dom.nodes.DocumentType;
 import com.earnix.webk.dom.nodes.Element;
 import com.earnix.webk.dom.nodes.Node;
-import com.earnix.webk.script.html5.canvas.impl.HTMLCanvasElementImpl;
+import com.earnix.webk.script.html.canvas.impl.HTMLCanvasElementImpl;
 import com.earnix.webk.script.impl.CharacterDataImpl;
 import com.earnix.webk.script.impl.CommentImpl;
 import com.earnix.webk.script.impl.DocumentTypeImpl;

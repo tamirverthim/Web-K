@@ -1,7 +1,7 @@
 package com.earnix.webk.script.whatwg_dom.impl;
 
 import com.earnix.webk.dom.nodes.TextNode;
-import com.earnix.webk.script.html5.canvas.HTMLSlotElement;
+import com.earnix.webk.script.html.canvas.HTMLSlotElement;
 import com.earnix.webk.script.impl.ChildNodeImpl;
 import com.earnix.webk.script.impl.NodeImpl;
 import com.earnix.webk.script.impl.NonDocumentTypeChildNodeImpl;

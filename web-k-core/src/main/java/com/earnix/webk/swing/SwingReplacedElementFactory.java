@@ -30,7 +30,7 @@ import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
 import com.earnix.webk.resource.ImageResource;
 import com.earnix.webk.script.Binder;
-import com.earnix.webk.script.html5.canvas.impl.HTMLCanvasElementImpl;
+import com.earnix.webk.script.html.canvas.impl.HTMLCanvasElementImpl;
 import com.earnix.webk.simple.extend.DefaultFormSubmissionListener;
 import com.earnix.webk.simple.extend.FormSubmissionListener;
 import com.earnix.webk.simple.extend.XhtmlForm;

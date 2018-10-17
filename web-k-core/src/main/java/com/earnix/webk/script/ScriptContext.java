@@ -2,8 +2,8 @@ package com.earnix.webk.script;
 
 import com.earnix.webk.dom.nodes.Document;
 import com.earnix.webk.event.DocumentListener;
-import com.earnix.webk.script.html5.canvas.impl.CanvasGradientImpl;
-import com.earnix.webk.script.html5.canvas.impl.CanvasPatternImpl;
+import com.earnix.webk.script.html.canvas.impl.CanvasGradientImpl;
+import com.earnix.webk.script.html.canvas.impl.CanvasPatternImpl;
 import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.web_idl.Exposed;
 import com.earnix.webk.script.whatwg_dom.css_style_attribute.CSSStyleAttribute;
@@ -84,7 +84,7 @@ public class ScriptContext implements DocumentListener {
         NashornScriptEngineFactory jsFactory = new NashornScriptEngineFactory();
         engine = (NashornScriptEngine) jsFactory.getScriptEngine(options);
         context = engine.getContext();
-        context.setAttribute("document", WebIDLAdapter.obtain(this, new com.earnix.webk.script.html5.impl.DocumentImpl(panel)), ENGINE_SCOPE);
+        context.setAttribute("document", WebIDLAdapter.obtain(this, new com.earnix.webk.script.html.impl.DocumentImpl(panel)), ENGINE_SCOPE);
         context.setAttribute("console", console, ENGINE_SCOPE);
         context.setAttribute("setInterval", new Function<>(this, (ctx, args) -> {
             val fn = (JSObject) args[0];
