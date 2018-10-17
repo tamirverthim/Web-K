@@ -11,7 +11,7 @@ FlyingSaucer PDF and SWT rendering was removed.
 Main usecase - pure Java web view component. Not intended to be used as standalone web browser (at leas at this moment).
 
 ### JavaScript runtime
-JavaScript APIs implementation based on [WHATWG DOM](https://dom.spec.whatwg.org/) and [WHATWG HTML](specification). It is currently very limited.
+JavaScript APIs implementation based on [WHATWG DOM](https://dom.spec.whatwg.org/) and [WHATWG HTML](specification). It is currently very limited. Exapmple of supported library: [ChartJS](http://www.chartjs.org/).
 
 ##### List of supported browser JS APIs
 * HTMLCanvasElement
