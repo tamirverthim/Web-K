@@ -37,6 +37,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import lombok.val;
 
 import javax.swing.JComponent;
 import java.awt.Color;
@@ -234,7 +235,35 @@ public abstract class FormField {
         return null;
     }
 
+    /**
+     * Non-standard attribute
+     */
+    public Optional<String> getDisplayName() {
+        if(hasAttribute("display-name")) {
+            return Optional.of(getAttribute("display-name"));
+        } else {
+            return Optional.empty();
+        }
+    }
 
+    /**
+     * Non-standard attribute
+     */
+    public Optional<String> getErrorMessage() {
+        if(hasAttribute("error-message")) {
+            return Optional.of(getAttribute("error-message"));
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    protected String entitle(String message){
+        if(getDisplayName().isPresent()) {
+            return message + " Field: " + getDisplayName().get();
+        }
+        return message;
+    }
+    
     /**
      * @return validation error
      */
@@ -242,7 +271,11 @@ public abstract class FormField {
         if (validationProvider != null) {
             return Optional.of(validationProvider.get());
         }
-        return validateInternal();
+        val error = validateInternal();
+        if(error.isPresent() && getErrorMessage().isPresent()){
+            return getErrorMessage();
+        }
+        return error.map(this::entitle);
     }
 
     protected Optional<String> validateInternal() {

@@ -11,7 +11,48 @@ FlyingSaucer PDF and SWT rendering was removed.
 Main use case - pure Java web view component. Not intended to be used as standalone web browser (at least at this moment).
 
 ### JavaScript runtime
+
 JavaScript APIs implementation based on [WHATWG DOM](https://dom.spec.whatwg.org/) and [WHATWG HTML](specification). It is currently very limited. Exapmple of supported library: [ChartJS](http://www.chartjs.org/).
+
+##### Examples of supported JS
+
+Element creation and append:
+```js
+var div = document.createElement("div");
+div.style.width = "200px";
+div.style.height = "100px";
+document.body.appendChild(div);
+```
+
+Element lookup and update:
+```js
+var main = document.getElementById("main");
+main.innerHTML = "<p style='background-color: red; color: white'>Red Paragraph</p>"
+```
+
+Canvas creation and drawing:
+```js
+var canvas = document.createElement("canvas");
+canvas.setAttribute("width", "500");
+canvas.setAttribute("height", "500");
+document.body.appendChild(canvas);
+var ctx = canvas.getContext("2d");
+ctx.strokeStyle = "rgba(0,255, 100, 0.5)";
+ctx.lineWidth = 5;
+ctx.strokeRect(10, 10, 80, 80);
+ctx.fillStyle = "red";
+ctx.fillText("Hello", 10, 10);
+ctx.save();
+ctx.lineCap = "round";
+ctx.strokeStyle = "#AA1188";
+ctx.moveTo(200, 200);
+ctx.setLineDash([10, 20]);
+ctx.lineDashOffset = 15;
+ctx.lineTo(300, 300);
+ctx.stroke();
+ctx.restore();
+ctx.stroke();
+```
 
 ##### List of supported browser JS APIs
 * HTMLCanvasElement

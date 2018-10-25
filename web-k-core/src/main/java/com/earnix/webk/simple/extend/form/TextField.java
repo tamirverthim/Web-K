@@ -109,7 +109,7 @@ public class TextField extends AbstractTextField {
     public Optional<String> validateInternal() {
 
         String textContent = getFieldValues()[0];
-
+        
         if (textContent.length() == 0) {
             if (isRequired()) {
                 return Optional.of("Value must be specified.");
