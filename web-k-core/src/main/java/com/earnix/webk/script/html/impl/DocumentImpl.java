@@ -1,7 +1,7 @@
 package com.earnix.webk.script.html.impl;
 
-import com.earnix.webk.dom.nodes.Document;
-import com.earnix.webk.dom.nodes.Node;
+import com.earnix.webk.dom.nodes.DocumentModel;
+import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.script.Binder;
 import com.earnix.webk.script.html.DocumentReadyState;
 import com.earnix.webk.script.html.HTMLElement;
@@ -30,7 +30,7 @@ import lombok.val;
 public class DocumentImpl extends com.earnix.webk.script.impl.DocumentImpl implements com.earnix.webk.script.html.Document {
 
     Location location;
-    Document document;
+    DocumentModel document;
 
 
     public DocumentImpl(BasicPanel panel) {
@@ -101,7 +101,7 @@ public class DocumentImpl extends com.earnix.webk.script.impl.DocumentImpl imple
             public void set(HTMLElement htmlElement) {
                 val bodyModel = document.getElementsByTag("body");
                 if (!bodyModel.isEmpty()) {
-                    bodyModel.forEach(Node::remove);
+                    bodyModel.forEach(NodeModel::remove);
                 }
                 document.appendChild(((ElementImpl) htmlElement).getModel());
             }

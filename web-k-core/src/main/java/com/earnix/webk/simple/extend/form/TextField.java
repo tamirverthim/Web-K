@@ -19,7 +19,7 @@
  */
 package com.earnix.webk.simple.extend.form;
 
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
 import com.earnix.webk.simple.extend.XhtmlForm;
@@ -41,7 +41,7 @@ public class TextField extends AbstractTextField {
     private final Color BACKGROUND_INVALID = new Color(0xff9999);
 
 
-    public TextField(Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
+    public TextField(ElementModel e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }
 

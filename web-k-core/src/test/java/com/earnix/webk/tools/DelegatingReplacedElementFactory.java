@@ -19,6 +19,7 @@
  */
 package com.earnix.webk.tools;
 
+import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.extend.ReplacedElement;
 import com.earnix.webk.extend.ReplacedElementFactory;
 import com.earnix.webk.extend.UserAgentCallback;
@@ -83,7 +84,7 @@ public class DelegatingReplacedElementFactory implements ReplacedElementFactory 
         }
     }
 
-    public void remove(final com.earnix.webk.dom.nodes.Element element) {
+    public void remove(final ElementModel element) {
         final int idx = elementReplacements.indexOf(element);
         ERItem item = (ERItem) elementReplacements.get(idx);
         elementReplacements.remove(idx);
@@ -108,11 +109,11 @@ public class DelegatingReplacedElementFactory implements ReplacedElementFactory 
     }
 
     private static class ERItem {
-        private final com.earnix.webk.dom.nodes.Element element;
+        private final ElementModel element;
         private final ReplacedElement replacedElement;
         private final ElementReplacer elementReplacer;
 
-        private ERItem(final com.earnix.webk.dom.nodes.Element e, final ReplacedElement re, final ElementReplacer er) {
+        private ERItem(final ElementModel e, final ReplacedElement re, final ElementReplacer er) {
             element = e;
             replacedElement = re;
             elementReplacer = er;

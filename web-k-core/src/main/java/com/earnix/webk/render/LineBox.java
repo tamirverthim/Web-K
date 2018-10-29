@@ -25,7 +25,7 @@ import com.earnix.webk.css.constants.IdentValue;
 import com.earnix.webk.css.parser.FSRGBColor;
 import com.earnix.webk.css.style.CalculatedStyle;
 import com.earnix.webk.css.style.CssContext;
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.layout.BoxCollector;
 import com.earnix.webk.layout.InlineBoxing;
 import com.earnix.webk.layout.InlinePaintable;
@@ -534,7 +534,7 @@ public class LineBox extends Box implements InlinePaintable {
 
     public void restyle(LayoutContext c) {
         Box parent = getParent();
-        Element e = parent.getElement();
+        ElementModel e = parent.getElement();
         if (e != null) {
             CalculatedStyle style = c.getSharedContext().getStyle(e, true);
             setStyle(style.createAnonymousStyle(IdentValue.BLOCK));

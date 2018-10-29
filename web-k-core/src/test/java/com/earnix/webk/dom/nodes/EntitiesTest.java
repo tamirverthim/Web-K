@@ -3,7 +3,7 @@ package com.earnix.webk.dom.nodes;
 import com.earnix.webk.dom.Jsoup;
 import org.junit.Test;
 
-import static com.earnix.webk.dom.nodes.Document.OutputSettings;
+import static com.earnix.webk.dom.nodes.DocumentModel.OutputSettings;
 import static com.earnix.webk.dom.nodes.Entities.EscapeMode.base;
 import static com.earnix.webk.dom.nodes.Entities.EscapeMode.extended;
 import static com.earnix.webk.dom.nodes.Entities.EscapeMode.xhtml;
@@ -138,9 +138,9 @@ public class EntitiesTest {
     @Test
     public void letterDigitEntities() {
         String html = "<p>&sup1;&sup2;&sup3;&frac14;&frac12;&frac34;</p>";
-        Document doc = Jsoup.parse(html);
+        DocumentModel doc = Jsoup.parse(html);
         doc.outputSettings().charset("ascii");
-        Element p = doc.select("p").first();
+        ElementModel p = doc.select("p").first();
         assertEquals("&sup1;&sup2;&sup3;&frac14;&frac12;&frac34;", p.html());
         assertEquals("¹²³¼½¾", p.text());
         doc.outputSettings().charset("UTF-8");
@@ -159,8 +159,8 @@ public class EntitiesTest {
 
 
         String docHtml = "<a title='<p>One</p>'>One</a>";
-        Document doc = Jsoup.parse(docHtml);
-        Element element = doc.select("a").first();
+        DocumentModel doc = Jsoup.parse(docHtml);
+        ElementModel element = doc.select("a").first();
 
         doc.outputSettings().escapeMode(base);
         assertEquals("<a title=\"<p>One</p>\">One</a>", element.outerHtml());

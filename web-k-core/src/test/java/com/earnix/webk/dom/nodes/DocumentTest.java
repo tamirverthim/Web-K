@@ -3,8 +3,8 @@ package com.earnix.webk.dom.nodes;
 import com.earnix.webk.dom.Jsoup;
 import com.earnix.webk.dom.TextUtil;
 import com.earnix.webk.dom.integration.ParseTest;
-import com.earnix.webk.dom.nodes.Document.OutputSettings;
-import com.earnix.webk.dom.nodes.Document.OutputSettings.Syntax;
+import com.earnix.webk.dom.nodes.DocumentModel.OutputSettings;
+import com.earnix.webk.dom.nodes.DocumentModel.OutputSettings.Syntax;
 import com.earnix.webk.dom.select.Elements;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -36,7 +36,7 @@ public class DocumentTest {
 
     @Test
     public void setTextPreservesDocumentStructure() {
-        Document doc = Jsoup.parse("<p>Hello</p>");
+        DocumentModel doc = Jsoup.parse("<p>Hello</p>");
         doc.text("Replaced");
         assertEquals("Replaced", doc.text());
         assertEquals("Replaced", doc.body().text());
@@ -45,8 +45,8 @@ public class DocumentTest {
 
     @Test
     public void testTitles() {
-        Document noTitle = Jsoup.parse("<p>Hello</p>");
-        Document withTitle = Jsoup.parse("<title>First</title><title>Ignore</title><p>Hello</p>");
+        DocumentModel noTitle = Jsoup.parse("<p>Hello</p>");
+        DocumentModel withTitle = Jsoup.parse("<title>First</title><title>Ignore</title><p>Hello</p>");
 
         assertEquals("", noTitle.title());
         noTitle.title("Hello");
@@ -58,13 +58,13 @@ public class DocumentTest {
         assertEquals("Hello", withTitle.title());
         assertEquals("Hello", withTitle.select("title").first().text());
 
-        Document normaliseTitle = Jsoup.parse("<title>   Hello\nthere   \n   now   \n");
+        DocumentModel normaliseTitle = Jsoup.parse("<title>   Hello\nthere   \n   now   \n");
         assertEquals("Hello there now", normaliseTitle.title());
     }
 
     @Test
     public void testOutputEncoding() {
-        Document doc = Jsoup.parse("<p title=π>π & < > </p>");
+        DocumentModel doc = Jsoup.parse("<p title=π>π & < > </p>");
         // default is utf-8
         assertEquals("<p title=\"π\">π &amp; &lt; &gt; </p>", doc.body().html());
         assertEquals("UTF-8", doc.outputSettings().charset().name());
@@ -79,21 +79,21 @@ public class DocumentTest {
 
     @Test
     public void testXhtmlReferences() {
-        Document doc = Jsoup.parse("&lt; &gt; &amp; &quot; &apos; &times;");
+        DocumentModel doc = Jsoup.parse("&lt; &gt; &amp; &quot; &apos; &times;");
         doc.outputSettings().escapeMode(Entities.EscapeMode.xhtml);
         assertEquals("&lt; &gt; &amp; \" ' ×", doc.body().html());
     }
 
     @Test
     public void testNormalisesStructure() {
-        Document doc = Jsoup.parse("<html><head><script>one</script><noscript><p>two</p></noscript></head><body><p>three</p></body><p>four</p></html>");
+        DocumentModel doc = Jsoup.parse("<html><head><script>one</script><noscript><p>two</p></noscript></head><body><p>three</p></body><p>four</p></html>");
         Assert.assertEquals("<html><head><script>one</script><noscript>&lt;p&gt;two</noscript></head><body><p>three</p><p>four</p></body></html>", TextUtil.stripNewlines(doc.html()));
     }
 
     @Test
     public void testClone() {
-        Document doc = Jsoup.parse("<title>Hello</title> <p>One<p>Two");
-        Document clone = doc.clone();
+        DocumentModel doc = Jsoup.parse("<title>Hello</title> <p>One<p>Two");
+        DocumentModel clone = doc.clone();
 
         assertEquals("<html><head><title>Hello</title> </head><body><p>One</p><p>Two</p></body></html>", TextUtil.stripNewlines(clone.html()));
         clone.title("Hello there");
@@ -104,8 +104,8 @@ public class DocumentTest {
 
     @Test
     public void testClonesDeclarations() {
-        Document doc = Jsoup.parse("<!DOCTYPE html><html><head><title>Doctype test");
-        Document clone = doc.clone();
+        DocumentModel doc = Jsoup.parse("<!DOCTYPE html><html><head><title>Doctype test");
+        DocumentModel clone = doc.clone();
 
         assertEquals(doc.html(), clone.html());
         assertEquals("<!doctype html><html><head><title>Doctype test</title></head><body></body></html>",
@@ -115,7 +115,7 @@ public class DocumentTest {
     @Test
     public void testLocation() throws IOException {
         File in = new ParseTest().getFile("/htmltests/yahoo-jp.html");
-        Document doc = Jsoup.parse(in, "UTF-8", "http://www.yahoo.co.jp/index.html");
+        DocumentModel doc = Jsoup.parse(in, "UTF-8", "http://www.yahoo.co.jp/index.html");
         String location = doc.location();
         String baseUri = doc.baseUri();
         assertEquals("http://www.yahoo.co.jp/index.html", location);
@@ -131,7 +131,7 @@ public class DocumentTest {
     @Test
     public void testHtmlAndXmlSyntax() {
         String h = "<!DOCTYPE html><body><img async checked='checked' src='&<>\"'>&lt;&gt;&amp;&quot;<foo />bar";
-        Document doc = Jsoup.parse(h);
+        DocumentModel doc = Jsoup.parse(h);
 
         doc.outputSettings().syntax(Syntax.html);
         assertEquals("<!doctype html>\n" +
@@ -143,7 +143,7 @@ public class DocumentTest {
                 " </body>\n" +
                 "</html>", doc.html());
 
-        doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
+        doc.outputSettings().syntax(DocumentModel.OutputSettings.Syntax.xml);
         assertEquals("<!DOCTYPE html>\n" +
                 "<html>\n" +
                 " <head></head>\n" +
@@ -156,14 +156,14 @@ public class DocumentTest {
 
     @Test
     public void htmlParseDefaultsToHtmlOutputSyntax() {
-        Document doc = Jsoup.parse("x");
+        DocumentModel doc = Jsoup.parse("x");
         assertEquals(Syntax.html, doc.outputSettings().syntax());
     }
 
     @Test
     public void testHtmlAppendable() {
         String htmlContent = "<html><head><title>Hello</title></head><body><p>One</p><p>Two</p></body></html>";
-        Document document = Jsoup.parse(htmlContent);
+        DocumentModel document = Jsoup.parse(htmlContent);
         OutputSettings outputSettings = new OutputSettings();
 
         outputSettings.prettyPrint(false);
@@ -181,15 +181,15 @@ public class DocumentTest {
             builder.append("</i>");
         }
 
-        Document doc = Jsoup.parse(builder.toString());
+        DocumentModel doc = Jsoup.parse(builder.toString());
         doc.clone();
     }
 
     @Test
     public void DocumentsWithSameContentAreEqual() throws Exception {
-        Document docA = Jsoup.parse("<div/>One");
-        Document docB = Jsoup.parse("<div/>One");
-        Document docC = Jsoup.parse("<div/>Two");
+        DocumentModel docA = Jsoup.parse("<div/>One");
+        DocumentModel docB = Jsoup.parse("<div/>One");
+        DocumentModel docC = Jsoup.parse("<div/>Two");
 
         assertFalse(docA.equals(docB));
         assertTrue(docA.equals(docA));
@@ -199,9 +199,9 @@ public class DocumentTest {
 
     @Test
     public void DocumentsWithSameContentAreVerifialbe() throws Exception {
-        Document docA = Jsoup.parse("<div/>One");
-        Document docB = Jsoup.parse("<div/>One");
-        Document docC = Jsoup.parse("<div/>Two");
+        DocumentModel docA = Jsoup.parse("<div/>One");
+        DocumentModel docB = Jsoup.parse("<div/>One");
+        DocumentModel docC = Jsoup.parse("<div/>Two");
 
         assertTrue(docA.hasSameValue(docB));
         assertFalse(docA.hasSameValue(docC));
@@ -209,7 +209,7 @@ public class DocumentTest {
 
     @Test
     public void testMetaCharsetUpdateUtf8() {
-        final Document doc = createHtmlDocument("changeThis");
+        final DocumentModel doc = createHtmlDocument("changeThis");
         doc.updateMetaCharsetElement(true);
         doc.charset(Charset.forName(charsetUtf8));
 
@@ -221,7 +221,7 @@ public class DocumentTest {
                 "</html>";
         assertEquals(htmlCharsetUTF8, doc.toString());
 
-        Element selectedElement = doc.select("meta[charset]").first();
+        ElementModel selectedElement = doc.select("meta[charset]").first();
         assertEquals(charsetUtf8, doc.charset().name());
         assertEquals(charsetUtf8, selectedElement.attr("charset"));
         assertEquals(doc.charset(), doc.outputSettings().charset());
@@ -229,7 +229,7 @@ public class DocumentTest {
 
     @Test
     public void testMetaCharsetUpdateIso8859() {
-        final Document doc = createHtmlDocument("changeThis");
+        final DocumentModel doc = createHtmlDocument("changeThis");
         doc.updateMetaCharsetElement(true);
         doc.charset(Charset.forName(charsetIso8859));
 
@@ -241,7 +241,7 @@ public class DocumentTest {
                 "</html>";
         assertEquals(htmlCharsetISO, doc.toString());
 
-        Element selectedElement = doc.select("meta[charset]").first();
+        ElementModel selectedElement = doc.select("meta[charset]").first();
         assertEquals(charsetIso8859, doc.charset().name());
         assertEquals(charsetIso8859, selectedElement.attr("charset"));
         assertEquals(doc.charset(), doc.outputSettings().charset());
@@ -249,7 +249,7 @@ public class DocumentTest {
 
     @Test
     public void testMetaCharsetUpdateNoCharset() {
-        final Document docNoCharset = Document.createShell("");
+        final DocumentModel docNoCharset = DocumentModel.createShell("");
         docNoCharset.updateMetaCharsetElement(true);
         docNoCharset.charset(Charset.forName(charsetUtf8));
 
@@ -266,7 +266,7 @@ public class DocumentTest {
 
     @Test
     public void testMetaCharsetUpdateDisabled() {
-        final Document docDisabled = Document.createShell("");
+        final DocumentModel docDisabled = DocumentModel.createShell("");
 
         final String htmlNoCharset = "<html>\n" +
                 " <head></head>\n" +
@@ -278,7 +278,7 @@ public class DocumentTest {
 
     @Test
     public void testMetaCharsetUpdateDisabledNoChanges() {
-        final Document doc = createHtmlDocument("dontTouch");
+        final DocumentModel doc = createHtmlDocument("dontTouch");
 
         final String htmlCharset = "<html>\n" +
                 " <head>\n" +
@@ -289,7 +289,7 @@ public class DocumentTest {
                 "</html>";
         assertEquals(htmlCharset, doc.toString());
 
-        Element selectedElement = doc.select("meta[charset]").first();
+        ElementModel selectedElement = doc.select("meta[charset]").first();
         assertNotNull(selectedElement);
         assertEquals("dontTouch", selectedElement.attr("charset"));
 
@@ -300,17 +300,17 @@ public class DocumentTest {
 
     @Test
     public void testMetaCharsetUpdateEnabledAfterCharsetChange() {
-        final Document doc = createHtmlDocument("dontTouch");
+        final DocumentModel doc = createHtmlDocument("dontTouch");
         doc.charset(Charset.forName(charsetUtf8));
 
-        Element selectedElement = doc.select("meta[charset]").first();
+        ElementModel selectedElement = doc.select("meta[charset]").first();
         assertEquals(charsetUtf8, selectedElement.attr("charset"));
         assertTrue(doc.select("meta[name=charset]").isEmpty());
     }
 
     @Test
     public void testMetaCharsetUpdateCleanup() {
-        final Document doc = createHtmlDocument("dontTouch");
+        final DocumentModel doc = createHtmlDocument("dontTouch");
         doc.updateMetaCharsetElement(true);
         doc.charset(Charset.forName(charsetUtf8));
 
@@ -326,7 +326,7 @@ public class DocumentTest {
 
     @Test
     public void testMetaCharsetUpdateXmlUtf8() {
-        final Document doc = createXmlDocument("1.0", "changeThis", true);
+        final DocumentModel doc = createXmlDocument("1.0", "changeThis", true);
         doc.updateMetaCharsetElement(true);
         doc.charset(Charset.forName(charsetUtf8));
 
@@ -344,7 +344,7 @@ public class DocumentTest {
 
     @Test
     public void testMetaCharsetUpdateXmlIso8859() {
-        final Document doc = createXmlDocument("1.0", "changeThis", true);
+        final DocumentModel doc = createXmlDocument("1.0", "changeThis", true);
         doc.updateMetaCharsetElement(true);
         doc.charset(Charset.forName(charsetIso8859));
 
@@ -362,7 +362,7 @@ public class DocumentTest {
 
     @Test
     public void testMetaCharsetUpdateXmlNoCharset() {
-        final Document doc = createXmlDocument("1.0", "none", false);
+        final DocumentModel doc = createXmlDocument("1.0", "none", false);
         doc.updateMetaCharsetElement(true);
         doc.charset(Charset.forName(charsetUtf8));
 
@@ -378,7 +378,7 @@ public class DocumentTest {
 
     @Test
     public void testMetaCharsetUpdateXmlDisabled() {
-        final Document doc = createXmlDocument("none", "none", false);
+        final DocumentModel doc = createXmlDocument("none", "none", false);
 
         final String xmlNoCharset = "<root>\n" +
                 " node\n" +
@@ -388,7 +388,7 @@ public class DocumentTest {
 
     @Test
     public void testMetaCharsetUpdateXmlDisabledNoChanges() {
-        final Document doc = createXmlDocument("dontTouch", "dontTouch", true);
+        final DocumentModel doc = createXmlDocument("dontTouch", "dontTouch", true);
 
         final String xmlCharset = "<?xml version=\"dontTouch\" encoding=\"dontTouch\"?>\n" +
                 "<root>\n" +
@@ -403,20 +403,20 @@ public class DocumentTest {
 
     @Test
     public void testMetaCharsetUpdatedDisabledPerDefault() {
-        final Document doc = createHtmlDocument("none");
+        final DocumentModel doc = createHtmlDocument("none");
         assertFalse(doc.updateMetaCharsetElement());
     }
 
-    private Document createHtmlDocument(String charset) {
-        final Document doc = Document.createShell("");
+    private DocumentModel createHtmlDocument(String charset) {
+        final DocumentModel doc = DocumentModel.createShell("");
         doc.head().appendElement("meta").attr("charset", charset);
         doc.head().appendElement("meta").attr("name", "charset").attr("content", charset);
 
         return doc;
     }
 
-    private Document createXmlDocument(String version, String charset, boolean addDecl) {
-        final Document doc = new Document("");
+    private DocumentModel createXmlDocument(String version, String charset, boolean addDecl) {
+        final DocumentModel doc = new DocumentModel("");
         doc.appendElement("root").text("node");
         doc.outputSettings().syntax(Syntax.xml);
 
@@ -443,7 +443,7 @@ public class DocumentTest {
                         + "</html>";
         InputStream is = new ByteArrayInputStream(input.getBytes(Charset.forName("ASCII")));
 
-        Document doc = Jsoup.parse(is, null, "http://example.com");
+        DocumentModel doc = Jsoup.parse(is, null, "http://example.com");
         doc.outputSettings().escapeMode(Entities.EscapeMode.xhtml);
 
         String output = new String(doc.html().getBytes(doc.outputSettings().charset()), doc.outputSettings().charset());
@@ -458,7 +458,7 @@ public class DocumentTest {
         String html = "<p>Alrighty then it's not \uD83D\uDCA9. <span>Next</span></p>"; // 💩
         String asci = "<p>Alrighty then it's not &#x1f4a9;. <span>Next</span></p>";
 
-        final Document doc = Jsoup.parse(html);
+        final DocumentModel doc = Jsoup.parse(html);
         final String[] out = new String[1];
         final Elements p = doc.select("p");
         assertEquals(html, p.outerHtml());

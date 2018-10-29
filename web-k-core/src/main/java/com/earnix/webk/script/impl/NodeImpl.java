@@ -1,6 +1,7 @@
 package com.earnix.webk.script.impl;
 
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.script.Binder;
 import com.earnix.webk.script.web_idl.Attribute;
 import com.earnix.webk.script.web_idl.DOMString;
@@ -30,10 +31,10 @@ import java.util.List;
 @Slf4j
 public class NodeImpl implements Node {
 
-    com.earnix.webk.dom.nodes.Node target;
+    NodeModel target;
     BasicPanel panel;
 
-    public NodeImpl(com.earnix.webk.dom.nodes.Node target, BasicPanel panel) {
+    public NodeImpl(NodeModel target, BasicPanel panel) {
         this.target = target;
         this.panel = panel;
     }
@@ -76,8 +77,8 @@ public class NodeImpl implements Node {
     @Override
     public com.earnix.webk.script.whatwg_dom.Element parentElement() {
         val modelParent = target.parent();
-        if (modelParent instanceof Element) {
-            return Binder.getElement((Element) modelParent, panel);
+        if (modelParent instanceof ElementModel) {
+            return Binder.getElement((ElementModel) modelParent, panel);
         }
         return null;
     }
@@ -175,7 +176,7 @@ public class NodeImpl implements Node {
     @Override
     public Node appendChild(Node node) {
         NodeImpl impl = (NodeImpl) node;
-        ((Element) target).appendChild(impl.target);
+        ((ElementModel) target).appendChild(impl.target);
         return node;
     }
 

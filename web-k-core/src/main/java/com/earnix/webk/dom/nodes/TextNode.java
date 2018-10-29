@@ -10,7 +10,7 @@ import java.io.IOException;
  *
  * @author Jonathan Hedley, jonathan@hedley.net
  */
-public class TextNode extends LeafNode {
+public class TextNode extends LeafNodeModel {
 
     /**
      * Create a new TextNode representing the supplied (unencoded) text).
@@ -99,16 +99,16 @@ public class TextNode extends LeafNode {
         return tailNode;
     }
 
-    void outerHtmlHead(Appendable accum, int depth, Document.OutputSettings out) throws IOException {
-        if (out.prettyPrint() && ((siblingIndex() == 0 && parentNode instanceof Element && ((Element) parentNode).tag().formatAsBlock() && !isBlank()) || (out.outline() && siblingNodes().size() > 0 && !isBlank())))
+    void outerHtmlHead(Appendable accum, int depth, DocumentModel.OutputSettings out) throws IOException {
+        if (out.prettyPrint() && ((siblingIndex() == 0 && parentNode instanceof ElementModel && ((ElementModel) parentNode).tag().formatAsBlock() && !isBlank()) || (out.outline() && siblingNodes().size() > 0 && !isBlank())))
             indent(accum, depth, out);
 
-        boolean normaliseWhite = out.prettyPrint() && parent() instanceof Element
-                && !Element.preserveWhitespace(parent());
+        boolean normaliseWhite = out.prettyPrint() && parent() instanceof ElementModel
+                && !ElementModel.preserveWhitespace(parent());
         Entities.escape(accum, coreValue(), out, false, normaliseWhite, false);
     }
 
-    void outerHtmlTail(Appendable accum, int depth, Document.OutputSettings out) {
+    void outerHtmlTail(Appendable accum, int depth, DocumentModel.OutputSettings out) {
     }
 
     @Override

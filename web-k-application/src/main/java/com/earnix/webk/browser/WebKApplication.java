@@ -142,7 +142,7 @@ public class WebKApplication {
     class FrameBrowserPanelListener implements BrowserPanelListener {
 
         public void pageLoadSuccess(String url, String title) {
-            frame.setTitle(title + (title.length() > 0 ? " - " : "") + "Flying Saucer");
+            frame.setTitle(title + (title.length() > 0 ? " - " : "") + "Web-K Browser");
         }
     }
 }

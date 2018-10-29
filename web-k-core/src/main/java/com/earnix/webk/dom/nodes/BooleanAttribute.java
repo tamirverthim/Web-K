@@ -5,7 +5,7 @@ package com.earnix.webk.dom.nodes;
  *
  * @deprecated just use null values (vs empty string) for booleans.
  */
-public class BooleanAttribute extends Attribute {
+public class BooleanAttribute extends AttributeModel {
     /**
      * Create a new boolean attribute from unencoded (raw) key.
      *

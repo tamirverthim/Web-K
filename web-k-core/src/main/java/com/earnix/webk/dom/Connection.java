@@ -1,6 +1,6 @@
 package com.earnix.webk.dom;
 
-import com.earnix.webk.dom.nodes.Document;
+import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.parser.Parser;
 
 import javax.net.ssl.SSLSocketFactory;
@@ -314,7 +314,7 @@ public interface Connection {
      * @throws java.net.SocketTimeoutException if the connection times out
      * @throws IOException                     on error
      */
-    Document get() throws IOException;
+    DocumentModel get() throws IOException;
 
     /**
      * Execute the request as a POST, and parse the result.
@@ -326,7 +326,7 @@ public interface Connection {
      * @throws java.net.SocketTimeoutException if the connection times out
      * @throws IOException                     on error
      */
-    Document post() throws IOException;
+    DocumentModel post() throws IOException;
 
     /**
      * Execute the request.
@@ -771,7 +771,7 @@ public interface Connection {
          * @return a parsed Document
          * @throws IOException on error
          */
-        Document parse() throws IOException;
+        DocumentModel parse() throws IOException;
 
         /**
          * Get the body of the response as a plain string.

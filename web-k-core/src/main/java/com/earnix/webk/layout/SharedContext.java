@@ -24,9 +24,9 @@ import com.earnix.webk.context.StyleReference;
 import com.earnix.webk.css.style.CalculatedStyle;
 import com.earnix.webk.css.style.EmptyStyle;
 import com.earnix.webk.css.value.FontSpecification;
-import com.earnix.webk.dom.nodes.Document;
-import com.earnix.webk.dom.nodes.Element;
-import com.earnix.webk.dom.nodes.Node;
+import com.earnix.webk.dom.nodes.DocumentModel;
+import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.extend.FSCanvas;
 import com.earnix.webk.extend.FontContext;
 import com.earnix.webk.extend.FontResolver;
@@ -92,7 +92,7 @@ public class SharedContext {
 
     int dotsPerPixel = 1;
 
-    Map<Element, CalculatedStyle> styleMap;
+    Map<ElementModel, CalculatedStyle> styleMap;
 
     ReplacedElementFactory replacedElementFactory;
 
@@ -498,11 +498,11 @@ public class SharedContext {
         this.dotsPerPixel = pixelsPerDot;
     }
 
-    public CalculatedStyle getStyle(Element e) {
+    public CalculatedStyle getStyle(ElementModel e) {
         return getStyle(e, false);
     }
 
-    public CalculatedStyle getStyle(Element e, boolean restyle) {
+    public CalculatedStyle getStyle(ElementModel e, boolean restyle) {
         if (styleMap == null) {
             styleMap = new HashMap<>(1024, 0.75f);
         }
@@ -512,12 +512,12 @@ public class SharedContext {
             result = (CalculatedStyle) styleMap.get(e);
         }
         if (result == null) {
-            Node parent = e.parentNode();
+            NodeModel parent = e.parentNode();
             CalculatedStyle parentCalculatedStyle;
-            if (parent instanceof Document) {
+            if (parent instanceof DocumentModel) {
                 parentCalculatedStyle = new EmptyStyle();
             } else {
-                parentCalculatedStyle = getStyle((Element) parent, false);
+                parentCalculatedStyle = getStyle((ElementModel) parent, false);
             }
 
             result = parentCalculatedStyle.deriveStyle(getCss().getCascadedStyle(e, restyle));
@@ -549,7 +549,7 @@ public class SharedContext {
         this.replacedElementFactory = ref;
     }
 
-    public void removeElementReferences(Element e) {
+    public void removeElementReferences(ElementModel e) {
         String id = namespaceHandler.getID(e);
         if (id != null && id.length() > 0) {
             removeBoxId(id);
@@ -563,11 +563,11 @@ public class SharedContext {
         getReplacedElementFactory().remove(e);
 
         if (e.childNodeSize() > 0) {
-            List<Node> children = e.childNodes();
+            List<NodeModel> children = e.childNodes();
             for (int i = 0; i < children.size(); i++) {
-                Node child = children.get(i);
-                if (child instanceof Element) {
-                    removeElementReferences((Element) child);
+                NodeModel child = children.get(i);
+                if (child instanceof ElementModel) {
+                    removeElementReferences((ElementModel) child);
                 }
             }
         }

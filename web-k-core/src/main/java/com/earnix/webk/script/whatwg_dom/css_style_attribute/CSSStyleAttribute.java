@@ -1,7 +1,7 @@
 package com.earnix.webk.script.whatwg_dom.css_style_attribute;
 
 import com.earnix.webk.css.constants.CSSName;
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.script.Function;
 import com.earnix.webk.swing.BasicPanel;
 import com.helger.css.ECSSVersion;
@@ -23,9 +23,9 @@ public class CSSStyleAttribute extends AbstractJSObject {
 
     final BasicPanel panel;
     HashMap<String, String> map = new HashMap<>();
-    Element model;
+    ElementModel model;
 
-    public CSSStyleAttribute(Element model, BasicPanel panel) {
+    public CSSStyleAttribute(ElementModel model, BasicPanel panel) {
         this(model.attr("style"), panel);
         this.model = model;
     }

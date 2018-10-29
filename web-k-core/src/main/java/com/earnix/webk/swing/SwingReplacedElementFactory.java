@@ -20,9 +20,9 @@
 package com.earnix.webk.swing;
 
 
-import com.earnix.webk.dom.nodes.Document;
-import com.earnix.webk.dom.nodes.Element;
-import com.earnix.webk.dom.nodes.Node;
+import com.earnix.webk.dom.nodes.DocumentModel;
+import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.extend.ReplacedElement;
 import com.earnix.webk.extend.ReplacedElementFactory;
 import com.earnix.webk.extend.UserAgentCallback;
@@ -92,7 +92,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
             int cssWidth,
             int cssHeight
     ) {
-        Element el = box.getElement();
+        ElementModel el = box.getElement();
         ReplacedElement replacedEl = createReplacedElementImpl(context, box, uac, cssWidth, cssHeight);
 
         if (replacedEl instanceof SwingReplacedElement) {
@@ -130,7 +130,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
             int cssWidth,
             int cssHeight
     ) {
-        Element e = box.getElement();
+        ElementModel e = box.getElement();
 
         if (e == null) {
             return null;
@@ -145,7 +145,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
             return new SVGReplacedElement(e, cssWidth, cssHeight);
         } else {
             //form components
-            Element parentForm = getParentForm(e, context);
+            ElementModel parentForm = getParentForm(e, context);
             //parentForm may be null! No problem! Assume action is this document and method is get.
             XhtmlForm form = getForm(parentForm);
             if (form == null) {
@@ -186,7 +186,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
      * @param cssHeight Target height of the image @return A ReplacedElement for the image; will not be null.
      * @return
      */
-    protected ReplacedElement replaceImage(UserAgentCallback uac, LayoutContext context, Element elem, int cssWidth, int cssHeight) {
+    protected ReplacedElement replaceImage(UserAgentCallback uac, LayoutContext context, ElementModel elem, int cssWidth, int cssHeight) {
         ReplacedElement re = null;
         String imageSrc = context.getNamespaceHandler().getImageSourceURI(elem);
 
@@ -216,7 +216,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
         return re;
     }
 
-    private ReplacedElement lookupImageReplacedElement(final Element elem, final String ruri, final int cssWidth, final int cssHeight) {
+    private ReplacedElement lookupImageReplacedElement(final ElementModel elem, final String ruri, final int cssWidth, final int cssHeight) {
         if (imageComponents == null) {
             return null;
         }
@@ -263,7 +263,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
      * @param cssWidth
      * @param cssHeight
      */
-    protected void storeImageReplacedElement(Element e, ReplacedElement cc, String uri, final int cssWidth, final int cssHeight) {
+    protected void storeImageReplacedElement(ElementModel e, ReplacedElement cc, String uri, final int cssWidth, final int cssHeight) {
         if (imageComponents == null) {
             imageComponents = new HashMap();
         }
@@ -278,7 +278,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
      * @param uri
      * @return The ReplacedElement for the image, or null if there is none.
      */
-    protected ReplacedElement lookupImageReplacedElement(Element e, String uri) {
+    protected ReplacedElement lookupImageReplacedElement(ElementModel e, String uri) {
         return lookupImageReplacedElement(e, uri, -1, -1);
     }
 
@@ -288,7 +288,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
      * @param e The element under which the form is keyed (e.g. "<form>" in HTML)
      * @param f The form element being stored.
      */
-    protected void addForm(Element e, XhtmlForm f) {
+    protected void addForm(ElementModel e, XhtmlForm f) {
         if (forms == null) {
             forms = new LinkedHashMap();
         }
@@ -301,7 +301,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
      * @param e The Element to which the form is keyed
      * @return The form, or null if not found.
      */
-    protected XhtmlForm getForm(Element e) {
+    protected XhtmlForm getForm(ElementModel e) {
         if (forms == null) {
             return null;
         }
@@ -311,19 +311,19 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
     /**
      * @param e
      */
-    protected Element getParentForm(Element e, LayoutContext context) {
-        Node node = e;
+    protected ElementModel getParentForm(ElementModel e, LayoutContext context) {
+        NodeModel node = e;
 
         do {
             node = node.parentNode();
-        } while (node instanceof Element &&
-                !context.getNamespaceHandler().isFormElement((Element) node));
+        } while (node instanceof ElementModel &&
+                !context.getNamespaceHandler().isFormElement((ElementModel) node));
 
-        if (!(node instanceof Element) || node instanceof Document) {
+        if (!(node instanceof ElementModel) || node instanceof DocumentModel) {
             return null;
         }
 
-        return (Element) node;
+        return (ElementModel) node;
     }
 
     /**
@@ -334,7 +334,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
         //imageComponents = null;
     }
 
-    public void remove(Element e) {
+    public void remove(ElementModel e) {
         if (forms != null) {
             forms.remove(e);
         }
@@ -349,12 +349,12 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
     }
 
     private static class CacheKey {
-        final Element elem;
+        final ElementModel elem;
         final String uri;
         final int width;
         final int height;
 
-        public CacheKey(final Element elem, final String uri, final int width, final int height) {
+        public CacheKey(final ElementModel elem, final String uri, final int width, final int height) {
             this.uri = uri;
             this.width = width;
             this.height = height;

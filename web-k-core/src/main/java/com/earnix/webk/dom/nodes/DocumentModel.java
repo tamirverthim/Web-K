@@ -18,7 +18,7 @@ import java.util.List;
  *
  * @author Jonathan Hedley, jonathan@hedley.net
  */
-public class Document extends Element {
+public class DocumentModel extends ElementModel {
     private OutputSettings outputSettings = new OutputSettings();
     private Parser parser; // the parser used to parse this document
     private QuirksMode quirksMode = QuirksMode.noQuirks;
@@ -32,7 +32,7 @@ public class Document extends Element {
      * @see Jsoup#parse
      * @see #createShell
      */
-    public Document(String baseUri) {
+    public DocumentModel(String baseUri) {
         super(Tag.valueOf("#root", ParseSettings.htmlDefault), baseUri);
         this.location = baseUri;
     }
@@ -43,12 +43,12 @@ public class Document extends Element {
      * @param baseUri baseUri of document
      * @return document with html, head, and body elements.
      */
-    public static Document createShell(String baseUri) {
+    public static DocumentModel createShell(String baseUri) {
         Validate.notNull(baseUri);
 
-        Document doc = new Document(baseUri);
+        DocumentModel doc = new DocumentModel(baseUri);
         doc.parser = doc.parser();
-        Element html = doc.appendElement("html");
+        ElementModel html = doc.appendElement("html");
         html.appendElement("head");
         html.appendElement("body");
 
@@ -70,7 +70,7 @@ public class Document extends Element {
      *
      * @return {@code head}
      */
-    public Element head() {
+    public ElementModel head() {
         return findFirstElementByTagName("head", this);
     }
 
@@ -79,7 +79,7 @@ public class Document extends Element {
      *
      * @return {@code body}
      */
-    public Element body() {
+    public ElementModel body() {
         return findFirstElementByTagName("body", this);
     }
 
@@ -90,7 +90,7 @@ public class Document extends Element {
      */
     public String title() {
         // title is a preserve whitespace tag (for document output), but normalised here
-        Element titleEl = getElementsByTag("title").first();
+        ElementModel titleEl = getElementsByTag("title").first();
         return titleEl != null ? StringUtil.normaliseWhitespace(titleEl.text()).trim() : "";
     }
 
@@ -102,7 +102,7 @@ public class Document extends Element {
      */
     public void title(String title) {
         Validate.notNull(title);
-        Element titleEl = getElementsByTag("title").first();
+        ElementModel titleEl = getElementsByTag("title").first();
         if (titleEl == null) { // add to head
             head().appendElement("title").text(title);
         } else {
@@ -116,8 +116,8 @@ public class Document extends Element {
      * @param tagName element tag name (e.g. {@code a})
      * @return new element
      */
-    public Element createElement(String tagName) {
-        return new Element(Tag.valueOf(tagName, ParseSettings.preserveCase), this.baseUri());
+    public ElementModel createElement(String tagName) {
+        return new ElementModel(Tag.valueOf(tagName, ParseSettings.preserveCase), this.baseUri());
     }
 
     /**
@@ -126,8 +126,8 @@ public class Document extends Element {
      *
      * @return this document after normalisation
      */
-    public Document normalise() {
-        Element htmlEl = findFirstElementByTagName("html", this);
+    public DocumentModel normalise() {
+        ElementModel htmlEl = findFirstElementByTagName("html", this);
         if (htmlEl == null)
             htmlEl = appendElement("html");
         if (head() == null)
@@ -150,9 +150,9 @@ public class Document extends Element {
     }
 
     // does not recurse.
-    private void normaliseTextNodes(Element element) {
-        List<Node> toMove = new ArrayList<>();
-        for (Node node : element.childNodes) {
+    private void normaliseTextNodes(ElementModel element) {
+        List<NodeModel> toMove = new ArrayList<>();
+        for (NodeModel node : element.childNodes) {
             if (node instanceof TextNode) {
                 TextNode tn = (TextNode) node;
                 if (!tn.isBlank())
@@ -161,7 +161,7 @@ public class Document extends Element {
         }
 
         for (int i = toMove.size() - 1; i >= 0; i--) {
-            Node node = toMove.get(i);
+            NodeModel node = toMove.get(i);
             element.removeChild(node);
             body().prependChild(new TextNode(" "));
             body().prependChild(node);
@@ -169,18 +169,18 @@ public class Document extends Element {
     }
 
     // merge multiple <head> or <body> contents into one, delete the remainder, and ensure they are owned by <html>
-    private void normaliseStructure(String tag, Element htmlEl) {
+    private void normaliseStructure(String tag, ElementModel htmlEl) {
         Elements elements = this.getElementsByTag(tag);
-        Element master = elements.first(); // will always be available as created above if not existent
+        ElementModel master = elements.first(); // will always be available as created above if not existent
         if (elements.size() > 1) { // dupes, move contents to master
-            List<Node> toMove = new ArrayList<>();
+            List<NodeModel> toMove = new ArrayList<>();
             for (int i = 1; i < elements.size(); i++) {
-                Node dupe = elements.get(i);
+                NodeModel dupe = elements.get(i);
                 toMove.addAll(dupe.ensureChildNodes());
                 dupe.remove();
             }
 
-            for (Node dupe : toMove)
+            for (NodeModel dupe : toMove)
                 master.appendChild(dupe);
         }
         // ensure parented by <html>
@@ -190,13 +190,13 @@ public class Document extends Element {
     }
 
     // fast method to get first by tag name, used for html, head, body finders
-    private Element findFirstElementByTagName(String tag, Node node) {
+    private ElementModel findFirstElementByTagName(String tag, NodeModel node) {
         if (node.nodeName().equals(tag))
-            return (Element) node;
+            return (ElementModel) node;
         else {
             int size = node.childNodeSize();
             for (int i = 0; i < size; i++) {
-                Element found = findFirstElementByTagName(tag, node.childNode(i));
+                ElementModel found = findFirstElementByTagName(tag, node.childNode(i));
                 if (found != null)
                     return found;
             }
@@ -216,7 +216,7 @@ public class Document extends Element {
      * @return this document
      */
     @Override
-    public Element text(String text) {
+    public ElementModel text(String text) {
         body().text(text); // overridden to not nuke doc structure
         return this;
     }
@@ -295,8 +295,8 @@ public class Document extends Element {
     }
 
     @Override
-    public Document clone() {
-        Document clone = (Document) super.clone();
+    public DocumentModel clone() {
+        DocumentModel clone = (DocumentModel) super.clone();
         clone.outputSettings = this.outputSettings.clone();
         return clone;
     }
@@ -325,12 +325,12 @@ public class Document extends Element {
             OutputSettings.Syntax syntax = outputSettings().syntax();
 
             if (syntax == OutputSettings.Syntax.html) {
-                Element metaCharset = select("meta[charset]").first();
+                ElementModel metaCharset = select("meta[charset]").first();
 
                 if (metaCharset != null) {
                     metaCharset.attr("charset", charset().displayName());
                 } else {
-                    Element head = head();
+                    ElementModel head = head();
 
                     if (head != null) {
                         head.appendElement("meta").attr("charset", charset().displayName());
@@ -340,7 +340,7 @@ public class Document extends Element {
                 // Remove obsolete elements
                 select("meta[name=charset]").remove();
             } else if (syntax == OutputSettings.Syntax.xml) {
-                Node node = childNodes().get(0);
+                NodeModel node = childNodes().get(0);
 
                 if (node instanceof XmlDeclaration) {
                     XmlDeclaration decl = (XmlDeclaration) node;
@@ -584,7 +584,7 @@ public class Document extends Element {
      * @param outputSettings new output settings.
      * @return this document, for chaining.
      */
-    public Document outputSettings(OutputSettings outputSettings) {
+    public DocumentModel outputSettings(OutputSettings outputSettings) {
         Validate.notNull(outputSettings);
         this.outputSettings = outputSettings;
         return this;
@@ -598,7 +598,7 @@ public class Document extends Element {
         return quirksMode;
     }
 
-    public Document quirksMode(QuirksMode quirksMode) {
+    public DocumentModel quirksMode(QuirksMode quirksMode) {
         this.quirksMode = quirksMode;
         return this;
     }
@@ -619,7 +619,7 @@ public class Document extends Element {
      * @param parser the configured parser to use when further parsing is required for this document.
      * @return this document, for chaining.
      */
-    public Document parser(Parser parser) {
+    public DocumentModel parser(Parser parser) {
         this.parser = parser;
         return this;
     }

@@ -1,5 +1,6 @@
 package com.earnix.webk.script.impl;
 
+import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.script.Binder;
 import com.earnix.webk.script.cssom_view.ScrollToOptions;
 import com.earnix.webk.script.geom.DOMRect;
@@ -37,18 +38,18 @@ import java.util.HashSet;
 @Slf4j
 public class ElementImpl extends NodeImpl implements HTMLElement {
 
-    final com.earnix.webk.dom.nodes.Element model;
+    final ElementModel model;
     final ChildNodeImpl childNodeMixin;
     final BasicPanel panel;
 
-    public ElementImpl(com.earnix.webk.dom.nodes.Element model, BasicPanel panel) {
+    public ElementImpl(ElementModel model, BasicPanel panel) {
         super(model, panel);
         this.model = model;
         this.panel = panel;
         childNodeMixin = new ChildNodeImpl(model);
     }
 
-    public com.earnix.webk.dom.nodes.Element getModel() {
+    public ElementModel getModel() {
         return model;
     }
 

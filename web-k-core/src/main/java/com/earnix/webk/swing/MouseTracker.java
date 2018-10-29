@@ -41,7 +41,7 @@ import java.util.Map;
  */
 public class MouseTracker extends MouseInputAdapter {
     private BasicPanel _panel;
-    private Map _handlers;
+    private Map<FSMouseListener, FSMouseListener> _handlers;
     private Box _last;
     private boolean _enabled;
 
@@ -52,7 +52,7 @@ public class MouseTracker extends MouseInputAdapter {
      */
     public MouseTracker(BasicPanel panel) {
         _panel = panel;
-        _handlers = new LinkedHashMap();
+        _handlers = new LinkedHashMap<>();
     }
 
     /**

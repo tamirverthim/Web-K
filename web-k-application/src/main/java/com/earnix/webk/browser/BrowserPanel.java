@@ -19,7 +19,7 @@
  */
 package com.earnix.webk.browser;
 
-import com.earnix.webk.dom.nodes.Document;
+import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.event.DocumentListener;
 import com.earnix.webk.layout.SharedContext;
 import com.earnix.webk.resource.XMLResource;
@@ -337,7 +337,7 @@ public class BrowserPanel extends JPanel implements DocumentListener {
     }
 
     private void handlePageLoadFailed(String url_text, XRRuntimeException ex) {
-        final Document xr;
+        final DocumentModel xr;
         final String rootCause = getRootCause(ex);
         final String msg = GeneralUtil.escapeHTML(addLineBreaks(rootCause, 80));
         String notFound =

@@ -19,7 +19,7 @@
  */
 package com.earnix.webk.swing;
 
-import com.earnix.webk.dom.nodes.Document;
+import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.event.DocumentListener;
 import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.resource.CSSResource;
@@ -294,7 +294,7 @@ public class NaiveUserAgent implements UserAgentCallback, DocumentListener {
      * @param uri Location of the XML source.
      * @return An XMLResource containing the image.
      */
-    public Document getXMLResource(String uri) {
+    public DocumentModel getXMLResource(String uri) {
 //        InputStream inputStream = resolveAndOpenStream(uri);
 //        XMLResource xmlResource;
 //        try {

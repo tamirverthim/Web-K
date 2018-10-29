@@ -20,7 +20,7 @@
 package com.earnix.webk.layout;
 
 import com.earnix.webk.css.style.CalculatedStyle;
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.ElementModel;
 
 /**
  * All objects appearing the layout tree must implement this interface.  It
@@ -35,9 +35,9 @@ public interface Styleable {
 
     public void setStyle(CalculatedStyle style);
 
-    public Element getElement();
+    public ElementModel getElement();
 
-    public void setElement(Element e);
+    public void setElement(ElementModel e);
 
     public String getPseudoElementOrClass();
 }

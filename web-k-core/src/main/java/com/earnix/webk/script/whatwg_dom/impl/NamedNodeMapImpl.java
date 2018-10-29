@@ -1,6 +1,6 @@
 package com.earnix.webk.script.whatwg_dom.impl;
 
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.script.web_idl.DOMString;
 import com.earnix.webk.script.whatwg_dom.Attr;
 import com.earnix.webk.script.whatwg_dom.NamedNodeMap;
@@ -16,10 +16,10 @@ import lombok.val;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NamedNodeMapImpl implements NamedNodeMap {
 
-    Element modelElement;
+    ElementModel modelElement;
     BasicPanel panel;
 
-    public NamedNodeMapImpl(Element modelElement, BasicPanel panel) {
+    public NamedNodeMapImpl(ElementModel modelElement, BasicPanel panel) {
         this.modelElement = modelElement;
         this.panel = panel;
     }

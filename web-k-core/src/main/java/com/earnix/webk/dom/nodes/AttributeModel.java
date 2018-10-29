@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * A single key + value attribute. (Only used for presentation.)
  */
-public class Attribute implements Map.Entry<String, String>, Cloneable {
+public class AttributeModel implements Map.Entry<String, String>, Cloneable {
     private static final String[] booleanAttributes = {
             "allowfullscreen", "async", "autofocus", "checked", "compact", "declare", "default", "defer", "disabled",
             "formnovalidate", "hidden", "inert", "ismap", "itemscope", "multiple", "muted", "nohref", "noresize",
@@ -30,7 +30,7 @@ public class Attribute implements Map.Entry<String, String>, Cloneable {
      * @param value attribute value
      * @see #createFromEncoded
      */
-    public Attribute(String key, String value) {
+    public AttributeModel(String key, String value) {
         this(key, value, null);
     }
 
@@ -42,7 +42,7 @@ public class Attribute implements Map.Entry<String, String>, Cloneable {
      * @param parent the containing Attributes (this Attribute is not automatically added to said Attributes)
      * @see #createFromEncoded
      */
-    public Attribute(String key, String val, Attributes parent) {
+    public AttributeModel(String key, String val, Attributes parent) {
         Validate.notNull(key);
         this.key = key.trim();
         Validate.notEmpty(key); // trimming could potentially make empty, so validate here
@@ -110,14 +110,14 @@ public class Attribute implements Map.Entry<String, String>, Cloneable {
         StringBuilder sb = StringUtil.borrowBuilder();
 
         try {
-            html(sb, (new Document("")).outputSettings());
+            html(sb, (new DocumentModel("")).outputSettings());
         } catch (IOException exception) {
             throw new SerializationException(exception);
         }
         return StringUtil.releaseBuilder(sb);
     }
 
-    protected static void html(String key, String val, Appendable accum, Document.OutputSettings out) throws IOException {
+    protected static void html(String key, String val, Appendable accum, DocumentModel.OutputSettings out) throws IOException {
         accum.append(key);
         if (!shouldCollapseAttribute(key, val, out)) {
             accum.append("=\"");
@@ -126,7 +126,7 @@ public class Attribute implements Map.Entry<String, String>, Cloneable {
         }
     }
 
-    protected void html(Appendable accum, Document.OutputSettings out) throws IOException {
+    protected void html(Appendable accum, DocumentModel.OutputSettings out) throws IOException {
         html(key, val, accum, out);
     }
 
@@ -147,9 +147,9 @@ public class Attribute implements Map.Entry<String, String>, Cloneable {
      * @param encodedValue HTML attribute encoded value
      * @return attribute
      */
-    public static Attribute createFromEncoded(String unencodedKey, String encodedValue) {
+    public static AttributeModel createFromEncoded(String unencodedKey, String encodedValue) {
         String value = Entities.unescape(encodedValue, true);
-        return new Attribute(unencodedKey, value, null); // parent will get set when Put
+        return new AttributeModel(unencodedKey, value, null); // parent will get set when Put
     }
 
     protected boolean isDataAttribute() {
@@ -166,14 +166,14 @@ public class Attribute implements Map.Entry<String, String>, Cloneable {
      * @param out output settings
      * @return Returns whether collapsible or not
      */
-    protected final boolean shouldCollapseAttribute(Document.OutputSettings out) {
+    protected final boolean shouldCollapseAttribute(DocumentModel.OutputSettings out) {
         return shouldCollapseAttribute(key, val, out);
     }
 
-    protected static boolean shouldCollapseAttribute(final String key, final String val, final Document.OutputSettings out) {
+    protected static boolean shouldCollapseAttribute(final String key, final String val, final DocumentModel.OutputSettings out) {
         return (
-                out.syntax() == Document.OutputSettings.Syntax.html &&
-                        (val == null || ("".equals(val) || val.equalsIgnoreCase(key)) && Attribute.isBooleanAttribute(key)));
+                out.syntax() == DocumentModel.OutputSettings.Syntax.html &&
+                        (val == null || ("".equals(val) || val.equalsIgnoreCase(key)) && AttributeModel.isBooleanAttribute(key)));
     }
 
     /**
@@ -194,7 +194,7 @@ public class Attribute implements Map.Entry<String, String>, Cloneable {
     public boolean equals(Object o) { // note parent not considered
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Attribute attribute = (Attribute) o;
+        AttributeModel attribute = (AttributeModel) o;
         if (key != null ? !key.equals(attribute.key) : attribute.key != null) return false;
         return val != null ? val.equals(attribute.val) : attribute.val == null;
     }
@@ -207,9 +207,9 @@ public class Attribute implements Map.Entry<String, String>, Cloneable {
     }
 
     @Override
-    public Attribute clone() {
+    public AttributeModel clone() {
         try {
-            return (Attribute) super.clone();
+            return (AttributeModel) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }

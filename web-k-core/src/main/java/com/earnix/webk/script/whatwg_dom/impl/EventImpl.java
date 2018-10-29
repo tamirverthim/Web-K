@@ -7,14 +7,22 @@ import com.earnix.webk.script.whatwg_dom.DOMHighResTimeStamp;
 import com.earnix.webk.script.whatwg_dom.Event;
 import com.earnix.webk.script.whatwg_dom.EventInit;
 import com.earnix.webk.script.whatwg_dom.EventTarget;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 /**
  * @author Taras Maslov
  * 8/14/2018
  */
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
+@Setter
 public class EventImpl implements Event {
 
     String type;
+    short phase;
 
     public EventImpl(String type, EventInit eventInit) {
         construct(type, eventInit);

@@ -10,7 +10,7 @@ import java.io.IOException;
  *
  * @author Jonathan Hedley, jonathan@hedley.net
  */
-public class Comment extends LeafNode {
+public class Comment extends LeafNodeModel {
     private static final String COMMENT_KEY = "comment";
 
     /**
@@ -46,7 +46,7 @@ public class Comment extends LeafNode {
         return coreValue();
     }
 
-    void outerHtmlHead(Appendable accum, int depth, Document.OutputSettings out) throws IOException {
+    void outerHtmlHead(Appendable accum, int depth, DocumentModel.OutputSettings out) throws IOException {
         if (out.prettyPrint())
             indent(accum, depth, out);
         accum
@@ -55,7 +55,7 @@ public class Comment extends LeafNode {
                 .append("-->");
     }
 
-    void outerHtmlTail(Appendable accum, int depth, Document.OutputSettings out) {
+    void outerHtmlTail(Appendable accum, int depth, DocumentModel.OutputSettings out) {
     }
 
     @Override
@@ -80,10 +80,10 @@ public class Comment extends LeafNode {
      */
     public XmlDeclaration asXmlDeclaration() {
         String data = getData();
-        Document doc = Jsoup.parse("<" + data.substring(1, data.length() - 1) + ">", baseUri(), Parser.xmlParser());
+        DocumentModel doc = Jsoup.parse("<" + data.substring(1, data.length() - 1) + ">", baseUri(), Parser.xmlParser());
         XmlDeclaration decl = null;
         if (doc.childNodeSize() > 0) {
-            Element el = doc.child(0);
+            ElementModel el = doc.child(0);
             decl = new XmlDeclaration(NodeUtils.parser(doc).settings().normalizeTag(el.tagName()), data.startsWith("!"));
             decl.attributes().addAll(el.attributes());
         }

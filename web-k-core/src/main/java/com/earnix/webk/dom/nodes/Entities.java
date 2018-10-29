@@ -24,7 +24,7 @@ public class Entities {
     static final int codepointRadix = 36;
     private static final char[] codeDelims = {',', ';'};
     private static final HashMap<String, String> multipoints = new HashMap<>(); // name -> multiple character references
-    private static final Document.OutputSettings DefaultOutput = new Document.OutputSettings();
+    private static final DocumentModel.OutputSettings DefaultOutput = new DocumentModel.OutputSettings();
 
     public enum EscapeMode {
         /**
@@ -146,7 +146,7 @@ public class Entities {
      * @param out    the output settings to use
      * @return the escaped string
      */
-    public static String escape(String string, Document.OutputSettings out) {
+    public static String escape(String string, DocumentModel.OutputSettings out) {
         if (string == null)
             return "";
         StringBuilder accum = StringUtil.borrowBuilder();
@@ -170,7 +170,7 @@ public class Entities {
     }
 
     // this method is ugly, and does a lot. but other breakups cause rescanning and stringbuilder generations
-    static void escape(Appendable accum, String string, Document.OutputSettings out,
+    static void escape(Appendable accum, String string, DocumentModel.OutputSettings out,
                        boolean inAttribute, boolean normaliseWhite, boolean stripLeadingWhite) throws IOException {
 
         boolean lastWasWhite = false;

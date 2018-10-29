@@ -19,8 +19,8 @@
  */
 package com.earnix.webk.simple.extend.form;
 
-import com.earnix.webk.dom.nodes.Element;
-import com.earnix.webk.dom.nodes.Node;
+import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.dom.select.Elements;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
@@ -38,7 +38,7 @@ import java.util.Optional;
 
 public class SelectField extends FormField {
 
-    public SelectField(Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
+    public SelectField(ElementModel e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }
 
@@ -63,7 +63,7 @@ public class SelectField extends FormField {
         List<Integer> selectedIndices = new ArrayList();
         Elements options = getElement().getElementsByTag("option");
         for (int i = 0; i < options.size(); i++) {
-            Element option = options.get(i);
+            ElementModel option = options.get(i);
             if (XHTMLUtils.isTrue(option, "selected")) {
                 selectedIndices.add(new Integer(i));
             }
@@ -128,12 +128,12 @@ public class SelectField extends FormField {
         return list;
     }
 
-    private void addChildren(List<NameValuePair> list, Element e) {
-        List<Node> children = e.childNodes();
+    private void addChildren(List<NameValuePair> list, ElementModel e) {
+        List<NodeModel> children = e.childNodes();
         for (int i = 0; i < children.size(); i++) {
-            if (!(children.get(i) instanceof Element))
+            if (!(children.get(i) instanceof ElementModel))
                 continue;
-            Element child = (Element) children.get(i);
+            ElementModel child = (ElementModel) children.get(i);
 
             if ("option".equals(child.nodeName())) {
                 // option tag, add it

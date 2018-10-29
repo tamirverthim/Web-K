@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 public class AttributeTest {
     @Test
     public void html() {
-        Attribute attr = new Attribute("key", "value &");
+        AttributeModel attr = new AttributeModel("key", "value &");
         assertEquals("key=\"value &amp;\"", attr.html());
         assertEquals(attr.html(), attr.toString());
     }
@@ -15,7 +15,7 @@ public class AttributeTest {
     @Test
     public void testWithSupplementaryCharacterInAttributeKeyAndValue() {
         String s = new String(Character.toChars(135361));
-        Attribute attr = new Attribute(s, "A" + s + "B");
+        AttributeModel attr = new AttributeModel(s, "A" + s + "B");
         assertEquals(s + "=\"A" + s + "B\"", attr.html());
         assertEquals(attr.html(), attr.toString());
     }

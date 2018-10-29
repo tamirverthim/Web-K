@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * An XML Declaration.
  */
-public class XmlDeclaration extends LeafNode {
+public class XmlDeclaration extends LeafNodeModel {
     // todo this impl isn't really right, the data shouldn't be attributes, just a run of text after the name
     private final boolean isProcessingInstruction; // <! if true, <? if false, declaration (and last data char should be ?)
 
@@ -59,15 +59,15 @@ public class XmlDeclaration extends LeafNode {
     public String getWholeDeclaration() {
         StringBuilder sb = StringUtil.borrowBuilder();
         try {
-            getWholeDeclaration(sb, new Document.OutputSettings());
+            getWholeDeclaration(sb, new DocumentModel.OutputSettings());
         } catch (IOException e) {
             throw new SerializationException(e);
         }
         return StringUtil.releaseBuilder(sb).trim();
     }
 
-    private void getWholeDeclaration(Appendable accum, Document.OutputSettings out) throws IOException {
-        for (Attribute attribute : attributes()) {
+    private void getWholeDeclaration(Appendable accum, DocumentModel.OutputSettings out) throws IOException {
+        for (AttributeModel attribute : attributes()) {
             if (!attribute.getKey().equals(nodeName())) { // skips coreValue (name)
                 accum.append(' ');
                 attribute.html(accum, out);
@@ -75,7 +75,7 @@ public class XmlDeclaration extends LeafNode {
         }
     }
 
-    void outerHtmlHead(Appendable accum, int depth, Document.OutputSettings out) throws IOException {
+    void outerHtmlHead(Appendable accum, int depth, DocumentModel.OutputSettings out) throws IOException {
         accum
                 .append("<")
                 .append(isProcessingInstruction ? "!" : "?")
@@ -86,7 +86,7 @@ public class XmlDeclaration extends LeafNode {
                 .append(">");
     }
 
-    void outerHtmlTail(Appendable accum, int depth, Document.OutputSettings out) {
+    void outerHtmlTail(Appendable accum, int depth, DocumentModel.OutputSettings out) {
     }
 
     @Override

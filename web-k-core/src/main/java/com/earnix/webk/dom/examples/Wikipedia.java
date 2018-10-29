@@ -1,8 +1,8 @@
 package com.earnix.webk.dom.examples;
 
 import com.earnix.webk.dom.Jsoup;
-import com.earnix.webk.dom.nodes.Document;
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.DocumentModel;
+import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.select.Elements;
 
 import java.io.IOException;
@@ -12,11 +12,11 @@ import java.io.IOException;
  */
 public class Wikipedia {
     public static void main(String[] args) throws IOException {
-        Document doc = Jsoup.connect("http://en.wikipedia.org/").get();
+        DocumentModel doc = Jsoup.connect("http://en.wikipedia.org/").get();
         log(doc.title());
 
         Elements newsHeadlines = doc.select("#mp-itn b a");
-        for (Element headline : newsHeadlines) {
+        for (ElementModel headline : newsHeadlines) {
             log("%s\n\t%s", headline.attr("title"), headline.absUrl("href"));
         }
     }

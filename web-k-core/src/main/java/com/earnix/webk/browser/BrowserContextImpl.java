@@ -1,6 +1,6 @@
 package com.earnix.webk.browser;
 
-import com.earnix.webk.dom.nodes.Document;
+import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.simple.XHTMLPanel;
 
@@ -15,7 +15,7 @@ public class BrowserContextImpl implements BrowserContext {
     }
 
     @Override
-    public Document getModel() {
+    public DocumentModel getModel() {
         return null;
     }
 

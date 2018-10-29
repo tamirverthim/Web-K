@@ -50,8 +50,8 @@ public class AttributesTest {
         a.put("data-name", "Jsoup");
         assertTrue(a.hasKey("Tot"));
 
-        Iterator<Attribute> iterator = a.iterator();
-        Attribute attr = iterator.next();
+        Iterator<AttributeModel> iterator = a.iterator();
+        AttributeModel attr = iterator.next();
         assertEquals("Tot", attr.getKey());
         iterator.remove();
         assertEquals(2, a.size());
@@ -72,8 +72,8 @@ public class AttributesTest {
         a.put("Hello", "There");
 
         assertFalse(a.hasKey("Foo"));
-        Iterator<Attribute> iterator = a.iterator();
-        Attribute attr = iterator.next();
+        Iterator<AttributeModel> iterator = a.iterator();
+        AttributeModel attr = iterator.next();
         attr.setKey("Foo");
         attr = iterator.next();
         attr.setKey("Bar");
@@ -93,7 +93,7 @@ public class AttributesTest {
         a.put("data-name", "3");
 
         int seen = 0;
-        for (Attribute attribute : a) {
+        for (AttributeModel attribute : a) {
             seen++;
             assertEquals(String.valueOf(seen), attribute.getValue());
         }
@@ -110,10 +110,10 @@ public class AttributesTest {
             a.put(atts[0], atts[1]);
         }
 
-        Iterator<Attribute> iterator = a.iterator();
+        Iterator<AttributeModel> iterator = a.iterator();
         assertTrue(iterator.hasNext());
         int i = 0;
-        for (Attribute attribute : a) {
+        for (AttributeModel attribute : a) {
             assertEquals(datas[i][0], attribute.getKey());
             assertEquals(datas[i][1], attribute.getValue());
             i++;
@@ -125,7 +125,7 @@ public class AttributesTest {
     public void testIteratorEmpty() {
         Attributes a = new Attributes();
 
-        Iterator<Attribute> iterator = a.iterator();
+        Iterator<AttributeModel> iterator = a.iterator();
         assertFalse(iterator.hasNext());
     }
 
@@ -150,7 +150,7 @@ public class AttributesTest {
     public void testSetKeyConsistency() {
         Attributes a = new Attributes();
         a.put("a", "a");
-        for (Attribute at : a) {
+        for (AttributeModel at : a) {
             at.setKey("b");
         }
         assertFalse("Attribute 'a' not correctly removed", a.hasKey("a"));

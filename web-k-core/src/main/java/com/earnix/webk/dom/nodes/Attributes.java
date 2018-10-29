@@ -30,7 +30,7 @@ import static com.earnix.webk.dom.internal.Normalizer.lowerCase;
  *
  * @author Jonathan Hedley, jonathan@hedley.net
  */
-public class Attributes implements Iterable<Attribute>, Cloneable {
+public class Attributes implements Iterable<AttributeModel>, Cloneable {
     protected static final String dataPrefix = "data-";
     private static final int InitialCapacity = 4; // todo - analyze Alexa 1MM sites, determine best setting
 
@@ -168,7 +168,7 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
      * @param attribute attribute with case sensitive key
      * @return these attributes, for chaining
      */
-    public Attributes put(Attribute attribute) {
+    public Attributes put(AttributeModel attribute) {
         Validate.notNull(attribute);
         put(attribute.getKey(), attribute.getValue());
         attribute.parent = this;
@@ -249,15 +249,15 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
             return;
         checkCapacity(size + incoming.size);
 
-        for (Attribute attr : incoming) {
+        for (AttributeModel attr : incoming) {
             // todo - should this be case insensitive?
             put(attr);
         }
 
     }
 
-    public Iterator<Attribute> iterator() {
-        return new Iterator<Attribute>() {
+    public Iterator<AttributeModel> iterator() {
+        return new Iterator<AttributeModel>() {
             int i = 0;
 
             @Override
@@ -266,8 +266,8 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
             }
 
             @Override
-            public Attribute next() {
-                final Attribute attr = new Attribute(keys[i], vals[i], Attributes.this);
+            public AttributeModel next() {
+                final AttributeModel attr = new AttributeModel(keys[i], vals[i], Attributes.this);
                 i++;
                 return attr;
             }
@@ -284,12 +284,12 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
      *
      * @return an view of the attributes as an unmodifialbe List.
      */
-    public List<Attribute> asList() {
-        ArrayList<Attribute> list = new ArrayList<>(size);
+    public List<AttributeModel> asList() {
+        ArrayList<AttributeModel> list = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
-            Attribute attr = vals[i] == null ?
+            AttributeModel attr = vals[i] == null ?
                     new BooleanAttribute(keys[i]) : // deprecated class, but maybe someone still wants it
-                    new Attribute(keys[i], vals[i], Attributes.this);
+                    new AttributeModel(keys[i], vals[i], Attributes.this);
             list.add(attr);
         }
         return Collections.unmodifiableList(list);
@@ -314,14 +314,14 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
     public String html() {
         StringBuilder sb = StringUtil.borrowBuilder();
         try {
-            html(sb, (new Document("")).outputSettings()); // output settings a bit funky, but this html() seldom used
+            html(sb, (new DocumentModel("")).outputSettings()); // output settings a bit funky, but this html() seldom used
         } catch (IOException e) { // ought never happen
             throw new SerializationException(e);
         }
         return StringUtil.releaseBuilder(sb);
     }
 
-    final void html(final Appendable accum, final Document.OutputSettings out) throws IOException {
+    final void html(final Appendable accum, final DocumentModel.OutputSettings out) throws IOException {
         final int sz = size;
         for (int i = 0; i < sz; i++) {
             // inlined from Attribute.html()
@@ -330,7 +330,7 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
             accum.append(' ').append(key);
 
             // collapse checked=null, checked="", checked=checked; write out others
-            if (!Attribute.shouldCollapseAttribute(key, val, out)) {
+            if (!AttributeModel.shouldCollapseAttribute(key, val, out)) {
                 accum.append("=\"");
                 Entities.escape(accum, val == null ? EmptyString : val, out, true, false, false);
                 accum.append('"');
@@ -435,8 +435,8 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
         }
 
         private class DatasetIterator implements Iterator<Map.Entry<String, String>> {
-            private Iterator<Attribute> attrIter = attributes.iterator();
-            private Attribute attr;
+            private Iterator<AttributeModel> attrIter = attributes.iterator();
+            private AttributeModel attr;
 
             public boolean hasNext() {
                 while (attrIter.hasNext()) {
@@ -447,7 +447,7 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
             }
 
             public Entry<String, String> next() {
-                return new Attribute(attr.getKey().substring(dataPrefix.length()), attr.getValue());
+                return new AttributeModel(attr.getKey().substring(dataPrefix.length()), attr.getValue());
             }
 
             public void remove() {

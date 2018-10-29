@@ -6,9 +6,9 @@ package com.earnix.webk.dom.safety;
  */
 
 import com.earnix.webk.dom.helper.Validate;
-import com.earnix.webk.dom.nodes.Attribute;
+import com.earnix.webk.dom.nodes.AttributeModel;
 import com.earnix.webk.dom.nodes.Attributes;
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.ElementModel;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -495,7 +495,7 @@ public class Whitelist {
      * @param attr    attribute under test
      * @return true if allowed
      */
-    protected boolean isSafeAttribute(String tagName, Element el, Attribute attr) {
+    protected boolean isSafeAttribute(String tagName, ElementModel el, AttributeModel attr) {
         TagName tag = TagName.valueOf(tagName);
         AttributeKey key = AttributeKey.valueOf(attr.getKey());
 
@@ -522,7 +522,7 @@ public class Whitelist {
         return !tagName.equals(":all") && isSafeAttribute(":all", el, attr);
     }
 
-    private boolean testValidProtocol(Element el, Attribute attr, Set<Protocol> protocols) {
+    private boolean testValidProtocol(ElementModel el, AttributeModel attr, Set<Protocol> protocols) {
         // try to resolve relative urls to abs, and optionally update the attribute so output html has abs.
         // rels without a baseuri get removed
         String value = el.absUrl(attr.getKey());

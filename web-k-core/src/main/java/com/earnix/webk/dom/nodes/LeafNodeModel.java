@@ -5,8 +5,8 @@ import com.earnix.webk.dom.helper.Validate;
 import java.util.Collections;
 import java.util.List;
 
-abstract class LeafNode extends Node {
-    private static final List<Node> EmptyNodes = Collections.emptyList();
+abstract class LeafNodeModel extends NodeModel {
+    private static final List<NodeModel> EmptyNodes = Collections.emptyList();
 
     Object value; // either a string value, or an attribute map (in the rare case multiple attributes are set)
 
@@ -48,7 +48,7 @@ abstract class LeafNode extends Node {
     }
 
     @Override
-    public Node attr(String key, String value) {
+    public NodeModel attr(String key, String value) {
         if (!hasAttributes() && key.equals(nodeName())) {
             this.value = value;
         } else {
@@ -65,7 +65,7 @@ abstract class LeafNode extends Node {
     }
 
     @Override
-    public Node removeAttr(String key) {
+    public NodeModel removeAttr(String key) {
         ensureAttributes();
         return super.removeAttr(key);
     }
@@ -92,7 +92,7 @@ abstract class LeafNode extends Node {
     }
 
     @Override
-    protected List<Node> ensureChildNodes() {
+    protected List<NodeModel> ensureChildNodes() {
         return EmptyNodes;
     }
 }

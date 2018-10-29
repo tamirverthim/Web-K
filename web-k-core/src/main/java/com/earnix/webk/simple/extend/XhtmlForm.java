@@ -20,8 +20,8 @@
  */
 package com.earnix.webk.simple.extend;
 
-import com.earnix.webk.dom.nodes.Element;
-import com.earnix.webk.dom.nodes.Node;
+import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.dom.nodes.TextNode;
 import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.layout.LayoutContext;
@@ -55,13 +55,13 @@ public class XhtmlForm {
 
 
     UserAgentCallback userAgentCallback;
-    LinkedHashMap<Element, FormField> componentCache;
+    LinkedHashMap<ElementModel, FormField> componentCache;
     HashMap<String, ButtonGroupWrapper> buttonGroups;
-    Element parentFormElement;
+    ElementModel parentFormElement;
     FormSubmissionListener formSubmissionListener;
 
 
-    public XhtmlForm(UserAgentCallback uac, Element e, FormSubmissionListener fsListener) {
+    public XhtmlForm(UserAgentCallback uac, ElementModel e, FormSubmissionListener fsListener) {
         userAgentCallback = uac;
         buttonGroups = new HashMap<>();
         componentCache = new LinkedHashMap<>();
@@ -69,7 +69,7 @@ public class XhtmlForm {
         formSubmissionListener = fsListener;
     }
 
-    public XhtmlForm(UserAgentCallback uac, Element e) {
+    public XhtmlForm(UserAgentCallback uac, ElementModel e) {
         this(uac, e, new DefaultFormSubmissionListener());
     }
 
@@ -97,7 +97,7 @@ public class XhtmlForm {
         return FS_DEFAULT_GROUP + ++defaultGroupCount;
     }
 
-    private static boolean isFormField(Element e) {
+    private static boolean isFormField(ElementModel e) {
         String nodeName = e.nodeName();
 
         if (nodeName.equals("input") || nodeName.equals("select") || nodeName.equals("textarea")) {
@@ -107,7 +107,7 @@ public class XhtmlForm {
         return false;
     }
 
-    public FormField addComponent(Element e, LayoutContext context, BlockBox box) {
+    public FormField addComponent(ElementModel e, LayoutContext context, BlockBox box) {
         FormField field;
 
         if (componentCache.containsKey(e)) {
@@ -184,10 +184,10 @@ public class XhtmlForm {
         if (formSubmissionListener != null) formSubmissionListener.submit(data.toString());
     }
 
-    public static String collectText(Element e) {
+    public static String collectText(ElementModel e) {
         StringBuilder result = new StringBuilder();
         if (e.childNodeSize() > 0) {
-            Node node = e.childNodeSize() > 0 ? e.childNode(0) : null;
+            NodeModel node = e.childNodeSize() > 0 ? e.childNode(0) : null;
 
             do {
 //                short nodeType = node.getNodeType();

@@ -1,5 +1,6 @@
 package com.earnix.webk.tools;
 
+import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.extend.ReplacedElement;
 import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.layout.LayoutContext;
@@ -13,7 +14,7 @@ public abstract class ElementReplacer {
 
     public abstract String getElementNameMatch();
 
-    public abstract boolean accept(LayoutContext context, com.earnix.webk.dom.nodes.Element element);
+    public abstract boolean accept(LayoutContext context, ElementModel element);
 
     public abstract ReplacedElement replace(final LayoutContext context,
                                             final BlockBox box,
@@ -22,7 +23,7 @@ public abstract class ElementReplacer {
                                             final int cssHeight
     );
 
-    public abstract void clear(final com.earnix.webk.dom.nodes.Element element);
+    public abstract void clear(final ElementModel element);
 
     public abstract void reset();
 }

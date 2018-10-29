@@ -1,7 +1,7 @@
 package com.earnix.webk.script.impl;
 
-import com.earnix.webk.dom.nodes.Element;
-import com.earnix.webk.dom.nodes.Node;
+import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.script.Binder;
 import com.earnix.webk.script.whatwg_dom.NonDocumentTypeChildNode;
 import com.earnix.webk.swing.BasicPanel;
@@ -15,18 +15,18 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NonDocumentTypeChildNodeImpl implements NonDocumentTypeChildNode {
 
-    Node target;
+    NodeModel target;
     BasicPanel panel;
 
-    public NonDocumentTypeChildNodeImpl(Node target, BasicPanel panel) {
+    public NonDocumentTypeChildNodeImpl(NodeModel target, BasicPanel panel) {
         this.target = target;
         this.panel = panel;
     }
 
     @Override
     public com.earnix.webk.script.whatwg_dom.Element previousElementSibling() {
-        if (target instanceof Element) {
-            return (com.earnix.webk.script.whatwg_dom.Element) Binder.get(((Element) target).previousElementSibling(), panel);
+        if (target instanceof ElementModel) {
+            return (com.earnix.webk.script.whatwg_dom.Element) Binder.get(((ElementModel) target).previousElementSibling(), panel);
         }
 
         return null;
@@ -34,8 +34,8 @@ public class NonDocumentTypeChildNodeImpl implements NonDocumentTypeChildNode {
 
     @Override
     public com.earnix.webk.script.whatwg_dom.Element nextElementSibling() {
-        if (target instanceof Element) {
-            return (com.earnix.webk.script.whatwg_dom.Element) Binder.get(((Element) target).nextElementSibling(), panel);
+        if (target instanceof ElementModel) {
+            return (com.earnix.webk.script.whatwg_dom.Element) Binder.get(((ElementModel) target).nextElementSibling(), panel);
         }
         return null;
     }

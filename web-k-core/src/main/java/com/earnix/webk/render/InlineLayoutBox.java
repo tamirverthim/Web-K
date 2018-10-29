@@ -26,7 +26,7 @@ import com.earnix.webk.css.style.CalculatedStyle;
 import com.earnix.webk.css.style.CssContext;
 import com.earnix.webk.css.style.derived.BorderPropertySet;
 import com.earnix.webk.css.style.derived.RectPropertySet;
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.layout.BoxCollector;
 import com.earnix.webk.layout.InlineBoxing;
 import com.earnix.webk.layout.InlinePaintable;
@@ -69,7 +69,7 @@ public class InlineLayoutBox extends Box implements InlinePaintable {
 
     private int _containingBlockWidth;
 
-    public InlineLayoutBox(LayoutContext c, Element elem, CalculatedStyle style, int cbWidth) {
+    public InlineLayoutBox(LayoutContext c, ElementModel elem, CalculatedStyle style, int cbWidth) {
         this();
         setElement(elem);
         setStyle(style);
@@ -548,7 +548,7 @@ public class InlineLayoutBox extends Box implements InlinePaintable {
         return false;
     }
 
-    public List getElementBoxes(Element elem) {
+    public List getElementBoxes(ElementModel elem) {
         List result = new ArrayList();
         for (int i = 0; i < getInlineChildCount(); i++) {
             Object child = getInlineChild(i);

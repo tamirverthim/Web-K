@@ -1,12 +1,14 @@
 package com.earnix.webk.script;
 
-import com.earnix.webk.dom.nodes.Document;
+import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.event.DocumentListener;
 import com.earnix.webk.script.html.canvas.impl.CanvasGradientImpl;
 import com.earnix.webk.script.html.canvas.impl.CanvasPatternImpl;
 import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.web_idl.Exposed;
+import com.earnix.webk.script.web_idl.Getter;
 import com.earnix.webk.script.whatwg_dom.css_style_attribute.CSSStyleAttribute;
+import com.earnix.webk.script.whatwg_dom.impl.EventManager;
 import com.earnix.webk.swing.BasicPanel;
 import jdk.nashorn.api.scripting.AbstractJSObject;
 import jdk.nashorn.api.scripting.JSObject;
@@ -40,7 +42,8 @@ public class ScriptContext implements DocumentListener {
 
     BasicPanel panel;
     JsConsole console = new JsConsole();
-    Document document;
+    DocumentModel document;
+    EventManager eventManager = new EventManager();
 
     public ScriptContext(BasicPanel panel) {
         this.panel = panel;
@@ -155,7 +158,6 @@ public class ScriptContext implements DocumentListener {
                             val target = implementationClass.newInstance();
                             val adapter = WebIDLAdapter.obtain(ScriptContext.this, target);
                             Function constructor = (Function) adapter.getMember("constructor");
-                            ;
                             if (constructor != null) {
                                 constructor.call(this, args);
                             }

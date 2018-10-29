@@ -1,7 +1,7 @@
 package com.earnix.webk.script.whatwg_dom.impl;
 
-import com.earnix.webk.dom.nodes.Attribute;
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.AttributeModel;
+import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.script.Binder;
 import com.earnix.webk.script.web_idl.DOMString;
 import com.earnix.webk.script.web_idl.USVString;
@@ -23,12 +23,12 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AttrImpl implements Attr {
 
-    Attribute model;
-    Element modelNode;
+    AttributeModel model;
+    ElementModel modelNode;
     BasicPanel panel;
 
 
-    public AttrImpl(Element modelNode, Attribute attribute, BasicPanel panel) {
+    public AttrImpl(ElementModel modelNode, AttributeModel attribute, BasicPanel panel) {
         super();
         this.modelNode = modelNode;
         this.model = attribute;

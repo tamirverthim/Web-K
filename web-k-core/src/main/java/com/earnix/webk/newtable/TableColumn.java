@@ -20,7 +20,7 @@
 package com.earnix.webk.newtable;
 
 import com.earnix.webk.css.style.CalculatedStyle;
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.layout.Styleable;
 
 /**
@@ -28,7 +28,7 @@ import com.earnix.webk.layout.Styleable;
  * <code>display: table-column-group</code>.
  */
 public class TableColumn implements Styleable {
-    private Element _element;
+    private ElementModel _element;
     private CalculatedStyle _style;
 
     private TableColumn _parent;
@@ -36,12 +36,12 @@ public class TableColumn implements Styleable {
     public TableColumn() {
     }
 
-    public TableColumn(Element element, CalculatedStyle style) {
+    public TableColumn(ElementModel element, CalculatedStyle style) {
         _element = element;
         _style = style;
     }
 
-    public Element getElement() {
+    public ElementModel getElement() {
         return _element;
     }
 
@@ -53,7 +53,7 @@ public class TableColumn implements Styleable {
         return _style;
     }
 
-    public void setElement(Element e) {
+    public void setElement(ElementModel e) {
         _element = e;
     }
 

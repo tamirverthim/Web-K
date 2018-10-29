@@ -21,8 +21,8 @@ package com.earnix.webk.css.extend.lib;
 
 
 import com.earnix.webk.css.extend.TreeResolver;
-import com.earnix.webk.dom.nodes.Element;
-import com.earnix.webk.dom.nodes.Node;
+import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.dom.nodes.NodeModel;
 
 import java.util.List;
 
@@ -33,14 +33,14 @@ import java.util.List;
  */
 public class DOMTreeResolver implements TreeResolver {
     public Object getParentElement(Object element) {
-        com.earnix.webk.dom.nodes.Node parent = ((com.earnix.webk.dom.nodes.Element) element).parentNode();
-        if (!(parent instanceof com.earnix.webk.dom.nodes.Element)) parent = null;
+        NodeModel parent = ((ElementModel) element).parentNode();
+        if (!(parent instanceof ElementModel)) parent = null;
         return parent;
     }
 
     public Object getPreviousSiblingElement(Object element) {
-        com.earnix.webk.dom.nodes.Node sibling = ((com.earnix.webk.dom.nodes.Element) element).previousSibling();
-        while (sibling != null && !(sibling instanceof com.earnix.webk.dom.nodes.Element)) {
+        NodeModel sibling = ((ElementModel) element).previousSibling();
+        while (sibling != null && !(sibling instanceof ElementModel)) {
             sibling = sibling.previousSibling();
         }
         if (sibling == null) {
@@ -50,45 +50,45 @@ public class DOMTreeResolver implements TreeResolver {
     }
 
     public String getElementName(Object element) {
-        return ((Element) element).nodeName();
+        return ((ElementModel) element).nodeName();
     }
 
     public boolean isFirstChildElement(Object element) {
-        Node parent = ((Element) element).parentNode();
-        Node currentChild;
+        NodeModel parent = ((ElementModel) element).parentNode();
+        NodeModel currentChild;
         if (parent.childNodeSize() > 0) {
             currentChild = parent.childNode(0);
         } else {
             currentChild = null;
         }
 
-        while (currentChild != null && !(currentChild instanceof Element)) {
+        while (currentChild != null && !(currentChild instanceof ElementModel)) {
             currentChild = currentChild.nextSibling();
         }
         return currentChild == element;
     }
 
     public boolean isLastChildElement(Object element) {
-        Node parent = ((Element) element).parentNode();
-        Node currentChild = parent.childNode(parent.childNodeSize() - 1);
-        while (currentChild != null && !(currentChild instanceof Element)) {
+        NodeModel parent = ((ElementModel) element).parentNode();
+        NodeModel currentChild = parent.childNode(parent.childNodeSize() - 1);
+        while (currentChild != null && !(currentChild instanceof ElementModel)) {
             currentChild = currentChild.previousSibling();
         }
         return currentChild == element;
     }
 
     public boolean matchesElement(Object element, String namespaceURI, String name) {
-        return ((Element) element).nodeName().equalsIgnoreCase(name);
+        return ((ElementModel) element).nodeName().equalsIgnoreCase(name);
     }
 
     public int getPositionOfElement(Object element) {
-        Node parent = ((Element) element).parent();
-        List<Node> nl = parent.childNodes();
+        NodeModel parent = ((ElementModel) element).parent();
+        List<NodeModel> nl = parent.childNodes();
 
         int elt_count = 0;
         int i = 0;
         while (i < nl.size()) {
-            if (nl.get(i) instanceof Element) {
+            if (nl.get(i) instanceof ElementModel) {
                 if (nl.get(i) == element) {
                     return elt_count;
                 } else {

@@ -1,6 +1,6 @@
 package com.earnix.webk.dom.select;
 
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.ElementModel;
 
 /**
  * Base structural evaluator.
@@ -9,7 +9,7 @@ abstract class StructuralEvaluator extends Evaluator {
     Evaluator evaluator;
 
     static class Root extends Evaluator {
-        public boolean matches(Element root, Element element) {
+        public boolean matches(ElementModel root, ElementModel element) {
             return root == element;
         }
     }
@@ -19,8 +19,8 @@ abstract class StructuralEvaluator extends Evaluator {
             this.evaluator = evaluator;
         }
 
-        public boolean matches(Element root, Element element) {
-            for (Element e : element.getAllElements()) {
+        public boolean matches(ElementModel root, ElementModel element) {
+            for (ElementModel e : element.getAllElements()) {
                 if (e != element && evaluator.matches(root, e))
                     return true;
             }
@@ -38,7 +38,7 @@ abstract class StructuralEvaluator extends Evaluator {
             this.evaluator = evaluator;
         }
 
-        public boolean matches(Element root, Element node) {
+        public boolean matches(ElementModel root, ElementModel node) {
             return !evaluator.matches(root, node);
         }
 
@@ -53,11 +53,11 @@ abstract class StructuralEvaluator extends Evaluator {
             this.evaluator = evaluator;
         }
 
-        public boolean matches(Element root, Element element) {
+        public boolean matches(ElementModel root, ElementModel element) {
             if (root == element)
                 return false;
 
-            Element parent = element.parent();
+            ElementModel parent = element.parent();
             while (true) {
                 if (evaluator.matches(root, parent))
                     return true;
@@ -79,11 +79,11 @@ abstract class StructuralEvaluator extends Evaluator {
             this.evaluator = evaluator;
         }
 
-        public boolean matches(Element root, Element element) {
+        public boolean matches(ElementModel root, ElementModel element) {
             if (root == element)
                 return false;
 
-            Element parent = element.parent();
+            ElementModel parent = element.parent();
             return parent != null && evaluator.matches(root, parent);
         }
 
@@ -98,11 +98,11 @@ abstract class StructuralEvaluator extends Evaluator {
             this.evaluator = evaluator;
         }
 
-        public boolean matches(Element root, Element element) {
+        public boolean matches(ElementModel root, ElementModel element) {
             if (root == element)
                 return false;
 
-            Element prev = element.previousElementSibling();
+            ElementModel prev = element.previousElementSibling();
 
             while (prev != null) {
                 if (evaluator.matches(root, prev))
@@ -124,11 +124,11 @@ abstract class StructuralEvaluator extends Evaluator {
             this.evaluator = evaluator;
         }
 
-        public boolean matches(Element root, Element element) {
+        public boolean matches(ElementModel root, ElementModel element) {
             if (root == element)
                 return false;
 
-            Element prev = element.previousElementSibling();
+            ElementModel prev = element.previousElementSibling();
             return prev != null && evaluator.matches(root, prev);
         }
 

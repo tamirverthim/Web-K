@@ -1,6 +1,6 @@
 package com.earnix.webk.browser;
 
-import com.earnix.webk.dom.nodes.Document;
+import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.simple.XHTMLPanel;
 
@@ -11,7 +11,7 @@ import com.earnix.webk.simple.XHTMLPanel;
 public interface BrowserContext {
     XHTMLPanel getView();
 
-    Document getModel();
+    DocumentModel getModel();
 
     ScriptContext getScriptContext();
 }

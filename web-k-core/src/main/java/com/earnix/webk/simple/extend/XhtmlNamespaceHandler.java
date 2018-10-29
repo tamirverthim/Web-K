@@ -19,8 +19,8 @@
 package com.earnix.webk.simple.extend;
 
 
-import com.earnix.webk.dom.nodes.Element;
-import com.earnix.webk.dom.nodes.Node;
+import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.dom.nodes.NodeModel;
 
 /**
  * Handles xhtml documents, including presentational html attributes (see css 2.1 spec, 6.4.4).
@@ -33,18 +33,18 @@ public class XhtmlNamespaceHandler extends XhtmlCssOnlyNamespaceHandler {
     /**
      * {@inheritDoc}
      */
-    public boolean isImageElement(Element e) {
+    public boolean isImageElement(ElementModel e) {
         return (e != null && e.nodeName().equalsIgnoreCase("img"));
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean isFormElement(Element e) {
+    public boolean isFormElement(ElementModel e) {
         return (e != null && e.nodeName().equalsIgnoreCase("form"));
     }
 
-    public String getImageSourceURI(Element e) {
+    public String getImageSourceURI(ElementModel e) {
         String uri = null;
         if (e != null) {
             uri = e.attr("src");
@@ -52,7 +52,7 @@ public class XhtmlNamespaceHandler extends XhtmlCssOnlyNamespaceHandler {
         return uri;
     }
 
-    public String getNonCssStyling(Element e) {
+    public String getNonCssStyling(ElementModel e) {
         if (e.nodeName().equals("table")) {
             return applyTableStyles(e);
         } else if (e.nodeName().equals("td") || e.nodeName().equals("th")) {
@@ -67,23 +67,23 @@ public class XhtmlNamespaceHandler extends XhtmlCssOnlyNamespaceHandler {
         return "";
     }
 
-    private String applyBlockAlign(Element e) {
+    private String applyBlockAlign(ElementModel e) {
         StringBuffer style = new StringBuffer();
         applyTextAlign(e, style);
         return style.toString();
     }
 
-    private String applyImgStyles(Element e) {
+    private String applyImgStyles(ElementModel e) {
         StringBuffer style = new StringBuffer();
         applyFloatingAlign(e, style);
         return style.toString();
     }
 
-    private String applyTableCellStyles(Element e) {
+    private String applyTableCellStyles(ElementModel e) {
         StringBuffer style = new StringBuffer();
         String s;
         //check for cellpadding
-        Element table = findTable(e);
+        ElementModel table = findTable(e);
         if (table != null) {
             s = getAttribute(table, "cellpadding");
             if (s != null) {
@@ -130,7 +130,7 @@ public class XhtmlNamespaceHandler extends XhtmlCssOnlyNamespaceHandler {
         return style.toString();
     }
 
-    private String applyTableStyles(Element e) {
+    private String applyTableStyles(ElementModel e) {
         StringBuffer style = new StringBuffer();
         String s;
         s = getAttribute(e, "width");
@@ -173,13 +173,13 @@ public class XhtmlNamespaceHandler extends XhtmlCssOnlyNamespaceHandler {
         return style.toString();
     }
 
-    private String applyTableRowStyles(Element e) {
+    private String applyTableRowStyles(ElementModel e) {
         StringBuffer style = new StringBuffer();
         applyTableContentAlign(e, style);
         return style.toString();
     }
 
-    private void applyFloatingAlign(Element e, StringBuffer style) {
+    private void applyFloatingAlign(ElementModel e, StringBuffer style) {
         String s;
         s = getAttribute(e, "align");
         if (s != null) {
@@ -194,7 +194,7 @@ public class XhtmlNamespaceHandler extends XhtmlCssOnlyNamespaceHandler {
         }
     }
 
-    private void applyTextAlign(Element e, StringBuffer style) {
+    private void applyTextAlign(ElementModel e, StringBuffer style) {
         String s;
         s = getAttribute(e, "align");
         if (s != null) {
@@ -208,7 +208,7 @@ public class XhtmlNamespaceHandler extends XhtmlCssOnlyNamespaceHandler {
         }
     }
 
-    private void applyTableContentAlign(Element e, StringBuffer style) {
+    private void applyTableContentAlign(ElementModel e, StringBuffer style) {
         String s;
         s = getAttribute(e, "align");
         if (s != null) {
@@ -238,15 +238,15 @@ public class XhtmlNamespaceHandler extends XhtmlCssOnlyNamespaceHandler {
         return true;
     }
 
-    private Element findTable(Element cell) {
-        Node n = cell.parent();
-        Element next;
-        if (n instanceof Element) {
-            next = (Element) n;
+    private ElementModel findTable(ElementModel cell) {
+        NodeModel n = cell.parent();
+        ElementModel next;
+        if (n instanceof ElementModel) {
+            next = (ElementModel) n;
             if (next.nodeName().equals("tr")) {
                 n = next.parent();
-                if (n instanceof Element) {
-                    next = (Element) n;
+                if (n instanceof ElementModel) {
+                    next = (ElementModel) n;
                     String name = next.nodeName();
                     if (name.equals("table")) {
                         return next;
@@ -254,8 +254,8 @@ public class XhtmlNamespaceHandler extends XhtmlCssOnlyNamespaceHandler {
 
                     if (name.equals("tbody") || name.equals("tfoot") || name.equals("thead")) {
                         n = next.parent();
-                        if (n instanceof Element) {
-                            next = (Element) n;
+                        if (n instanceof ElementModel) {
+                            next = (ElementModel) n;
                             if (next.nodeName().equals("table")) {
                                 return next;
                             }
@@ -269,12 +269,12 @@ public class XhtmlNamespaceHandler extends XhtmlCssOnlyNamespaceHandler {
     }
 
     @Override
-    public boolean isCanvasElement(Element e) {
+    public boolean isCanvasElement(ElementModel e) {
         return (e != null && e.nodeName().equalsIgnoreCase("canvas"));
     }
 
     @Override
-    public boolean isSvgElement(Element element) {
+    public boolean isSvgElement(ElementModel element) {
         return element != null && element.nodeName().equalsIgnoreCase("svg");
     }
 }

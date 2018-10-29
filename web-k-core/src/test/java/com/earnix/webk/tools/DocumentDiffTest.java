@@ -19,6 +19,7 @@
  */
 package com.earnix.webk.tools;
 
+import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.render.Box;
 import com.earnix.webk.simple.Graphics2DRenderer;
 import com.earnix.webk.util.AssertHelper;
@@ -95,7 +96,7 @@ public class DocumentDiffTest {
 
     public static String xhtmlToDiff(String xhtml, int width, int height)
             throws Exception {
-        com.earnix.webk.dom.nodes.Document doc = XMLUtil.documentFromFile(xhtml);
+        DocumentModel doc = XMLUtil.documentFromFile(xhtml);
         Graphics2DRenderer renderer = new Graphics2DRenderer();
         renderer.setDocument(doc, new File(xhtml).toURL().toString());
 

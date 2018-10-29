@@ -19,7 +19,7 @@
  */
 package com.earnix.webk.browser;
 
-import com.earnix.webk.dom.nodes.Document;
+import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.resource.XMLResource;
 import com.earnix.webk.swing.DelegatingUserAgent;
 import com.earnix.webk.util.GeneralUtil;
@@ -108,7 +108,7 @@ public class PanelManager extends DelegatingUserAgent {
     /**
      * {@inheritDoc}
      */
-    public Document getXMLResource(String uri) {
+    public DocumentModel getXMLResource(String uri) {
         uri = resolveURI(uri);
         if (uri != null && uri.startsWith("file:")) {
             File file = null;
@@ -133,7 +133,7 @@ public class PanelManager extends DelegatingUserAgent {
                 return XMLResource.load(new StringReader(dirlist));
             }
         }
-        Document xr = null;
+        DocumentModel xr = null;
         URLConnection uc = null;
         InputStream inputStream = null;
         try {
@@ -179,8 +179,8 @@ public class PanelManager extends DelegatingUserAgent {
      * @param uri The URI which could not be loaded.
      * @return An XMLResource containing XML which about the failure.
      */
-    private Document getNotFoundDocument(String uri) {
-        Document xr;
+    private DocumentModel getNotFoundDocument(String uri) {
+        DocumentModel xr;
 
         // URI may contain & symbols which can "break" the XHTML we're creating
         String cleanUri = GeneralUtil.escapeHTML(uri);

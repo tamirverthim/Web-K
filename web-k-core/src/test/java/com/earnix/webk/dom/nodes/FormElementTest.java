@@ -20,7 +20,7 @@ public class FormElementTest {
         //"button", "fieldset", "input", "keygen", "object", "output", "select", "textarea"
         String html = "<form id=1><button id=1><fieldset id=2 /><input id=3><keygen id=4><object id=5><output id=6>" +
                 "<select id=7><option></select><textarea id=8><p id=9>";
-        Document doc = Jsoup.parse(html);
+        DocumentModel doc = Jsoup.parse(html);
 
         FormElement form = (FormElement) doc.select("form").first();
         assertEquals(8, form.elements().size());
@@ -34,7 +34,7 @@ public class FormElementTest {
                 "<input name='eight' type='checkbox' checked><input name='nine' type='checkbox' value='unset'>" +
                 "<input name='ten' value='text' disabled>" +
                 "</form>";
-        Document doc = Jsoup.parse(html);
+        DocumentModel doc = Jsoup.parse(html);
         FormElement form = (FormElement) doc.select("form").first();
         List<Connection.KeyVal> data = form.formData();
 
@@ -52,7 +52,7 @@ public class FormElementTest {
     @Test
     public void createsSubmitableConnection() {
         String html = "<form action='/search'><input name='q'></form>";
-        Document doc = Jsoup.parse(html, "http://example.com/");
+        DocumentModel doc = Jsoup.parse(html, "http://example.com/");
         doc.select("[name=q]").attr("value", "jsoup");
 
         FormElement form = ((FormElement) doc.select("form").first());
@@ -71,7 +71,7 @@ public class FormElementTest {
     @Test
     public void actionWithNoValue() {
         String html = "<form><input name='q'></form>";
-        Document doc = Jsoup.parse(html, "http://example.com/");
+        DocumentModel doc = Jsoup.parse(html, "http://example.com/");
         FormElement form = ((FormElement) doc.select("form").first());
         Connection con = form.submit();
 
@@ -81,7 +81,7 @@ public class FormElementTest {
     @Test
     public void actionWithNoBaseUri() {
         String html = "<form><input name='q'></form>";
-        Document doc = Jsoup.parse(html);
+        DocumentModel doc = Jsoup.parse(html);
         FormElement form = ((FormElement) doc.select("form").first());
 
 
@@ -98,9 +98,9 @@ public class FormElementTest {
 
     @Test
     public void formsAddedAfterParseAreFormElements() {
-        Document doc = Jsoup.parse("<body />");
+        DocumentModel doc = Jsoup.parse("<body />");
         doc.body().html("<form action='http://example.com/search'><input name='q' value='search'>");
-        Element formEl = doc.select("form").first();
+        ElementModel formEl = doc.select("form").first();
         assertTrue(formEl instanceof FormElement);
 
         FormElement form = (FormElement) formEl;
@@ -109,10 +109,10 @@ public class FormElementTest {
 
     @Test
     public void controlsAddedAfterParseAreLinkedWithForms() {
-        Document doc = Jsoup.parse("<body />");
+        DocumentModel doc = Jsoup.parse("<body />");
         doc.body().html("<form />");
 
-        Element formEl = doc.select("form").first();
+        ElementModel formEl = doc.select("form").first();
         formEl.append("<input name=foo value=bar>");
 
         assertTrue(formEl instanceof FormElement);
@@ -125,7 +125,7 @@ public class FormElementTest {
 
     @Test
     public void usesOnForCheckboxValueIfNoValueSet() {
-        Document doc = Jsoup.parse("<form><input type=checkbox checked name=foo></form>");
+        DocumentModel doc = Jsoup.parse("<form><input type=checkbox checked name=foo></form>");
         FormElement form = (FormElement) doc.select("form").first();
         List<Connection.KeyVal> data = form.formData();
         assertEquals("on", data.get(0).value());
@@ -146,7 +146,7 @@ public class FormElementTest {
                 "  </table>\n" +
                 "</body>\n" +
                 "</html>";
-        Document doc = Jsoup.parse(html);
+        DocumentModel doc = Jsoup.parse(html);
         FormElement form = (FormElement) doc.select("form").first();
         List<Connection.KeyVal> data = form.formData();
         assertEquals(3, data.size());
@@ -166,9 +166,9 @@ public class FormElementTest {
                 "   </form>\n" +
                 "  </body>\n" +
                 "</html>  ";
-        Document doc = Jsoup.parse(html);
+        DocumentModel doc = Jsoup.parse(html);
         FormElement form = (FormElement) doc.selectFirst("form");
-        Element pass = form.selectFirst("input[name=pass]");
+        ElementModel pass = form.selectFirst("input[name=pass]");
         pass.remove();
 
         List<Connection.KeyVal> data = form.formData();

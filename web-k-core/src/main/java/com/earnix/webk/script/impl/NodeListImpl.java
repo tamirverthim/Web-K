@@ -1,6 +1,6 @@
 package com.earnix.webk.script.impl;
 
-import com.earnix.webk.dom.nodes.Node;
+import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.script.Binder;
 import com.earnix.webk.script.web_idl.DOMException;
 import com.earnix.webk.script.whatwg_dom.NodeList;
@@ -18,10 +18,10 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NodeListImpl implements NodeList {
 
-    List<Node> parserNodes;
+    List<NodeModel> parserNodes;
     BasicPanel panel;
 
-    public NodeListImpl(List<Node> parserNodes, BasicPanel panel) {
+    public NodeListImpl(List<NodeModel> parserNodes, BasicPanel panel) {
         this.parserNodes = parserNodes;
         this.panel = panel;
     }

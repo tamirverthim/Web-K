@@ -30,7 +30,7 @@ import com.earnix.webk.css.style.CalculatedStyle;
 import com.earnix.webk.css.style.CssContext;
 import com.earnix.webk.css.style.derived.LengthValue;
 import com.earnix.webk.css.style.derived.RectPropertySet;
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.layout.BoxBuilder;
 import com.earnix.webk.layout.Layer;
 import com.earnix.webk.layout.LayoutContext;
@@ -80,7 +80,7 @@ public class PageBox {
 
     private MarginAreaContainer[] _marginAreas = new MarginAreaContainer[MARGIN_AREA_DEFS.length];
 
-    private Element _metadata;
+    private ElementModel _metadata;
 
     public int getWidth(CssContext cssCtx) {
         resolvePageDimensions(cssCtx);
@@ -359,7 +359,7 @@ public class PageBox {
         _pageInfo = pageInfo;
     }
 
-    public Element getMetadata() {
+    public ElementModel getMetadata() {
         return _metadata;
     }
 

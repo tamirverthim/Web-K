@@ -22,8 +22,8 @@ package com.earnix.webk.layout.breaker;
 
 import com.earnix.webk.css.constants.IdentValue;
 import com.earnix.webk.css.style.CalculatedStyle;
-import com.earnix.webk.dom.nodes.Element;
-import com.earnix.webk.dom.nodes.Node;
+import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.dom.nodes.TextNode;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.layout.LineBreakContext;
@@ -118,7 +118,7 @@ public class Breaker {
         return c.getTextRenderer().getWidth(c.getFontContext(), f, text);
     }
 
-    public static BreakPointsProvider getBreakPointsProvider(String text, LayoutContext c, Element element, CalculatedStyle style) {
+    public static BreakPointsProvider getBreakPointsProvider(String text, LayoutContext c, ElementModel element, CalculatedStyle style) {
         return c.getSharedContext().getLineBreakingStrategy().getBreakPointsProvider(text, getLanguage(c, element), style);
     }
 
@@ -126,7 +126,7 @@ public class Breaker {
         return c.getSharedContext().getLineBreakingStrategy().getBreakPointsProvider(text, getLanguage(c, textNode), style);
     }
 
-    private static String getLanguage(LayoutContext c, Element element) {
+    private static String getLanguage(LayoutContext c, ElementModel element) {
         String language = c.getNamespaceHandler().getLang(element);
         if (language == null || language.isEmpty()) {
             language = DEFAULT_LANGUAGE;
@@ -136,9 +136,9 @@ public class Breaker {
 
     private static String getLanguage(LayoutContext c, TextNode textNode) {
         if (textNode != null) {
-            Node parentNode = textNode.parentNode();
-            if (parentNode instanceof Element) {
-                return getLanguage(c, (Element) parentNode);
+            NodeModel parentNode = textNode.parentNode();
+            if (parentNode instanceof ElementModel) {
+                return getLanguage(c, (ElementModel) parentNode);
             }
         }
         return DEFAULT_LANGUAGE;

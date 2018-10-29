@@ -21,7 +21,7 @@ package com.earnix.webk.simple.xhtml.controls;
 
 //import org.w3c.dom.Element;
 
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.simple.xhtml.XhtmlForm;
 
 public class TextControl extends AbstractControl {
@@ -32,7 +32,7 @@ public class TextControl extends AbstractControl {
     private boolean _password, _readonly, _multiline;
     private int _size, _rows, _maxlength;
 
-    public TextControl(XhtmlForm form, Element e) {
+    public TextControl(XhtmlForm form, ElementModel e) {
         super(form, e);
 
         _readonly = (e.hasAttr("readonly"));

@@ -7,7 +7,7 @@ import java.io.IOException;
  *
  * @author Jonathan Hedley, jonathan@hedley.net
  */
-public class DataNode extends LeafNode {
+public class DataNode extends LeafNodeModel {
 
     /**
      * Create a new DataNode.
@@ -53,11 +53,11 @@ public class DataNode extends LeafNode {
         return this;
     }
 
-    void outerHtmlHead(Appendable accum, int depth, Document.OutputSettings out) throws IOException {
+    void outerHtmlHead(Appendable accum, int depth, DocumentModel.OutputSettings out) throws IOException {
         accum.append(getWholeData()); // data is not escaped in return from data nodes, so " in script, style is plain
     }
 
-    void outerHtmlTail(Appendable accum, int depth, Document.OutputSettings out) {
+    void outerHtmlTail(Appendable accum, int depth, DocumentModel.OutputSettings out) {
     }
 
     @Override

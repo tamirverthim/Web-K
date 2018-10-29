@@ -28,9 +28,9 @@ import com.earnix.webk.css.newmatch.PageInfo;
 import com.earnix.webk.css.sheet.PropertyDeclaration;
 import com.earnix.webk.css.sheet.Stylesheet;
 import com.earnix.webk.css.sheet.StylesheetInfo;
-import com.earnix.webk.dom.nodes.Document;
-import com.earnix.webk.dom.nodes.Element;
-import com.earnix.webk.dom.nodes.Node;
+import com.earnix.webk.dom.nodes.DocumentModel;
+import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.extend.NamespaceHandler;
 import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.extend.UserInterface;
@@ -58,7 +58,7 @@ public class StyleReference {
 
     private NamespaceHandler _nsh;
 
-    private Document _doc;
+    private DocumentModel _doc;
 
     private StylesheetFactoryImpl _stylesheetFactory;
 
@@ -78,7 +78,7 @@ public class StyleReference {
         _stylesheetFactory = new StylesheetFactoryImpl(userAgent);
     }
 
-    public void setDocumentContext(SharedContext context, NamespaceHandler nsh, Document doc, UserInterface ui) {
+    public void setDocumentContext(SharedContext context, NamespaceHandler nsh, DocumentModel doc, UserInterface ui) {
         _context = context;
         _nsh = nsh;
         _doc = doc;
@@ -120,7 +120,7 @@ public class StyleReference {
         return result;
     }
 
-    public boolean isHoverStyled(Element e) {
+    public boolean isHoverStyled(ElementModel e) {
         return _matcher.isHoverStyled(e);
     }
 
@@ -129,14 +129,14 @@ public class StyleReference {
      * assigned value as a SAC CSSValue instance. The properties should have
      * been matched to the element when the Context was established for this
      * StyleReference on the Document to which the Element belongs. See {@link
-     * BasicPanel#setDocument(Document, java.net.URL)}
+     * BasicPanel#setDocument(DocumentModel, java.net.URL)}
      * for an example of how to establish a StyleReference and associate to a
      * Document.
      *
      * @param e The DOM Element for which to find properties
      * @return Map of CSS property names to CSSValue instance assigned to it.
      */
-    public java.util.Map getCascadedPropertiesMap(Element e) {
+    public java.util.Map getCascadedPropertiesMap(ElementModel e) {
         CascadedStyle cs = _matcher.getCascadedStyle(e, false);//this is only for debug, I think
         java.util.LinkedHashMap props = new java.util.LinkedHashMap();
         for (java.util.Iterator i = cs.getCascadedPropertyDeclarations(); i.hasNext(); ) {
@@ -156,12 +156,12 @@ public class StyleReference {
      * @param pseudoElement PARAM
      * @return The pseudoElementStyle value
      */
-    public CascadedStyle getPseudoElementStyle(Node node, String pseudoElement) {
-        Element e = null;
-        if (node instanceof Element) {
-            e = (Element) node;
+    public CascadedStyle getPseudoElementStyle(NodeModel node, String pseudoElement) {
+        ElementModel e = null;
+        if (node instanceof ElementModel) {
+            e = (ElementModel) node;
         } else {
-            e = (Element) node.parent();
+            e = (ElementModel) node.parent();
         }
         return _matcher.getPECascadedStyle(e, pseudoElement);
     }
@@ -174,7 +174,7 @@ public class StyleReference {
      * @param restyle
      * @return The style value
      */
-    public CascadedStyle getCascadedStyle(Element e, boolean restyle) {
+    public CascadedStyle getCascadedStyle(ElementModel e, boolean restyle) {
         if (e == null) return CascadedStyle.emptyCascadedStyle;
         return _matcher.getCascadedStyle(e, restyle);
     }
@@ -249,7 +249,7 @@ public class StyleReference {
         return infos;
     }
 
-    public void removeStyle(Element e) {
+    public void removeStyle(ElementModel e) {
         if (_matcher != null) {
             _matcher.removeStyle(e);
         }

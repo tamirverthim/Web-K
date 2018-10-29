@@ -1,5 +1,8 @@
 package com.earnix.webk.script.impl;
 
+import com.earnix.webk.dom.nodes.DocumentModel;
+import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.dom.nodes.TextNode;
 import com.earnix.webk.script.Binder;
 import com.earnix.webk.script.web_idl.DOMString;
@@ -38,7 +41,7 @@ import java.util.ArrayList;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DocumentImpl implements Document {
 
-    com.earnix.webk.dom.nodes.Document document;
+    DocumentModel document;
     DOMImplementation implementation = new DOMImplementationImpl();
 
     protected BasicPanel panel;
@@ -125,7 +128,7 @@ public class DocumentImpl implements Document {
 
     @Override
     public Element createElement(String localName, Object options) {
-        return Binder.getElement(new com.earnix.webk.dom.nodes.Element(localName), panel);
+        return Binder.getElement(new ElementModel(localName), panel);
     }
 
     @Override
@@ -255,7 +258,7 @@ public class DocumentImpl implements Document {
     @Override
     public NodeList querySelectorAll(String selectors) {
         val selected = document.select(selectors);
-        val nodes = new ArrayList<com.earnix.webk.dom.nodes.Node>(selected);
+        val nodes = new ArrayList<NodeModel>(selected);
         return new NodeListImpl(nodes, panel);
     }
 }

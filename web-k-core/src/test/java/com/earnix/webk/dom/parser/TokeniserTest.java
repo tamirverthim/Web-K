@@ -1,10 +1,10 @@
 package com.earnix.webk.dom.parser;
 
 import com.earnix.webk.dom.Jsoup;
-import com.earnix.webk.dom.nodes.Attribute;
+import com.earnix.webk.dom.nodes.AttributeModel;
 import com.earnix.webk.dom.nodes.Comment;
-import com.earnix.webk.dom.nodes.Document;
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.DocumentModel;
+import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.TextNode;
 import com.earnix.webk.dom.select.Elements;
 import org.junit.Test;
@@ -37,7 +37,7 @@ public class TokeniserTest {
             sb.append(tail + quote + ">\n");
 
             String html = sb.toString();
-            Document doc = Jsoup.parse(html);
+            DocumentModel doc = Jsoup.parse(html);
             String src = doc.select("img").attr("src");
 
             assertTrue("Handles for quote " + quote, src.contains("X"));
@@ -56,10 +56,10 @@ public class TokeniserTest {
         String tag = sb.toString();
         String html = "<" + tag + ">One</" + tag + ">";
 
-        Document doc = Parser.htmlParser().settings(ParseSettings.preserveCase).parseInput(html, "");
+        DocumentModel doc = Parser.htmlParser().settings(ParseSettings.preserveCase).parseInput(html, "");
         Elements els = doc.select(tag);
         assertEquals(1, els.size());
-        Element el = els.first();
+        ElementModel el = els.first();
         assertNotNull(el);
         assertEquals("One", el.text());
         assertEquals(tag, el.tagName());
@@ -74,13 +74,13 @@ public class TokeniserTest {
         String attrName = sb.toString();
         String html = "<p " + attrName + "=foo>One</p>";
 
-        Document doc = Jsoup.parse(html);
+        DocumentModel doc = Jsoup.parse(html);
         Elements els = doc.getElementsByAttribute(attrName);
         assertEquals(1, els.size());
-        Element el = els.first();
+        ElementModel el = els.first();
         assertNotNull(el);
         assertEquals("One", el.text());
-        Attribute attribute = el.attributes().asList().get(0);
+        AttributeModel attribute = el.attributes().asList().get(0);
         assertEquals(attrName.toLowerCase(), attribute.getKey());
         assertEquals("foo", attribute.getValue());
     }
@@ -94,10 +94,10 @@ public class TokeniserTest {
         String text = sb.toString();
         String html = "<p>" + text + "</p>";
 
-        Document doc = Jsoup.parse(html);
+        DocumentModel doc = Jsoup.parse(html);
         Elements els = doc.select("p");
         assertEquals(1, els.size());
-        Element el = els.first();
+        ElementModel el = els.first();
 
         assertNotNull(el);
         assertEquals(text, el.text());
@@ -112,10 +112,10 @@ public class TokeniserTest {
         String comment = sb.toString();
         String html = "<p><!-- " + comment + " --></p>";
 
-        Document doc = Jsoup.parse(html);
+        DocumentModel doc = Jsoup.parse(html);
         Elements els = doc.select("p");
         assertEquals(1, els.size());
-        Element el = els.first();
+        ElementModel el = els.first();
 
         assertNotNull(el);
         Comment child = (Comment) el.childNode(0);
@@ -131,10 +131,10 @@ public class TokeniserTest {
         String cdata = sb.toString();
         String html = "<p><![CDATA[" + cdata + "]]></p>";
 
-        Document doc = Jsoup.parse(html);
+        DocumentModel doc = Jsoup.parse(html);
         Elements els = doc.select("p");
         assertEquals(1, els.size());
-        Element el = els.first();
+        ElementModel el = els.first();
 
         assertNotNull(el);
         TextNode child = (TextNode) el.childNode(0);
@@ -151,10 +151,10 @@ public class TokeniserTest {
         String title = sb.toString();
         String html = "<title>" + title + "</title>";
 
-        Document doc = Jsoup.parse(html);
+        DocumentModel doc = Jsoup.parse(html);
         Elements els = doc.select("title");
         assertEquals(1, els.size());
-        Element el = els.first();
+        ElementModel el = els.first();
 
         assertNotNull(el);
         TextNode child = (TextNode) el.childNode(0);

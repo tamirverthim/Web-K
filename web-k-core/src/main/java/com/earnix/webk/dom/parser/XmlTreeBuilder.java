@@ -3,10 +3,10 @@ package com.earnix.webk.dom.parser;
 import com.earnix.webk.dom.helper.Validate;
 import com.earnix.webk.dom.nodes.CDataNode;
 import com.earnix.webk.dom.nodes.Comment;
-import com.earnix.webk.dom.nodes.Document;
+import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.nodes.DocumentType;
-import com.earnix.webk.dom.nodes.Element;
-import com.earnix.webk.dom.nodes.Node;
+import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.dom.nodes.TextNode;
 import com.earnix.webk.dom.nodes.XmlDeclaration;
 
@@ -30,14 +30,14 @@ public class XmlTreeBuilder extends TreeBuilder {
     protected void initialiseParse(Reader input, String baseUri, Parser parser) {
         super.initialiseParse(input, baseUri, parser);
         stack.add(doc); // place the document onto the stack. differs from HtmlTreeBuilder (not on stack)
-        doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
+        doc.outputSettings().syntax(DocumentModel.OutputSettings.Syntax.xml);
     }
 
-    Document parse(Reader input, String baseUri) {
+    DocumentModel parse(Reader input, String baseUri) {
         return parse(input, baseUri, new Parser(this));
     }
 
-    Document parse(String input, String baseUri) {
+    DocumentModel parse(String input, String baseUri) {
         return parse(new StringReader(input), baseUri, new Parser(this));
     }
 
@@ -68,14 +68,14 @@ public class XmlTreeBuilder extends TreeBuilder {
         return true;
     }
 
-    private void insertNode(Node node) {
+    private void insertNode(NodeModel node) {
         currentElement().appendChild(node);
     }
 
-    Element insert(Token.StartTag startTag) {
+    ElementModel insert(Token.StartTag startTag) {
         Tag tag = Tag.valueOf(startTag.name(), settings);
         // todo: wonder if for xml parsing, should treat all tags as unknown? because it's not html.
-        Element el = new Element(tag, baseUri, settings.normalizeAttributes(startTag.attributes));
+        ElementModel el = new ElementModel(tag, baseUri, settings.normalizeAttributes(startTag.attributes));
         insertNode(el);
         if (startTag.isSelfClosing()) {
             if (!tag.isKnownTag()) // unknown tag, remember this is self closing for output. see above.
@@ -88,7 +88,7 @@ public class XmlTreeBuilder extends TreeBuilder {
 
     void insert(Token.Comment commentToken) {
         Comment comment = new Comment(commentToken.getData());
-        Node insert = comment;
+        NodeModel insert = comment;
         if (commentToken.bogus && comment.isXmlDeclaration()) {
             // xml declarations are emitted as bogus comments (which is right for html, but not xml)
             // so we do a bit of a hack and parse the data as an element to pull the attributes out
@@ -118,10 +118,10 @@ public class XmlTreeBuilder extends TreeBuilder {
      */
     private void popStackToClose(Token.EndTag endTag) {
         String elName = settings.normalizeTag(endTag.tagName);
-        Element firstFound = null;
+        ElementModel firstFound = null;
 
         for (int pos = stack.size() - 1; pos >= 0; pos--) {
-            Element next = stack.get(pos);
+            ElementModel next = stack.get(pos);
             if (next.nodeName().equals(elName)) {
                 firstFound = next;
                 break;
@@ -131,7 +131,7 @@ public class XmlTreeBuilder extends TreeBuilder {
             return; // not found, skip
 
         for (int pos = stack.size() - 1; pos >= 0; pos--) {
-            Element next = stack.get(pos);
+            ElementModel next = stack.get(pos);
             stack.remove(pos);
             if (next == firstFound)
                 break;
@@ -139,13 +139,13 @@ public class XmlTreeBuilder extends TreeBuilder {
     }
 
 
-    List<Node> parseFragment(String inputFragment, String baseUri, Parser parser) {
+    List<NodeModel> parseFragment(String inputFragment, String baseUri, Parser parser) {
         initialiseParse(new StringReader(inputFragment), baseUri, parser);
         runParser();
         return doc.childNodes();
     }
 
-    List<Node> parseFragment(String inputFragment, Element context, String baseUri, Parser parser) {
+    List<NodeModel> parseFragment(String inputFragment, ElementModel context, String baseUri, Parser parser) {
         return parseFragment(inputFragment, baseUri, parser);
     }
 }

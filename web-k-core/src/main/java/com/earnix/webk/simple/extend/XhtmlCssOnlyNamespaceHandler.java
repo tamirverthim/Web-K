@@ -22,9 +22,9 @@ import com.earnix.webk.css.extend.StylesheetFactory;
 import com.earnix.webk.css.sheet.Stylesheet;
 import com.earnix.webk.css.sheet.StylesheetInfo;
 import com.earnix.webk.dom.nodes.DataNode;
-import com.earnix.webk.dom.nodes.Document;
-import com.earnix.webk.dom.nodes.Element;
-import com.earnix.webk.dom.nodes.Node;
+import com.earnix.webk.dom.nodes.DocumentModel;
+import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.dom.nodes.TextNode;
 import com.earnix.webk.simple.NoNamespaceHandler;
 import com.earnix.webk.util.Configuration;
@@ -67,7 +67,7 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
      * @param e PARAM
      * @return The class value
      */
-    public String getClass(Element e) {
+    public String getClass(ElementModel e) {
         return e.attr("class");
     }
 
@@ -77,7 +77,7 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
      * @param e PARAM
      * @return The iD value
      */
-    public String getID(Element e) {
+    public String getID(ElementModel e) {
         return e.id();
     }
 
@@ -99,7 +99,7 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
         return true;
     }
 
-    protected String getAttribute(Element e, String attrName) {
+    protected String getAttribute(ElementModel e, String attrName) {
         String result = e.attr(attrName);
         result = result.trim();
         return result.length() == 0 ? null : result;
@@ -111,7 +111,7 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
      * @param e PARAM
      * @return The elementStyling value
      */
-    public String getElementStyling(Element e) {
+    public String getElementStyling(ElementModel e) {
         StringBuffer style = new StringBuffer();
         if (e.nodeName().equals("td") || e.nodeName().equals("th")) {
             String s;
@@ -180,7 +180,7 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
      * @param e PARAM
      * @return The linkUri value
      */
-    public String getLinkUri(Element e) {
+    public String getLinkUri(ElementModel e) {
         String href = null;
         if (e.nodeName().equalsIgnoreCase("a") && e.hasAttr("href")) {
             href = e.attr("href");
@@ -188,7 +188,7 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
         return href;
     }
 
-    public String getAnchorName(Element e) {
+    public String getAnchorName(ElementModel e) {
         if (e != null && e.nodeName().equalsIgnoreCase("a") &&
                 e.hasAttr("name")) {
             return e.attr("name");
@@ -196,9 +196,9 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
         return null;
     }
 
-    private static String readTextContent(Element element) {
+    private static String readTextContent(ElementModel element) {
         StringBuffer result = new StringBuffer();
-        Node current = element.childNode(0);
+        NodeModel current = element.childNode(0);
         while (current != null) {
 //            short nodeType = current.getNodeType();
             if (current instanceof TextNode) {
@@ -237,13 +237,13 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
      * @param doc the document to search for a title
      * @return The document's title, or "" if none found
      */
-    public String getDocumentTitle(Document doc) {
+    public String getDocumentTitle(DocumentModel doc) {
         String title = "";
 
-        Element html = doc;
-        Element head = findFirstChild(html, "head");
+        ElementModel html = doc;
+        ElementModel head = findFirstChild(html, "head");
         if (head != null) {
-            Element titleElem = findFirstChild(head, "title");
+            ElementModel titleElem = findFirstChild(head, "title");
             if (titleElem != null) {
                 title = collapseWhiteSpace(readTextContent(titleElem).trim());
             }
@@ -252,19 +252,19 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
         return title;
     }
 
-    private Element findFirstChild(Element parent, String targetName) {
-        List<Node> children = parent.childNodes();
+    private ElementModel findFirstChild(ElementModel parent, String targetName) {
+        List<NodeModel> children = parent.childNodes();
         for (int i = 0; i < children.size(); i++) {
-            Node n = children.get(i);
-            if (n instanceof Element && n.nodeName().equals(targetName)) {
-                return (Element) n;
+            NodeModel n = children.get(i);
+            if (n instanceof ElementModel && n.nodeName().equals(targetName)) {
+                return (ElementModel) n;
             }
         }
 
         return null;
     }
 
-    protected StylesheetInfo readStyleElement(Element style) {
+    protected StylesheetInfo readStyleElement(ElementModel style) {
         String media = style.attr("media");
         if ("".equals(media)) {
             media = "all";
@@ -276,7 +276,7 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
         info.setOrigin(StylesheetInfo.AUTHOR);
 
         StringBuffer buf = new StringBuffer();
-        Node current = style.childNodeSize() > 0 ? style.childNode(0) : null;
+        NodeModel current = style.childNodeSize() > 0 ? style.childNode(0) : null;
         while (current != null) {
             if (current instanceof DataNode) {
                 buf.append(((DataNode) current).getWholeData());
@@ -294,7 +294,7 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
         }
     }
 
-    protected StylesheetInfo readLinkElement(Element link) {
+    protected StylesheetInfo readLinkElement(ElementModel link) {
         String rel = link.attr("rel").toLowerCase();
         if (rel.indexOf("alternate") != -1) {
             return null;
@@ -336,19 +336,19 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
      * @param doc PARAM
      * @return The stylesheetLinks value
      */
-    public StylesheetInfo[] getStylesheets(Document doc) {
+    public StylesheetInfo[] getStylesheets(DocumentModel doc) {
         List result = new ArrayList();
         //get the processing-instructions (actually for XmlDocuments)
         result.addAll(Arrays.asList(super.getStylesheets(doc)));
 
         //get the link elements
-        Element html = doc.child(0);
-        Element head = findFirstChild(html, "head");
+        ElementModel html = doc.child(0);
+        ElementModel head = findFirstChild(html, "head");
         if (head != null) {
-            Node current = head.childNodeSize() > 0 ? head.childNode(0) : null;
+            NodeModel current = head.childNodeSize() > 0 ? head.childNode(0) : null;
             while (current != null) {
-                if (current instanceof Element) {
-                    Element elem = (Element) current;
+                if (current instanceof ElementModel) {
+                    ElementModel elem = (ElementModel) current;
                     StylesheetInfo info = null;
                     String elemName = elem.nodeName();
                     if (elemName == null) {
@@ -431,20 +431,20 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
         return stream;
     }
 
-    private Map getMetaInfo(Document doc) {
+    private Map getMetaInfo(DocumentModel doc) {
         if (this._metadata != null) {
             return this._metadata;
         }
 
         Map metadata = new HashMap();
 
-        Element html = doc;//();
-        Element head = findFirstChild(html, "head");
+        ElementModel html = doc;//();
+        ElementModel head = findFirstChild(html, "head");
         if (head != null) {
-            Node current = head.children().size() > 0 ? head.children().get(0) : null;
+            NodeModel current = head.children().size() > 0 ? head.children().get(0) : null;
             while (current != null) {
-                if (current instanceof Element) {
-                    Element elem = (Element) current;
+                if (current instanceof ElementModel) {
+                    ElementModel elem = (ElementModel) current;
                     String elemName;// = elem.getLocalName();
 //                    if (elemName == null)
 //                    {
@@ -466,7 +466,7 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
         return metadata;
     }
 
-    public String getLang(Element e) {
+    public String getLang(ElementModel e) {
         if (e == null) {
             return "";
         }

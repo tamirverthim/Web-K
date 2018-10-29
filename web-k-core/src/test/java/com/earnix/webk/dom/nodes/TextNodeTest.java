@@ -34,10 +34,10 @@ public class TextNodeTest {
 
     @Test
     public void testTextBean() {
-        Document doc = Jsoup.parse("<p>One <span>two &amp;</span> three &amp;</p>");
-        Element p = doc.select("p").first();
+        DocumentModel doc = Jsoup.parse("<p>One <span>two &amp;</span> three &amp;</p>");
+        ElementModel p = doc.select("p").first();
 
-        Element span = doc.select("span").first();
+        ElementModel span = doc.select("span").first();
         assertEquals("two &", span.text());
         TextNode spanText = (TextNode) span.childNode(0);
         assertEquals("two &", spanText.text());
@@ -55,8 +55,8 @@ public class TextNodeTest {
 
     @Test
     public void testSplitText() {
-        Document doc = Jsoup.parse("<div>Hello there</div>");
-        Element div = doc.select("div").first();
+        DocumentModel doc = Jsoup.parse("<div>Hello there</div>");
+        ElementModel div = doc.select("div").first();
         TextNode tn = (TextNode) div.childNode(0);
         TextNode tail = tn.splitText(6);
         assertEquals("Hello ", tn.getWholeText());
@@ -68,8 +68,8 @@ public class TextNodeTest {
 
     @Test
     public void testSplitAnEmbolden() {
-        Document doc = Jsoup.parse("<div>Hello there</div>");
-        Element div = doc.select("div").first();
+        DocumentModel doc = Jsoup.parse("<div>Hello there</div>");
+        ElementModel div = doc.select("div").first();
         TextNode tn = (TextNode) div.childNode(0);
         TextNode tail = tn.splitText(6);
         tail.wrap("<b></b>");
@@ -79,17 +79,17 @@ public class TextNodeTest {
 
     @Test
     public void testWithSupplementaryCharacter() {
-        Document doc = Jsoup.parse(new String(Character.toChars(135361)));
+        DocumentModel doc = Jsoup.parse(new String(Character.toChars(135361)));
         TextNode t = doc.body().textNodes().get(0);
         assertEquals(new String(Character.toChars(135361)), t.outerHtml().trim());
     }
 
     @Test
     public void testLeadNodesHaveNoChildren() {
-        Document doc = Jsoup.parse("<div>Hello there</div>");
-        Element div = doc.select("div").first();
+        DocumentModel doc = Jsoup.parse("<div>Hello there</div>");
+        ElementModel div = doc.select("div").first();
         TextNode tn = (TextNode) div.childNode(0);
-        List<Node> nodes = tn.childNodes();
+        List<NodeModel> nodes = tn.childNodes();
         assertEquals(0, nodes.size());
     }
 }

@@ -8,7 +8,7 @@ import java.io.IOException;
 /**
  * A {@code <!DOCTYPE>} node.
  */
-public class DocumentType extends LeafNode {
+public class DocumentType extends LeafNodeModel {
     // todo needs a bit of a chunky cleanup. this level of detail isn't needed
     public static final String PUBLIC_KEY = "PUBLIC";
     public static final String SYSTEM_KEY = "SYSTEM";
@@ -84,8 +84,8 @@ public class DocumentType extends LeafNode {
     }
 
     @Override
-    void outerHtmlHead(Appendable accum, int depth, Document.OutputSettings out) throws IOException {
-        if (out.syntax() == Document.OutputSettings.Syntax.html && !has(PUBLIC_ID) && !has(SYSTEM_ID)) {
+    void outerHtmlHead(Appendable accum, int depth, DocumentModel.OutputSettings out) throws IOException {
+        if (out.syntax() == DocumentModel.OutputSettings.Syntax.html && !has(PUBLIC_ID) && !has(SYSTEM_ID)) {
             // looks like a html5 doctype, go lowercase for aesthetics
             accum.append("<!doctype");
         } else {
@@ -103,7 +103,7 @@ public class DocumentType extends LeafNode {
     }
 
     @Override
-    void outerHtmlTail(Appendable accum, int depth, Document.OutputSettings out) {
+    void outerHtmlTail(Appendable accum, int depth, DocumentModel.OutputSettings out) {
     }
 
     private boolean has(final String attribute) {

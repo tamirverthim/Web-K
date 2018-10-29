@@ -19,8 +19,8 @@
  */
 package com.earnix.webk.swing;
 
-import com.earnix.webk.dom.nodes.Document;
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.DocumentModel;
+import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.extend.NamespaceHandler;
 import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.extend.UserInterface;
@@ -75,7 +75,7 @@ public class BoxRenderer {
     private SharedContext sharedContext;
     private Java2DOutputDevice outputDevice;
 
-    private Document doc;
+    private DocumentModel doc;
     private Box root;
 
     private float dotsPerPoint;
@@ -276,7 +276,7 @@ public class BoxRenderer {
         return image;
     }
 
-    private void setDocument(Document doc, String url, NamespaceHandler nsh) {
+    private void setDocument(DocumentModel doc, String url, NamespaceHandler nsh) {
         this.doc = doc;
 
         sharedContext.reset();
@@ -304,7 +304,7 @@ public class BoxRenderer {
         this.root = root;
     }
 
-    private Document loadDocument(final String uri) {
+    private DocumentModel loadDocument(final String uri) {
         return sharedContext.getUac().getXMLResource(uri);
     }
 
@@ -347,15 +347,15 @@ public class BoxRenderer {
 
     private static final class NullUserInterface implements UserInterface {
 
-        public boolean isHover(Element e) {
+        public boolean isHover(ElementModel e) {
             return false;
         }
 
-        public boolean isActive(Element e) {
+        public boolean isActive(ElementModel e) {
             return false;
         }
 
-        public boolean isFocus(Element e) {
+        public boolean isFocus(ElementModel e) {
             return false;
         }
     }
