@@ -259,7 +259,7 @@ public abstract class FormField {
 
     protected String entitle(String message){
         if(getDisplayName().isPresent()) {
-            return message + " Field: " + getDisplayName().get();
+            return String.format("%s Field: %s.", message, getDisplayName().get());
         }
         return message;
     }
