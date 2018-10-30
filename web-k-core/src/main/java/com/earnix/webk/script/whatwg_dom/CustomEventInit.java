@@ -7,6 +7,6 @@ import com.earnix.webk.script.web_idl.Dictionary;
  * 6/19/2018
  */
 @Dictionary
-public interface CustomEventInit extends EventInit {
-    Object detail(); // any, default null
+public class CustomEventInit extends EventInit {
+    Object detail; // any, default null
 }

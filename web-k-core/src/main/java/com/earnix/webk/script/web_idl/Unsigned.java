@@ -6,6 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Currently just marker
+ * 
  * @author Taras Maslov
  * 6/1/2018
  */

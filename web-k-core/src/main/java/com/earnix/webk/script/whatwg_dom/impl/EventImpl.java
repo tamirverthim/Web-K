@@ -17,13 +17,29 @@ import lombok.experimental.FieldDefaults;
  * 8/14/2018
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Getter
-@Setter
 public class EventImpl implements Event {
 
     String type;
-    short phase;
+    @Getter @Setter short phase;
+    @Getter boolean propagationStopped;
+    @Getter @Setter EventTarget currentTarget;
+    EventTarget target;
+    @Setter Sequence<EventTarget> composedPath;
+    @Getter @Setter boolean trusted;
+    boolean defaultPrevented;
+    
+    Attribute<Boolean> cancelBubble = new Attribute<Boolean>() {
+        @Override
+        public Boolean get() {
+            return propagationStopped;
+        }
 
+        @Override
+        public void set(Boolean aBoolean) {
+            EventImpl.this.propagationStopped = aBoolean;
+        }
+    };
+    
     public EventImpl(String type, EventInit eventInit) {
         construct(type, eventInit);
     }
@@ -40,7 +56,7 @@ public class EventImpl implements Event {
 
     @Override
     public EventTarget target() {
-        return null;
+        return target;
     }
 
     @Override
@@ -65,11 +81,12 @@ public class EventImpl implements Event {
 
     @Override
     public void stopPropagation() {
+        propagationStopped = true;
     }
 
     @Override
     public Attribute<Boolean> cancelBubble() {
-        return null;
+        return cancelBubble;
     }
 
     @Override
@@ -84,7 +101,7 @@ public class EventImpl implements Event {
 
     @Override
     public boolean cancelable() {
-        return false;
+        return true;
     }
 
     @Override
@@ -94,12 +111,12 @@ public class EventImpl implements Event {
 
     @Override
     public void preventDefault() {
-
+        defaultPrevented = true;
     }
 
     @Override
     public boolean defaultPrevented() {
-        return false;
+        return defaultPrevented;
     }
 
     @Override
@@ -109,7 +126,7 @@ public class EventImpl implements Event {
 
     @Override
     public boolean isTrusted() {
-        return false;
+        return trusted;
     }
 
     @Override

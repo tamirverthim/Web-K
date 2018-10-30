@@ -29,7 +29,7 @@ import java.awt.Cursor;
  * document. This implementation changes the cursor according to the cursor property that applies to the Box
  * on which the mouse is located.
  */
-public class CursorListener extends DefaultFSMouseListener {
+public class  CursorListener extends DefaultFSMouseListener {
     /**
      * {@inheritDoc}
      */

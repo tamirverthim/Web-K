@@ -1,11 +1,14 @@
 package com.earnix.webk.script.whatwg_dom.impl;
 
-import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.script.Binder;
 import com.earnix.webk.script.ScriptContext;
+import com.earnix.webk.script.web_idl.impl.SequenceImpl;
+import com.earnix.webk.script.whatwg_dom.Element;
 import com.earnix.webk.script.whatwg_dom.Event;
+import com.earnix.webk.script.whatwg_dom.EventTarget;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
 
@@ -16,38 +19,56 @@ import java.util.ArrayList;
  * 10/26/2018
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class EventManager {
-    
+
     ScriptContext scriptContext;
-    DocumentModel document;
-    
-    public void publishEvent(ElementModel target, String type) {
-        val chain = new ArrayList<ElementModel>();
-        ElementModel current = target;
+
+    public void publishEvent(ElementModel targetModel, String type) {
+        val target = Binder.getElement(targetModel, scriptContext.getPanel());
+
+        // preparing propagation path 
+        val propagationPath = new ArrayList<EventTarget>();
+        Element current = target;
         do {
-            chain.add(current);
-            current = current.parent();
-        } while (current != document);
+            propagationPath.add(current);
+            current = current.parentElement();
+        } while (current != Binder.get(scriptContext.getPanel().getDocument(), scriptContext.getPanel()));
 
+        val event = new EventImpl(type, null);
 
-        val jsEvent = new EventImpl(type, null);
-        jsEvent.setPhase(Event.CAPTURING_PHASE);
-        
+        event.setTrusted(true);
+        event.setPhase(Event.CAPTURING_PHASE);
+        event.setComposedPath(new SequenceImpl<>(propagationPath));
+
         // capturing & target phases
-        val iterator = chain.listIterator(chain.size());
+        val iterator = propagationPath.listIterator(propagationPath.size());
         while (iterator.hasPrevious()) {
             val element = iterator.previous();
-            val jsElement = Binder.getElement(element, scriptContext.getPanel());
-            if(element == target) {
-                jsEvent.setPhase(Event.AT_TARGET);
+//            val jsElement = Binder.getElement(element, scriptContext.getPanel());
+            if (element == target) {
+                event.setPhase(Event.AT_TARGET);
             }
-            jsElement.dispatchEvent(jsEvent);
+            event.setCurrentTarget(element);
+            element.dispatchEvent(event);
+
+            // cancel if propagation stopped
+            if (event.isPropagationStopped()) {
+                break;
+            }
         }
-        
-        // bubbling
-        for (ElementModel element : chain) {
-            val jsElement = Binder.getElement(element, scriptContext.getPanel());
-            
+
+        if (!event.isPropagationStopped()) {
+            // bubbling
+            event.setPhase(Event.BUBBLING_PHASE);
+            for (EventTarget eventTarget : propagationPath) {
+                if (eventTarget == target) {
+                    continue;
+                }
+                event.setCurrentTarget(eventTarget);
+                eventTarget.dispatchEvent(event);
+            }
         }
+        scriptContext.getPanel().reset();
     }
 }

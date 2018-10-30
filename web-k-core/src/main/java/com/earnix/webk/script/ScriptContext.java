@@ -6,7 +6,6 @@ import com.earnix.webk.script.html.canvas.impl.CanvasGradientImpl;
 import com.earnix.webk.script.html.canvas.impl.CanvasPatternImpl;
 import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.web_idl.Exposed;
-import com.earnix.webk.script.web_idl.Getter;
 import com.earnix.webk.script.whatwg_dom.css_style_attribute.CSSStyleAttribute;
 import com.earnix.webk.script.whatwg_dom.impl.EventManager;
 import com.earnix.webk.swing.BasicPanel;
@@ -24,6 +23,7 @@ import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.script.ScriptException;
+import javax.swing.JOptionPane;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -43,10 +43,12 @@ public class ScriptContext implements DocumentListener {
     BasicPanel panel;
     JsConsole console = new JsConsole();
     DocumentModel document;
-    EventManager eventManager = new EventManager();
+    EventManager eventManager = new EventManager(this);
 
     public ScriptContext(BasicPanel panel) {
         this.panel = panel;
+        
+        panel.addMouseTrackingListener(new MouseEventsAdapter(eventManager));
     }
 
     public void onload() {
@@ -121,12 +123,20 @@ public class ScriptContext implements DocumentListener {
 
         context.setAttribute("location", new Location(), ENGINE_SCOPE);
 
-        context.setAttribute("HTMLCanvasElement", new Location(), ENGINE_SCOPE);
+//        context.setAttribute("HTMLCanvasElement", new Location(), ENGINE_SCOPE);
 
         context.setAttribute("addEventListener", new Function<>(this, (ctx, arg) -> {
             log.trace("addEventListener");
             return null;
         }, "addEventListener"), ENGINE_SCOPE);
+        
+        context.setAttribute("alert", new Function<>(this, (ctx, arg) -> {
+            if(arg.length == 0) {
+                return null;
+            }
+            JOptionPane.showMessageDialog(panel, String.valueOf(arg[0]));
+            return null;
+        }, "alert"), ENGINE_SCOPE);
 
 
         try {
