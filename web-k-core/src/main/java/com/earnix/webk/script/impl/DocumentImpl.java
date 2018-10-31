@@ -3,7 +3,7 @@ package com.earnix.webk.script.impl;
 import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.dom.nodes.TextNode;
+import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.script.Binder;
 import com.earnix.webk.script.web_idl.DOMString;
 import com.earnix.webk.script.web_idl.USVString;
@@ -143,7 +143,7 @@ public class DocumentImpl implements Document {
 
     @Override
     public Text createTextNode(String data) {
-        TextNode textNode = new TextNode(data.toString());
+        TextNodeModel textNode = new TextNodeModel(data);
         val result = new TextImpl(textNode, panel);
         Binder.put(textNode, result);
         return result;

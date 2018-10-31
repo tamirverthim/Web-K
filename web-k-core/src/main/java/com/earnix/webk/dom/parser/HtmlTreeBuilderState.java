@@ -2,9 +2,9 @@ package com.earnix.webk.dom.parser;
 
 import com.earnix.webk.dom.internal.StringUtil;
 import com.earnix.webk.dom.nodes.AttributeModel;
-import com.earnix.webk.dom.nodes.Attributes;
+import com.earnix.webk.dom.nodes.AttributesModel;
 import com.earnix.webk.dom.nodes.DocumentModel;
-import com.earnix.webk.dom.nodes.DocumentType;
+import com.earnix.webk.dom.nodes.DocumentTypeModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
 
@@ -24,7 +24,7 @@ enum HtmlTreeBuilderState {
                 // todo: parse error check on expected doctypes
                 // todo: quirk state check on doctype ids
                 Token.Doctype d = t.asDoctype();
-                DocumentType doctype = new DocumentType(
+                DocumentTypeModel doctype = new DocumentTypeModel(
                         tb.settings.normalizeTag(d.getName()), d.getPublicIdentifier(), d.getSystemIdentifier());
                 doctype.setPubSysKey(d.getPubSysKey());
                 tb.getDocument().appendChild(doctype);
@@ -487,7 +487,7 @@ enum HtmlTreeBuilderState {
                         tb.process(new Token.Character().data(prompt));
 
                         // input
-                        Attributes inputAttribs = new Attributes();
+                        AttributesModel inputAttribs = new AttributesModel();
                         for (AttributeModel attr : startTag.attributes) {
                             if (!StringUtil.inSorted(attr.getKey(), Constants.InBodyStartInputAttribs))
                                 inputAttribs.put(attr);

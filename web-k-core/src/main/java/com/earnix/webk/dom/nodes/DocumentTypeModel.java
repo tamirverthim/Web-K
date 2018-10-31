@@ -8,7 +8,7 @@ import java.io.IOException;
 /**
  * A {@code <!DOCTYPE>} node.
  */
-public class DocumentType extends LeafNodeModel {
+public class DocumentTypeModel extends LeafNodeModel {
     // todo needs a bit of a chunky cleanup. this level of detail isn't needed
     public static final String PUBLIC_KEY = "PUBLIC";
     public static final String SYSTEM_KEY = "SYSTEM";
@@ -25,7 +25,7 @@ public class DocumentType extends LeafNodeModel {
      * @param publicId the doctype's public ID
      * @param systemId the doctype's system ID
      */
-    public DocumentType(String name, String publicId, String systemId) {
+    public DocumentTypeModel(String name, String publicId, String systemId) {
         Validate.notNull(name);
         Validate.notNull(publicId);
         Validate.notNull(systemId);
@@ -46,7 +46,7 @@ public class DocumentType extends LeafNodeModel {
      * @param baseUri  unused
      * @deprecated
      */
-    public DocumentType(String name, String publicId, String systemId, String baseUri) {
+    public DocumentTypeModel(String name, String publicId, String systemId, String baseUri) {
         attr(NAME, name);
         attr(PUBLIC_ID, publicId);
         if (has(PUBLIC_ID)) {
@@ -64,7 +64,7 @@ public class DocumentType extends LeafNodeModel {
      * @param baseUri  unused
      * @deprecated
      */
-    public DocumentType(String name, String pubSysKey, String publicId, String systemId, String baseUri) {
+    public DocumentTypeModel(String name, String pubSysKey, String publicId, String systemId, String baseUri) {
         attr(NAME, name);
         if (pubSysKey != null) {
             attr(PUB_SYS_KEY, pubSysKey);

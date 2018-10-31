@@ -7,14 +7,14 @@ import java.io.IOException;
  *
  * @author Jonathan Hedley, jonathan@hedley.net
  */
-public class DataNode extends LeafNodeModel {
+public class DataNodeModel extends LeafNodeModel {
 
     /**
      * Create a new DataNode.
      *
      * @param data data contents
      */
-    public DataNode(String data) {
+    public DataNodeModel(String data) {
         value = data;
     }
 
@@ -23,9 +23,9 @@ public class DataNode extends LeafNodeModel {
      *
      * @param data    data contents
      * @param baseUri Unused, Leaf Nodes do not hold base URis
-     * @deprecated use {@link #DataNode(String)} instead
+     * @deprecated use {@link #DataNodeModel(String)} instead
      */
-    public DataNode(String data, String baseUri) {
+    public DataNodeModel(String data, String baseUri) {
         this(data);
     }
 
@@ -48,7 +48,7 @@ public class DataNode extends LeafNodeModel {
      * @param data unencoded data
      * @return this node, for chaining
      */
-    public DataNode setWholeData(String data) {
+    public DataNodeModel setWholeData(String data) {
         coreValue(data);
         return this;
     }
@@ -72,8 +72,8 @@ public class DataNode extends LeafNodeModel {
      * @param baseUri     bass URI
      * @return new DataNode
      */
-    public static DataNode createFromEncoded(String encodedData, String baseUri) {
+    public static DataNodeModel createFromEncoded(String encodedData, String baseUri) {
         String data = Entities.unescape(encodedData);
-        return new DataNode(data);
+        return new DataNodeModel(data);
     }
 }

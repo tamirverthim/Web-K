@@ -7,8 +7,8 @@ import java.io.IOException;
 /**
  * A Character Data node, to support CDATA sections.
  */
-public class CDataNode extends TextNode {
-    public CDataNode(String text) {
+public class CDataNodeModel extends TextNodeModel {
+    public CDataNodeModel(String text) {
         super(text);
     }
 

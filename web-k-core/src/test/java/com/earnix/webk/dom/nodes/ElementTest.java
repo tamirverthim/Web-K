@@ -40,8 +40,8 @@ public class ElementTest {
 
         List<ElementModel> ps = doc.getElementsByTag("p");
         assertEquals(2, ps.size());
-        assertEquals("Hello", ((TextNode) ps.get(0).childNode(0)).getWholeText());
-        assertEquals("Another ", ((TextNode) ps.get(1).childNode(0)).getWholeText());
+        assertEquals("Hello", ((TextNodeModel) ps.get(0).childNode(0)).getWholeText());
+        assertEquals("Another ", ((TextNodeModel) ps.get(1).childNode(0)).getWholeText());
         List<ElementModel> ps2 = doc.getElementsByTag("P");
         assertEquals(ps, ps2);
 
@@ -269,7 +269,7 @@ public class ElementTest {
     @Test
     public void testHasClassDomMethods() {
         Tag tag = Tag.valueOf("a");
-        Attributes attribs = new Attributes();
+        AttributesModel attribs = new AttributesModel();
         ElementModel el = new ElementModel(tag, "", attribs);
 
         attribs.put("class", "toto");
@@ -444,7 +444,7 @@ public class ElementTest {
 
         List<AttributeModel> attributes = div.attributes().asList();
         assertEquals("There should be one attribute", 1, attributes.size());
-        assertTrue("Attribute should be boolean", attributes.get(0) instanceof BooleanAttribute);
+        assertTrue("Attribute should be boolean", attributes.get(0) instanceof BooleanAttributeModel);
 
         assertFalse(div.hasAttr("false"));
 
@@ -626,7 +626,7 @@ public class ElementTest {
         DocumentModel doc = Jsoup.parse("<div id=1 data-name=jsoup class=new data-package=jar>Hello</div><p id=2>Hello</p>");
         ElementModel div = doc.select("div").first();
         Map<String, String> dataset = div.dataset();
-        Attributes attributes = div.attributes();
+        AttributesModel attributes = div.attributes();
 
         // size, get, set, add, remove
         assertEquals(2, dataset.size());
@@ -719,11 +719,11 @@ public class ElementTest {
         DocumentModel doc = Jsoup.parse("<div id=1 class=one><p id=2 class=two>One", base);
         ElementModel d = doc.selectFirst("div");
         ElementModel p = doc.selectFirst("p");
-        TextNode t = p.textNodes().get(0);
+        TextNodeModel t = p.textNodes().get(0);
 
         ElementModel d2 = d.shallowClone();
         ElementModel p2 = p.shallowClone();
-        TextNode t2 = (TextNode) t.shallowClone();
+        TextNodeModel t2 = (TextNodeModel) t.shallowClone();
 
         assertEquals(1, d.childNodeSize());
         assertEquals(0, d2.childNodeSize());
@@ -762,7 +762,7 @@ public class ElementTest {
     @Test
     public void testGetTextNodes() {
         DocumentModel doc = Jsoup.parse("<p>One <span>Two</span> Three <br> Four</p>");
-        List<TextNode> textNodes = doc.select("p").first().textNodes();
+        List<TextNodeModel> textNodes = doc.select("p").first().textNodes();
 
         assertEquals(3, textNodes.size());
         assertEquals("One ", textNodes.get(0).text());
@@ -776,7 +776,7 @@ public class ElementTest {
     public void testManipulateTextNodes() {
         DocumentModel doc = Jsoup.parse("<p>One <span>Two</span> Three <br> Four</p>");
         ElementModel p = doc.select("p").first();
-        List<TextNode> textNodes = p.textNodes();
+        List<TextNodeModel> textNodes = p.textNodes();
 
         textNodes.get(1).text(" three-more ");
         textNodes.get(2).splitText(3).text("-ur");
@@ -793,15 +793,15 @@ public class ElementTest {
         ElementModel style = doc.select("style").first();
         ElementModel p = doc.select("p").first();
 
-        List<DataNode> scriptData = script.dataNodes();
+        List<DataNodeModel> scriptData = script.dataNodes();
         assertEquals(1, scriptData.size());
         assertEquals("One Two", scriptData.get(0).getWholeData());
 
-        List<DataNode> styleData = style.dataNodes();
+        List<DataNodeModel> styleData = style.dataNodes();
         assertEquals(1, styleData.size());
         assertEquals("Three Four", styleData.get(0).getWholeData());
 
-        List<DataNode> pData = p.dataNodes();
+        List<DataNodeModel> pData = p.dataNodes();
         assertEquals(0, pData.size());
     }
 
@@ -895,7 +895,7 @@ public class ElementTest {
         List<NodeModel> els = new ArrayList<>();
         ElementModel el1 = new ElementModel(Tag.valueOf("span"), "").text("Span1");
         ElementModel el2 = new ElementModel(Tag.valueOf("span"), "").text("Span2");
-        TextNode tn1 = new TextNode("Text4");
+        TextNodeModel tn1 = new TextNodeModel("Text4");
         els.add(el1);
         els.add(el2);
         els.add(tn1);
@@ -1340,7 +1340,7 @@ public class ElementTest {
     @Test
     public void whiteSpaceClassElement() {
         Tag tag = Tag.valueOf("a");
-        Attributes attribs = new Attributes();
+        AttributesModel attribs = new AttributesModel();
         ElementModel el = new ElementModel(tag, "", attribs);
 
         attribs.put("class", "abc ");

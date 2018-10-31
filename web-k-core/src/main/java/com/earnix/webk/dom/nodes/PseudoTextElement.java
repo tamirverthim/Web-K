@@ -3,12 +3,12 @@ package com.earnix.webk.dom.nodes;
 import com.earnix.webk.dom.parser.Tag;
 
 /**
- * Represents a {@link TextNode} as an {@link ElementModel}, to enable text nodes to be selected with
+ * Represents a {@link TextNodeModel} as an {@link ElementModel}, to enable text nodes to be selected with
  * the {@link com.earnix.webk.dom.select.Selector} {@code :matchText} syntax.
  */
 public class PseudoTextElement extends ElementModel {
 
-    public PseudoTextElement(Tag tag, String baseUri, Attributes attributes) {
+    public PseudoTextElement(Tag tag, String baseUri, AttributesModel attributes) {
         super(tag, baseUri, attributes);
     }
 

@@ -20,7 +20,7 @@
  */
 package com.earnix.webk.render;
 
-import com.earnix.webk.dom.nodes.TextNode;
+import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.extend.FSGlyphVector;
 import com.earnix.webk.layout.FunctionData;
 import com.earnix.webk.layout.LayoutContext;
@@ -57,7 +57,7 @@ public class InlineText {
 
     private boolean _trimmedLeadingSpace;
     private boolean _trimmedTrailingSpace;
-    private TextNode _textNode;
+    private TextNodeModel _textNode;
 
     public void trimTrailingSpace(LayoutContext c) {
         if (!isEmpty() && _masterText.charAt(_end - 1) == ' ') {
@@ -347,11 +347,11 @@ public class InlineText {
         _selectionEnd = s;
     }
 
-    public TextNode getTextNode() {
+    public TextNodeModel getTextNode() {
         return this._textNode;
     }
 
-    public void setTextNode(TextNode node) {
+    public void setTextNode(TextNodeModel node) {
         this._textNode = node;
     }
 }

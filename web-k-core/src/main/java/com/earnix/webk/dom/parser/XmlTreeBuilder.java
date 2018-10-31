@@ -1,14 +1,14 @@
 package com.earnix.webk.dom.parser;
 
 import com.earnix.webk.dom.helper.Validate;
-import com.earnix.webk.dom.nodes.CDataNode;
-import com.earnix.webk.dom.nodes.Comment;
+import com.earnix.webk.dom.nodes.CDataNodeModel;
+import com.earnix.webk.dom.nodes.CommentModel;
 import com.earnix.webk.dom.nodes.DocumentModel;
-import com.earnix.webk.dom.nodes.DocumentType;
+import com.earnix.webk.dom.nodes.DocumentTypeModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.dom.nodes.TextNode;
-import com.earnix.webk.dom.nodes.XmlDeclaration;
+import com.earnix.webk.dom.nodes.TextNodeModel;
+import com.earnix.webk.dom.nodes.XmlDeclarationModel;
 
 import java.io.Reader;
 import java.io.StringReader;
@@ -87,12 +87,12 @@ public class XmlTreeBuilder extends TreeBuilder {
     }
 
     void insert(Token.Comment commentToken) {
-        Comment comment = new Comment(commentToken.getData());
+        CommentModel comment = new CommentModel(commentToken.getData());
         NodeModel insert = comment;
         if (commentToken.bogus && comment.isXmlDeclaration()) {
             // xml declarations are emitted as bogus comments (which is right for html, but not xml)
             // so we do a bit of a hack and parse the data as an element to pull the attributes out
-            XmlDeclaration decl = comment.asXmlDeclaration(); // else, we couldn't parse it as a decl, so leave as a comment
+            XmlDeclarationModel decl = comment.asXmlDeclaration(); // else, we couldn't parse it as a decl, so leave as a comment
             if (decl != null)
                 insert = decl;
         }
@@ -101,11 +101,11 @@ public class XmlTreeBuilder extends TreeBuilder {
 
     void insert(Token.Character token) {
         final String data = token.getData();
-        insertNode(token.isCData() ? new CDataNode(data) : new TextNode(data));
+        insertNode(token.isCData() ? new CDataNodeModel(data) : new TextNodeModel(data));
     }
 
     void insert(Token.Doctype d) {
-        DocumentType doctypeNode = new DocumentType(settings.normalizeTag(d.getName()), d.getPublicIdentifier(), d.getSystemIdentifier());
+        DocumentTypeModel doctypeNode = new DocumentTypeModel(settings.normalizeTag(d.getName()), d.getPublicIdentifier(), d.getSystemIdentifier());
         doctypeNode.setPubSysKey(d.getPubSysKey());
         insertNode(doctypeNode);
     }

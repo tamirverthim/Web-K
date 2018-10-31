@@ -24,7 +24,11 @@ public class EventManager {
 
     ScriptContext scriptContext;
 
-    public void publishEvent(ElementModel targetModel, String type) {
+    public void publishEvent(EventTarget target, Event event){
+        
+    };
+    
+    public void publishEvent(ElementModel targetModel, EventImpl event) {
         val target = Binder.getElement(targetModel, scriptContext.getPanel());
 
         // preparing propagation path 
@@ -34,9 +38,8 @@ public class EventManager {
             propagationPath.add(current);
             current = current.parentElement();
         } while (current != Binder.get(scriptContext.getPanel().getDocument(), scriptContext.getPanel()));
-
-        val event = new EventImpl(type, null);
-
+        
+        
         event.setTrusted(true);
         event.setPhase(Event.CAPTURING_PHASE);
         event.setComposedPath(new SequenceImpl<>(propagationPath));

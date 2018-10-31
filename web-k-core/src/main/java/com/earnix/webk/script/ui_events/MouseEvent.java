@@ -6,13 +6,14 @@ import com.earnix.webk.script.web_idl.Optional;
 import com.earnix.webk.script.web_idl.Readonly;
 import com.earnix.webk.script.web_idl.ReadonlyAttribute;
 import com.earnix.webk.script.web_idl.Unsigned;
+import com.earnix.webk.script.whatwg_dom.Event;
 import com.earnix.webk.script.whatwg_dom.EventTarget;
 
 /**
  * @author Taras Maslov
  * 10/30/2018
  */
-public interface MouseEvent {
+public interface MouseEvent extends Event {
 
     @ReadonlyAttribute
     int screenX();

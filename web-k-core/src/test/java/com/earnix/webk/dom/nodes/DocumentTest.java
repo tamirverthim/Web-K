@@ -336,7 +336,7 @@ public class DocumentTest {
                 "</root>";
         assertEquals(xmlCharsetUTF8, doc.toString());
 
-        XmlDeclaration selectedNode = (XmlDeclaration) doc.childNode(0);
+        XmlDeclarationModel selectedNode = (XmlDeclarationModel) doc.childNode(0);
         assertEquals(charsetUtf8, doc.charset().name());
         assertEquals(charsetUtf8, selectedNode.attr("encoding"));
         assertEquals(doc.charset(), doc.outputSettings().charset());
@@ -354,7 +354,7 @@ public class DocumentTest {
                 "</root>";
         assertEquals(xmlCharsetISO, doc.toString());
 
-        XmlDeclaration selectedNode = (XmlDeclaration) doc.childNode(0);
+        XmlDeclarationModel selectedNode = (XmlDeclarationModel) doc.childNode(0);
         assertEquals(charsetIso8859, doc.charset().name());
         assertEquals(charsetIso8859, selectedNode.attr("encoding"));
         assertEquals(doc.charset(), doc.outputSettings().charset());
@@ -372,7 +372,7 @@ public class DocumentTest {
                 "</root>";
         assertEquals(xmlCharsetUTF8, doc.toString());
 
-        XmlDeclaration selectedNode = (XmlDeclaration) doc.childNode(0);
+        XmlDeclarationModel selectedNode = (XmlDeclarationModel) doc.childNode(0);
         assertEquals(charsetUtf8, selectedNode.attr("encoding"));
     }
 
@@ -396,7 +396,7 @@ public class DocumentTest {
                 "</root>";
         assertEquals(xmlCharset, doc.toString());
 
-        XmlDeclaration selectedNode = (XmlDeclaration) doc.childNode(0);
+        XmlDeclarationModel selectedNode = (XmlDeclarationModel) doc.childNode(0);
         assertEquals("dontTouch", selectedNode.attr("encoding"));
         assertEquals("dontTouch", selectedNode.attr("version"));
     }
@@ -421,7 +421,7 @@ public class DocumentTest {
         doc.outputSettings().syntax(Syntax.xml);
 
         if (addDecl) {
-            XmlDeclaration decl = new XmlDeclaration("xml", false);
+            XmlDeclarationModel decl = new XmlDeclarationModel("xml", false);
             decl.attr("version", version);
             decl.attr("encoding", charset);
             doc.prependChild(decl);

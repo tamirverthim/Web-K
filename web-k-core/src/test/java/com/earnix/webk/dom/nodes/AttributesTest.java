@@ -18,7 +18,7 @@ public class AttributesTest {
 
     @Test
     public void html() {
-        Attributes a = new Attributes();
+        AttributesModel a = new AttributesModel();
         a.put("Tot", "a&p");
         a.put("Hello", "There");
         a.put("data-name", "Jsoup");
@@ -44,7 +44,7 @@ public class AttributesTest {
 
     @Test
     public void testIteratorRemovable() {
-        Attributes a = new Attributes();
+        AttributesModel a = new AttributesModel();
         a.put("Tot", "a&p");
         a.put("Hello", "There");
         a.put("data-name", "Jsoup");
@@ -67,7 +67,7 @@ public class AttributesTest {
 
     @Test
     public void testIteratorUpdateable() {
-        Attributes a = new Attributes();
+        AttributesModel a = new AttributesModel();
         a.put("Tot", "a&p");
         a.put("Hello", "There");
 
@@ -87,7 +87,7 @@ public class AttributesTest {
 
     @Test
     public void testIteratorHasNext() {
-        Attributes a = new Attributes();
+        AttributesModel a = new AttributesModel();
         a.put("Tot", "1");
         a.put("Hello", "2");
         a.put("data-name", "3");
@@ -102,7 +102,7 @@ public class AttributesTest {
 
     @Test
     public void testIterator() {
-        Attributes a = new Attributes();
+        AttributesModel a = new AttributesModel();
         String[][] datas = {{"Tot", "raul"},
                 {"Hello", "pismuth"},
                 {"data-name", "Jsoup"}};
@@ -123,7 +123,7 @@ public class AttributesTest {
 
     @Test
     public void testIteratorEmpty() {
-        Attributes a = new Attributes();
+        AttributesModel a = new AttributesModel();
 
         Iterator<AttributeModel> iterator = a.iterator();
         assertFalse(iterator.hasNext());
@@ -131,7 +131,7 @@ public class AttributesTest {
 
     @Test
     public void removeCaseSensitive() {
-        Attributes a = new Attributes();
+        AttributesModel a = new AttributesModel();
         a.put("Tot", "a&p");
         a.put("tot", "one");
         a.put("Hello", "There");
@@ -148,7 +148,7 @@ public class AttributesTest {
 
     @Test
     public void testSetKeyConsistency() {
-        Attributes a = new Attributes();
+        AttributesModel a = new AttributesModel();
         a.put("a", "a");
         for (AttributeModel at : a) {
             at.setKey("b");

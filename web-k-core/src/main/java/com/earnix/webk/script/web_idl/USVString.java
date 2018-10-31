@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * @author Taras Maslov
  * 6/21/2018
  */
-@Target({ElementType.METHOD, ElementType.PARAMETER})
+@Target({ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface USVString {
 

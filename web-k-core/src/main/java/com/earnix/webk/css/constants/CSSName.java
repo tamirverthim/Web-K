@@ -120,7 +120,7 @@ public final class CSSName implements Comparable {
     /**
      * Map of all non-shorthand CSS properties
      */
-    private static final Map ALL_PRIMITIVE_PROPERTY_NAMES = new TreeMap();
+    private static final Map<String, CSSName> ALL_PRIMITIVE_PROPERTY_NAMES = new TreeMap<>();
 
     /**
      * Unique CSSName instance for CSS2 property.

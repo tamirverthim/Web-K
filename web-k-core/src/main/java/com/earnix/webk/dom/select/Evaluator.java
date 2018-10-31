@@ -2,14 +2,14 @@ package com.earnix.webk.dom.select;
 
 import com.earnix.webk.dom.helper.Validate;
 import com.earnix.webk.dom.nodes.AttributeModel;
-import com.earnix.webk.dom.nodes.Comment;
+import com.earnix.webk.dom.nodes.CommentModel;
 import com.earnix.webk.dom.nodes.DocumentModel;
-import com.earnix.webk.dom.nodes.DocumentType;
+import com.earnix.webk.dom.nodes.DocumentTypeModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.dom.nodes.PseudoTextElement;
-import com.earnix.webk.dom.nodes.TextNode;
-import com.earnix.webk.dom.nodes.XmlDeclaration;
+import com.earnix.webk.dom.nodes.TextNodeModel;
+import com.earnix.webk.dom.nodes.XmlDeclarationModel;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -630,7 +630,7 @@ public abstract class Evaluator {
         public boolean matches(ElementModel root, ElementModel element) {
             List<NodeModel> family = element.childNodes();
             for (NodeModel n : family) {
-                if (!(n instanceof Comment || n instanceof XmlDeclaration || n instanceof DocumentType)) return false;
+                if (!(n instanceof CommentModel || n instanceof XmlDeclarationModel || n instanceof DocumentTypeModel)) return false;
             }
             return true;
         }
@@ -768,8 +768,8 @@ public abstract class Evaluator {
             if (element instanceof PseudoTextElement)
                 return true;
 
-            List<TextNode> textNodes = element.textNodes();
-            for (TextNode textNode : textNodes) {
+            List<TextNodeModel> textNodes = element.textNodes();
+            for (TextNodeModel textNode : textNodes) {
                 PseudoTextElement pel = new PseudoTextElement(
                         com.earnix.webk.dom.parser.Tag.valueOf(element.tagName()), element.baseUri(), element.attributes());
                 textNode.replaceWith(pel);

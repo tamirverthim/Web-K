@@ -22,11 +22,11 @@ package com.earnix.webk.swing;
 
 import com.earnix.webk.context.StyleReference;
 import com.earnix.webk.css.constants.ValueConstants;
-import com.earnix.webk.dom.nodes.Comment;
+import com.earnix.webk.dom.nodes.CommentModel;
 import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.dom.nodes.TextNode;
+import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.layout.SharedContext;
 import org.w3c.dom.css.CSSPrimitiveValue;
 
@@ -574,8 +574,8 @@ class DOMTreeModel implements TreeModel {
             for (int i = 0, len = nl.size(); i < len; i++) {
                 NodeModel child = nl.get(i);
                 if (child instanceof ElementModel ||
-                        child instanceof Comment ||
-                        (child instanceof TextNode && (((TextNode) child).getWholeText().trim().length() > 0))) {
+                        child instanceof CommentModel ||
+                        (child instanceof TextNodeModel && (((TextNodeModel) child).getWholeText().trim().length() > 0))) {
                     children.add(child);
                 }
             }
@@ -623,16 +623,16 @@ class DOMTreeCellRenderer extends DefaultTreeCellRenderer {
 
         }
 
-        if (node instanceof TextNode) {
+        if (node instanceof TextNodeModel) {
 
-            if (((TextNode) node).getWholeText().trim().length() > 0) {
-                value = "\"" + ((TextNode) node).getWholeText() + "\"";
+            if (((TextNodeModel) node).getWholeText().trim().length() > 0) {
+                value = "\"" + ((TextNodeModel) node).getWholeText() + "\"";
             }
         }
 
-        if (node instanceof Comment) {
+        if (node instanceof CommentModel) {
 
-            value = "<!-- " + ((Comment) node).getData() + " -->";
+            value = "<!-- " + ((CommentModel) node).getData() + " -->";
 
         }
 

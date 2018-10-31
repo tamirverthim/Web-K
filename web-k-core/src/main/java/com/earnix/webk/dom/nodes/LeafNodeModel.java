@@ -11,19 +11,19 @@ abstract class LeafNodeModel extends NodeModel {
     Object value; // either a string value, or an attribute map (in the rare case multiple attributes are set)
 
     protected final boolean hasAttributes() {
-        return value instanceof Attributes;
+        return value instanceof AttributesModel;
     }
 
     @Override
-    public final Attributes attributes() {
+    public final AttributesModel attributes() {
         ensureAttributes();
-        return (Attributes) value;
+        return (AttributesModel) value;
     }
 
     private void ensureAttributes() {
         if (!hasAttributes()) {
             Object coreValue = value;
-            Attributes attributes = new Attributes();
+            AttributesModel attributes = new AttributesModel();
             value = attributes;
             if (coreValue != null)
                 attributes.put(nodeName(), (String) coreValue);

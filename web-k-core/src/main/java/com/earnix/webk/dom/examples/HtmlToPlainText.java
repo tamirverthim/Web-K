@@ -6,7 +6,7 @@ import com.earnix.webk.dom.internal.StringUtil;
 import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.dom.nodes.TextNode;
+import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.dom.select.Elements;
 import com.earnix.webk.dom.select.NodeTraversor;
 import com.earnix.webk.dom.select.NodeVisitor;
@@ -75,14 +75,15 @@ public class HtmlToPlainText {
         // hit when the node is first seen
         public void head(NodeModel node, int depth) {
             String name = node.nodeName();
-            if (node instanceof TextNode)
-                append(((TextNode) node).getWholeText()); // TextNodes carry all user-readable text in the DOM.
-            else if (name.equals("li"))
+            if (node instanceof TextNodeModel) {
+                append(((TextNodeModel) node).getWholeText()); // TextNodes carry all user-readable text in the DOM.
+            } else if (name.equals("li")) {
                 append("\n * ");
-            else if (name.equals("dt"))
+            } else if (name.equals("dt")) {
                 append("  ");
-            else if (StringUtil.in(name, "p", "h1", "h2", "h3", "h4", "h5", "tr"))
+            } else if (StringUtil.in(name, "p", "h1", "h2", "h3", "h4", "h5", "tr")) {
                 append("\n");
+            }
         }
 
         // hit when all of the node's children (if any) have been visited

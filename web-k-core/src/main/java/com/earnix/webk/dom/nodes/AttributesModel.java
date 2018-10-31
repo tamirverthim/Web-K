@@ -30,7 +30,7 @@ import static com.earnix.webk.dom.internal.Normalizer.lowerCase;
  *
  * @author Jonathan Hedley, jonathan@hedley.net
  */
-public class Attributes implements Iterable<AttributeModel>, Cloneable {
+public class AttributesModel implements Iterable<AttributeModel>, Cloneable {
     protected static final String dataPrefix = "data-";
     private static final int InitialCapacity = 4; // todo - analyze Alexa 1MM sites, determine best setting
 
@@ -128,7 +128,7 @@ public class Attributes implements Iterable<AttributeModel>, Cloneable {
      * @param value attribute value
      * @return these attributes, for chaining
      */
-    public Attributes put(String key, String value) {
+    public AttributesModel put(String key, String value) {
         int i = indexOfKey(key);
         if (i != NotFound)
             vals[i] = value;
@@ -154,7 +154,7 @@ public class Attributes implements Iterable<AttributeModel>, Cloneable {
      * @param value attribute value
      * @return these attributes, for chaining
      */
-    public Attributes put(String key, boolean value) {
+    public AttributesModel put(String key, boolean value) {
         if (value)
             putIgnoreCase(key, null);
         else
@@ -168,7 +168,7 @@ public class Attributes implements Iterable<AttributeModel>, Cloneable {
      * @param attribute attribute with case sensitive key
      * @return these attributes, for chaining
      */
-    public Attributes put(AttributeModel attribute) {
+    public AttributesModel put(AttributeModel attribute) {
         Validate.notNull(attribute);
         put(attribute.getKey(), attribute.getValue());
         attribute.parent = this;
@@ -244,7 +244,7 @@ public class Attributes implements Iterable<AttributeModel>, Cloneable {
      *
      * @param incoming attributes to add to these attributes.
      */
-    public void addAll(Attributes incoming) {
+    public void addAll(AttributesModel incoming) {
         if (incoming.size() == 0)
             return;
         checkCapacity(size + incoming.size);
@@ -267,14 +267,14 @@ public class Attributes implements Iterable<AttributeModel>, Cloneable {
 
             @Override
             public AttributeModel next() {
-                final AttributeModel attr = new AttributeModel(keys[i], vals[i], Attributes.this);
+                final AttributeModel attr = new AttributeModel(keys[i], vals[i], AttributesModel.this);
                 i++;
                 return attr;
             }
 
             @Override
             public void remove() {
-                Attributes.this.remove(--i); // next() advanced, so rewind
+                AttributesModel.this.remove(--i); // next() advanced, so rewind
             }
         };
     }
@@ -288,8 +288,8 @@ public class Attributes implements Iterable<AttributeModel>, Cloneable {
         ArrayList<AttributeModel> list = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
             AttributeModel attr = vals[i] == null ?
-                    new BooleanAttribute(keys[i]) : // deprecated class, but maybe someone still wants it
-                    new AttributeModel(keys[i], vals[i], Attributes.this);
+                    new BooleanAttributeModel(keys[i]) : // deprecated class, but maybe someone still wants it
+                    new AttributeModel(keys[i], vals[i], AttributesModel.this);
             list.add(attr);
         }
         return Collections.unmodifiableList(list);
@@ -354,7 +354,7 @@ public class Attributes implements Iterable<AttributeModel>, Cloneable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Attributes that = (Attributes) o;
+        AttributesModel that = (AttributesModel) o;
 
         if (size != that.size) return false;
         if (!Arrays.equals(keys, that.keys)) return false;
@@ -375,10 +375,10 @@ public class Attributes implements Iterable<AttributeModel>, Cloneable {
     }
 
     @Override
-    public Attributes clone() {
-        Attributes clone;
+    public AttributesModel clone() {
+        AttributesModel clone;
         try {
-            clone = (Attributes) super.clone();
+            clone = (AttributesModel) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
@@ -398,9 +398,9 @@ public class Attributes implements Iterable<AttributeModel>, Cloneable {
     }
 
     private static class Dataset extends AbstractMap<String, String> {
-        private final Attributes attributes;
+        private final AttributesModel attributes;
 
-        private Dataset(Attributes attributes) {
+        private Dataset(AttributesModel attributes) {
             this.attributes = attributes;
         }
 

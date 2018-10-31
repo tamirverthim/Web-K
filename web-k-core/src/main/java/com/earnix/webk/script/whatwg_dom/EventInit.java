@@ -1,6 +1,7 @@
 package com.earnix.webk.script.whatwg_dom;
 
 import com.earnix.webk.script.web_idl.Dictionary;
+import lombok.AllArgsConstructor;
 
 /**
  * @author Taras Maslov
@@ -8,7 +9,7 @@ import com.earnix.webk.script.web_idl.Dictionary;
  */
 @Dictionary
 public class EventInit {
-    boolean bubbles = false;
-    boolean cancelable = false;
-    boolean composed = false;
+    public boolean bubbles = false;
+    public boolean cancelable = false;
+    public boolean composed = false;
 }

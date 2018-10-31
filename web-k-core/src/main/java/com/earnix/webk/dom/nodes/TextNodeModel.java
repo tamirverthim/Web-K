@@ -10,7 +10,7 @@ import java.io.IOException;
  *
  * @author Jonathan Hedley, jonathan@hedley.net
  */
-public class TextNode extends LeafNodeModel {
+public class TextNodeModel extends LeafNodeModel {
 
     /**
      * Create a new TextNode representing the supplied (unencoded) text).
@@ -18,7 +18,7 @@ public class TextNode extends LeafNodeModel {
      * @param text raw text
      * @see #createFromEncoded(String)
      */
-    public TextNode(String text) {
+    public TextNodeModel(String text) {
         value = text;
     }
 
@@ -28,9 +28,9 @@ public class TextNode extends LeafNodeModel {
      * @param text    raw text
      * @param baseUri base uri - ignored for this node type
      * @see #createFromEncoded(String, String)
-     * @deprecated use {@link TextNode#TextNode(String)}
+     * @deprecated use {@link TextNodeModel#TextNodeModel(String)}
      */
-    public TextNode(String text, String baseUri) {
+    public TextNodeModel(String text, String baseUri) {
         this(text);
     }
 
@@ -42,7 +42,7 @@ public class TextNode extends LeafNodeModel {
      * Get the text content of this text node.
      *
      * @return Unencoded, normalised text.
-     * @see TextNode#getWholeText()
+     * @see TextNodeModel#getWholeText()
      */
     public String text() {
         return StringUtil.normaliseWhitespace(getWholeText());
@@ -54,7 +54,7 @@ public class TextNode extends LeafNodeModel {
      * @param text unencoded text
      * @return this, for chaining
      */
-    public TextNode text(String text) {
+    public TextNodeModel text(String text) {
         coreValue(text);
         return this;
     }
@@ -84,7 +84,7 @@ public class TextNode extends LeafNodeModel {
      * @param offset string offset point to split node at.
      * @return the newly created text node containing the text after the offset.
      */
-    public TextNode splitText(int offset) {
+    public TextNodeModel splitText(int offset) {
         final String text = coreValue();
         Validate.isTrue(offset >= 0, "Split offset must be not be negative");
         Validate.isTrue(offset < text.length(), "Split offset must not be greater than current text length");
@@ -92,7 +92,7 @@ public class TextNode extends LeafNodeModel {
         String head = text.substring(0, offset);
         String tail = text.substring(offset);
         text(head);
-        TextNode tailNode = new TextNode(tail);
+        TextNodeModel tailNode = new TextNodeModel(tail);
         if (parent() != null)
             parent().addChildren(siblingIndex() + 1, tailNode);
 
@@ -122,11 +122,11 @@ public class TextNode extends LeafNodeModel {
      * @param encodedText Text containing encoded HTML (e.g. &amp;lt;)
      * @param baseUri     Base uri
      * @return TextNode containing unencoded data (e.g. &lt;)
-     * @deprecated use {@link TextNode#createFromEncoded(String)} instead, as LeafNodes don't carry base URIs.
+     * @deprecated use {@link TextNodeModel#createFromEncoded(String)} instead, as LeafNodes don't carry base URIs.
      */
-    public static TextNode createFromEncoded(String encodedText, String baseUri) {
+    public static TextNodeModel createFromEncoded(String encodedText, String baseUri) {
         String text = Entities.unescape(encodedText);
-        return new TextNode(text);
+        return new TextNodeModel(text);
     }
 
     /**
@@ -135,9 +135,9 @@ public class TextNode extends LeafNodeModel {
      * @param encodedText Text containing encoded HTML (e.g. &amp;lt;)
      * @return TextNode containing unencoded data (e.g. &lt;)
      */
-    public static TextNode createFromEncoded(String encodedText) {
+    public static TextNodeModel createFromEncoded(String encodedText) {
         String text = Entities.unescape(encodedText);
-        return new TextNode(text);
+        return new TextNodeModel(text);
     }
 
     static String normaliseWhitespace(String text) {

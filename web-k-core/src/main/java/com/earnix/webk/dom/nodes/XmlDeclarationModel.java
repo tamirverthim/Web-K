@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * An XML Declaration.
  */
-public class XmlDeclaration extends LeafNodeModel {
+public class XmlDeclarationModel extends LeafNodeModel {
     // todo this impl isn't really right, the data shouldn't be attributes, just a run of text after the name
     private final boolean isProcessingInstruction; // <! if true, <? if false, declaration (and last data char should be ?)
 
@@ -19,7 +19,7 @@ public class XmlDeclaration extends LeafNodeModel {
      * @param name                    of declaration
      * @param isProcessingInstruction is processing instruction
      */
-    public XmlDeclaration(String name, boolean isProcessingInstruction) {
+    public XmlDeclarationModel(String name, boolean isProcessingInstruction) {
         Validate.notNull(name);
         value = name;
         this.isProcessingInstruction = isProcessingInstruction;
@@ -31,10 +31,10 @@ public class XmlDeclaration extends LeafNodeModel {
      * @param name                    of declaration
      * @param baseUri                 Leaf Nodes don't have base URIs; they inherit from their Element
      * @param isProcessingInstruction is processing instruction
-     * @see XmlDeclaration#XmlDeclaration(String, boolean)
+     * @see XmlDeclarationModel#XmlDeclarationModel(String, boolean)
      * @deprecated
      */
-    public XmlDeclaration(String name, String baseUri, boolean isProcessingInstruction) {
+    public XmlDeclarationModel(String name, String baseUri, boolean isProcessingInstruction) {
         this(name, isProcessingInstruction);
     }
 

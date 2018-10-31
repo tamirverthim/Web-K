@@ -21,11 +21,11 @@ package com.earnix.webk.simple.extend;
 import com.earnix.webk.css.extend.StylesheetFactory;
 import com.earnix.webk.css.sheet.Stylesheet;
 import com.earnix.webk.css.sheet.StylesheetInfo;
-import com.earnix.webk.dom.nodes.DataNode;
+import com.earnix.webk.dom.nodes.DataNodeModel;
 import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.dom.nodes.TextNode;
+import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.simple.NoNamespaceHandler;
 import com.earnix.webk.util.Configuration;
 import com.earnix.webk.util.XRLog;
@@ -201,8 +201,8 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
         NodeModel current = element.childNode(0);
         while (current != null) {
 //            short nodeType = current.getNodeType();
-            if (current instanceof TextNode) {
-                TextNode t = (TextNode) current;
+            if (current instanceof TextNodeModel) {
+                TextNodeModel t = (TextNodeModel) current;
                 result.append(t.getWholeText());
             }
             current = current.nextSibling();
@@ -278,8 +278,8 @@ public class XhtmlCssOnlyNamespaceHandler extends NoNamespaceHandler {
         StringBuffer buf = new StringBuffer();
         NodeModel current = style.childNodeSize() > 0 ? style.childNode(0) : null;
         while (current != null) {
-            if (current instanceof DataNode) {
-                buf.append(((DataNode) current).getWholeData());
+            if (current instanceof DataNodeModel) {
+                buf.append(((DataNodeModel) current).getWholeData());
             }
             current = current.nextSibling();
         }

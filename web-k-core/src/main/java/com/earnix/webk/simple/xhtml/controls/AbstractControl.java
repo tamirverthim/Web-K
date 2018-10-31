@@ -21,7 +21,7 @@ package com.earnix.webk.simple.xhtml.controls;
 
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.dom.nodes.TextNode;
+import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.simple.xhtml.FormControl;
 import com.earnix.webk.simple.xhtml.FormControlListener;
 import com.earnix.webk.simple.xhtml.FormListener;
@@ -173,8 +173,8 @@ public abstract class AbstractControl implements FormControl {
         NodeModel node = e.childNodeSize() > 0 ? e.childNode(0) : null;
         if (node != null) {
             do {
-                if (node instanceof TextNode) {
-                    TextNode text = (TextNode) node;
+                if (node instanceof TextNodeModel) {
+                    TextNodeModel text = (TextNodeModel) node;
                     result.append(text.getWholeText());
                 }
             } while ((node = node.nextSibling()) != null);

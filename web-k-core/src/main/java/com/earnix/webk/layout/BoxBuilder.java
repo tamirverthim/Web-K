@@ -37,7 +37,7 @@ import com.earnix.webk.css.style.FSDerivedValue;
 import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.dom.nodes.TextNode;
+import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.newtable.TableBox;
 import com.earnix.webk.newtable.TableCellBox;
 import com.earnix.webk.newtable.TableColumn;
@@ -1060,7 +1060,7 @@ public class BoxBuilder {
     }
 
     private static InlineBox createInlineBox(
-            String text, ElementModel parent, CalculatedStyle parentStyle, TextNode node) {
+            String text, ElementModel parent, CalculatedStyle parentStyle, TextNodeModel node) {
         InlineBox result = new InlineBox(text, node);
 
         if (parentStyle.isInline() && !(parent.parentNode() instanceof Document)) {
@@ -1183,11 +1183,11 @@ public class BoxBuilder {
                         //I think we need to do this to evaluate counters correctly
                         block.ensureChildren(c);
                     }
-                } else if (working instanceof TextNode) {
+                } else if (working instanceof TextNodeModel) {
                     needStartText = false;
                     needEndText = false;
 
-                    TextNode textNode = (TextNode) working;
+                    TextNodeModel textNode = (TextNodeModel) working;
 
                     /*
                     StringBuffer text = new StringBuffer(textNode.getData());

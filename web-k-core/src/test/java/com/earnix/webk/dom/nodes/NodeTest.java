@@ -23,7 +23,7 @@ public class NodeTest {
     @Test
     public void handlesBaseUri() {
         Tag tag = Tag.valueOf("a");
-        Attributes attribs = new Attributes();
+        AttributesModel attribs = new AttributesModel();
         attribs.put("relHref", "/foo");
         attribs.put("absHref", "http://bar/qux");
 
@@ -225,8 +225,8 @@ public class NodeTest {
         NodeModel node = span.unwrap();
 
         assertEquals("<div>One Two <b>Three</b> Four</div>", TextUtil.stripNewlines(doc.body().html()));
-        assertTrue(node instanceof TextNode);
-        assertEquals("Two ", ((TextNode) node).text());
+        assertTrue(node instanceof TextNodeModel);
+        assertEquals("Two ", ((TextNodeModel) node).text());
         assertEquals(node, twoText);
         assertEquals(node.parent(), doc.select("div").first());
     }
@@ -291,8 +291,8 @@ public class NodeTest {
         ElementModel div2 = doc.select("#2").first();
         List<NodeModel> divChildren = div1.childNodesCopy();
         assertEquals(5, divChildren.size());
-        TextNode tn1 = (TextNode) div1.childNode(0);
-        TextNode tn2 = (TextNode) divChildren.get(0);
+        TextNodeModel tn1 = (TextNodeModel) div1.childNode(0);
+        TextNodeModel tn2 = (TextNodeModel) divChildren.get(0);
         tn2.text("Text 1 updated");
         assertEquals("Text 1 ", tn1.text());
         div2.insertChildren(-1, divChildren);
@@ -328,8 +328,8 @@ public class NodeTest {
         assertEquals(singletonAttributes("value", "bar"), getAttributesCaseInsensitive(inputElement, "value"));
     }
 
-    private Attributes getAttributesCaseInsensitive(ElementModel element, String attributeName) {
-        Attributes matches = new Attributes();
+    private AttributesModel getAttributesCaseInsensitive(ElementModel element, String attributeName) {
+        AttributesModel matches = new AttributesModel();
         for (AttributeModel attribute : element.attributes()) {
             if (attribute.getKey().equalsIgnoreCase(attributeName)) {
                 matches.put(attribute);
@@ -338,8 +338,8 @@ public class NodeTest {
         return matches;
     }
 
-    private Attributes singletonAttributes(String key, String value) {
-        Attributes attributes = new Attributes();
+    private AttributesModel singletonAttributes(String key, String value) {
+        AttributesModel attributes = new AttributesModel();
         attributes.put(key, value);
         return attributes;
     }

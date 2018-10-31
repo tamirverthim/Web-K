@@ -24,7 +24,7 @@ import com.earnix.webk.css.constants.IdentValue;
 import com.earnix.webk.css.style.CalculatedStyle;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.dom.nodes.TextNode;
+import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.layout.LineBreakContext;
 import com.earnix.webk.layout.TextUtil;
@@ -122,7 +122,7 @@ public class Breaker {
         return c.getSharedContext().getLineBreakingStrategy().getBreakPointsProvider(text, getLanguage(c, element), style);
     }
 
-    public static BreakPointsProvider getBreakPointsProvider(String text, LayoutContext c, TextNode textNode, CalculatedStyle style) {
+    public static BreakPointsProvider getBreakPointsProvider(String text, LayoutContext c, TextNodeModel textNode, CalculatedStyle style) {
         return c.getSharedContext().getLineBreakingStrategy().getBreakPointsProvider(text, getLanguage(c, textNode), style);
     }
 
@@ -134,7 +134,7 @@ public class Breaker {
         return language;
     }
 
-    private static String getLanguage(LayoutContext c, TextNode textNode) {
+    private static String getLanguage(LayoutContext c, TextNodeModel textNode) {
         if (textNode != null) {
             NodeModel parentNode = textNode.parentNode();
             if (parentNode instanceof ElementModel) {

@@ -7,7 +7,7 @@ package com.earnix.webk.dom.safety;
 
 import com.earnix.webk.dom.helper.Validate;
 import com.earnix.webk.dom.nodes.AttributeModel;
-import com.earnix.webk.dom.nodes.Attributes;
+import com.earnix.webk.dom.nodes.AttributesModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 
 import java.util.HashMap;
@@ -512,7 +512,7 @@ public class Whitelist {
         // might be an enforced attribute?
         Map<AttributeKey, AttributeValue> enforcedSet = enforcedAttributes.get(tag);
         if (enforcedSet != null) {
-            Attributes expect = getEnforcedAttributes(tagName);
+            AttributesModel expect = getEnforcedAttributes(tagName);
             String attrKey = attr.getKey();
             if (expect.hasKeyIgnoreCase(attrKey)) {
                 return expect.getIgnoreCase(attrKey).equals(attr.getValue());
@@ -555,8 +555,8 @@ public class Whitelist {
         return value.startsWith("#") && !value.matches(".*\\s.*");
     }
 
-    Attributes getEnforcedAttributes(String tagName) {
-        Attributes attrs = new Attributes();
+    AttributesModel getEnforcedAttributes(String tagName) {
+        AttributesModel attrs = new AttributesModel();
         TagName tag = TagName.valueOf(tagName);
         if (enforcedAttributes.containsKey(tag)) {
             Map<AttributeKey, AttributeValue> keyVals = enforcedAttributes.get(tag);

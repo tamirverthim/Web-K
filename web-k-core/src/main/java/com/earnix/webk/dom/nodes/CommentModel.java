@@ -10,7 +10,7 @@ import java.io.IOException;
  *
  * @author Jonathan Hedley, jonathan@hedley.net
  */
-public class Comment extends LeafNodeModel {
+public class CommentModel extends LeafNodeModel {
     private static final String COMMENT_KEY = "comment";
 
     /**
@@ -18,7 +18,7 @@ public class Comment extends LeafNodeModel {
      *
      * @param data The contents of the comment
      */
-    public Comment(String data) {
+    public CommentModel(String data) {
         value = data;
     }
 
@@ -29,7 +29,7 @@ public class Comment extends LeafNodeModel {
      * @param baseUri base URI not used. This is a leaf node.
      * @deprecated
      */
-    public Comment(String data, String baseUri) {
+    public CommentModel(String data, String baseUri) {
         this(data);
     }
 
@@ -78,13 +78,13 @@ public class Comment extends LeafNodeModel {
      *
      * @return an XML declaration if it could be parsed as one, null otherwise.
      */
-    public XmlDeclaration asXmlDeclaration() {
+    public XmlDeclarationModel asXmlDeclaration() {
         String data = getData();
         DocumentModel doc = Jsoup.parse("<" + data.substring(1, data.length() - 1) + ">", baseUri(), Parser.xmlParser());
-        XmlDeclaration decl = null;
+        XmlDeclarationModel decl = null;
         if (doc.childNodeSize() > 0) {
             ElementModel el = doc.child(0);
-            decl = new XmlDeclaration(NodeUtils.parser(doc).settings().normalizeTag(el.tagName()), data.startsWith("!"));
+            decl = new XmlDeclarationModel(NodeModelUtils.parser(doc).settings().normalizeTag(el.tagName()), data.startsWith("!"));
             decl.attributes().addAll(el.attributes());
         }
         return decl;

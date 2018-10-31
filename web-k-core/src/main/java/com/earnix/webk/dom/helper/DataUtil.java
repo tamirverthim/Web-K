@@ -3,11 +3,11 @@ package com.earnix.webk.dom.helper;
 import com.earnix.webk.dom.UncheckedIOException;
 import com.earnix.webk.dom.internal.ConstrainableInputStream;
 import com.earnix.webk.dom.internal.StringUtil;
-import com.earnix.webk.dom.nodes.Comment;
+import com.earnix.webk.dom.nodes.CommentModel;
 import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.dom.nodes.XmlDeclaration;
+import com.earnix.webk.dom.nodes.XmlDeclarationModel;
 import com.earnix.webk.dom.parser.Parser;
 import com.earnix.webk.dom.select.Elements;
 
@@ -135,11 +135,11 @@ public final class DataUtil {
             // look for <?xml encoding='ISO-8859-1'?>
             if (foundCharset == null && doc.childNodeSize() > 0) {
                 NodeModel first = doc.childNode(0);
-                XmlDeclaration decl = null;
-                if (first instanceof XmlDeclaration)
-                    decl = (XmlDeclaration) first;
-                else if (first instanceof Comment) {
-                    Comment comment = (Comment) first;
+                XmlDeclarationModel decl = null;
+                if (first instanceof XmlDeclarationModel)
+                    decl = (XmlDeclarationModel) first;
+                else if (first instanceof CommentModel) {
+                    CommentModel comment = (CommentModel) first;
                     if (comment.isXmlDeclaration())
                         decl = comment.asXmlDeclaration();
                 }

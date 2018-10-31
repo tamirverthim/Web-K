@@ -1,6 +1,6 @@
 package com.earnix.webk.script.impl;
 
-import com.earnix.webk.dom.nodes.CDataNode;
+import com.earnix.webk.dom.nodes.CDataNodeModel;
 import com.earnix.webk.script.web_idl.Attribute;
 import com.earnix.webk.script.web_idl.DOMException;
 import com.earnix.webk.script.whatwg_dom.CharacterData;
@@ -18,13 +18,13 @@ import lombok.val;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CharacterDataImpl extends NodeImpl implements CharacterData {
 
-    CDataNode target;
+    CDataNodeModel target;
     ChildNodeImpl childNodeMixin;
     NonDocumentTypeChildNode nonDocumentTypeChildNodeMixin;
 
     Attribute<String> dataAttribute = Attribute.<String>receive(val -> target.text(val)).give(() -> target.getWholeText());
 
-    public CharacterDataImpl(CDataNode target, BasicPanel panel) {
+    public CharacterDataImpl(CDataNodeModel target, BasicPanel panel) {
         super(target, panel);
         this.target = target;
         childNodeMixin = new ChildNodeImpl(target);

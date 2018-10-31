@@ -2,10 +2,10 @@ package com.earnix.webk.dom.parser;
 
 import com.earnix.webk.dom.Jsoup;
 import com.earnix.webk.dom.nodes.AttributeModel;
-import com.earnix.webk.dom.nodes.Comment;
+import com.earnix.webk.dom.nodes.CommentModel;
 import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.nodes.ElementModel;
-import com.earnix.webk.dom.nodes.TextNode;
+import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.dom.select.Elements;
 import org.junit.Test;
 
@@ -118,7 +118,7 @@ public class TokeniserTest {
         ElementModel el = els.first();
 
         assertNotNull(el);
-        Comment child = (Comment) el.childNode(0);
+        CommentModel child = (CommentModel) el.childNode(0);
         assertEquals(" " + comment + " ", child.getData());
     }
 
@@ -137,7 +137,7 @@ public class TokeniserTest {
         ElementModel el = els.first();
 
         assertNotNull(el);
-        TextNode child = (TextNode) el.childNode(0);
+        TextNodeModel child = (TextNodeModel) el.childNode(0);
         assertEquals(cdata, el.text());
         assertEquals(cdata, child.getWholeText());
     }
@@ -157,7 +157,7 @@ public class TokeniserTest {
         ElementModel el = els.first();
 
         assertNotNull(el);
-        TextNode child = (TextNode) el.childNode(0);
+        TextNodeModel child = (TextNodeModel) el.childNode(0);
         assertEquals(title, el.text());
         assertEquals(title, child.getWholeText());
         assertEquals(title, doc.title());

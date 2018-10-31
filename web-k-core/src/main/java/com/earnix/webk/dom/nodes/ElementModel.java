@@ -43,7 +43,7 @@ public class ElementModel extends NodeModel {
     private Tag tag;
     private WeakReference<List<ElementModel>> shadowChildrenRef; // points to child elements shadowed from node children
     List<NodeModel> childNodes;
-    private Attributes attributes;
+    private AttributesModel attributes;
     private String baseUri;
 
 
@@ -64,7 +64,7 @@ public class ElementModel extends NodeModel {
      * @param tag tag name
      */
     public ElementModel(String tag) {
-        this(Tag.valueOf(tag), "", new Attributes());
+        this(Tag.valueOf(tag), "", new AttributesModel());
     }
 
     /**
@@ -76,7 +76,7 @@ public class ElementModel extends NodeModel {
      * @see #appendChild(NodeModel)
      * @see #appendElement(String)
      */
-    public ElementModel(Tag tag, String baseUri, Attributes attributes) {
+    public ElementModel(Tag tag, String baseUri, AttributesModel attributes) {
         Validate.notNull(tag);
         Validate.notNull(baseUri);
         childNodes = EMPTY_NODES;
@@ -110,9 +110,9 @@ public class ElementModel extends NodeModel {
     }
 
     @Override
-    public Attributes attributes() {
+    public AttributesModel attributes() {
         if (!hasAttributes())
-            attributes = new Attributes();
+            attributes = new AttributesModel();
         return attributes;
     }
 
@@ -154,7 +154,7 @@ public class ElementModel extends NodeModel {
      */
     public ElementModel tagName(String tagName) {
         Validate.notEmpty(tagName, "Tag name must not be empty.");
-        tag = Tag.valueOf(tagName, NodeUtils.parser(this).settings()); // maintains the case option of the original parse
+        tag = Tag.valueOf(tagName, NodeModelUtils.parser(this).settings()); // maintains the case option of the original parse
         return this;
     }
 
@@ -329,11 +329,11 @@ public class ElementModel extends NodeModel {
      * <li>{@code p.textNodes()} = {@code List<TextNode>["One ", " Three ", " Four"]}</li>
      * </ul>
      */
-    public List<TextNode> textNodes() {
-        List<TextNode> textNodes = new ArrayList<>();
+    public List<TextNodeModel> textNodes() {
+        List<TextNodeModel> textNodes = new ArrayList<>();
         for (NodeModel node : childNodes) {
-            if (node instanceof TextNode)
-                textNodes.add((TextNode) node);
+            if (node instanceof TextNodeModel)
+                textNodes.add((TextNodeModel) node);
         }
         return Collections.unmodifiableList(textNodes);
     }
@@ -348,11 +348,11 @@ public class ElementModel extends NodeModel {
      * empty list.
      * @see #data()
      */
-    public List<DataNode> dataNodes() {
-        List<DataNode> dataNodes = new ArrayList<>();
+    public List<DataNodeModel> dataNodes() {
+        List<DataNodeModel> dataNodes = new ArrayList<>();
         for (NodeModel node : childNodes) {
-            if (node instanceof DataNode)
-                dataNodes.add((DataNode) node);
+            if (node instanceof DataNodeModel)
+                dataNodes.add((DataNodeModel) node);
         }
         return Collections.unmodifiableList(dataNodes);
     }
@@ -504,7 +504,7 @@ public class ElementModel extends NodeModel {
      * {@code parent.appendElement("h1").attr("id", "header").text("Welcome");}
      */
     public ElementModel appendElement(String tagName) {
-        ElementModel child = new ElementModel(Tag.valueOf(tagName, NodeUtils.parser(this).settings()), baseUri());
+        ElementModel child = new ElementModel(Tag.valueOf(tagName, NodeModelUtils.parser(this).settings()), baseUri());
         appendChild(child);
         return child;
     }
@@ -517,7 +517,7 @@ public class ElementModel extends NodeModel {
      * {@code parent.prependElement("h1").attr("id", "header").text("Welcome");}
      */
     public ElementModel prependElement(String tagName) {
-        ElementModel child = new ElementModel(Tag.valueOf(tagName, NodeUtils.parser(this).settings()), baseUri());
+        ElementModel child = new ElementModel(Tag.valueOf(tagName, NodeModelUtils.parser(this).settings()), baseUri());
         prependChild(child);
         return child;
     }
@@ -530,7 +530,7 @@ public class ElementModel extends NodeModel {
      */
     public ElementModel appendText(String text) {
         Validate.notNull(text);
-        TextNode node = new TextNode(text);
+        TextNodeModel node = new TextNodeModel(text);
         appendChild(node);
         return this;
     }
@@ -543,7 +543,7 @@ public class ElementModel extends NodeModel {
      */
     public ElementModel prependText(String text) {
         Validate.notNull(text);
-        TextNode node = new TextNode(text);
+        TextNodeModel node = new TextNodeModel(text);
         prependChild(node);
         return this;
     }
@@ -557,7 +557,7 @@ public class ElementModel extends NodeModel {
      */
     public ElementModel append(String html) {
         Validate.notNull(html);
-        List<NodeModel> nodes = NodeUtils.parser(this).parseFragmentInput(html, this, baseUri());
+        List<NodeModel> nodes = NodeModelUtils.parser(this).parseFragmentInput(html, this, baseUri());
         addChildren(nodes.toArray(new NodeModel[nodes.size()]));
         return this;
     }
@@ -571,7 +571,7 @@ public class ElementModel extends NodeModel {
      */
     public ElementModel prepend(String html) {
         Validate.notNull(html);
-        List<NodeModel> nodes = NodeUtils.parser(this).parseFragmentInput(html, this, baseUri());
+        List<NodeModel> nodes = NodeModelUtils.parser(this).parseFragmentInput(html, this, baseUri());
         addChildren(0, nodes.toArray(new NodeModel[nodes.size()]));
         return this;
     }
@@ -1096,14 +1096,14 @@ public class ElementModel extends NodeModel {
         final StringBuilder accum = StringUtil.borrowBuilder();
         NodeTraversor.traverse(new NodeVisitor() {
             public void head(NodeModel node, int depth) {
-                if (node instanceof TextNode) {
-                    TextNode textNode = (TextNode) node;
+                if (node instanceof TextNodeModel) {
+                    TextNodeModel textNode = (TextNodeModel) node;
                     appendNormalisedText(accum, textNode);
                 } else if (node instanceof ElementModel) {
                     ElementModel element = (ElementModel) node;
                     if (accum.length() > 0 &&
                             (element.isBlock() || element.tag.getName().equals("br")) &&
-                            !TextNode.lastCharIsWhitespace(accum))
+                            !TextNodeModel.lastCharIsWhitespace(accum))
                         accum.append(' ');
                 }
             }
@@ -1112,7 +1112,7 @@ public class ElementModel extends NodeModel {
                 // make sure there is a space between block tags and immediately following text nodes <div>One</div>Two should be "One Two".
                 if (node instanceof ElementModel) {
                     ElementModel element = (ElementModel) node;
-                    if (element.isBlock() && (node.nextSibling() instanceof TextNode) && !TextNode.lastCharIsWhitespace(accum))
+                    if (element.isBlock() && (node.nextSibling() instanceof TextNodeModel) && !TextNodeModel.lastCharIsWhitespace(accum))
                         accum.append(' ');
                 }
 
@@ -1133,8 +1133,8 @@ public class ElementModel extends NodeModel {
         final StringBuilder accum = StringUtil.borrowBuilder();
         NodeTraversor.traverse(new NodeVisitor() {
             public void head(NodeModel node, int depth) {
-                if (node instanceof TextNode) {
-                    TextNode textNode = (TextNode) node;
+                if (node instanceof TextNodeModel) {
+                    TextNodeModel textNode = (TextNodeModel) node;
                     accum.append(textNode.getWholeText());
                 }
             }
@@ -1165,8 +1165,8 @@ public class ElementModel extends NodeModel {
 
     private void ownText(StringBuilder accum) {
         for (NodeModel child : childNodes) {
-            if (child instanceof TextNode) {
-                TextNode textNode = (TextNode) child;
+            if (child instanceof TextNodeModel) {
+                TextNodeModel textNode = (TextNodeModel) child;
                 appendNormalisedText(accum, textNode);
             } else if (child instanceof ElementModel) {
                 appendWhitespaceIfBr((ElementModel) child, accum);
@@ -1174,17 +1174,17 @@ public class ElementModel extends NodeModel {
         }
     }
 
-    private static void appendNormalisedText(StringBuilder accum, TextNode textNode) {
+    private static void appendNormalisedText(StringBuilder accum, TextNodeModel textNode) {
         String text = textNode.getWholeText();
 
-        if (preserveWhitespace(textNode.parentNode) || textNode instanceof CDataNode)
+        if (preserveWhitespace(textNode.parentNode) || textNode instanceof CDataNodeModel)
             accum.append(text);
         else
-            StringUtil.appendNormalisedWhitespace(accum, text, TextNode.lastCharIsWhitespace(accum));
+            StringUtil.appendNormalisedWhitespace(accum, text, TextNodeModel.lastCharIsWhitespace(accum));
     }
 
     private static void appendWhitespaceIfBr(ElementModel element, StringBuilder accum) {
-        if (element.tag.getName().equals("br") && !TextNode.lastCharIsWhitespace(accum))
+        if (element.tag.getName().equals("br") && !TextNodeModel.lastCharIsWhitespace(accum))
             accum.append(" ");
     }
 
@@ -1213,7 +1213,7 @@ public class ElementModel extends NodeModel {
         Validate.notNull(text);
 
         empty();
-        TextNode textNode = new TextNode(text);
+        TextNodeModel textNode = new TextNodeModel(text);
         appendChild(textNode);
 
         return this;
@@ -1226,8 +1226,8 @@ public class ElementModel extends NodeModel {
      */
     public boolean hasText() {
         for (NodeModel child : childNodes) {
-            if (child instanceof TextNode) {
-                TextNode textNode = (TextNode) child;
+            if (child instanceof TextNodeModel) {
+                TextNodeModel textNode = (TextNodeModel) child;
                 if (!textNode.isBlank())
                     return true;
             } else if (child instanceof ElementModel) {
@@ -1251,20 +1251,20 @@ public class ElementModel extends NodeModel {
         StringBuilder sb = StringUtil.borrowBuilder();
 
         for (NodeModel childNode : childNodes) {
-            if (childNode instanceof DataNode) {
-                DataNode data = (DataNode) childNode;
+            if (childNode instanceof DataNodeModel) {
+                DataNodeModel data = (DataNodeModel) childNode;
                 sb.append(data.getWholeData());
-            } else if (childNode instanceof Comment) {
-                Comment comment = (Comment) childNode;
+            } else if (childNode instanceof CommentModel) {
+                CommentModel comment = (CommentModel) childNode;
                 sb.append(comment.getData());
             } else if (childNode instanceof ElementModel) {
                 ElementModel element = (ElementModel) childNode;
                 String elementData = element.data();
                 sb.append(elementData);
-            } else if (childNode instanceof CDataNode) {
+            } else if (childNode instanceof CDataNodeModel) {
                 // this shouldn't really happen because the html parser won't see the cdata as anything special when parsing script.
                 // but incase another type gets through.
-                CDataNode cDataNode = (CDataNode) childNode;
+                CDataNodeModel cDataNode = (CDataNodeModel) childNode;
                 sb.append(cDataNode.getWholeText());
             }
         }
@@ -1464,7 +1464,7 @@ public class ElementModel extends NodeModel {
     void outerHtmlTail(Appendable accum, int depth, DocumentModel.OutputSettings out) throws IOException {
         if (!(childNodes.isEmpty() && tag.isSelfClosing())) {
             if (out.prettyPrint() && (!childNodes.isEmpty() && (
-                    tag.formatAsBlock() || (out.outline() && (childNodes.size() > 1 || (childNodes.size() == 1 && !(childNodes.get(0) instanceof TextNode))))
+                    tag.formatAsBlock() || (out.outline() && (childNodes.size() > 1 || (childNodes.size() == 1 && !(childNodes.get(0) instanceof TextNodeModel))))
             )))
                 indent(accum, depth, out);
             accum.append("</").append(tagName()).append('>');
@@ -1482,7 +1482,7 @@ public class ElementModel extends NodeModel {
         StringBuilder accum = StringUtil.borrowBuilder();
         html(accum);
         String html = StringUtil.releaseBuilder(accum);
-        return NodeUtils.outputSettings(this).prettyPrint() ? html.trim() : html;
+        return NodeModelUtils.outputSettings(this).prettyPrint() ? html.trim() : html;
     }
 
     @Override

@@ -2,12 +2,13 @@ package com.earnix.webk.dom.helper;
 
 import com.earnix.webk.dom.internal.StringUtil;
 import com.earnix.webk.dom.nodes.AttributeModel;
-import com.earnix.webk.dom.nodes.Attributes;
-import com.earnix.webk.dom.nodes.DataNode;
+import com.earnix.webk.dom.nodes.AttributesModel;
+import com.earnix.webk.dom.nodes.CommentModel;
+import com.earnix.webk.dom.nodes.DataNodeModel;
 import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.dom.nodes.TextNode;
+import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.dom.select.NodeTraversor;
 import com.earnix.webk.dom.select.NodeVisitor;
 import org.w3c.dom.Comment;
@@ -106,16 +107,16 @@ public class W3CDom {
                     dest.appendChild(el);
                 }
                 dest = el; // descend
-            } else if (source instanceof TextNode) {
-                TextNode sourceText = (TextNode) source;
+            } else if (source instanceof TextNodeModel) {
+                TextNodeModel sourceText = (TextNodeModel) source;
                 Text text = doc.createTextNode(sourceText.getWholeText());
                 dest.appendChild(text);
-            } else if (source instanceof com.earnix.webk.dom.nodes.Comment) {
-                com.earnix.webk.dom.nodes.Comment sourceComment = (com.earnix.webk.dom.nodes.Comment) source;
+            } else if (source instanceof CommentModel) {
+                CommentModel sourceComment = (CommentModel) source;
                 Comment comment = doc.createComment(sourceComment.getData());
                 dest.appendChild(comment);
-            } else if (source instanceof DataNode) {
-                DataNode sourceData = (DataNode) source;
+            } else if (source instanceof DataNodeModel) {
+                DataNodeModel sourceData = (DataNodeModel) source;
                 Text node = doc.createTextNode(sourceData.getWholeData());
                 dest.appendChild(node);
             } else {
@@ -145,7 +146,7 @@ public class W3CDom {
         private String updateNamespaces(ElementModel el) {
             // scan the element for namespace declarations
             // like: xmlns="blah" or xmlns:prefix="blah"
-            Attributes attributes = el.attributes();
+            AttributesModel attributes = el.attributes();
             for (AttributeModel attr : attributes) {
                 String key = attr.getKey();
                 String prefix;

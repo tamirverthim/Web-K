@@ -27,6 +27,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -46,6 +47,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.net.URL;
+import java.util.concurrent.Future;
 import java.util.logging.Logger;
 
 @Slf4j
@@ -189,7 +191,7 @@ public class BrowserActions {
                 try {
                     String url_text = root.getPanel().getUrl().getText();
                     root.getPanel().loadPage(url_text);
-                    root.getPanel().getView().repaint();
+//                    root.getPanel().getView().repaint();
                 } catch (Exception ex) {
                     throw new RuntimeException(ex);
                 }
@@ -202,7 +204,7 @@ public class BrowserActions {
                 try {
                     String url_text = root.getPanel().getUrl().getText();
                     root.getPanel().loadPage(url_text);
-                    root.getPanel().getView().repaint();
+//                    root.getPanel().getView().repaint();
                 } catch (Exception ex) {
                     throw new RuntimeException(ex);
                 }
@@ -337,20 +339,6 @@ public class BrowserActions {
             logger.info("error:" + ex);
         }
     }
-
-    private void exportToPdf() {
-        try {
-            FileDialog fd = new FileDialog(root.getFrame(), "Save as PDF", FileDialog.SAVE);
-            fd.setVisible(true);
-            if (fd.getFile() != null) {
-                File outTarget = new File(fd.getDirectory(), fd.getFile());
-                root.getPanel().exportToPdf(outTarget.getAbsolutePath());
-            }
-        } catch (Exception ex) {
-            logger.info("error:" + ex);
-        }
-    }
-
 
     /**
      * Sets the name attribute of the BrowserActions object

@@ -24,7 +24,7 @@ public class FormElement extends ElementModel {
      * @param baseUri    the base URI
      * @param attributes initial attributes
      */
-    public FormElement(Tag tag, String baseUri, Attributes attributes) {
+    public FormElement(Tag tag, String baseUri, AttributesModel attributes) {
         super(tag, baseUri, attributes);
     }
 

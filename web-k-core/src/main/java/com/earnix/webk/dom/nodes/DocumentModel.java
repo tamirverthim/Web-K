@@ -153,8 +153,8 @@ public class DocumentModel extends ElementModel {
     private void normaliseTextNodes(ElementModel element) {
         List<NodeModel> toMove = new ArrayList<>();
         for (NodeModel node : element.childNodes) {
-            if (node instanceof TextNode) {
-                TextNode tn = (TextNode) node;
+            if (node instanceof TextNodeModel) {
+                TextNodeModel tn = (TextNodeModel) node;
                 if (!tn.isBlank())
                     toMove.add(tn);
             }
@@ -163,7 +163,7 @@ public class DocumentModel extends ElementModel {
         for (int i = toMove.size() - 1; i >= 0; i--) {
             NodeModel node = toMove.get(i);
             element.removeChild(node);
-            body().prependChild(new TextNode(" "));
+            body().prependChild(new TextNodeModel(" "));
             body().prependChild(node);
         }
     }
@@ -342,8 +342,8 @@ public class DocumentModel extends ElementModel {
             } else if (syntax == OutputSettings.Syntax.xml) {
                 NodeModel node = childNodes().get(0);
 
-                if (node instanceof XmlDeclaration) {
-                    XmlDeclaration decl = (XmlDeclaration) node;
+                if (node instanceof XmlDeclarationModel) {
+                    XmlDeclarationModel decl = (XmlDeclarationModel) node;
 
                     if (decl.name().equals("xml")) {
                         decl.attr("encoding", charset().displayName());
@@ -354,14 +354,14 @@ public class DocumentModel extends ElementModel {
                             decl.attr("version", "1.0");
                         }
                     } else {
-                        decl = new XmlDeclaration("xml", false);
+                        decl = new XmlDeclarationModel("xml", false);
                         decl.attr("version", "1.0");
                         decl.attr("encoding", charset().displayName());
 
                         prependChild(decl);
                     }
                 } else {
-                    XmlDeclaration decl = new XmlDeclaration("xml", false);
+                    XmlDeclarationModel decl = new XmlDeclarationModel("xml", false);
                     decl.attr("version", "1.0");
                     decl.attr("encoding", charset().displayName());
 

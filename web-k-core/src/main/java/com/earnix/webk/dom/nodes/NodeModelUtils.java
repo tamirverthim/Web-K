@@ -7,7 +7,7 @@ import com.earnix.webk.dom.parser.Parser;
  * Internal helpers for Nodes, to keep the actual node APIs relatively clean. A jsoup internal class, so don't use it as
  * there is no contract API).
  */
-final class NodeUtils {
+final class NodeModelUtils {
     /**
      * Get the output setting for this node,  or if this node has no document (or parent), retrieve the default output
      * settings

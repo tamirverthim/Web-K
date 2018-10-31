@@ -1,7 +1,7 @@
 package com.earnix.webk.dom.parser;
 
 import com.earnix.webk.dom.helper.Validate;
-import com.earnix.webk.dom.nodes.Attributes;
+import com.earnix.webk.dom.nodes.AttributesModel;
 import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
@@ -71,7 +71,7 @@ abstract class TreeBuilder {
         return process(start.reset().name(name));
     }
 
-    public boolean processStartTag(String name, Attributes attrs) {
+    public boolean processStartTag(String name, AttributesModel attrs) {
         if (currentToken == start) { // don't recycle an in-use token
             return process(new Token.StartTag().nameAttr(name, attrs));
         }

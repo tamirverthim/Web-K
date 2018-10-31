@@ -2,14 +2,14 @@ package com.earnix.webk.dom.parser;
 
 import com.earnix.webk.dom.helper.Validate;
 import com.earnix.webk.dom.internal.StringUtil;
-import com.earnix.webk.dom.nodes.CDataNode;
-import com.earnix.webk.dom.nodes.Comment;
-import com.earnix.webk.dom.nodes.DataNode;
+import com.earnix.webk.dom.nodes.CDataNodeModel;
+import com.earnix.webk.dom.nodes.CommentModel;
+import com.earnix.webk.dom.nodes.DataNodeModel;
 import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.FormElement;
 import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.dom.nodes.TextNode;
+import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.dom.select.Elements;
 
 import java.io.Reader;
@@ -246,7 +246,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
     }
 
     void insert(Token.Comment commentToken) {
-        Comment comment = new Comment(commentToken.getData());
+        CommentModel comment = new CommentModel(commentToken.getData());
         insertNode(comment);
     }
 
@@ -257,11 +257,11 @@ public class HtmlTreeBuilder extends TreeBuilder {
         final String data = characterToken.getData();
 
         if (characterToken.isCData())
-            node = new CDataNode(data);
+            node = new CDataNodeModel(data);
         else if (tagName.equals("script") || tagName.equals("style"))
-            node = new DataNode(data);
+            node = new DataNodeModel(data);
         else
-            node = new TextNode(data);
+            node = new TextNodeModel(data);
         el.appendChild(node); // doesn't use insertNode, because we don't foster these; and will always have a stack.
     }
 

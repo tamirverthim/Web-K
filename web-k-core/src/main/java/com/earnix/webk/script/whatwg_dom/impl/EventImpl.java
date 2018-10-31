@@ -20,6 +20,10 @@ import lombok.experimental.FieldDefaults;
 public class EventImpl implements Event {
 
     String type;
+    boolean bubbles;
+    boolean cancellable;
+    boolean composed;
+    
     @Getter @Setter short phase;
     @Getter boolean propagationStopped;
     @Getter @Setter EventTarget currentTarget;
@@ -47,6 +51,9 @@ public class EventImpl implements Event {
     @Override
     public void construct(@DOMString String type, EventInit init) {
         this.type = type;
+        this.bubbles = init.bubbles;
+        this.cancellable = init.cancelable;
+        this.composed = init.composed;
     }
 
     @Override
@@ -96,12 +103,12 @@ public class EventImpl implements Event {
 
     @Override
     public boolean bubbles() {
-        return false;
+        return bubbles;
     }
 
     @Override
     public boolean cancelable() {
-        return true;
+        return cancellable;
     }
 
     @Override

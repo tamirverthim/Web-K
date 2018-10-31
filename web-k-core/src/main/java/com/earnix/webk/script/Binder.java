@@ -1,10 +1,10 @@
 package com.earnix.webk.script;
 
 
-import com.earnix.webk.dom.nodes.CDataNode;
-import com.earnix.webk.dom.nodes.Comment;
+import com.earnix.webk.dom.nodes.CDataNodeModel;
+import com.earnix.webk.dom.nodes.CommentModel;
 import com.earnix.webk.dom.nodes.DocumentModel;
-import com.earnix.webk.dom.nodes.DocumentType;
+import com.earnix.webk.dom.nodes.DocumentTypeModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.script.html.canvas.impl.HTMLCanvasElementImpl;
@@ -69,12 +69,12 @@ public class Binder {
 
         com.earnix.webk.script.whatwg_dom.Node result;
 
-        if (parsedNode instanceof CDataNode) {
-            result = new CharacterDataImpl((CDataNode) parsedNode, panel);
-        } else if (parsedNode instanceof Comment) {
-            result = new CommentImpl((Comment) parsedNode, panel);
-        } else if (parsedNode instanceof DocumentType) {
-            result = new DocumentTypeImpl((DocumentType) parsedNode, panel);
+        if (parsedNode instanceof CDataNodeModel) {
+            result = new CharacterDataImpl((CDataNodeModel) parsedNode, panel);
+        } else if (parsedNode instanceof CommentModel) {
+            result = new CommentImpl((CommentModel) parsedNode, panel);
+        } else if (parsedNode instanceof DocumentTypeModel) {
+            result = new DocumentTypeImpl((DocumentTypeModel) parsedNode, panel);
         } else if (parsedNode instanceof DocumentModel) {
             result = new ElementImpl((ElementModel) parsedNode, panel);
         } else if (parsedNode instanceof ElementModel) {

@@ -2,10 +2,10 @@ package com.earnix.webk.dom.parser;
 
 import com.earnix.webk.dom.Jsoup;
 import com.earnix.webk.dom.TextUtil;
-import com.earnix.webk.dom.nodes.Comment;
+import com.earnix.webk.dom.nodes.CommentModel;
 import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.nodes.ElementModel;
-import com.earnix.webk.dom.nodes.TextNode;
+import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.dom.select.Elements;
 import org.junit.Assert;
 import org.junit.Test;
@@ -119,10 +119,10 @@ public class TokeniserStateTest {
         DocumentModel doc = Jsoup.parse(html);
 
         ElementModel body = doc.body();
-        Comment comment = (Comment) body.childNode(1);
+        CommentModel comment = (CommentModel) body.childNode(1);
         assertEquals(" <table><tr><td></table> --! --- ", comment.getData());
         ElementModel p = body.child(1);
-        TextNode text = (TextNode) p.childNode(0);
+        TextNodeModel text = (TextNodeModel) p.childNode(0);
         assertEquals("Hello", text.getWholeText());
     }
 
@@ -132,10 +132,10 @@ public class TokeniserStateTest {
         DocumentModel doc = Jsoup.parse(html);
 
         ElementModel body = doc.body();
-        Comment comment = (Comment) body.childNode(1);
+        CommentModel comment = (CommentModel) body.childNode(1);
         assertEquals(" <table><tr><td></table> --!-", comment.getData());
         ElementModel p = body.child(1);
-        TextNode text = (TextNode) p.childNode(0);
+        TextNodeModel text = (TextNodeModel) p.childNode(0);
         assertEquals("Hello", text.getWholeText());
     }
 

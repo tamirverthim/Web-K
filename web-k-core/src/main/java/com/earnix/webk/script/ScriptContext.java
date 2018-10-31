@@ -5,6 +5,8 @@ import com.earnix.webk.event.DocumentListener;
 import com.earnix.webk.script.html.canvas.impl.CanvasGradientImpl;
 import com.earnix.webk.script.html.canvas.impl.CanvasPatternImpl;
 import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.script.ui_events.UIEventImpl;
+import com.earnix.webk.script.ui_events.UIEventInit;
 import com.earnix.webk.script.web_idl.Exposed;
 import com.earnix.webk.script.whatwg_dom.css_style_attribute.CSSStyleAttribute;
 import com.earnix.webk.script.whatwg_dom.impl.EventManager;
@@ -47,12 +49,33 @@ public class ScriptContext implements DocumentListener {
 
     public ScriptContext(BasicPanel panel) {
         this.panel = panel;
-        
-        panel.addMouseTrackingListener(new MouseEventsAdapter(eventManager));
+
+//        panel.addMouseTrackingListener(new MouseEventsAdapter(eventManager));
     }
 
     public void onload() {
         eval("window.onload && window.onload()");
+
+        //Type	load
+        //Interface	UIEvent if generated from a user interface, Event otherwise.
+        //Sync / Async	Async
+        //Bubbles	No
+        //Trusted Targets	Window, Document, Element
+        //Cancelable	No
+        //Default action	None
+        //Context
+        //(trusted events)	
+        //Event.target : common object whose contained resources have loaded
+        //UIEvent.view : Window
+        //UIEvent.detail : 0
+
+        val eventInit = new UIEventInit();
+        eventInit.bubbles = false;
+        eventInit.cancelable = false;
+//        eventInit.view = getWindow() // todo
+
+        val event = new UIEventImpl("load", eventInit);
+        eventManager.publishEvent(document, event);
     }
 
     public BasicPanel getPanel() {
@@ -129,9 +152,9 @@ public class ScriptContext implements DocumentListener {
             log.trace("addEventListener");
             return null;
         }, "addEventListener"), ENGINE_SCOPE);
-        
+
         context.setAttribute("alert", new Function<>(this, (ctx, arg) -> {
-            if(arg.length == 0) {
+            if (arg.length == 0) {
                 return null;
             }
             JOptionPane.showMessageDialog(panel, String.valueOf(arg[0]));

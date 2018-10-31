@@ -3,12 +3,12 @@ package com.earnix.webk.dom.safety;
 import com.earnix.webk.dom.Jsoup;
 import com.earnix.webk.dom.helper.Validate;
 import com.earnix.webk.dom.nodes.AttributeModel;
-import com.earnix.webk.dom.nodes.Attributes;
-import com.earnix.webk.dom.nodes.DataNode;
+import com.earnix.webk.dom.nodes.AttributesModel;
+import com.earnix.webk.dom.nodes.DataNodeModel;
 import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.dom.nodes.TextNode;
+import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.dom.parser.ParseErrorList;
 import com.earnix.webk.dom.parser.Parser;
 import com.earnix.webk.dom.parser.Tag;
@@ -121,13 +121,13 @@ public class Cleaner {
                 } else if (source != root) { // not a safe tag, so don't add. don't count root against discarded.
                     numDiscarded++;
                 }
-            } else if (source instanceof TextNode) {
-                TextNode sourceText = (TextNode) source;
-                TextNode destText = new TextNode(sourceText.getWholeText());
+            } else if (source instanceof TextNodeModel) {
+                TextNodeModel sourceText = (TextNodeModel) source;
+                TextNodeModel destText = new TextNodeModel(sourceText.getWholeText());
                 destination.appendChild(destText);
-            } else if (source instanceof DataNode && whitelist.isSafeTag(source.parent().nodeName())) {
-                DataNode sourceData = (DataNode) source;
-                DataNode destData = new DataNode(sourceData.getWholeData());
+            } else if (source instanceof DataNodeModel && whitelist.isSafeTag(source.parent().nodeName())) {
+                DataNodeModel sourceData = (DataNodeModel) source;
+                DataNodeModel destData = new DataNodeModel(sourceData.getWholeData());
                 destination.appendChild(destData);
             } else { // else, we don't care about comments, xml proc instructions, etc
                 numDiscarded++;
@@ -149,18 +149,18 @@ public class Cleaner {
 
     private ElementMeta createSafeElement(ElementModel sourceEl) {
         String sourceTag = sourceEl.tagName();
-        Attributes destAttrs = new Attributes();
+        AttributesModel destAttrs = new AttributesModel();
         ElementModel dest = new ElementModel(Tag.valueOf(sourceTag), sourceEl.baseUri(), destAttrs);
         int numDiscarded = 0;
 
-        Attributes sourceAttrs = sourceEl.attributes();
+        AttributesModel sourceAttrs = sourceEl.attributes();
         for (AttributeModel sourceAttr : sourceAttrs) {
             if (whitelist.isSafeAttribute(sourceTag, sourceEl, sourceAttr))
                 destAttrs.put(sourceAttr);
             else
                 numDiscarded++;
         }
-        Attributes enforcedAttrs = whitelist.getEnforcedAttributes(sourceTag);
+        AttributesModel enforcedAttrs = whitelist.getEnforcedAttributes(sourceTag);
         destAttrs.addAll(enforcedAttrs);
 
         return new ElementMeta(dest, numDiscarded);

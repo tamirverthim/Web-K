@@ -22,7 +22,7 @@ package com.earnix.webk.simple.extend;
 
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.dom.nodes.TextNode;
+import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
@@ -191,8 +191,8 @@ public class XhtmlForm {
 
             do {
 //                short nodeType = node.getNodeType();
-                if (node instanceof TextNode) {
-                    TextNode text = (TextNode) node;
+                if (node instanceof TextNodeModel) {
+                    TextNodeModel text = (TextNodeModel) node;
                     result.append(text.getWholeText());
                 }
             } while ((node = node.nextSibling()) != null);

@@ -2,8 +2,8 @@ package com.earnix.webk.dom.parser;
 
 import com.earnix.webk.dom.Jsoup;
 import com.earnix.webk.dom.nodes.AttributeModel;
-import com.earnix.webk.dom.nodes.Attributes;
-import com.earnix.webk.dom.nodes.BooleanAttribute;
+import com.earnix.webk.dom.nodes.AttributesModel;
+import com.earnix.webk.dom.nodes.BooleanAttributeModel;
 import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.select.Elements;
@@ -28,7 +28,7 @@ public class AttributeParseTest {
         // should be: <id=123>, <class=baz = 'bar'>, <qux=>, <zim=>, <foo=12>, <mux.=18>
 
         ElementModel el = Jsoup.parse(html).getElementsByTag("a").get(0);
-        Attributes attr = el.attributes();
+        AttributesModel attr = el.attributes();
         assertEquals(7, attr.size());
         assertEquals("123", attr.get("id"));
         assertEquals("baz = 'bar'", attr.get("class"));
@@ -52,7 +52,7 @@ public class AttributeParseTest {
     public void parsesEmptyString() {
         String html = "<a />";
         ElementModel el = Jsoup.parse(html).getElementsByTag("a").get(0);
-        Attributes attr = el.attributes();
+        AttributesModel attr = el.attributes();
         assertEquals(0, attr.size());
     }
 
@@ -60,7 +60,7 @@ public class AttributeParseTest {
     public void canStartWithEq() {
         String html = "<a =empty />";
         ElementModel el = Jsoup.parse(html).getElementsByTag("a").get(0);
-        Attributes attr = el.attributes();
+        AttributesModel attr = el.attributes();
         assertEquals(1, attr.size());
         assertTrue(attr.hasKey("=empty"));
         assertEquals("", attr.get("=empty"));
@@ -94,9 +94,9 @@ public class AttributeParseTest {
         assertEquals("There should be 3 attribute present", 3, attributes.size());
 
         // Assuming the list order always follows the parsed html
-        assertFalse("'normal' attribute should not be boolean", attributes.get(0) instanceof BooleanAttribute);
-        assertTrue("'boolean' attribute should be boolean", attributes.get(1) instanceof BooleanAttribute);
-        assertFalse("'empty' attribute should not be boolean", attributes.get(2) instanceof BooleanAttribute);
+        assertFalse("'normal' attribute should not be boolean", attributes.get(0) instanceof BooleanAttributeModel);
+        assertTrue("'boolean' attribute should be boolean", attributes.get(1) instanceof BooleanAttributeModel);
+        assertFalse("'empty' attribute should not be boolean", attributes.get(2) instanceof BooleanAttributeModel);
 
         assertEquals(html, el.outerHtml());
     }

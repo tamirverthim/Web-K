@@ -82,7 +82,7 @@ public abstract class NodeModel implements Cloneable {
      *
      * @return attributes (which implements iterable, in same order as presented in original HTML).
      */
-    public abstract Attributes attributes();
+    public abstract AttributesModel attributes();
 
     /**
      * Set an attribute (key=value). If the attribute already exists, it is replaced. The attribute key comparison is
@@ -93,7 +93,7 @@ public abstract class NodeModel implements Cloneable {
      * @return this (for chaining)
      */
     public NodeModel attr(String attributeKey, String attributeValue) {
-        attributeKey = NodeUtils.parser(this).settings().normalizeAttribute(attributeKey);
+        attributeKey = NodeModelUtils.parser(this).settings().normalizeAttribute(attributeKey);
         attributes().putIgnoreCase(attributeKey, attributeValue);
         return this;
     }
@@ -361,7 +361,7 @@ public abstract class NodeModel implements Cloneable {
         Validate.notNull(parentNode);
 
         ElementModel context = parent() instanceof ElementModel ? (ElementModel) parent() : null;
-        List<NodeModel> nodes = NodeUtils.parser(this).parseFragmentInput(html, context, baseUri());
+        List<NodeModel> nodes = NodeModelUtils.parser(this).parseFragmentInput(html, context, baseUri());
         parentNode.addChildren(index, nodes.toArray(new NodeModel[nodes.size()]));
     }
 
@@ -375,7 +375,7 @@ public abstract class NodeModel implements Cloneable {
         Validate.notEmpty(html);
 
         ElementModel context = parent() instanceof ElementModel ? (ElementModel) parent() : null;
-        List<NodeModel> wrapChildren = NodeUtils.parser(this).parseFragmentInput(html, context, baseUri());
+        List<NodeModel> wrapChildren = NodeModelUtils.parser(this).parseFragmentInput(html, context, baseUri());
         NodeModel wrapNode = wrapChildren.get(0);
         if (!(wrapNode instanceof ElementModel)) // nothing to wrap with; noop
             return null;
@@ -406,7 +406,7 @@ public abstract class NodeModel implements Cloneable {
      * <p>{@code <div>One <span>Two <b>Three</b></span></div>}</p>
      * Calling {@code element.unwrap()} on the {@code span} element will result in the html:
      * <p>{@code <div>One Two <b>Three</b></div>}</p>
-     * and the {@code "Two "} {@link TextNode} being returned.
+     * and the {@code "Two "} {@link TextNodeModel} being returned.
      *
      * @return the first child of this node, after the node has been unwrapped. Null if the node had no children.
      * @see #remove()
@@ -610,7 +610,7 @@ public abstract class NodeModel implements Cloneable {
     }
 
     protected void outerHtml(Appendable accum) {
-        NodeTraversor.traverse(new OuterHtmlVisitor(accum, NodeUtils.outputSettings(this)), this);
+        NodeTraversor.traverse(new OuterHtmlVisitor(accum, NodeModelUtils.outputSettings(this)), this);
     }
 
     /**

@@ -21,7 +21,7 @@ public class AttributeModel implements Map.Entry<String, String>, Cloneable {
 
     private String key;
     private String val;
-    Attributes parent; // used to update the holding Attributes when the key / value is changed via this interface
+    AttributesModel parent; // used to update the holding Attributes when the key / value is changed via this interface
 
     /**
      * Create a new attribute from unencoded (raw) key and value.
@@ -42,7 +42,7 @@ public class AttributeModel implements Map.Entry<String, String>, Cloneable {
      * @param parent the containing Attributes (this Attribute is not automatically added to said Attributes)
      * @see #createFromEncoded
      */
-    public AttributeModel(String key, String val, Attributes parent) {
+    public AttributeModel(String key, String val, AttributesModel parent) {
         Validate.notNull(key);
         this.key = key.trim();
         Validate.notEmpty(key); // trimming could potentially make empty, so validate here
@@ -70,7 +70,7 @@ public class AttributeModel implements Map.Entry<String, String>, Cloneable {
         Validate.notEmpty(key); // trimming could potentially make empty, so validate here
         if (parent != null) {
             int i = parent.indexOfKey(this.key);
-            if (i != Attributes.NotFound)
+            if (i != AttributesModel.NotFound)
                 parent.keys[i] = key;
         }
         this.key = key;
@@ -94,7 +94,7 @@ public class AttributeModel implements Map.Entry<String, String>, Cloneable {
         String oldVal = parent.get(this.key);
         if (parent != null) {
             int i = parent.indexOfKey(this.key);
-            if (i != Attributes.NotFound)
+            if (i != AttributesModel.NotFound)
                 parent.vals[i] = val;
         }
         this.val = val;
@@ -121,7 +121,7 @@ public class AttributeModel implements Map.Entry<String, String>, Cloneable {
         accum.append(key);
         if (!shouldCollapseAttribute(key, val, out)) {
             accum.append("=\"");
-            Entities.escape(accum, Attributes.checkNotNull(val), out, true, false, false);
+            Entities.escape(accum, AttributesModel.checkNotNull(val), out, true, false, false);
             accum.append('"');
         }
     }
@@ -157,7 +157,7 @@ public class AttributeModel implements Map.Entry<String, String>, Cloneable {
     }
 
     protected static boolean isDataAttribute(String key) {
-        return key.startsWith(Attributes.dataPrefix) && key.length() > Attributes.dataPrefix.length();
+        return key.startsWith(AttributesModel.dataPrefix) && key.length() > AttributesModel.dataPrefix.length();
     }
 
     /**

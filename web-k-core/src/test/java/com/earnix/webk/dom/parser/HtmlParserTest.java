@@ -4,15 +4,15 @@ import com.earnix.webk.dom.Jsoup;
 import com.earnix.webk.dom.TextUtil;
 import com.earnix.webk.dom.integration.ParseTest;
 import com.earnix.webk.dom.internal.StringUtil;
-import com.earnix.webk.dom.nodes.CDataNode;
-import com.earnix.webk.dom.nodes.Comment;
-import com.earnix.webk.dom.nodes.DataNode;
+import com.earnix.webk.dom.nodes.CDataNodeModel;
+import com.earnix.webk.dom.nodes.CommentModel;
+import com.earnix.webk.dom.nodes.DataNodeModel;
 import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.Entities;
 import com.earnix.webk.dom.nodes.FormElement;
 import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.dom.nodes.TextNode;
+import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.dom.safety.Whitelist;
 import com.earnix.webk.dom.select.Elements;
 import org.junit.Assert;
@@ -79,10 +79,10 @@ public class HtmlParserTest {
         DocumentModel doc = Jsoup.parse(html);
 
         ElementModel body = doc.body();
-        Comment comment = (Comment) body.childNode(1); // comment should not be sub of img, as it's an empty tag
+        CommentModel comment = (CommentModel) body.childNode(1); // comment should not be sub of img, as it's an empty tag
         assertEquals(" <table><tr><td></table> ", comment.getData());
         ElementModel p = body.child(1);
-        TextNode text = (TextNode) p.childNode(0);
+        TextNodeModel text = (TextNodeModel) p.childNode(0);
         assertEquals("Hello", text.getWholeText());
     }
 
@@ -92,9 +92,9 @@ public class HtmlParserTest {
         DocumentModel doc = Jsoup.parse(html);
         ElementModel p = doc.getElementsByTag("p").get(0);
         assertEquals("Hello", p.text());
-        TextNode text = (TextNode) p.childNode(0);
+        TextNodeModel text = (TextNodeModel) p.childNode(0);
         assertEquals("Hello", text.getWholeText());
-        Comment comment = (Comment) p.childNode(1);
+        CommentModel comment = (CommentModel) p.childNode(1);
         assertEquals(" <tr><td>", comment.getData());
     }
 
@@ -361,7 +361,7 @@ public class HtmlParserTest {
 
         assertEquals("<div id=\"1\"><![CDATA[\n<html>\n <foo><&amp;]]>\n</div>", div.outerHtml());
 
-        CDataNode cdata = (CDataNode) div.textNodes().get(0);
+        CDataNodeModel cdata = (CDataNodeModel) div.textNodes().get(0);
         assertEquals("\n<html>\n <foo><&amp;", cdata.text());
     }
 
@@ -376,7 +376,7 @@ public class HtmlParserTest {
         DocumentModel doc = Jsoup.parse(h);
         ElementModel div = doc.selectFirst("div");
 
-        CDataNode node = (CDataNode) div.textNodes().get(0);
+        CDataNodeModel node = (CDataNodeModel) div.textNodes().get(0);
         assertEquals(cdata, node.text());
     }
 
@@ -391,7 +391,7 @@ public class HtmlParserTest {
         assertEquals(data, script.data());
         assertEquals(html, script.outerHtml());
 
-        DataNode dataNode = (DataNode) script.childNode(0);
+        DataNodeModel dataNode = (DataNodeModel) script.childNode(0);
         assertEquals(data, dataNode.getWholeData());
         // see - not a cdata node, because in script. contrast with XmlTreeBuilder - will be cdata.
     }
@@ -411,10 +411,10 @@ public class HtmlParserTest {
         ElementModel p = doc.selectFirst("p");
 
         List<NodeModel> nodes = p.childNodes();
-        assertEquals("One ", ((TextNode) nodes.get(0)).getWholeText());
-        assertEquals("Two <&", ((TextNode) nodes.get(1)).getWholeText());
-        assertEquals("Two <&", ((CDataNode) nodes.get(1)).getWholeText());
-        assertEquals(" Three", ((TextNode) nodes.get(2)).getWholeText());
+        assertEquals("One ", ((TextNodeModel) nodes.get(0)).getWholeText());
+        assertEquals("Two <&", ((TextNodeModel) nodes.get(1)).getWholeText());
+        assertEquals("Two <&", ((CDataNodeModel) nodes.get(1)).getWholeText());
+        assertEquals(" Three", ((TextNodeModel) nodes.get(2)).getWholeText());
 
         assertEquals(h, p.outerHtml());
     }
@@ -425,7 +425,7 @@ public class HtmlParserTest {
         DocumentModel doc = Jsoup.parse(h);
         ElementModel p = doc.selectFirst("p");
 
-        List<TextNode> nodes = p.textNodes();
+        List<TextNodeModel> nodes = p.textNodes();
         assertEquals("One ", nodes.get(0).text());
         assertEquals(" Two <& ", nodes.get(1).text());
         assertEquals(" Three", nodes.get(2).text());
@@ -1305,7 +1305,7 @@ public class HtmlParserTest {
     @Test
     public void commentAtEnd() throws Exception {
         DocumentModel doc = Jsoup.parse("<!");
-        assertTrue(doc.childNode(0) instanceof Comment);
+        assertTrue(doc.childNode(0) instanceof CommentModel);
     }
 
     @Test

@@ -23,7 +23,7 @@ import com.earnix.webk.css.style.CalculatedStyle;
 import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.dom.nodes.TextNode;
+import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.Box;
 import com.earnix.webk.render.InlineLayoutBox;
@@ -498,7 +498,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
                     Object o = it.next();
                     if (o instanceof InlineText) {
                         InlineText t = (InlineText) o;
-                        TextNode txt = t.getTextNode();
+                        TextNodeModel txt = t.getTextNode();
                         if (!textInlineMap.containsKey(txt)) {
                             textInlineMap.put(txt, new ArrayList());
                         }
@@ -518,7 +518,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
 
     }
 
-    private List getInlineTextsForText(TextNode t) {
+    private List getInlineTextsForText(TextNodeModel t) {
         return (List) textInlineMap.get(t);
     }
 
