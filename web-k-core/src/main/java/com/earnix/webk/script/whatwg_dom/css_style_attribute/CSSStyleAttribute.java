@@ -2,7 +2,8 @@ package com.earnix.webk.script.whatwg_dom.css_style_attribute;
 
 import com.earnix.webk.css.constants.CSSName;
 import com.earnix.webk.dom.nodes.ElementModel;
-import com.earnix.webk.script.Function;
+import com.earnix.webk.script.FunctionAdapter;
+import com.earnix.webk.script.web_idl.Function;
 import com.earnix.webk.swing.BasicPanel;
 import com.helger.css.ECSSVersion;
 import com.helger.css.reader.CSSReaderDeclarationList;
@@ -43,7 +44,7 @@ public class CSSStyleAttribute extends AbstractJSObject {
     @Override
     public Object getMember(String name) throws JSException {
         if (name.equals("getPropertyValue")) {
-            return new Function<>(panel.getScriptContext(), (Function.Callback<Object>) (ctx, arg) -> {
+            return new FunctionAdapter<>(panel.getScriptContext(), (Function<Object>) (ctx, arg) -> {
                 val res = map.get(arg[0]);
                 if (res == null) {
                     try {

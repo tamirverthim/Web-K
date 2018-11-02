@@ -14,6 +14,6 @@ public interface Window {
     
     @Replaceable
     @Readonly
-    Attribute<?> event();
+    Attribute<Object> event();
     
 }

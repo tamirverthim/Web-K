@@ -143,7 +143,7 @@ public interface Window extends
     // user prompts
     void alert();
 
-    void alert(DOMString message);
+    void alert(@DOMString String message);
 
     boolean confirm(@Optional @DOMString @DefaultString("") String message);
 

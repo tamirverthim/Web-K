@@ -40,11 +40,11 @@ public interface WindowOrWorkerGlobalScope {
     String atob(@DOMString String data);
 
     // timers
-    long setTimeout(TimerHandler handler, @Optional @DefaultLong(0) int timeout, Object... arguments);
+    int setTimeout(TimerHandler handler, @Optional @DefaultLong(0) int timeout, Object... arguments);
 
     void clearTimeout(@Optional @DefaultLong(0) int handle);
 
-    long setInterval(TimerHandler handler, @Optional @DefaultLong(0) int timeout, Object... arguments);
+    int setInterval(TimerHandler handler, @Optional @DefaultLong(0) int timeout, Object... arguments);
 
     void clearInterval(@Optional @DefaultLong(0) int handle);
 

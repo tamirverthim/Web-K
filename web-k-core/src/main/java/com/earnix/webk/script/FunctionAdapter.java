@@ -1,7 +1,10 @@
 package com.earnix.webk.script;
 
+import com.earnix.webk.script.web_idl.Function;
 import jdk.nashorn.api.scripting.JSObject;
 import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Collection;
@@ -12,32 +15,37 @@ import java.util.Set;
  * 6/1/2018
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Function<T> implements JSObject {
+public class FunctionAdapter<T> implements JSObject {
 
     final String id;
     final ScriptContext scriptContext;
-
-    @FunctionalInterface
-    public interface Callback<T> {
-        T call(Object ctx, Object... arg);
+    
+    @Getter @Setter private Integer argsCount;
+    @Getter @Setter private Function<T> callback;
+    
+    public FunctionAdapter(ScriptContext scriptContext, Function<T> callback, Integer argsCount, String id) {
+        this.callback = callback;
+        this.argsCount = argsCount;
+        this.id = id;
+        this.scriptContext = scriptContext;
     }
 
-    private Callback<T> callback;
-
-    public Function(ScriptContext scriptContext, Callback<T> callback, String id) {
+    public FunctionAdapter(ScriptContext scriptContext, Function<T> callback, String id) {
         this.callback = callback;
+        this.argsCount = null;
         this.id = id;
         this.scriptContext = scriptContext;
     }
 
     @Override
     public Object call(Object o, Object... objects) {
+        
         return callback.call(o, objects);
     }
 
     @Override
     public Object newObject(Object... objects) {
-        return new Function<>(scriptContext, callback, id);
+        return new FunctionAdapter<>(scriptContext, callback, null, id);
     }
 
     @Override
@@ -48,7 +56,7 @@ public class Function<T> implements JSObject {
     @Override
     public Object getMember(String s) {
         if ("toString".equals(s)) {
-            return new Function<>(scriptContext, (Callback<Object>) (ctx, arg) -> id, id + ".toString");
+            return new FunctionAdapter<>(scriptContext, (ctx, arg) -> id, 0, id + ".toString");
         }
         return null;
     }

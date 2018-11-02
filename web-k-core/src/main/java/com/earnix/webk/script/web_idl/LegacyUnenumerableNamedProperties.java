@@ -5,7 +5,9 @@ package com.earnix.webk.script.web_idl;
  * 6/21/2018
  */
 public interface LegacyUnenumerableNamedProperties {
+    
     Object item(int index);
 
     Object namedItem(@DOMString String name);
+
 }

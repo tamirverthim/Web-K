@@ -6,6 +6,7 @@ import com.earnix.webk.script.web_idl.DefaultDouble;
 import com.earnix.webk.script.web_idl.DefaultLong;
 import com.earnix.webk.script.web_idl.DefaultNull;
 import com.earnix.webk.script.web_idl.DefaultString;
+import com.earnix.webk.script.web_idl.Function;
 import com.earnix.webk.script.web_idl.Indexed;
 import com.earnix.webk.script.web_idl.Iterable;
 import com.earnix.webk.script.web_idl.LegacyUnenumerableNamedProperties;
@@ -15,6 +16,7 @@ import com.earnix.webk.script.web_idl.ReadonlyAttribute;
 import com.earnix.webk.script.web_idl.Sequence;
 import com.earnix.webk.script.web_idl.TreatNullAs;
 import com.earnix.webk.script.web_idl.impl.SequenceImpl;
+import com.earnix.webk.util.XRLog;
 import jdk.nashorn.api.scripting.JSObject;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import jdk.nashorn.api.scripting.ScriptUtils;
@@ -22,6 +24,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.var;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.ClassUtils;
@@ -40,6 +43,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.logging.Level;
 import java.util.stream.Stream;
 
 
@@ -53,6 +57,12 @@ import java.util.stream.Stream;
 public class WebIDLAdapter<T> implements JSObject {
 
     private static WeakHashMap<Object, WebIDLAdapter> all = new WeakHashMap<>();
+
+    /**
+     * Indicates that named item was set to null during runtime
+     */
+    private static final Object NULL = new Object();
+    private static final Object UNDEFINED = new Object();
 
     T target;
     ScriptContext js;
@@ -68,8 +78,8 @@ public class WebIDLAdapter<T> implements JSObject {
     public T getTarget() {
         return target;
     }
-
-    public static WebIDLAdapter obtain(ScriptContext js, Object target) {
+    
+    public static <T> WebIDLAdapter<T> obtain(ScriptContext js, T target) {
         WebIDLAdapter result = all.get(target);
         if (result == null) {
             result = new WebIDLAdapter(js, target);
@@ -87,50 +97,120 @@ public class WebIDLAdapter<T> implements JSObject {
         Class attributeClass;
     }
 
+
+    class MultiArgFunctionCallback implements Function<T> {
+        private HashMap<Integer, Function> callbacks = new HashMap<>();
+
+        public T call(Object ctx, Object... args) {
+            // calling callback with closest but larger args count
+            // todo thing about NPE
+            val callback = get(args.length);
+            if (callback != null){
+                return (T) callback.call(ctx, args);
+            } else {
+                XRLog.script(Level.WARNING, "No matching function to call with given args count");
+                throw new RuntimeException();
+            }
+        }
+
+        MultiArgFunctionCallback add(Function callback, int argsCount) {
+
+            callbacks.put(argsCount, callback);
+            return this;
+        }
+
+        @javax.annotation.Nullable
+        Function get(Integer argsCount) {
+            var callback = callbacks.get(argsCount);
+            if (callback == null) {
+                // finding firs with larger args count
+                @SuppressWarnings("ConstantConditions")
+                int approximateCount = callbacks.keySet().stream().filter(i -> i > argsCount).mapToInt(i -> i).min().getAsInt();
+                callback = callbacks.get(approximateCount);
+            }
+
+            // only functions with less number of args...
+            return callback;
+        }
+    }
+
     private void processTarget() {
 
-        ClassUtils.getAllInterfaces(target.getClass())
-                .stream()
-                .flatMap(i -> Stream.of(i.getMethods()))
-                .forEach(m -> {
-                    
-                    // Attribute member
-                    try {
-                        if (m.getReturnType().equals(Attribute.class)) {
-                            members.put(m.getName(), new AttributeLink(
-                                    (Attribute<?>) m.invoke(target),
-                                    (Class<?>) ((ParameterizedType) m.getGenericReturnType()).getActualTypeArguments()[0])
-                            );
+        try {
+
+            ClassUtils.getAllInterfaces(target.getClass())
+                    .stream()
+                    .flatMap(i -> Stream.of(i.getMethods()))
+                    .forEach(m -> {
+
+                        // Attribute member
+                        try {
+                            if (m.getReturnType().equals(Attribute.class)) {
+                                members.put(m.getName(), new AttributeLink(
+                                        (Attribute<?>) m.invoke(target),
+                                        (Class<?>) ((ParameterizedType) m.getGenericReturnType()).getActualTypeArguments()[0])
+                                );
+                                return;
+                            }
+                        } catch (IllegalAccessException | InvocationTargetException e) {
+                            throw new RuntimeException(e);
+                        } catch (RuntimeException e) {
+                            throw e; // todo rem
+                        }
+
+
+                        if (m.isAnnotationPresent(ReadonlyAttribute.class)) {
+                            members.put(m.getName(), readonlyAttributeMark);
                             return;
                         }
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        throw new RuntimeException(e);
-                    }
 
+                        // Function member
 
-                    if (m.isAnnotationPresent(ReadonlyAttribute.class)) {
-                        members.put(m.getName(), readonlyAttributeMark);
-                        return;
-                    }
+                        @SuppressWarnings("RedundantCast")
+                        val callback = (Function) (ctx, args) -> {
+                            final Object res;
 
-                    // Function member
-
-                    members.put(m.getName(), new Function<>(js, (ctx, args) -> {
-                        final Object res;
-
-                        try {
-                            res = MethodUtils.invokeMethod(target, m.getName(), prepareArguments(m, args), m.getParameterTypes());
-                        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | IllegalArgumentException e) {
-                            throw new RuntimeException(e);
+                            try {
+                                res = MethodUtils.invokeMethod(target, m.getName(), prepareArguments(m, args), m.getParameterTypes());
+                            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | IllegalArgumentException e) {
+                                throw new RuntimeException(e);
+                            }
+                            return wrapIfNeeded(res);
+                        };
+//                        val function = new Function<>(js, 
+//
+//                        }, m.getName());
+                        // multiple functions are supported for different number of arguments
+                        val currentMember = members.get(m.getName());
+                        if (currentMember != null) {
+                            if (currentMember.getClass().equals(FunctionAdapter.class)) {
+                                val function = (FunctionAdapter) currentMember;
+                                if (function.getCallback() instanceof WebIDLAdapter.MultiArgFunctionCallback) {
+                                    val multiArgCallback = (MultiArgFunctionCallback) function.getCallback();
+                                    multiArgCallback.add(callback, m.getParameterCount());
+                                } else {
+                                    val multiArgCallback = new MultiArgFunctionCallback();
+                                    multiArgCallback.add(function.getCallback(), function.getArgsCount()).add(callback, m.getParameterCount());
+                                    function.setCallback(multiArgCallback);
+                                    function.setArgsCount(null);
+                                }
+                                return;
+                            } else {
+                                log.error("Overriding member {} of {}", m.getName(), m.getDeclaringClass().getName());
+                            }
                         }
-                        return wrapIfNeeded(res);
+                        members.put(m.getName(), new FunctionAdapter<>(js, callback, m.getParameterCount(), m.getName()));
+                    });
 
-                    }, m.getName()));
-                });
 
-        members.put("toString", new Function<>(js, (ctx, arg) -> WebIDLAdapter.this.toString() + " " + target.toString(), "toString"));
-        members.put("equals", new Function<>(js, (ctx, arg) ->
-                WebIDLAdapter.this.equals(arg[0]), "equals"));
+            members.put("toString", new FunctionAdapter<>(js, (ctx, arg) -> WebIDLAdapter.this.toString() + " " + target.toString(), 0, "toString"));
+
+            members.put("equals", new FunctionAdapter<>(js, (ctx, arg) ->
+                    WebIDLAdapter.this.equals(arg[0]), 1, "equals"));
+
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -151,25 +231,37 @@ public class WebIDLAdapter<T> implements JSObject {
 
     @Override
     public Object getMember(String s) {
-//        log.trace("Getting member {} of {}", s, target);
-        val member = members.get(s);
-        if (member instanceof WebIDLAdapter.AttributeLink) {
-            try {
+        log.trace("Getting member {} of {}", s, target);
+        try {
+            val member = members.get(s);
+            Object namedItem = null;
+
+            if (member instanceof WebIDLAdapter.AttributeLink) {
+
                 return wrapIfNeeded((((AttributeLink) member).attribute).get());
-            } catch (Exception e) {
-                System.err.println();
-                throw e;
+
+            } else if (readonlyAttributeMark.equals(member)) {
+                try {
+                    return wrapIfNeeded(MethodUtils.invokeMethod(target, s));
+                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                    throw new RuntimeException(e);
+                }
+            } else if (target instanceof LegacyUnenumerableNamedProperties) {
+                namedItem = ((LegacyUnenumerableNamedProperties) target).namedItem(s);
             }
-        } else if (readonlyAttributeMark.equals(member)) {
-            try {
-                return wrapIfNeeded(MethodUtils.invokeMethod(target, s));
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                throw new RuntimeException(e);
+
+            // it is NULL if was overriden with null during runtime,
+            // actually LegacyUnenumerableNamedProperties are tot set-able, so this should be used for similar cases
+            if (namedItem == NULL || namedItem != null) {
+                return wrapIfNeeded(namedItem);
             }
-        } else if (target instanceof LegacyUnenumerableNamedProperties) {
-            return wrapIfNeeded(((LegacyUnenumerableNamedProperties) target).namedItem(s));
-        } else {
+
+            // function or custom value set by js runtime
             return member;
+
+        } catch (RuntimeException e){
+            log.error("Error getting member {} of {}", s, target, e);
+            return null;
         }
     }
 
@@ -226,7 +318,7 @@ public class WebIDLAdapter<T> implements JSObject {
 //                setMember(s, o);
             }
 
-        } else {
+        } else if (target instanceof LegacyUnenumerableNamedProperties) {
             members.put(s, o);
         }
     }
@@ -452,6 +544,10 @@ public class WebIDLAdapter<T> implements JSObject {
         Object result;
         if (object instanceof WebIDLAdapter) {
             object = ((WebIDLAdapter) object).target;
+        }
+        
+        if (object instanceof  FunctionAdapter) {
+            object = ((FunctionAdapter)object).getCallback();
         }
 
         if (target != null) {

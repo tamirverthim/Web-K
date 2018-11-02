@@ -159,8 +159,7 @@ public class DocumentImpl extends com.earnix.webk.script.impl.DocumentImpl imple
     }
 
     @Override
-    public @WindowProxy
-    Object open(@USVString String url, @DOMString String name, @DOMString String features) {
+    public WindowProxy open(@USVString String url, @DOMString String name, @DOMString String features) {
         return null;
     }
 
@@ -180,8 +179,7 @@ public class DocumentImpl extends com.earnix.webk.script.impl.DocumentImpl imple
     }
 
     @Override
-    public @WindowProxy
-    Object defaultView() {
+    public WindowProxy defaultView() {
         return panel.getScriptContext().getWindow();
     }
 

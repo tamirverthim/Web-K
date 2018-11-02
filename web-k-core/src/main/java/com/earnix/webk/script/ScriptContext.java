@@ -2,8 +2,12 @@ package com.earnix.webk.script;
 
 import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.event.DocumentListener;
+import com.earnix.webk.script.html.Window;
+import com.earnix.webk.script.html.WindowProxy;
 import com.earnix.webk.script.html.canvas.impl.CanvasGradientImpl;
 import com.earnix.webk.script.html.canvas.impl.CanvasPatternImpl;
+import com.earnix.webk.script.html.impl.WindowImpl;
+import com.earnix.webk.script.html.impl.WindowProxyImpl;
 import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.ui_events.UIEventImpl;
 import com.earnix.webk.script.ui_events.UIEventInit;
@@ -12,11 +16,10 @@ import com.earnix.webk.script.whatwg_dom.css_style_attribute.CSSStyleAttribute;
 import com.earnix.webk.script.whatwg_dom.impl.EventManager;
 import com.earnix.webk.swing.BasicPanel;
 import jdk.nashorn.api.scripting.AbstractJSObject;
-import jdk.nashorn.api.scripting.JSObject;
 import jdk.nashorn.api.scripting.NashornException;
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
-import jdk.nashorn.api.scripting.ScriptUtils;
+import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +28,6 @@ import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.script.ScriptException;
-import javax.swing.JOptionPane;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import static javax.script.ScriptContext.ENGINE_SCOPE;
 
@@ -75,16 +75,17 @@ public class ScriptContext implements DocumentListener {
 //        eventInit.view = getWindow() // todo
 
         val event = new UIEventImpl("load", eventInit);
-        eventManager.publishEvent(document, event);
+//        eventManager.publishEvent(document, event);
     }
 
     public BasicPanel getPanel() {
         return panel;
     }
 
-    public Object getWindow() {
+    public WindowProxy getWindow() {
         try {
-            return engine.eval("this");
+            @SuppressWarnings("unchecked") val adapter = (WebIDLAdapter<Window>)engine.eval("window");
+            return new WindowProxyImpl(adapter.getTarget());
         } catch (ScriptException e) {
             throw new RuntimeException();
         }
@@ -112,75 +113,77 @@ public class ScriptContext implements DocumentListener {
         NashornScriptEngineFactory jsFactory = new NashornScriptEngineFactory();
         engine = (NashornScriptEngine) jsFactory.getScriptEngine(options);
         context = engine.getContext();
-        context.setAttribute("document", WebIDLAdapter.obtain(this, new com.earnix.webk.script.html.impl.DocumentImpl(panel)), ENGINE_SCOPE);
-        context.setAttribute("console", console, ENGINE_SCOPE);
-        context.setAttribute("setInterval", new Function<>(this, (ctx, args) -> {
-            val fn = (JSObject) args[0];
-            double interval = (double) ScriptUtils.convert(args[1], Double.class);
-
-            Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    fn.call(ctx);
-                    panel.relayout();
-                }
-            }, 0, (long) interval);
-            return null;
-        }, "setInterval"), ENGINE_SCOPE);
-
-        context.setAttribute("setTimeout", new Function<>(this, (ctx, arg) -> {
-            val fn = (JSObject) arg[0];
-            double timeout = (double) ScriptUtils.convert(arg[1], Double.class);
-
-            Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    fn.call(ctx);
-                    panel.relayout();
-                }
-            }, (long) timeout);
-            return null;
-        }, "setTimeout"), ENGINE_SCOPE);
-
-        context.setAttribute("location", new Location(), ENGINE_SCOPE);
-
-//        context.setAttribute("HTMLCanvasElement", new Location(), ENGINE_SCOPE);
-
-        context.setAttribute("addEventListener", new Function<>(this, (ctx, arg) -> {
-            log.trace("addEventListener");
-            return null;
-        }, "addEventListener"), ENGINE_SCOPE);
-
-        context.setAttribute("alert", new Function<>(this, (ctx, arg) -> {
-            if (arg.length == 0) {
-                return null;
-            }
-            JOptionPane.showMessageDialog(panel, String.valueOf(arg[0]));
-            return null;
-        }, "alert"), ENGINE_SCOPE);
-
-
-        try {
-            context.setAttribute("window", engine.eval("this"), ENGINE_SCOPE);
-            context.setAttribute("self", engine.eval("this"), ENGINE_SCOPE);
-        } catch (ScriptException e) {
-            throw new RuntimeException(e);
-        }
-
-        // https://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSview-getComputedStyle
-
-        context.setAttribute("getComputedStyle", new Function<>(this, (ctx, arg) -> {
+        
+//        context.setAttribute("document", WebIDLAdapter.obtain(this, new com.earnix.webk.script.html.impl.DocumentImpl(panel)), ENGINE_SCOPE);
+//        context.setAttribute("console", console, ENGINE_SCOPE);
+//        context.setAttribute("setInterval", new Function<>(this, (ctx, args) -> {
+//            val fn = (JSObject) args[0];
+//            double interval = (double) ScriptUtils.convert(args[1], Double.class);
+//
+//            Timer timer = new Timer();
+//            timer.schedule(new TimerTask() {
+//                @Override
+//                public void run() {
+//                    fn.call(ctx);
+//                    panel.relayout();
+//                }
+//            }, 0, (long) interval);
+//            return null;
+//        }, "setInterval"), ENGINE_SCOPE);
+//
+//
+//        context.setAttribute("location", new Location(), ENGINE_SCOPE);
+//
+////        context.setAttribute("HTMLCanvasElement", new Location(), ENGINE_SCOPE);
+//
+//        context.setAttribute("addEventListener", new Function<>(this, (ctx, arg) -> {
+//            log.trace("addEventListener");
+//            return null;
+//        }, "addEventListener"), ENGINE_SCOPE);
+//
+//        context.setAttribute("alert", new Function<>(this, (ctx, arg) -> {
+//            if (arg.length == 0) {
+//                return null;
+//            }
+//            JOptionPane.showMessageDialog(panel, String.valueOf(arg[0]));
+//            return null;
+//        }, "alert"), ENGINE_SCOPE);
+//
+//
+//        try {
+//            context.setAttribute("window", engine.eval("this"), ENGINE_SCOPE);
+            
+//        } catch (ScriptException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        // https://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSview-getComputedStyle
+//
+        context.setAttribute("getComputedStyle", new FunctionAdapter<>(this, (ctx, arg) -> {
             val element = (ElementImpl) ((WebIDLAdapter) arg[0]).getTarget();
             return new CSSStyleAttribute(panel.getSharedContext().getStyle(element.getModel()).toString(), panel);
         }, "getComputedStyle"), ENGINE_SCOPE);
 
         expose(CanvasGradientImpl.class);
         expose(CanvasPatternImpl.class);
+        
+        Window window = new WindowImpl(this);
+        WebIDLAdapter<Window> windowAdapter = WebIDLAdapter.obtain(this, window);
+        
+        windowAdapter.keySet().forEach(key -> {
+            context.setAttribute(key, windowAdapter.getMember(key), ENGINE_SCOPE);
+        });
+        
+        try {
+            context.setAttribute("window", engine.eval("this"), ENGINE_SCOPE);
+            context.setAttribute("self", engine.eval("this"), ENGINE_SCOPE);
+        } catch (ScriptException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void expose(Class implementationClass) {
+        
         ClassUtils.getAllInterfaces(implementationClass).forEach(i -> {
             if (i.isAnnotationPresent(Exposed.class)) {
                 context.setAttribute(i.getSimpleName(), new AbstractJSObject() {
@@ -190,7 +193,7 @@ public class ScriptContext implements DocumentListener {
 
                             val target = implementationClass.newInstance();
                             val adapter = WebIDLAdapter.obtain(ScriptContext.this, target);
-                            Function constructor = (Function) adapter.getMember("constructor");
+                            FunctionAdapter constructor = (FunctionAdapter) adapter.getMember("constructor");
                             if (constructor != null) {
                                 constructor.call(this, args);
                             }
@@ -207,6 +210,7 @@ public class ScriptContext implements DocumentListener {
                 }, ENGINE_SCOPE);
             }
         });
+        
     }
 
     private void handleNewDocument() {
