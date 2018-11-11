@@ -1,5 +1,6 @@
 package com.earnix.webk.script.html;
 
+import com.earnix.webk.script.console.Console;
 import com.earnix.webk.script.web_idl.Attribute;
 import com.earnix.webk.script.web_idl.DOMString;
 import com.earnix.webk.script.web_idl.DefaultSequence;
@@ -29,12 +30,12 @@ import java.util.Objects;
  */
 @Exposed(Window.class) // todo we have multiple windows, fix it
 @Global(Window.class)
-public interface Window extends 
-        com.earnix.webk.script.whatwg_dom.Window, 
-        LegacyUnenumerableNamedProperties, 
+public interface Window extends
+        com.earnix.webk.script.whatwg_dom.Window,
+        LegacyUnenumerableNamedProperties,
         GlobalEventHandlers,
-        WindowOrWorkerGlobalScope
-{
+        WindowOrWorkerGlobalScope {
+    
     // the current browsing context
     @Unforgeable
     @ReadonlyAttribute
@@ -155,4 +156,8 @@ public interface Window extends
     void postMessage(Object message, @USVString String targetOrigin, @Optional @DefaultSequence Sequence<Object> transfer);
 
     void postMessage(Object message, @Optional WindowPostMessageOptions options);
+
+    // is not in WebIDL, exposed as namespace
+
+    Console console();
 }

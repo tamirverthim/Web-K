@@ -115,7 +115,7 @@ public final class CSSName implements Comparable {
     /**
      * Map of all CSS properties
      */
-    private static final Map ALL_PROPERTY_NAMES = new TreeMap();
+    private static final Map<String, CSSName> ALL_PROPERTY_NAMES = new TreeMap<>();
 
     /**
      * Map of all non-shorthand CSS properties

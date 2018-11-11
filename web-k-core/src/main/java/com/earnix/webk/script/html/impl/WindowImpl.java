@@ -1,6 +1,8 @@
 package com.earnix.webk.script.html.impl;
 
 import com.earnix.webk.script.ScriptContext;
+import com.earnix.webk.script.console.Console;
+import com.earnix.webk.script.console.impl.ConsoleImpl;
 import com.earnix.webk.script.fetch.RequestInfo;
 import com.earnix.webk.script.fetch.RequestInit;
 import com.earnix.webk.script.fetch.Response;
@@ -46,9 +48,9 @@ import java.util.TimerTask;
 @RequiredArgsConstructor
 @Slf4j
 public class WindowImpl implements Window {
-    
+
     final ScriptContext scriptContext;
-    
+
     @Override
     public WindowProxy window() {
         return null;
@@ -126,7 +128,7 @@ public class WindowImpl implements Window {
 
     private String status;
     private Attribute<String> statusAttribute = new Attribute<String>() {
-        
+
         @Override
         public String get() {
             return status;
@@ -137,7 +139,7 @@ public class WindowImpl implements Window {
             WindowImpl.this.status = status;
         }
     };
-    
+
     @Override
     public @DOMString Attribute<String> status() {
         return statusAttribute;
@@ -267,15 +269,15 @@ public class WindowImpl implements Window {
     }
 
     private HashMap<String, Attribute<EventHandler>> handlers = new HashMap<>();
-    
-    private Attribute<EventHandler> getEventHandler(String event){
+
+    private Attribute<EventHandler> getEventHandler(String event) {
         return handlers.computeIfAbsent(event, new java.util.function.Function<String, Attribute<EventHandler>>() {
             @Override
             public Attribute<EventHandler> apply(String s) {
                 return new Attribute<EventHandler>() {
-                    
+
                     EventHandler handler;
-                    
+
                     @Override
                     public EventHandler get() {
                         return handler;
@@ -288,8 +290,10 @@ public class WindowImpl implements Window {
                 };
             }
         });
-    };
-    
+    }
+
+
+
     @Override
     public Attribute<EventHandler> onabort() {
         return getEventHandler("onabort");
@@ -435,7 +439,7 @@ public class WindowImpl implements Window {
         return getEventHandler("onkeyup");
     }
 
-    
+
 //    EventHandler onladValue = null;
 //    Attribute<EventHandler> onload = new Attribute<EventHandler>() {
 //        @Override
@@ -448,7 +452,7 @@ public class WindowImpl implements Window {
 //            onladValue = eventHandler;
 //        }
 //    };
-    
+
     @Override
     public Attribute<EventHandler> onload() {
         return getEventHandler("onload");
@@ -630,14 +634,14 @@ public class WindowImpl implements Window {
     }
 
     // region timers
-    
+
     Timer timer = new Timer();
     HashMap<Integer, TimerTask> timeoutTasks = new HashMap<>();
     HashMap<Integer, TimerTask> intervalTasks = new HashMap<>();
-            
+
     @Override
     public int setTimeout(TimerHandler handler, int timeout, Object... arguments) {
-        if(handler.is(String.class)){
+        if (handler.is(String.class)) {
             // unimplemented
             return -1;
         } else if (handler.is(com.earnix.webk.script.web_idl.Function.class)) {
@@ -650,7 +654,7 @@ public class WindowImpl implements Window {
                     });
                 }
             };
-            
+
             timer.schedule(task, (long) timeout);
             val handle = timeoutTasks.size();
             timeoutTasks.put(handle, task);
@@ -676,7 +680,7 @@ public class WindowImpl implements Window {
      */
     @Override
     public int setInterval(TimerHandler handler, int timeout, Object... arguments) {
-        if(handler.is(String.class)){
+        if (handler.is(String.class)) {
             //
             log.warn("Unimplemented");
             return -1;
@@ -716,7 +720,7 @@ public class WindowImpl implements Window {
     }
 
     // endregion
-    
+
     @Override
     public Promise<ImageBitmap> createImageBitmap(ImageBitmapSource image, ImageBitmapOptions options) {
         return null;
@@ -747,12 +751,20 @@ public class WindowImpl implements Window {
 
             @Override
             public void set(Object o) {
-            
+
             }
         };
     }
+
     
-    private void repaintPanel(){
-        SwingUtilities.invokeLater( () -> scriptContext.getPanel().repaint());
+    ConsoleImpl console = new ConsoleImpl();
+    
+    @Override
+    public Console console() {
+        return console;
+    }
+
+    private void repaintPanel() {
+        SwingUtilities.invokeLater(() -> scriptContext.getPanel().repaint());
     }
 }
