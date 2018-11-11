@@ -6,6 +6,7 @@ import com.earnix.webk.script.html.Window;
 import com.earnix.webk.script.html.WindowProxy;
 import com.earnix.webk.script.html.canvas.impl.CanvasGradientImpl;
 import com.earnix.webk.script.html.canvas.impl.CanvasPatternImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 import com.earnix.webk.script.html.impl.WindowImpl;
 import com.earnix.webk.script.html.impl.WindowProxyImpl;
 import com.earnix.webk.script.impl.ElementImpl;
@@ -21,6 +22,7 @@ import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -46,6 +48,8 @@ public class ScriptContext implements DocumentListener {
     JsConsole console = new JsConsole();
     DocumentModel document;
     EventManager eventManager = new EventManager(this);
+    @Getter WindowImpl window;
+    private WebIDLAdapter<WindowImpl> windowAdapter;
 
     public ScriptContext(BasicPanel panel) {
         this.panel = panel;
@@ -82,14 +86,14 @@ public class ScriptContext implements DocumentListener {
         return panel;
     }
 
-    public WindowProxy getWindow() {
-        try {
-            @SuppressWarnings("unchecked") val adapter = (WebIDLAdapter<Window>)engine.eval("window");
-            return new WindowProxyImpl(adapter.getTarget());
-        } catch (ScriptException e) {
-            throw new RuntimeException();
-        }
-    }
+//    public WindowProxy getWindow() {
+//        try {
+//            @SuppressWarnings("unchecked") val adapter = (WebIDLAdapter<Window>)engine.eval("window");
+//            return new WindowProxyImpl(adapter.getTarget());
+//        } catch (ScriptException e) {
+//            throw new RuntimeException();
+//        }
+//    }
 
     @Override
     public void documentStarted() {
@@ -167,8 +171,8 @@ public class ScriptContext implements DocumentListener {
         expose(CanvasGradientImpl.class);
         expose(CanvasPatternImpl.class);
         
-        Window window = new WindowImpl(this);
-        WebIDLAdapter<Window> windowAdapter = WebIDLAdapter.obtain(this, window);
+        window = new WindowImpl(this);
+        windowAdapter = WebIDLAdapter.obtain(this, window);
         
         windowAdapter.keySet().forEach(key -> {
             context.setAttribute(key, windowAdapter.getMember(key), ENGINE_SCOPE);
@@ -217,6 +221,10 @@ public class ScriptContext implements DocumentListener {
         val nextDocument = panel.getDocument();
         if (nextDocument != document) {
             initEngine();
+ 
+            window.setDocument(new DocumentImpl(this));
+            context.setAttribute("document", windowAdapter.getMember("document"), ENGINE_SCOPE);
+            
             val scripts = panel.getDocument().getElementsByTag("script");
             log.trace("Document has {} scripts", scripts.size());
             for (int i = 0; i < scripts.size(); i++) {
@@ -260,5 +268,9 @@ public class ScriptContext implements DocumentListener {
         panel.reset();
         return res;
     }
-    // temp
+    
+    
+    public WindowImpl getWindow(){
+        return window;
+    };
 }

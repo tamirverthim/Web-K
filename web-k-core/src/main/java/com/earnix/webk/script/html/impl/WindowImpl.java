@@ -30,6 +30,7 @@ import com.earnix.webk.script.whatwg_dom.Element;
 import com.earnix.webk.script.whatwg_dom.EventHandler;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -50,10 +51,12 @@ import java.util.TimerTask;
 public class WindowImpl implements Window {
 
     final ScriptContext scriptContext;
-
+    @Setter DocumentImpl document;
+    
+    
     @Override
     public WindowProxy window() {
-        return null;
+        return new WindowProxyImpl(this);
     }
 
     @Override
@@ -63,7 +66,7 @@ public class WindowImpl implements Window {
 
     @Override
     public Document document() {
-        return null;
+        return document;
     }
 
     @Override

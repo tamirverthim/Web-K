@@ -3,6 +3,7 @@ package com.earnix.webk.script.html.impl;
 import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.script.Binder;
+import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.html.DocumentReadyState;
 import com.earnix.webk.script.html.HTMLElement;
 import com.earnix.webk.script.html.HTMLHeadElement;
@@ -33,8 +34,8 @@ public class DocumentImpl extends com.earnix.webk.script.impl.DocumentImpl imple
     DocumentModel document;
 
 
-    public DocumentImpl(BasicPanel panel) {
-        super(panel);
+    public DocumentImpl(ScriptContext ctx) {
+        super(ctx);
         location = new LocationImpl(panel);
         document = panel.getDocument();
     }
@@ -180,7 +181,7 @@ public class DocumentImpl extends com.earnix.webk.script.impl.DocumentImpl imple
 
     @Override
     public WindowProxy defaultView() {
-        return panel.getScriptContext().getWindow();
+        return new WindowProxyImpl(ctx.getWindow());
     }
 
     @Override

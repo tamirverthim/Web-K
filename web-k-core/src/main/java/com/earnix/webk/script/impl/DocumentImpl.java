@@ -5,6 +5,7 @@ import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.script.Binder;
+import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.web_idl.DOMString;
 import com.earnix.webk.script.web_idl.USVString;
 import com.earnix.webk.script.whatwg_dom.Attr;
@@ -43,12 +44,13 @@ public class DocumentImpl implements Document {
 
     DocumentModel document;
     DOMImplementation implementation = new DOMImplementationImpl();
-
     protected BasicPanel panel;
+    protected ScriptContext ctx;
 
-    public DocumentImpl(BasicPanel panel) {
-        this.document = panel.getDocument();
-        this.panel = panel;
+    public DocumentImpl(ScriptContext ctx) {
+        this.document = ctx.getPanel().getDocument();
+        this.panel = ctx.getPanel();
+        this.ctx = ctx;
     }
 
     @Override
