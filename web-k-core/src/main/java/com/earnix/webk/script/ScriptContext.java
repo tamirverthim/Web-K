@@ -10,12 +10,14 @@ import com.earnix.webk.script.ui_events.UIEventImpl;
 import com.earnix.webk.script.ui_events.UIEventInit;
 import com.earnix.webk.script.web_idl.Exposed;
 import com.earnix.webk.script.whatwg_dom.impl.EventManager;
+import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
 import com.earnix.webk.script.xhr.impl.XMLHttpRequestImpl;
 import com.earnix.webk.swing.BasicPanel;
 import jdk.nashorn.api.scripting.AbstractJSObject;
 import jdk.nashorn.api.scripting.NashornException;
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
+import jdk.nashorn.api.scripting.URLReader;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,8 @@ import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.script.ScriptException;
+
+import java.io.InputStreamReader;
 
 import static javax.script.ScriptContext.ENGINE_SCOPE;
 
@@ -42,8 +46,8 @@ public class ScriptContext implements DocumentListener {
     DocumentModel document;
     EventManager eventManager;
     MouseEventsAdapter mouseEventsAdapter;
-    
-    
+
+
     WindowImpl window;
     private WebIDLAdapter<WindowImpl> windowAdapter;
 
@@ -105,11 +109,24 @@ public class ScriptContext implements DocumentListener {
     }
 
     private void initEngine() {
-        String[] options = {"--language=es6"};
+        String[] options = {"--language=es6", "--no-java"};
         NashornScriptEngineFactory jsFactory = new NashornScriptEngineFactory();
         engine = (NashornScriptEngine) jsFactory.getScriptEngine(options);
         context = engine.getContext();
+
+        try {
+            context.setAttribute("window", engine.eval("this"), ENGINE_SCOPE);
+            context.setAttribute("self", engine.eval("this"), ENGINE_SCOPE);
+        } catch (ScriptException e) {
+            throw new RuntimeException(e);
+        }
         
+        try {
+            engine.eval(new URLReader(ScriptContext.class.getResource("/symbol-polyfill.js")), context);
+            engine.eval(new URLReader(ScriptContext.class.getResource("/es6-shim.min.js")), context);
+        } catch (ScriptException e) {
+            throw new RuntimeException(e);
+        }
 //        context.setAttribute("document", WebIDLAdapter.obtain(this, new com.earnix.webk.script.html.impl.DocumentImpl(panel)), ENGINE_SCOPE);
 //        context.setAttribute("console", console, ENGINE_SCOPE);
 //        context.setAttribute("setInterval", new Function<>(this, (ctx, args) -> {
@@ -150,14 +167,14 @@ public class ScriptContext implements DocumentListener {
         expose(CanvasGradientImpl.class);
         expose(CanvasPatternImpl.class);
         expose(XMLHttpRequestImpl.class);
-        
+
         window = new WindowImpl(this);
         windowAdapter = WebIDLAdapter.obtain(this, window);
-        
+
         windowAdapter.keySet().forEach(key -> {
             context.setAttribute(key, windowAdapter.getMember(key), ENGINE_SCOPE);
         });
-        
+
         try {
             context.setAttribute("window", engine.eval("this"), ENGINE_SCOPE);
             context.setAttribute("self", engine.eval("this"), ENGINE_SCOPE);
@@ -167,7 +184,7 @@ public class ScriptContext implements DocumentListener {
     }
 
     private void expose(Class implementationClass) {
-        
+
         ClassUtils.getAllInterfaces(implementationClass).forEach(i -> {
             if (i.isAnnotationPresent(Exposed.class)) {
                 context.setAttribute(i.getSimpleName(), new AbstractJSObject() {
@@ -195,17 +212,17 @@ public class ScriptContext implements DocumentListener {
                 }, ENGINE_SCOPE);
             }
         });
-        
+
     }
 
     private void handleNewDocument() {
         val nextDocument = panel.getDocument();
         if (nextDocument != document) {
             initEngine();
- 
+
             window.setDocument(new DocumentImpl(this));
             context.setAttribute("document", windowAdapter.getMember("document"), ENGINE_SCOPE);
-            
+
             val scripts = panel.getDocument().getElementsByTag("script");
             log.trace("Document has {} scripts", scripts.size());
             for (int i = 0; i < scripts.size(); i++) {
@@ -249,9 +266,11 @@ public class ScriptContext implements DocumentListener {
         panel.reset();
         return res;
     }
-    
-    
-    public WindowImpl getWindow(){
+
+
+    public WindowImpl getWindow() {
         return window;
-    };
+    }
+
+    ;
 }
