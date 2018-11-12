@@ -1,4 +1,4 @@
-package com.earnix.webk.script;
+package com.earnix.webk.script.whatwg_dom.impl;
 
 
 import com.earnix.webk.dom.nodes.CDataNodeModel;
@@ -7,12 +7,14 @@ import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.nodes.DocumentTypeModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
+import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.html.canvas.impl.HTMLCanvasElementImpl;
 import com.earnix.webk.script.impl.CharacterDataImpl;
 import com.earnix.webk.script.impl.CommentImpl;
 import com.earnix.webk.script.impl.DocumentTypeImpl;
 import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.impl.NodeImpl;
+import com.earnix.webk.script.whatwg_dom.Node;
 import com.earnix.webk.util.AssertHelper;
 import lombok.experimental.var;
 
@@ -25,12 +27,12 @@ import java.util.HashMap;
  * @author Taras Maslov
  * 6/4/2018
  */
-public class Binder {
+public class ScriptDOMFactory {
 
     private static HashMap<String, NodeCreator> elementsCreators = new HashMap<>();
 
     private interface NodeCreator {
-        com.earnix.webk.script.whatwg_dom.Node createNode(NodeModel parsedNode, ScriptContext panel);
+        Node createNode(NodeModel parsedNode, ScriptContext panel);
     }
 
     static {
@@ -40,14 +42,14 @@ public class Binder {
         ));
     }
 
-    public static com.earnix.webk.script.whatwg_dom.Node get(NodeModel key, ScriptContext ctx) {
+    public static Node get(NodeModel key, ScriptContext ctx) {
         if (key == null) {
             return null;
         }
 
         var result = key.getScriptNode();
         if (result == null) {
-            result = (NodeImpl) createJSNode(key, ctx);
+            result = (NodeImpl) createScriptNode(key, ctx);
             key.setScriptNode(result);
         }
         return result;
@@ -57,16 +59,16 @@ public class Binder {
         return (com.earnix.webk.script.whatwg_dom.Element) get(key, ctx);
     }
 
-    public static com.earnix.webk.script.whatwg_dom.Node put(NodeModel key, com.earnix.webk.script.whatwg_dom.Node value) {
+    public static Node put(NodeModel key, Node value) {
         key.setScriptNode((NodeImpl) value);
         return value;
     }
 
 
-    public static com.earnix.webk.script.whatwg_dom.Node createJSNode(NodeModel parsedNode, ScriptContext ctx) {
+    public static Node createScriptNode(NodeModel parsedNode, ScriptContext ctx) {
         AssertHelper.assertNotNull(parsedNode);
 
-        com.earnix.webk.script.whatwg_dom.Node result;
+        Node result;
 
         if (parsedNode instanceof CDataNodeModel) {
             result = new CharacterDataImpl((CDataNodeModel) parsedNode, ctx);

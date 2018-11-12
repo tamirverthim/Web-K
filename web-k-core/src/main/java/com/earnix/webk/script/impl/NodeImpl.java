@@ -2,7 +2,7 @@ package com.earnix.webk.script.impl;
 
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.script.Binder;
+import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
 import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.web_idl.Attribute;
 import com.earnix.webk.script.web_idl.DOMString;
@@ -62,24 +62,24 @@ public class NodeImpl implements Node {
 
     @Override
     public Document ownerDocument() {
-        return (Document) Binder.get(target.ownerDocument(), ctx);
+        return (Document) ScriptDOMFactory.get(target.ownerDocument(), ctx);
     }
 
     @Override
     public Node getRootNode(GetRootNodeOptions options) {
-        return Binder.get(target.root(), ctx);
+        return ScriptDOMFactory.get(target.root(), ctx);
     }
 
     @Override
     public Node parentNode() {
-        return Binder.get(target.parentNode(), ctx);
+        return ScriptDOMFactory.get(target.parentNode(), ctx);
     }
 
     @Override
     public com.earnix.webk.script.whatwg_dom.Element parentElement() {
         val modelParent = target.parent();
         if (modelParent instanceof ElementModel) {
-            return Binder.getElement((ElementModel) modelParent, ctx);
+            return ScriptDOMFactory.getElement((ElementModel) modelParent, ctx);
         }
         return null;
     }

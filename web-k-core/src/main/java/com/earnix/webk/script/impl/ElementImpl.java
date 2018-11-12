@@ -1,7 +1,7 @@
 package com.earnix.webk.script.impl;
 
 import com.earnix.webk.dom.nodes.ElementModel;
-import com.earnix.webk.script.Binder;
+import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
 import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.cssom.CSSStyleDeclaration;
 import com.earnix.webk.script.cssom.impl.CSSStyleDeclarationImpl;
@@ -260,12 +260,12 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public Element previousElementSibling() {
-        return Binder.getElement(model.previousElementSibling(), ctx);
+        return ScriptDOMFactory.getElement(model.previousElementSibling(), ctx);
     }
 
     @Override
     public Element nextElementSibling() {
-        return Binder.getElement(model.nextElementSibling(), ctx);
+        return ScriptDOMFactory.getElement(model.nextElementSibling(), ctx);
     }
 
     @Override

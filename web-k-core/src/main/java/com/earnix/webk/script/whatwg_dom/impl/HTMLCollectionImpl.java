@@ -1,12 +1,10 @@
 package com.earnix.webk.script.whatwg_dom.impl;
 
 import com.earnix.webk.dom.select.Elements;
-import com.earnix.webk.script.Binder;
 import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.web_idl.DOMString;
 import com.earnix.webk.script.whatwg_dom.Element;
 import com.earnix.webk.script.whatwg_dom.HTMLCollection;
-import com.earnix.webk.swing.BasicPanel;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
@@ -32,7 +30,7 @@ public class HTMLCollectionImpl implements HTMLCollection {
 
     @Override
     public Element item(int index) {
-        return Binder.getElement(elements.get(index), ctx);
+        return ScriptDOMFactory.getElement(elements.get(index), ctx);
     }
 
     @Override

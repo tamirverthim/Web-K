@@ -2,7 +2,7 @@ package com.earnix.webk.script.impl;
 
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.script.Binder;
+import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
 import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.whatwg_dom.Element;
 import com.earnix.webk.script.whatwg_dom.NonDocumentTypeChildNode;
@@ -27,7 +27,7 @@ public class NonDocumentTypeChildNodeImpl implements NonDocumentTypeChildNode {
     @Override
     public Element previousElementSibling() {
         if (target instanceof ElementModel) {
-            return (Element) Binder.get(((ElementModel) target).previousElementSibling(), ctx);
+            return (Element) ScriptDOMFactory.get(((ElementModel) target).previousElementSibling(), ctx);
         }
 
         return null;
@@ -36,7 +36,7 @@ public class NonDocumentTypeChildNodeImpl implements NonDocumentTypeChildNode {
     @Override
     public Element nextElementSibling() {
         if (target instanceof ElementModel) {
-            return (Element) Binder.get(((ElementModel) target).nextElementSibling(), ctx);
+            return (Element) ScriptDOMFactory.get(((ElementModel) target).nextElementSibling(), ctx);
         }
         return null;
     }

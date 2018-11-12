@@ -2,7 +2,7 @@ package com.earnix.webk.script.html.impl;
 
 import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.script.Binder;
+import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
 import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.html.DocumentReadyState;
 import com.earnix.webk.script.html.HTMLElement;
@@ -18,7 +18,6 @@ import com.earnix.webk.script.whatwg_dom.Element;
 import com.earnix.webk.script.whatwg_dom.EventHandler;
 import com.earnix.webk.script.whatwg_dom.HTMLCollection;
 import com.earnix.webk.script.whatwg_dom.NodeList;
-import com.earnix.webk.swing.BasicPanel;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
@@ -95,7 +94,7 @@ public class DocumentImpl extends com.earnix.webk.script.impl.DocumentImpl imple
                 if (bodyModel.isEmpty()) {
                     return null;
                 }
-                return (HTMLElement) Binder.getElement(bodyModel.get(0), ctx);
+                return (HTMLElement) ScriptDOMFactory.getElement(bodyModel.get(0), ctx);
             }
 
             @Override

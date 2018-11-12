@@ -29,7 +29,7 @@ import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
 import com.earnix.webk.resource.ImageResource;
-import com.earnix.webk.script.Binder;
+import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
 import com.earnix.webk.script.html.canvas.impl.HTMLCanvasElementImpl;
 import com.earnix.webk.simple.extend.DefaultFormSubmissionListener;
 import com.earnix.webk.simple.extend.FormSubmissionListener;
@@ -140,7 +140,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
             return replaceImage(uac, context, e, cssWidth, cssHeight);
         } else if (context.getNamespaceHandler().isCanvasElement(e)) {
             
-            HTMLCanvasElementImpl canvasElement = (HTMLCanvasElementImpl) Binder.get(
+            HTMLCanvasElementImpl canvasElement = (HTMLCanvasElementImpl) ScriptDOMFactory.get(
                     e,
                     ((BasicPanel) context.getSharedContext().getCanvas()).getScriptContext()
             );

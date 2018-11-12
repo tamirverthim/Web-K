@@ -1,7 +1,6 @@
 package com.earnix.webk.script.whatwg_dom.impl;
 
 import com.earnix.webk.dom.nodes.ElementModel;
-import com.earnix.webk.script.Binder;
 import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.web_idl.impl.SequenceImpl;
 import com.earnix.webk.script.whatwg_dom.Element;
@@ -29,7 +28,7 @@ public class EventManager {
     };
     
     public void publishEvent(ElementModel targetModel, EventImpl event) {
-        val target = Binder.getElement(targetModel, scriptContext);
+        val target = ScriptDOMFactory.getElement(targetModel, scriptContext);
 
         // preparing propagation path 
         val propagationPath = new ArrayList<EventTarget>();
@@ -37,7 +36,7 @@ public class EventManager {
         do {
             propagationPath.add(current);
             current = current.parentElement();
-        } while (current != Binder.get(scriptContext.getPanel().getDocument(), scriptContext));
+        } while (current != ScriptDOMFactory.get(scriptContext.getPanel().getDocument(), scriptContext));
         
         
         event.setTrusted(true);

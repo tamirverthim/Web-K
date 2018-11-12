@@ -4,7 +4,7 @@ import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.dom.nodes.TextNodeModel;
-import com.earnix.webk.script.Binder;
+import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
 import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.web_idl.DOMString;
 import com.earnix.webk.script.web_idl.USVString;
@@ -108,7 +108,7 @@ public class DocumentImpl implements Document {
 
     @Override
     public Element documentElement() {
-        return (Element) Binder.get(document, ctx);
+        return (Element) ScriptDOMFactory.get(document, ctx);
     }
 
     @Override
@@ -130,7 +130,7 @@ public class DocumentImpl implements Document {
 
     @Override
     public Element createElement(String localName, Object options) {
-        return Binder.getElement(new ElementModel(localName), ctx);
+        return ScriptDOMFactory.getElement(new ElementModel(localName), ctx);
     }
 
     @Override
@@ -147,7 +147,7 @@ public class DocumentImpl implements Document {
     public Text createTextNode(String data) {
         TextNodeModel textNode = new TextNodeModel(data);
         val result = new TextImpl(textNode, ctx);
-        Binder.put(textNode, result);
+        ScriptDOMFactory.put(textNode, result);
         return result;
     }
 
@@ -209,7 +209,7 @@ public class DocumentImpl implements Document {
     @Override
     public Element getElementById(String elementId) {
         val jsoupEl = document.getElementById(elementId.toString());
-        return (Element) Binder.get(jsoupEl, ctx);
+        return (Element) ScriptDOMFactory.get(jsoupEl, ctx);
     }
 
     @Override
@@ -246,10 +246,10 @@ public class DocumentImpl implements Document {
     public Element querySelector(String selectors) {
         val selected = document.select(selectors);
         if (selected.size() > 0) {
-            Element bound = (Element) Binder.get(selected.first(), ctx);
+            Element bound = (Element) ScriptDOMFactory.get(selected.first(), ctx);
             if (bound == null) {
                 bound = new ElementImpl(selected.first(), ctx);
-                Binder.put(selected.first(), bound);
+                ScriptDOMFactory.put(selected.first(), bound);
             }
 
             return bound;
