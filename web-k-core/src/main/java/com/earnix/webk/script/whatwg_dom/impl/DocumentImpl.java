@@ -1,9 +1,12 @@
-package com.earnix.webk.script.impl;
+package com.earnix.webk.script.whatwg_dom.impl;
 
 import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.dom.nodes.TextNodeModel;
+import com.earnix.webk.script.impl.DOMImplementationImpl;
+import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.script.impl.NodeListImpl;
 import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
 import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.web_idl.DOMString;
@@ -44,13 +47,11 @@ public class DocumentImpl implements Document {
 
     DocumentModel document;
     DOMImplementation implementation = new DOMImplementationImpl();
-    protected BasicPanel panel;
-    protected ScriptContext ctx;
+    String url;
 
-    public DocumentImpl(ScriptContext ctx) {
-        this.document = ctx.getPanel().getDocument();
-        this.panel = ctx.getPanel();
-        this.ctx = ctx;
+    public DocumentImpl(DocumentModel model, String url ) {
+        this.document = model;
+        this.url = url;
     }
 
     @Override
@@ -61,13 +62,13 @@ public class DocumentImpl implements Document {
     @Override
     public @USVString
     String URL() {
-        return panel.getURL().toString();
+        return url;
     }
 
     @Override
     public @USVString
     String documentURI() {
-        return panel.getURL().toString();
+        return url;
     }
 
     @Override
@@ -108,13 +109,13 @@ public class DocumentImpl implements Document {
 
     @Override
     public Element documentElement() {
-        return (Element) ScriptDOMFactory.get(document, ctx);
+        return (Element) ScriptDOMFactory.get(document);
     }
 
     @Override
     public HTMLCollection getElementsByTagName(String qualifiedName) {
         val elements = document.getElementsByTag(qualifiedName.toString());
-        return new HTMLCollectionImpl(elements, ctx);
+        return new HTMLCollectionImpl(elements);
     }
 
     @Override
@@ -125,12 +126,12 @@ public class DocumentImpl implements Document {
     @Override
     public HTMLCollection getElementsByClassName(String classNames) {
         val modelElements = document.getElementsByClass(classNames.toString());
-        return new HTMLCollectionImpl(modelElements, ctx);
+        return new HTMLCollectionImpl(modelElements);
     }
 
     @Override
     public Element createElement(String localName, Object options) {
-        return ScriptDOMFactory.getElement(new ElementModel(localName), ctx);
+        return ScriptDOMFactory.getElement(new ElementModel(localName));
     }
 
     @Override
@@ -146,7 +147,7 @@ public class DocumentImpl implements Document {
     @Override
     public Text createTextNode(String data) {
         TextNodeModel textNode = new TextNodeModel(data);
-        val result = new TextImpl(textNode, ctx);
+        val result = new TextImpl(textNode);
         ScriptDOMFactory.put(textNode, result);
         return result;
     }
@@ -209,7 +210,7 @@ public class DocumentImpl implements Document {
     @Override
     public Element getElementById(String elementId) {
         val jsoupEl = document.getElementById(elementId.toString());
-        return (Element) ScriptDOMFactory.get(jsoupEl, ctx);
+        return (Element) ScriptDOMFactory.get(jsoupEl);
     }
 
     @Override
@@ -246,9 +247,9 @@ public class DocumentImpl implements Document {
     public Element querySelector(String selectors) {
         val selected = document.select(selectors);
         if (selected.size() > 0) {
-            Element bound = (Element) ScriptDOMFactory.get(selected.first(), ctx);
+            Element bound = (Element) ScriptDOMFactory.get(selected.first());
             if (bound == null) {
-                bound = new ElementImpl(selected.first(), ctx);
+                bound = new ElementImpl(selected.first());
                 ScriptDOMFactory.put(selected.first(), bound);
             }
 
@@ -261,6 +262,6 @@ public class DocumentImpl implements Document {
     public NodeList querySelectorAll(String selectors) {
         val selected = document.select(selectors);
         val nodes = new ArrayList<NodeModel>(selected);
-        return new NodeListImpl(nodes, ctx);
+        return new NodeListImpl(nodes);
     }
 }

@@ -27,16 +27,18 @@ import lombok.val;
  * 7/17/2018
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DocumentImpl extends com.earnix.webk.script.impl.DocumentImpl implements com.earnix.webk.script.html.Document {
+public class DocumentImpl extends com.earnix.webk.script.whatwg_dom.impl.DocumentImpl implements com.earnix.webk.script.html.Document {
 
+    private final ScriptContext ctx;
     Location location;
     DocumentModel document;
 
 
     public DocumentImpl(ScriptContext ctx) {
-        super(ctx);
-        location = new LocationImpl(panel);
-        document = panel.getDocument();
+        super(ctx.getPanel().getDocument(), ctx.getPanel().getURL().toString());
+        location = new LocationImpl(ctx.getPanel());
+        document = ctx.getPanel().getDocument();
+        this.ctx = ctx;
     }
 
     @Override
@@ -94,7 +96,7 @@ public class DocumentImpl extends com.earnix.webk.script.impl.DocumentImpl imple
                 if (bodyModel.isEmpty()) {
                     return null;
                 }
-                return (HTMLElement) ScriptDOMFactory.getElement(bodyModel.get(0), ctx);
+                return (HTMLElement) ScriptDOMFactory.getElement(bodyModel.get(0));
             }
 
             @Override

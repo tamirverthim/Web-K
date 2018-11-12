@@ -57,8 +57,13 @@ public class WindowImpl implements Window {
     final ScriptContext scriptContext;
     @Setter DocumentImpl document;
     final NavigatorImpl navigator = new NavigatorImpl();
-    final LocationImpl location = new LocationImpl(scriptContext.getPanel());
+    final LocationImpl location;
 
+
+    public WindowImpl(ScriptContext scriptContext) {
+        this.scriptContext = scriptContext;
+        location = new LocationImpl(scriptContext.getPanel());
+    }
 
     @Override
     public WindowProxy window() {

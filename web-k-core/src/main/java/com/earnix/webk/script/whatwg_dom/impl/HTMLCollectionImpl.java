@@ -18,7 +18,7 @@ public class HTMLCollectionImpl implements HTMLCollection {
     Elements elements;
     ScriptContext ctx;
 
-    public HTMLCollectionImpl(Elements elements, ScriptContext ctx) {
+    public HTMLCollectionImpl(Elements elements) {
         this.elements = elements;
         this.ctx = ctx;
     }
@@ -30,7 +30,7 @@ public class HTMLCollectionImpl implements HTMLCollection {
 
     @Override
     public Element item(int index) {
-        return ScriptDOMFactory.getElement(elements.get(index), ctx);
+        return ScriptDOMFactory.getElement(elements.get(index));
     }
 
     @Override

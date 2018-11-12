@@ -21,7 +21,7 @@ public class NodeListImpl implements NodeList {
     List<NodeModel> parserNodes;
     ScriptContext ctx;
 
-    public NodeListImpl(List<NodeModel> parserNodes, ScriptContext ctx) {
+    public NodeListImpl(List<NodeModel> parserNodes) {
         this.parserNodes = parserNodes;
         this.ctx = ctx;
     }
@@ -30,7 +30,7 @@ public class NodeListImpl implements NodeList {
     public com.earnix.webk.script.whatwg_dom.Node item(int index) {
         if (parserNodes.size() > index) {
             val parsed = parserNodes.get((int) index);
-            return ScriptDOMFactory.get(parsed, ctx);
+            return ScriptDOMFactory.get(parsed);
         } else {
             throw new DOMException("RangeError");
         }

@@ -21,8 +21,8 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
     
     private final CanvasRenderingContext2DImpl context;
 
-    public HTMLCanvasElementImpl(ElementModel target, ScriptContext ctx) {
-        super(target, ctx);
+    public HTMLCanvasElementImpl(ElementModel target) {
+        super(target);
         if (!target.hasAttr("width")) {
             target.attr("width", String.valueOf(300));
         }

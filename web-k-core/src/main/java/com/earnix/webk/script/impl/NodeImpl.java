@@ -43,9 +43,8 @@ public class NodeImpl implements Node {
     @Delegate(types = {EventTarget.class})
     EventTargetImpl eventTargetImpl;
 
-    public NodeImpl(NodeModel target, ScriptContext ctx) {
+    public NodeImpl(NodeModel target) {
         this.target = target;
-        this.ctx = ctx;
     }
 
     @Override
@@ -70,24 +69,24 @@ public class NodeImpl implements Node {
 
     @Override
     public Document ownerDocument() {
-        return (Document) ScriptDOMFactory.get(target.ownerDocument(), ctx);
+        return (Document) ScriptDOMFactory.get(target.ownerDocument());
     }
 
     @Override
     public Node getRootNode(GetRootNodeOptions options) {
-        return ScriptDOMFactory.get(target.root(), ctx);
+        return ScriptDOMFactory.get(target.root());
     }
 
     @Override
     public Node parentNode() {
-        return ScriptDOMFactory.get(target.parentNode(), ctx);
+        return ScriptDOMFactory.get(target.parentNode());
     }
 
     @Override
     public com.earnix.webk.script.whatwg_dom.Element parentElement() {
         val modelParent = target.parent();
         if (modelParent instanceof ElementModel) {
-            return ScriptDOMFactory.getElement((ElementModel) modelParent, ctx);
+            return ScriptDOMFactory.getElement((ElementModel) modelParent);
         }
         return null;
     }
@@ -99,7 +98,7 @@ public class NodeImpl implements Node {
 
     @Override
     public NodeList childNodes() {
-        return new NodeListImpl(target.childNodes(), ctx);
+        return new NodeListImpl(target.childNodes());
     }
 
     @Override

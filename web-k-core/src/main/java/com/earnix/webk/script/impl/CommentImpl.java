@@ -29,11 +29,11 @@ public class CommentImpl extends NodeImpl implements com.earnix.webk.script.what
         target.replaceWith(next);
     }).give(() -> target.getData());
 
-    public CommentImpl(CommentModel target, ScriptContext ctx) {
-        super(target, ctx);
+    public CommentImpl(CommentModel target) {
+        super(target);
         this.target = target;
         childNodeMixin = new ChildNodeImpl(target);
-        nonDocumentTypeChildNodeMixin = new NonDocumentTypeChildNodeImpl(target, ctx);
+        nonDocumentTypeChildNodeMixin = new NonDocumentTypeChildNodeImpl(target);
     }
 
 

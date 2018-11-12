@@ -28,7 +28,7 @@ public class EventManager {
     };
     
     public void publishEvent(ElementModel targetModel, EventImpl event) {
-        val target = ScriptDOMFactory.getElement(targetModel, scriptContext);
+        val target = ScriptDOMFactory.getElement(targetModel);
 
         // preparing propagation path 
         val propagationPath = new ArrayList<EventTarget>();
@@ -36,7 +36,7 @@ public class EventManager {
         do {
             propagationPath.add(current);
             current = current.parentElement();
-        } while (current != ScriptDOMFactory.get(scriptContext.getPanel().getDocument(), scriptContext));
+        } while (current != ScriptDOMFactory.get(scriptContext.getPanel().getDocument()));
         
         
         event.setTrusted(true);

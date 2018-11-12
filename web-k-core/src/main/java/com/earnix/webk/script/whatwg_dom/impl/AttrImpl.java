@@ -73,7 +73,7 @@ public class AttrImpl implements Attr {
 
     @Override
     public com.earnix.webk.script.whatwg_dom.Element ownerElement() {
-        return ScriptDOMFactory.getElement(modelNode, ctx);
+        return ScriptDOMFactory.getElement(modelNode);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class AttrImpl implements Attr {
 
     @Override
     public com.earnix.webk.script.whatwg_dom.Element parentElement() {
-        return ScriptDOMFactory.getElement(modelNode.parent(), ctx);
+        return ScriptDOMFactory.getElement(modelNode.parent());
     }
 
     @Override

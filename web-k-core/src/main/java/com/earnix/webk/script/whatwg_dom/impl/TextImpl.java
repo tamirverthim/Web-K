@@ -28,11 +28,11 @@ public class TextImpl extends NodeImpl implements Text {
 
     // text
 
-    public TextImpl(TextNodeModel target, ScriptContext ctx) {
-        super(target, ctx);
+    public TextImpl(TextNodeModel target) {
+        super(target);
         this.target = target;
         this.childNodeMixin = new ChildNodeImpl(target);
-        this.nonDocumentTypeChildNodeMixin = new NonDocumentTypeChildNodeImpl(target, ctx);
+        this.nonDocumentTypeChildNodeMixin = new NonDocumentTypeChildNodeImpl(target);
     }
 
     @Override

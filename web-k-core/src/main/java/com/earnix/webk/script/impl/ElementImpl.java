@@ -41,12 +41,11 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     final ElementModel model;
     final ChildNodeImpl childNodeMixin;
-    final ScriptContext ctx;
+//    final ScriptContext ctx;
 
-    public ElementImpl(ElementModel model, ScriptContext ctx) {
-        super(model, ctx);
+    public ElementImpl(ElementModel model) {
+        super(model);
         this.model = model;
-        this.ctx = ctx;
         childNodeMixin = new ChildNodeImpl(model);
     }
 
@@ -211,7 +210,7 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public HTMLCollection getElementsByTagName(@DOMString String qualifiedName) {
-        return new HTMLCollectionImpl(model.getElementsByTag(qualifiedName.toString()), ctx);
+        return new HTMLCollectionImpl(model.getElementsByTag(qualifiedName));
     }
 
     @Override
@@ -221,7 +220,7 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public HTMLCollection getElementsByClassName(@DOMString String classNames) {
-        return new HTMLCollectionImpl(model.getElementsByClass(classNames), ctx);
+        return new HTMLCollectionImpl(model.getElementsByClass(classNames));
     }
 
     @Override
@@ -260,17 +259,17 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public Element previousElementSibling() {
-        return ScriptDOMFactory.getElement(model.previousElementSibling(), ctx);
+        return ScriptDOMFactory.getElement(model.previousElementSibling());
     }
 
     @Override
     public Element nextElementSibling() {
-        return ScriptDOMFactory.getElement(model.nextElementSibling(), ctx);
+        return ScriptDOMFactory.getElement(model.nextElementSibling());
     }
 
     @Override
     public HTMLCollection children() {
-        return new HTMLCollectionImpl(model.children(), ctx);
+        return new HTMLCollectionImpl(model.children());
     }
 
     @Override

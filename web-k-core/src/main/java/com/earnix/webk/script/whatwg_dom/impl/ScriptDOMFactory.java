@@ -9,9 +9,7 @@ import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.html.canvas.impl.HTMLCanvasElementImpl;
-import com.earnix.webk.script.impl.CharacterDataImpl;
 import com.earnix.webk.script.impl.CommentImpl;
-import com.earnix.webk.script.impl.DocumentTypeImpl;
 import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.impl.NodeImpl;
 import com.earnix.webk.script.whatwg_dom.Element;
@@ -33,31 +31,30 @@ public class ScriptDOMFactory {
     private static HashMap<String, NodeCreator> elementsCreators = new HashMap<>();
 
     private interface NodeCreator {
-        Node createNode(NodeModel parsedNode, ScriptContext panel);
+        Node createNode(NodeModel parsedNode);
     }
 
     static {
-        elementsCreators.put("canvas", (element, ctx) -> new HTMLCanvasElementImpl(
-                (ElementModel) element,
-                ctx
+        elementsCreators.put("canvas", (element) -> new HTMLCanvasElementImpl(
+                (ElementModel) element
         ));
     }
 
-    public static Node get(NodeModel key, ScriptContext ctx) {
+    public static Node get(NodeModel key) {
         if (key == null) {
             return null;
         }
 
         var result = key.getScriptNode();
         if (result == null) {
-            result = (NodeImpl) createScriptNode(key, ctx);
+            result = (NodeImpl) createScriptNode(key);
             key.setScriptNode(result);
         }
         return result;
     }
 
-    public static Element getElement(ElementModel key, ScriptContext ctx) {
-        return (Element) get(key, ctx);
+    public static Element getElement(ElementModel key) {
+        return (Element) get(key);
     }
 
     public static Node put(NodeModel key, Node value) {
@@ -66,24 +63,24 @@ public class ScriptDOMFactory {
     }
 
 
-    public static Node createScriptNode(NodeModel parsedNode, ScriptContext ctx) {
+    public static Node createScriptNode(NodeModel parsedNode) {
         AssertHelper.assertNotNull(parsedNode);
 
         Node result;
 
         if (parsedNode instanceof CDataNodeModel) {
-            result = new CharacterDataImpl((CDataNodeModel) parsedNode, ctx);
+            result = new CharacterDataImpl((CDataNodeModel) parsedNode);
         } else if (parsedNode instanceof CommentModel) {
-            result = new CommentImpl((CommentModel) parsedNode, ctx);
+            result = new CommentImpl((CommentModel) parsedNode);
         } else if (parsedNode instanceof DocumentTypeModel) {
-            result = new DocumentTypeImpl((DocumentTypeModel) parsedNode, ctx);
+            result = new DocumentTypeImpl((DocumentTypeModel) parsedNode);
         } else if (parsedNode instanceof DocumentModel) {
-            result = new ElementImpl((ElementModel) parsedNode, ctx);
+            result = new ElementImpl((ElementModel) parsedNode);
         } else if (parsedNode instanceof ElementModel) {
             if (elementsCreators.containsKey(parsedNode.nodeName())) {
-                result = elementsCreators.get(parsedNode.nodeName()).createNode(parsedNode, ctx);
+                result = elementsCreators.get(parsedNode.nodeName()).createNode(parsedNode);
             } else {
-                result = new ElementImpl((ElementModel) parsedNode, ctx);
+                result = new ElementImpl((ElementModel) parsedNode);
             }
         } else {
             throw new RuntimeException();
