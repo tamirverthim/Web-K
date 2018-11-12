@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * 6/18/2018
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
+@Target({ElementType.TYPE, ElementType.METHOD})
 public @interface Exposed {
     Class[] value();
 }

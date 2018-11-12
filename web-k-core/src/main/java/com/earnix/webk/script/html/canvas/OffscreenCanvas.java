@@ -18,10 +18,10 @@ import com.earnix.webk.script.whatwg_dom.EventTarget;
  * 6/21/2018
  */
 @Transferable
-@Constructor(true)
+@Constructor
 public interface OffscreenCanvas extends EventTarget {
 
-    void construct(@EnforceRange @Unsigned long width, @EnforceRange @Unsigned long height); // todo long long
+    void constructor(@EnforceRange @Unsigned long width, @EnforceRange @Unsigned long height); // todo long long
 
     @Unsigned
     Attribute<Long> width(); // "long long" // todo

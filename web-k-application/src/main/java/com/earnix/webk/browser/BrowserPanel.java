@@ -19,7 +19,7 @@
  */
 package com.earnix.webk.browser;
 
-import com.earnix.webk.dom.nodes.Document;
+import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.event.DocumentListener;
 import com.earnix.webk.layout.SharedContext;
 import com.earnix.webk.resource.XMLResource;
@@ -274,70 +274,32 @@ public class BrowserPanel extends JPanel implements DocumentListener {
     }
 
     //TODO: make this part of an implementation of UserAgentCallback instead
-    public void loadPage(final String url_text) {
+    public void loadPage(final String url) {
         try {
-            logger.info("Loading Page: " + url_text);
+            logger.info("Loading Page: " + url);
             view.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-            view.setDocument(url_text);
+            view.setDocument(url);
             view.addDocumentListener(BrowserPanel.this);
 
             updateButtons();
 
-            setStatus("Successfully loaded: " + url_text);
+            setStatus("Successfully loaded: " + url);
 
             if (listener != null) {
-                listener.pageLoadSuccess(url_text, view.getDocumentTitle());
+                listener.pageLoadSuccess(url, view.getDocumentTitle());
             }
         } catch (XRRuntimeException ex) {
             XRLog.general(Level.SEVERE, "Runtime exception", ex);
             setStatus("Can't load document");
-            handlePageLoadFailed(url_text, ex);
+            handlePageLoadFailed(url, ex);
         } catch (Exception ex) {
             XRLog.general(Level.SEVERE, "Could not load page for display.", ex);
             ex.printStackTrace();
         }
     }
 
-    public void exportToPdf(String path) {
-//       if (manager.getBaseURL() != null) {
-//           setStatus( "Exporting to " + path + "..." );
-//           OutputStream os = null;
-//           try {
-//               os = new FileOutputStream(path);
-//               try {
-//               ITextRenderer renderer = new ITextRenderer();
-//
-//               DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-//               DocumentBuilder db = dbf.newDocumentBuilder();
-//               Document doc =  db.parse(manager.getBaseURL());
-//
-//               PDFCreationListener pdfCreationListener = new XHtmlMetaToPdfInfoAdapter( doc );
-//               renderer.setListener( pdfCreationListener );
-//                              
-//               renderer.setDocument(manager.getBaseURL());
-//               renderer.layout();
-//
-//               renderer.createPDF(os);
-//               setStatus( "Done export." );
-//            } catch (Exception e) {
-//                XRLog.general(Level.SEVERE, "Could not export PDF.", e);
-//                e.printStackTrace();
-//                setStatus( "Error exporting to PDF." );
-//               } finally {
-//                   try {
-//                       os.close();
-//                   } catch (IOException e) {
-//                       // swallow
-//            }
-//        }
-//           } catch (Exception e) {
-//               e.printStackTrace();
-//	}
-//       }
-    }
-
     private void handlePageLoadFailed(String url_text, XRRuntimeException ex) {
-        final Document xr;
+        final DocumentModel xr;
         final String rootCause = getRootCause(ex);
         final String msg = GeneralUtil.escapeHTML(addLineBreaks(rootCause, 80));
         String notFound =
@@ -394,12 +356,7 @@ public class BrowserPanel extends JPanel implements DocumentListener {
     public void documentLoaded() {
         view.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
-
-    /**
-     * Sets the status attribute of the BrowserPanel object
-     *
-     * @param txt The new status value
-     */
+    
     public void setStatus(String txt) {
         status.getText().setText(txt);
     }

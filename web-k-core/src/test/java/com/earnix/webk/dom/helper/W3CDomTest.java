@@ -3,7 +3,8 @@ package com.earnix.webk.dom.helper;
 import com.earnix.webk.dom.Jsoup;
 import com.earnix.webk.dom.TextUtil;
 import com.earnix.webk.dom.integration.ParseTest;
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.DocumentModel;
+import com.earnix.webk.dom.nodes.ElementModel;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -19,7 +20,7 @@ public class W3CDomTest {
     @Test
     public void simpleConversion() {
         String html = "<html><head><title>W3c</title></head><body><p class='one' id=12>Text</p><!-- comment --><invalid>What<script>alert('!')";
-        com.earnix.webk.dom.nodes.Document doc = Jsoup.parse(html);
+        DocumentModel doc = Jsoup.parse(html);
 
         W3CDom w3c = new W3CDom();
         Document wDoc = w3c.fromJsoup(doc);
@@ -35,7 +36,7 @@ public class W3CDomTest {
     @Test
     public void convertsGoogle() throws IOException {
         File in = ParseTest.getFile("/htmltests/google-ipod.html");
-        com.earnix.webk.dom.nodes.Document doc = Jsoup.parse(in, "UTF8");
+        DocumentModel doc = Jsoup.parse(in, "UTF8");
 
         W3CDom w3c = new W3CDom();
         Document wDoc = w3c.fromJsoup(doc);
@@ -52,7 +53,7 @@ public class W3CDomTest {
     @Test
     public void convertsGoogleLocation() throws IOException {
         File in = ParseTest.getFile("/htmltests/google-ipod.html");
-        com.earnix.webk.dom.nodes.Document doc = Jsoup.parse(in, "UTF8");
+        DocumentModel doc = Jsoup.parse(in, "UTF8");
 
         W3CDom w3c = new W3CDom();
         Document wDoc = w3c.fromJsoup(doc);
@@ -65,7 +66,7 @@ public class W3CDomTest {
     @Test
     public void namespacePreservation() throws IOException {
         File in = ParseTest.getFile("/htmltests/namespaces.xhtml");
-        com.earnix.webk.dom.nodes.Document jsoupDoc;
+        DocumentModel jsoupDoc;
         jsoupDoc = Jsoup.parse(in, "UTF-8");
 
         Document doc;
@@ -127,9 +128,9 @@ public class W3CDomTest {
     @Test
     public void handlesInvalidAttributeNames() {
         String html = "<html><head></head><body style=\"color: red\" \" name\"></body></html>";
-        com.earnix.webk.dom.nodes.Document jsoupDoc;
+        DocumentModel jsoupDoc;
         jsoupDoc = Jsoup.parse(html);
-        Element body = jsoupDoc.select("body").first();
+        ElementModel body = jsoupDoc.select("body").first();
         assertTrue(body.hasAttr("\"")); // actually an attribute with key '"'. Correct per HTML5 spec, but w3c xml dom doesn't dig it
         assertTrue(body.hasAttr("name\""));
 
@@ -139,7 +140,7 @@ public class W3CDomTest {
     @Test
     public void treatsUndeclaredNamespaceAsLocalName() {
         String html = "<fb:like>One</fb:like>";
-        com.earnix.webk.dom.nodes.Document doc = Jsoup.parse(html);
+        DocumentModel doc = Jsoup.parse(html);
 
         Document w3Doc = new W3CDom().fromJsoup(doc);
         Node htmlEl = w3Doc.getFirstChild();

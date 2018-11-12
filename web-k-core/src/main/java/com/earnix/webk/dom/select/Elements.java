@@ -2,9 +2,9 @@ package com.earnix.webk.dom.select;
 
 import com.earnix.webk.dom.helper.Validate;
 import com.earnix.webk.dom.internal.StringUtil;
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.FormElement;
-import com.earnix.webk.dom.nodes.Node;
+import com.earnix.webk.dom.nodes.NodeModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,14 +14,14 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
- * A list of {@link Element}s, with methods that act on every element in the list.
+ * A list of {@link ElementModel}s, with methods that act on every element in the list.
  * <p>
- * To get an {@code Elements} object, use the {@link Element#select(String)} method.
+ * To get an {@code Elements} object, use the {@link ElementModel#select(String)} method.
  * </p>
  *
  * @author Jonathan Hedley, jonathan@hedley.net
  */
-public class Elements extends ArrayList<Element> {
+public class Elements extends ArrayList<ElementModel> {
     public Elements() {
     }
 
@@ -29,15 +29,15 @@ public class Elements extends ArrayList<Element> {
         super(initialCapacity);
     }
 
-    public Elements(Collection<Element> elements) {
+    public Elements(Collection<ElementModel> elements) {
         super(elements);
     }
 
-    public Elements(List<Element> elements) {
+    public Elements(List<ElementModel> elements) {
         super(elements);
     }
 
-    public Elements(Element... elements) {
+    public Elements(ElementModel... elements) {
         super(Arrays.asList(elements));
     }
 
@@ -50,7 +50,7 @@ public class Elements extends ArrayList<Element> {
     public Elements clone() {
         Elements clone = new Elements(size());
 
-        for (Element e : this)
+        for (ElementModel e : this)
             clone.add(e.clone());
 
         return clone;
@@ -67,7 +67,7 @@ public class Elements extends ArrayList<Element> {
      * @see #hasAttr(String)
      */
     public String attr(String attributeKey) {
-        for (Element element : this) {
+        for (ElementModel element : this) {
             if (element.hasAttr(attributeKey))
                 return element.attr(attributeKey);
         }
@@ -81,7 +81,7 @@ public class Elements extends ArrayList<Element> {
      * @return true if any of the elements have the attribute; false if none do.
      */
     public boolean hasAttr(String attributeKey) {
-        for (Element element : this) {
+        for (ElementModel element : this) {
             if (element.hasAttr(attributeKey))
                 return true;
         }
@@ -98,7 +98,7 @@ public class Elements extends ArrayList<Element> {
      */
     public List<String> eachAttr(String attributeKey) {
         List<String> attrs = new ArrayList<>(size());
-        for (Element element : this) {
+        for (ElementModel element : this) {
             if (element.hasAttr(attributeKey))
                 attrs.add(element.attr(attributeKey));
         }
@@ -113,7 +113,7 @@ public class Elements extends ArrayList<Element> {
      * @return this
      */
     public Elements attr(String attributeKey, String attributeValue) {
-        for (Element element : this) {
+        for (ElementModel element : this) {
             element.attr(attributeKey, attributeValue);
         }
         return this;
@@ -126,7 +126,7 @@ public class Elements extends ArrayList<Element> {
      * @return this (for chaining)
      */
     public Elements removeAttr(String attributeKey) {
-        for (Element element : this) {
+        for (ElementModel element : this) {
             element.removeAttr(attributeKey);
         }
         return this;
@@ -139,7 +139,7 @@ public class Elements extends ArrayList<Element> {
      * @return this
      */
     public Elements addClass(String className) {
-        for (Element element : this) {
+        for (ElementModel element : this) {
             element.addClass(className);
         }
         return this;
@@ -152,7 +152,7 @@ public class Elements extends ArrayList<Element> {
      * @return this
      */
     public Elements removeClass(String className) {
-        for (Element element : this) {
+        for (ElementModel element : this) {
             element.removeClass(className);
         }
         return this;
@@ -165,7 +165,7 @@ public class Elements extends ArrayList<Element> {
      * @return this
      */
     public Elements toggleClass(String className) {
-        for (Element element : this) {
+        for (ElementModel element : this) {
             element.toggleClass(className);
         }
         return this;
@@ -178,7 +178,7 @@ public class Elements extends ArrayList<Element> {
      * @return true if any do, false if none do
      */
     public boolean hasClass(String className) {
-        for (Element element : this) {
+        for (ElementModel element : this) {
             if (element.hasClass(className))
                 return true;
         }
@@ -189,7 +189,7 @@ public class Elements extends ArrayList<Element> {
      * Get the form element's value of the first matched element.
      *
      * @return The form element's value, or empty if not set.
-     * @see Element#val()
+     * @see ElementModel#val()
      */
     public String val() {
         if (size() > 0)
@@ -205,7 +205,7 @@ public class Elements extends ArrayList<Element> {
      * @return this (for chaining)
      */
     public Elements val(String value) {
-        for (Element element : this)
+        for (ElementModel element : this)
             element.val(value);
         return this;
     }
@@ -217,12 +217,12 @@ public class Elements extends ArrayList<Element> {
      * children, as the Element.text() method returns the combined text of a parent and all its children.
      *
      * @return string of all text: unescaped and no HTML.
-     * @see Element#text()
+     * @see ElementModel#text()
      * @see #eachText()
      */
     public String text() {
         StringBuilder sb = StringUtil.borrowBuilder();
-        for (Element element : this) {
+        for (ElementModel element : this) {
             if (sb.length() != 0)
                 sb.append(" ");
             sb.append(element.text());
@@ -234,10 +234,10 @@ public class Elements extends ArrayList<Element> {
      * Test if any matched Element has any text content, that is not just whitespace.
      *
      * @return true if any element has non-blank text content.
-     * @see Element#hasText()
+     * @see ElementModel#hasText()
      */
     public boolean hasText() {
-        for (Element element : this) {
+        for (ElementModel element : this) {
             if (element.hasText())
                 return true;
         }
@@ -249,13 +249,13 @@ public class Elements extends ArrayList<Element> {
      * result.
      *
      * @return A list of each matched element's text content.
-     * @see Element#text()
-     * @see Element#hasText()
+     * @see ElementModel#text()
+     * @see ElementModel#hasText()
      * @see #text()
      */
     public List<String> eachText() {
         ArrayList<String> texts = new ArrayList<>(size());
-        for (Element el : this) {
+        for (ElementModel el : this) {
             if (el.hasText())
                 texts.add(el.text());
         }
@@ -271,7 +271,7 @@ public class Elements extends ArrayList<Element> {
      */
     public String html() {
         StringBuilder sb = StringUtil.borrowBuilder();
-        for (Element element : this) {
+        for (ElementModel element : this) {
             if (sb.length() != 0)
                 sb.append("\n");
             sb.append(element.html());
@@ -288,7 +288,7 @@ public class Elements extends ArrayList<Element> {
      */
     public String outerHtml() {
         StringBuilder sb = StringUtil.borrowBuilder();
-        for (Element element : this) {
+        for (ElementModel element : this) {
             if (sb.length() != 0)
                 sb.append("\n");
             sb.append(element.outerHtml());
@@ -314,10 +314,10 @@ public class Elements extends ArrayList<Element> {
      *
      * @param tagName the new tag name
      * @return this, for chaining
-     * @see Element#tagName(String)
+     * @see ElementModel#tagName(String)
      */
     public Elements tagName(String tagName) {
-        for (Element element : this) {
+        for (ElementModel element : this) {
             element.tagName(tagName);
         }
         return this;
@@ -328,10 +328,10 @@ public class Elements extends ArrayList<Element> {
      *
      * @param html HTML to parse and set into each matched element.
      * @return this, for chaining
-     * @see Element#html(String)
+     * @see ElementModel#html(String)
      */
     public Elements html(String html) {
-        for (Element element : this) {
+        for (ElementModel element : this) {
             element.html(html);
         }
         return this;
@@ -342,10 +342,10 @@ public class Elements extends ArrayList<Element> {
      *
      * @param html HTML to add inside each element, before the existing HTML
      * @return this, for chaining
-     * @see Element#prepend(String)
+     * @see ElementModel#prepend(String)
      */
     public Elements prepend(String html) {
-        for (Element element : this) {
+        for (ElementModel element : this) {
             element.prepend(html);
         }
         return this;
@@ -356,10 +356,10 @@ public class Elements extends ArrayList<Element> {
      *
      * @param html HTML to add inside each element, after the existing HTML
      * @return this, for chaining
-     * @see Element#append(String)
+     * @see ElementModel#append(String)
      */
     public Elements append(String html) {
-        for (Element element : this) {
+        for (ElementModel element : this) {
             element.append(html);
         }
         return this;
@@ -370,10 +370,10 @@ public class Elements extends ArrayList<Element> {
      *
      * @param html HTML to insert before each element
      * @return this, for chaining
-     * @see Element#before(String)
+     * @see ElementModel#before(String)
      */
     public Elements before(String html) {
-        for (Element element : this) {
+        for (ElementModel element : this) {
             element.before(html);
         }
         return this;
@@ -384,10 +384,10 @@ public class Elements extends ArrayList<Element> {
      *
      * @param html HTML to insert after each element
      * @return this, for chaining
-     * @see Element#after(String)
+     * @see ElementModel#after(String)
      */
     public Elements after(String html) {
-        for (Element element : this) {
+        for (ElementModel element : this) {
             element.after(html);
         }
         return this;
@@ -401,11 +401,11 @@ public class Elements extends ArrayList<Element> {
      *
      * @param html HTML to wrap around each element, e.g. {@code <div class="head"></div>}. Can be arbitrarily deep.
      * @return this (for chaining)
-     * @see Element#wrap
+     * @see ElementModel#wrap
      */
     public Elements wrap(String html) {
         Validate.notEmpty(html);
-        for (Element element : this) {
+        for (ElementModel element : this) {
             element.wrap(html);
         }
         return this;
@@ -423,10 +423,10 @@ public class Elements extends ArrayList<Element> {
      * <p>HTML = {@code <div>One <a href="/">Two</a></div>}</p>
      *
      * @return this (for chaining)
-     * @see Node#unwrap
+     * @see NodeModel#unwrap
      */
     public Elements unwrap() {
-        for (Element element : this) {
+        for (ElementModel element : this) {
             element.unwrap();
         }
         return this;
@@ -441,11 +441,11 @@ public class Elements extends ArrayList<Element> {
      * HTML = {@code <div><p></p> <p></p></div>}
      *
      * @return this, for chaining
-     * @see Element#empty()
+     * @see ElementModel#empty()
      * @see #remove()
      */
     public Elements empty() {
-        for (Element element : this) {
+        for (ElementModel element : this) {
             element.empty();
         }
         return this;
@@ -461,11 +461,11 @@ public class Elements extends ArrayList<Element> {
      * Note that this method should not be used to clean user-submitted HTML; rather, use {@link com.earnix.webk.dom.safety.Cleaner} to clean HTML.
      *
      * @return this, for chaining
-     * @see Element#empty()
+     * @see ElementModel#empty()
      * @see #empty()
      */
     public Elements remove() {
-        for (Element element : this) {
+        for (ElementModel element : this) {
             element.remove();
         }
         return this;
@@ -519,7 +519,7 @@ public class Elements extends ArrayList<Element> {
      */
     public boolean is(String query) {
         Evaluator eval = QueryParser.parse(query);
-        for (Element e : this) {
+        for (ElementModel e : this) {
             if (e.is(eval))
                 return true;
         }
@@ -605,9 +605,9 @@ public class Elements extends ArrayList<Element> {
     private Elements siblings(String query, boolean next, boolean all) {
         Elements els = new Elements();
         Evaluator eval = query != null ? QueryParser.parse(query) : null;
-        for (Element e : this) {
+        for (ElementModel e : this) {
             do {
-                Element sib = next ? e.nextElementSibling() : e.previousElementSibling();
+                ElementModel sib = next ? e.nextElementSibling() : e.previousElementSibling();
                 if (sib == null) break;
                 if (eval == null)
                     els.add(sib);
@@ -625,8 +625,8 @@ public class Elements extends ArrayList<Element> {
      * @return all of the parents and ancestor elements of the matched elements
      */
     public Elements parents() {
-        HashSet<Element> combo = new LinkedHashSet<>();
-        for (Element e : this) {
+        HashSet<ElementModel> combo = new LinkedHashSet<>();
+        for (ElementModel e : this) {
             combo.addAll(e.parents());
         }
         return new Elements(combo);
@@ -639,7 +639,7 @@ public class Elements extends ArrayList<Element> {
      *
      * @return The first matched element, or <code>null</code> if contents is empty.
      */
-    public Element first() {
+    public ElementModel first() {
         return isEmpty() ? null : get(0);
     }
 
@@ -648,7 +648,7 @@ public class Elements extends ArrayList<Element> {
      *
      * @return The last matched element, or <code>null</code> if contents is empty.
      */
-    public Element last() {
+    public ElementModel last() {
         return isEmpty() ? null : get(size() - 1);
     }
 
@@ -682,7 +682,7 @@ public class Elements extends ArrayList<Element> {
      */
     public List<FormElement> forms() {
         ArrayList<FormElement> forms = new ArrayList<>();
-        for (Element el : this)
+        for (ElementModel el : this)
             if (el instanceof FormElement)
                 forms.add((FormElement) el);
         return forms;

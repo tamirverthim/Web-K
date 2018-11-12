@@ -1,8 +1,9 @@
 package com.earnix.webk.script.html.impl;
 
-import com.earnix.webk.dom.nodes.Document;
-import com.earnix.webk.dom.nodes.Node;
-import com.earnix.webk.script.Binder;
+import com.earnix.webk.dom.nodes.DocumentModel;
+import com.earnix.webk.dom.nodes.NodeModel;
+import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
+import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.html.DocumentReadyState;
 import com.earnix.webk.script.html.HTMLElement;
 import com.earnix.webk.script.html.HTMLHeadElement;
@@ -17,7 +18,6 @@ import com.earnix.webk.script.whatwg_dom.Element;
 import com.earnix.webk.script.whatwg_dom.EventHandler;
 import com.earnix.webk.script.whatwg_dom.HTMLCollection;
 import com.earnix.webk.script.whatwg_dom.NodeList;
-import com.earnix.webk.swing.BasicPanel;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
@@ -27,16 +27,18 @@ import lombok.val;
  * 7/17/2018
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DocumentImpl extends com.earnix.webk.script.impl.DocumentImpl implements com.earnix.webk.script.html.Document {
+public class DocumentImpl extends com.earnix.webk.script.whatwg_dom.impl.DocumentImpl implements com.earnix.webk.script.html.Document {
 
+    private final ScriptContext ctx;
     Location location;
-    Document document;
+    DocumentModel document;
 
 
-    public DocumentImpl(BasicPanel panel) {
-        super(panel);
-        location = new LocationImpl(panel);
-        document = panel.getDocument();
+    public DocumentImpl(ScriptContext ctx) {
+        super(ctx.getPanel().getDocument(), ctx.getPanel().getURL().toString());
+        location = new LocationImpl(ctx.getPanel());
+        document = ctx.getPanel().getDocument();
+        this.ctx = ctx;
     }
 
     @Override
@@ -94,14 +96,14 @@ public class DocumentImpl extends com.earnix.webk.script.impl.DocumentImpl imple
                 if (bodyModel.isEmpty()) {
                     return null;
                 }
-                return (HTMLElement) Binder.getElement(bodyModel.get(0), panel);
+                return (HTMLElement) ScriptDOMFactory.getElement(bodyModel.get(0));
             }
 
             @Override
             public void set(HTMLElement htmlElement) {
                 val bodyModel = document.getElementsByTag("body");
                 if (!bodyModel.isEmpty()) {
-                    bodyModel.forEach(Node::remove);
+                    bodyModel.forEach(NodeModel::remove);
                 }
                 document.appendChild(((ElementImpl) htmlElement).getModel());
             }
@@ -159,8 +161,7 @@ public class DocumentImpl extends com.earnix.webk.script.impl.DocumentImpl imple
     }
 
     @Override
-    public @WindowProxy
-    Object open(@USVString String url, @DOMString String name, @DOMString String features) {
+    public WindowProxy open(@USVString String url, @DOMString String name, @DOMString String features) {
         return null;
     }
 
@@ -180,9 +181,8 @@ public class DocumentImpl extends com.earnix.webk.script.impl.DocumentImpl imple
     }
 
     @Override
-    public @WindowProxy
-    Object defaultView() {
-        return panel.getScriptContext().getWindow();
+    public WindowProxy defaultView() {
+        return new WindowProxyImpl(ctx.getWindow());
     }
 
     @Override

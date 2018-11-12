@@ -47,6 +47,7 @@ public class XRLog {
     public static final String CSS_PARSE = registerLoggerByName("com.earnix.webk.css-parse");
     public static final String LAYOUT = registerLoggerByName("com.earnix.webk.layout");
     public static final String RENDER = registerLoggerByName("com.earnix.webk.render");
+    public static final String SCRIPT = registerLoggerByName("com.earnix.webk.script");
 
     private static boolean initPending = true;
     private static XRLogger loggerImpl;
@@ -199,6 +200,18 @@ public class XRLog {
         log(RENDER, level, msg, th);
     }
 
+    public static void script(String msg) {
+        script(Level.INFO, msg);
+    }
+
+    public static void script(Level level, String msg) {
+        log(SCRIPT, level, msg);
+    }
+
+    public static void script(Level level, String msg, Throwable th) {
+        log(SCRIPT, level, msg, th);
+    }
+    
     public static synchronized void log(String where, Level level, String msg) {
         if (initPending) {
             init();

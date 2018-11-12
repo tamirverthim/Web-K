@@ -20,7 +20,7 @@
 package com.earnix.webk.extend;
 
 
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.ElementModel;
 
 /**
  * @author Torbjoern Gannholm
@@ -33,7 +33,7 @@ public interface UserInterface {
      * @param e PARAM
      * @return The hover value
      */
-    public boolean isHover(Element e);
+    public boolean isHover(ElementModel e);
 
     /**
      * Gets the active attribute of the UserInterface object
@@ -41,7 +41,7 @@ public interface UserInterface {
      * @param e PARAM
      * @return The active value
      */
-    public boolean isActive(Element e);
+    public boolean isActive(ElementModel e);
 
     /**
      * Gets the focus attribute of the UserInterface object
@@ -49,6 +49,6 @@ public interface UserInterface {
      * @param e PARAM
      * @return The focus value
      */
-    public boolean isFocus(Element e);
+    public boolean isFocus(ElementModel e);
 }
 

@@ -9,8 +9,8 @@ import com.earnix.webk.script.web_idl.Optional;
  * @author Taras Maslov
  * 6/21/2018
  */
-@Constructor(true)
+@Constructor
 @Exposed(Window.class)
 public interface Comment extends CharacterData {
-    void construct(@Optional @DOMString String data);
+    void constructor(@Optional @DOMString String data);
 }

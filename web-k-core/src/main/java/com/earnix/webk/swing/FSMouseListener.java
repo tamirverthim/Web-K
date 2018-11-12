@@ -34,6 +34,10 @@ import java.awt.event.MouseEvent;
  * {@link com.earnix.webk.swing.CursorListener}.
  */
 public interface FSMouseListener {
+
+    default void onMouseClick(BasicPanel basicPanel, Box box) {
+    }
+
     /**
      * Sent when the mouse moves over a Box in the render tree.
      *

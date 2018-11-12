@@ -11,7 +11,9 @@ import com.earnix.webk.script.web_idl.Replaceable;
  */
 @Partial
 public interface Window {
+    
     @Replaceable
     @Readonly
-    Attribute<?> event();
+    Attribute<Object> event();
+    
 }

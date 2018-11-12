@@ -1,6 +1,6 @@
 package com.earnix.webk.script.impl;
 
-import com.earnix.webk.dom.nodes.Node;
+import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.script.whatwg_dom.ChildNode;
 
 /**
@@ -9,9 +9,9 @@ import com.earnix.webk.script.whatwg_dom.ChildNode;
  */
 public class ChildNodeImpl implements ChildNode {
 
-    private Node target;
+    private NodeModel target;
 
-    public ChildNodeImpl(Node target) {
+    public ChildNodeImpl(NodeModel target) {
         this.target = target;
     }
 

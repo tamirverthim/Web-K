@@ -22,11 +22,11 @@ package com.earnix.webk.swing;
 
 import com.earnix.webk.context.StyleReference;
 import com.earnix.webk.css.constants.ValueConstants;
-import com.earnix.webk.dom.nodes.Comment;
-import com.earnix.webk.dom.nodes.Document;
-import com.earnix.webk.dom.nodes.Element;
-import com.earnix.webk.dom.nodes.Node;
-import com.earnix.webk.dom.nodes.TextNode;
+import com.earnix.webk.dom.nodes.CommentModel;
+import com.earnix.webk.dom.nodes.DocumentModel;
+import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.dom.nodes.NodeModel;
+import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.layout.SharedContext;
 import org.w3c.dom.css.CSSPrimitiveValue;
 
@@ -76,16 +76,16 @@ public class DOMInspector extends JPanel {
     JSplitPane splitPane;
     // PW
 
-    Document doc;
+    DocumentModel doc;
     JButton close;
     JTree tree;
     JScrollPane scroll;
 
-    public DOMInspector(Document doc) {
+    public DOMInspector(DocumentModel doc) {
         this(doc, null, null);
     }
 
-    public DOMInspector(Document doc, SharedContext context, StyleReference sr) {
+    public DOMInspector(DocumentModel doc, SharedContext context, StyleReference sr) {
         super();
 
         this.setLayout(new java.awt.BorderLayout());
@@ -133,7 +133,7 @@ public class DOMInspector extends JPanel {
      *
      * @param doc The new forDocument value
      */
-    public void setForDocument(Document doc) {
+    public void setForDocument(DocumentModel doc) {
         setForDocument(doc, null, null);
     }
 
@@ -144,7 +144,7 @@ public class DOMInspector extends JPanel {
      * @param context The new forDocument value
      * @param sr      The new forDocument value
      */
-    public void setForDocument(Document doc, SharedContext context, StyleReference sr) {
+    public void setForDocument(DocumentModel doc, SharedContext context, StyleReference sr) {
         this.doc = doc;
         this.styleReference = sr;
         this.context = context;
@@ -213,7 +213,7 @@ class ElementPropertiesPanel extends JPanel {
      *
      * @param node The new forElement value
      */
-    public void setForElement(Node node) {
+    public void setForElement(NodeModel node) {
         try {
             _properties.setModel(tableModel(node));
             TableColumnModel model = _properties.getColumnModel();
@@ -225,12 +225,12 @@ class ElementPropertiesPanel extends JPanel {
         }
     }
 
-    private TableModel tableModel(Node node) {
-        if (!(node instanceof Element)) {
+    private TableModel tableModel(NodeModel node) {
+        if (!(node instanceof ElementModel)) {
             Toolkit.getDefaultToolkit().beep();
             return _defaultTableModel;
         }
-        Map props = _sr.getCascadedPropertiesMap((Element) node);
+        Map props = _sr.getCascadedPropertiesMap((ElementModel) node);
         return new PropertiesTableModel(props);
     }
 
@@ -382,7 +382,7 @@ class DOMSelectionListener implements TreeSelectionListener {
     }
 
     public void valueChanged(TreeSelectionEvent e) {
-        Node node = (Node) _tree.getLastSelectedPathComponent();
+        NodeModel node = (NodeModel) _tree.getLastSelectedPathComponent();
 
         if (node == null) {
             return;
@@ -396,24 +396,24 @@ class DOMSelectionListener implements TreeSelectionListener {
 
 class DOMTreeModel implements TreeModel {
 
-    Document doc;
+    DocumentModel doc;
 
     /**
      * Our root for display
      */
-    Node root;
+    NodeModel root;
     HashMap displayableNodes;
     List listeners = new ArrayList();
 
-    public DOMTreeModel(Document doc) {
+    public DOMTreeModel(DocumentModel doc) {
         this.displayableNodes = new HashMap();
         this.doc = doc;
         setRoot("body");
     }
 
     private void setRoot(String rootNodeName) {
-        Node tempRoot = doc;
-        List<Node> nl = tempRoot.childNodes();
+        NodeModel tempRoot = doc;
+        List<NodeModel> nl = tempRoot.childNodes();
         for (int i = 0; i < nl.size(); i++) {
             if (nl.get(i).nodeName().toLowerCase().equals(rootNodeName)) {
                 this.root = nl.get(i);
@@ -474,14 +474,14 @@ class DOMTreeModel implements TreeModel {
      */
     public Object getChild(Object parent, int index) {
 
-        Node node = (Node) parent;
+        NodeModel node = (NodeModel) parent;
 
         List children = (List) this.displayableNodes.get(parent);
         if (children == null) {
             children = addDisplayable(node);
         }
 
-        return (Node) children.get(index);
+        return (NodeModel) children.get(index);
     }
 
 
@@ -495,7 +495,7 @@ class DOMTreeModel implements TreeModel {
      */
     public int getChildCount(Object parent) {
 
-        Node node = (Node) parent;
+        NodeModel node = (NodeModel) parent;
         List children = (List) this.displayableNodes.get(parent);
         if (children == null) {
             children = addDisplayable(node);
@@ -516,7 +516,7 @@ class DOMTreeModel implements TreeModel {
      */
     public int getIndexOfChild(Object parent, Object child) {
 
-        Node node = (Node) parent;
+        NodeModel node = (NodeModel) parent;
         List children = (List) this.displayableNodes.get(parent);
         if (children == null) {
             children = addDisplayable(node);
@@ -552,7 +552,7 @@ class DOMTreeModel implements TreeModel {
      */
     public boolean isLeaf(Object nd) {
 
-        Node node = (Node) nd;
+        NodeModel node = (NodeModel) nd;
 
         return node.childNodeSize() == 0;
     }
@@ -565,17 +565,17 @@ class DOMTreeModel implements TreeModel {
      * @param parent The feature to be added to the Displayable attribute
      * @return Returns
      */
-    private List addDisplayable(Node parent) {
+    private List addDisplayable(NodeModel parent) {
         List children = (List) this.displayableNodes.get(parent);
         if (children == null) {
             children = new ArrayList();
             this.displayableNodes.put(parent, children);
-            List<Node> nl = parent.childNodes();
+            List<NodeModel> nl = parent.childNodes();
             for (int i = 0, len = nl.size(); i < len; i++) {
-                Node child = nl.get(i);
-                if (child instanceof Element ||
-                        child instanceof Comment ||
-                        (child instanceof TextNode && (((TextNode) child).getWholeText().trim().length() > 0))) {
+                NodeModel child = nl.get(i);
+                if (child instanceof ElementModel ||
+                        child instanceof CommentModel ||
+                        (child instanceof TextNodeModel && (((TextNodeModel) child).getWholeText().trim().length() > 0))) {
                     children.add(child);
                 }
             }
@@ -608,9 +608,9 @@ class DOMTreeCellRenderer extends DefaultTreeCellRenderer {
     public Component getTreeCellRendererComponent(JTree tree, Object value,
                                                   boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
 
-        Node node = (Node) value;
+        NodeModel node = (NodeModel) value;
 
-        if (node instanceof Element) {
+        if (node instanceof ElementModel) {
 
             String cls = "";
             if (node.attributes().size() > 0) {
@@ -623,16 +623,16 @@ class DOMTreeCellRenderer extends DefaultTreeCellRenderer {
 
         }
 
-        if (node instanceof TextNode) {
+        if (node instanceof TextNodeModel) {
 
-            if (((TextNode) node).getWholeText().trim().length() > 0) {
-                value = "\"" + ((TextNode) node).getWholeText() + "\"";
+            if (((TextNodeModel) node).getWholeText().trim().length() > 0) {
+                value = "\"" + ((TextNodeModel) node).getWholeText() + "\"";
             }
         }
 
-        if (node instanceof Comment) {
+        if (node instanceof CommentModel) {
 
-            value = "<!-- " + ((Comment) node).getData() + " -->";
+            value = "<!-- " + ((CommentModel) node).getData() + " -->";
 
         }
 

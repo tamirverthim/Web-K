@@ -13,11 +13,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Constructor {
     /**
-     * Custom
-     *
-     * @return
+     * Constructor method name
      */
-    boolean value() default false;
+    String value() default "constructor";
 
     /**
      * Zero-indexed optional arguments

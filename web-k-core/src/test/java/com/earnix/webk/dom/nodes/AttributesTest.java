@@ -18,7 +18,7 @@ public class AttributesTest {
 
     @Test
     public void html() {
-        Attributes a = new Attributes();
+        AttributesModel a = new AttributesModel();
         a.put("Tot", "a&p");
         a.put("Hello", "There");
         a.put("data-name", "Jsoup");
@@ -44,14 +44,14 @@ public class AttributesTest {
 
     @Test
     public void testIteratorRemovable() {
-        Attributes a = new Attributes();
+        AttributesModel a = new AttributesModel();
         a.put("Tot", "a&p");
         a.put("Hello", "There");
         a.put("data-name", "Jsoup");
         assertTrue(a.hasKey("Tot"));
 
-        Iterator<Attribute> iterator = a.iterator();
-        Attribute attr = iterator.next();
+        Iterator<AttributeModel> iterator = a.iterator();
+        AttributeModel attr = iterator.next();
         assertEquals("Tot", attr.getKey());
         iterator.remove();
         assertEquals(2, a.size());
@@ -67,13 +67,13 @@ public class AttributesTest {
 
     @Test
     public void testIteratorUpdateable() {
-        Attributes a = new Attributes();
+        AttributesModel a = new AttributesModel();
         a.put("Tot", "a&p");
         a.put("Hello", "There");
 
         assertFalse(a.hasKey("Foo"));
-        Iterator<Attribute> iterator = a.iterator();
-        Attribute attr = iterator.next();
+        Iterator<AttributeModel> iterator = a.iterator();
+        AttributeModel attr = iterator.next();
         attr.setKey("Foo");
         attr = iterator.next();
         attr.setKey("Bar");
@@ -87,13 +87,13 @@ public class AttributesTest {
 
     @Test
     public void testIteratorHasNext() {
-        Attributes a = new Attributes();
+        AttributesModel a = new AttributesModel();
         a.put("Tot", "1");
         a.put("Hello", "2");
         a.put("data-name", "3");
 
         int seen = 0;
-        for (Attribute attribute : a) {
+        for (AttributeModel attribute : a) {
             seen++;
             assertEquals(String.valueOf(seen), attribute.getValue());
         }
@@ -102,7 +102,7 @@ public class AttributesTest {
 
     @Test
     public void testIterator() {
-        Attributes a = new Attributes();
+        AttributesModel a = new AttributesModel();
         String[][] datas = {{"Tot", "raul"},
                 {"Hello", "pismuth"},
                 {"data-name", "Jsoup"}};
@@ -110,10 +110,10 @@ public class AttributesTest {
             a.put(atts[0], atts[1]);
         }
 
-        Iterator<Attribute> iterator = a.iterator();
+        Iterator<AttributeModel> iterator = a.iterator();
         assertTrue(iterator.hasNext());
         int i = 0;
-        for (Attribute attribute : a) {
+        for (AttributeModel attribute : a) {
             assertEquals(datas[i][0], attribute.getKey());
             assertEquals(datas[i][1], attribute.getValue());
             i++;
@@ -123,15 +123,15 @@ public class AttributesTest {
 
     @Test
     public void testIteratorEmpty() {
-        Attributes a = new Attributes();
+        AttributesModel a = new AttributesModel();
 
-        Iterator<Attribute> iterator = a.iterator();
+        Iterator<AttributeModel> iterator = a.iterator();
         assertFalse(iterator.hasNext());
     }
 
     @Test
     public void removeCaseSensitive() {
-        Attributes a = new Attributes();
+        AttributesModel a = new AttributesModel();
         a.put("Tot", "a&p");
         a.put("tot", "one");
         a.put("Hello", "There");
@@ -148,9 +148,9 @@ public class AttributesTest {
 
     @Test
     public void testSetKeyConsistency() {
-        Attributes a = new Attributes();
+        AttributesModel a = new AttributesModel();
         a.put("a", "a");
-        for (Attribute at : a) {
+        for (AttributeModel at : a) {
             at.setKey("b");
         }
         assertFalse("Attribute 'a' not correctly removed", a.hasKey("a"));

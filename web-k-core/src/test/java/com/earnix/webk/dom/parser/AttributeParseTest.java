@@ -1,11 +1,11 @@
 package com.earnix.webk.dom.parser;
 
 import com.earnix.webk.dom.Jsoup;
-import com.earnix.webk.dom.nodes.Attribute;
-import com.earnix.webk.dom.nodes.Attributes;
-import com.earnix.webk.dom.nodes.BooleanAttribute;
-import com.earnix.webk.dom.nodes.Document;
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.AttributeModel;
+import com.earnix.webk.dom.nodes.AttributesModel;
+import com.earnix.webk.dom.nodes.BooleanAttributeModel;
+import com.earnix.webk.dom.nodes.DocumentModel;
+import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.select.Elements;
 import org.junit.Test;
 
@@ -27,8 +27,8 @@ public class AttributeParseTest {
         String html = "<a id=\"123\" class=\"baz = 'bar'\" style = 'border: 2px'qux zim foo = 12 mux=18 />";
         // should be: <id=123>, <class=baz = 'bar'>, <qux=>, <zim=>, <foo=12>, <mux.=18>
 
-        Element el = Jsoup.parse(html).getElementsByTag("a").get(0);
-        Attributes attr = el.attributes();
+        ElementModel el = Jsoup.parse(html).getElementsByTag("a").get(0);
+        AttributesModel attr = el.attributes();
         assertEquals(7, attr.size());
         assertEquals("123", attr.get("id"));
         assertEquals("baz = 'bar'", attr.get("class"));
@@ -42,7 +42,7 @@ public class AttributeParseTest {
     @Test
     public void handlesNewLinesAndReturns() {
         String html = "<a\r\nfoo='bar\r\nqux'\r\nbar\r\n=\r\ntwo>One</a>";
-        Element el = Jsoup.parse(html).select("a").first();
+        ElementModel el = Jsoup.parse(html).select("a").first();
         assertEquals(2, el.attributes().size());
         assertEquals("bar\r\nqux", el.attr("foo")); // currently preserves newlines in quoted attributes. todo confirm if should.
         assertEquals("two", el.attr("bar"));
@@ -51,16 +51,16 @@ public class AttributeParseTest {
     @Test
     public void parsesEmptyString() {
         String html = "<a />";
-        Element el = Jsoup.parse(html).getElementsByTag("a").get(0);
-        Attributes attr = el.attributes();
+        ElementModel el = Jsoup.parse(html).getElementsByTag("a").get(0);
+        AttributesModel attr = el.attributes();
         assertEquals(0, attr.size());
     }
 
     @Test
     public void canStartWithEq() {
         String html = "<a =empty />";
-        Element el = Jsoup.parse(html).getElementsByTag("a").get(0);
-        Attributes attr = el.attributes();
+        ElementModel el = Jsoup.parse(html).getElementsByTag("a").get(0);
+        AttributesModel attr = el.attributes();
         assertEquals(1, attr.size());
         assertTrue(attr.hasKey("=empty"));
         assertEquals("", attr.get("=empty"));
@@ -84,19 +84,19 @@ public class AttributeParseTest {
     @Test
     public void parsesBooleanAttributes() {
         String html = "<a normal=\"123\" boolean empty=\"\"></a>";
-        Element el = Jsoup.parse(html).select("a").first();
+        ElementModel el = Jsoup.parse(html).select("a").first();
 
         assertEquals("123", el.attr("normal"));
         assertEquals("", el.attr("boolean"));
         assertEquals("", el.attr("empty"));
 
-        List<Attribute> attributes = el.attributes().asList();
+        List<AttributeModel> attributes = el.attributes().asList();
         assertEquals("There should be 3 attribute present", 3, attributes.size());
 
         // Assuming the list order always follows the parsed html
-        assertFalse("'normal' attribute should not be boolean", attributes.get(0) instanceof BooleanAttribute);
-        assertTrue("'boolean' attribute should be boolean", attributes.get(1) instanceof BooleanAttribute);
-        assertFalse("'empty' attribute should not be boolean", attributes.get(2) instanceof BooleanAttribute);
+        assertFalse("'normal' attribute should not be boolean", attributes.get(0) instanceof BooleanAttributeModel);
+        assertTrue("'boolean' attribute should be boolean", attributes.get(1) instanceof BooleanAttributeModel);
+        assertFalse("'empty' attribute should not be boolean", attributes.get(2) instanceof BooleanAttributeModel);
 
         assertEquals(html, el.outerHtml());
     }
@@ -104,7 +104,7 @@ public class AttributeParseTest {
     @Test
     public void dropsSlashFromAttributeName() {
         String html = "<img /onerror='doMyJob'/>";
-        Document doc = Jsoup.parse(html);
+        DocumentModel doc = Jsoup.parse(html);
         assertTrue("SelfClosingStartTag ignores last character", doc.select("img[onerror]").size() != 0);
         assertEquals("<img onerror=\"doMyJob\">", doc.body().html());
 

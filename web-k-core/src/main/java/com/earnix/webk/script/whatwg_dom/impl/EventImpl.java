@@ -7,22 +7,55 @@ import com.earnix.webk.script.whatwg_dom.DOMHighResTimeStamp;
 import com.earnix.webk.script.whatwg_dom.Event;
 import com.earnix.webk.script.whatwg_dom.EventInit;
 import com.earnix.webk.script.whatwg_dom.EventTarget;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 /**
  * @author Taras Maslov
  * 8/14/2018
  */
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventImpl implements Event {
 
     String type;
+    boolean bubbles;
+    boolean cancellable;
+    boolean composed;
+    
+    @Getter @Setter short phase;
+    @Getter boolean propagationStopped;
+    @Getter @Setter EventTarget currentTarget;
+    @Setter EventTarget target;
+    @Setter Sequence<EventTarget> composedPath;
+    @Getter @Setter boolean trusted;
+    boolean defaultPrevented;
+    
+    Attribute<Boolean> cancelBubble = new Attribute<Boolean>() {
+        @Override
+        public Boolean get() {
+            return propagationStopped;
+        }
 
+        @Override
+        public void set(Boolean aBoolean) {
+            EventImpl.this.propagationStopped = aBoolean;
+        }
+    };
+    
     public EventImpl(String type, EventInit eventInit) {
-        construct(type, eventInit);
+        constructor(type, eventInit);
     }
 
     @Override
-    public void construct(@DOMString String type, EventInit init) {
+    public void constructor(@DOMString String type, EventInit init) {
         this.type = type;
+        if (init != null) {
+            this.bubbles = init.bubbles;
+            this.cancellable = init.cancelable;
+            this.composed = init.composed;
+        }
     }
 
     @Override
@@ -32,7 +65,7 @@ public class EventImpl implements Event {
 
     @Override
     public EventTarget target() {
-        return null;
+        return target;
     }
 
     @Override
@@ -57,11 +90,12 @@ public class EventImpl implements Event {
 
     @Override
     public void stopPropagation() {
+        propagationStopped = true;
     }
 
     @Override
     public Attribute<Boolean> cancelBubble() {
-        return null;
+        return cancelBubble;
     }
 
     @Override
@@ -71,12 +105,12 @@ public class EventImpl implements Event {
 
     @Override
     public boolean bubbles() {
-        return false;
+        return bubbles;
     }
 
     @Override
     public boolean cancelable() {
-        return false;
+        return cancellable;
     }
 
     @Override
@@ -86,12 +120,12 @@ public class EventImpl implements Event {
 
     @Override
     public void preventDefault() {
-
+        defaultPrevented = true;
     }
 
     @Override
     public boolean defaultPrevented() {
-        return false;
+        return defaultPrevented;
     }
 
     @Override
@@ -101,7 +135,7 @@ public class EventImpl implements Event {
 
     @Override
     public boolean isTrusted() {
-        return false;
+        return trusted;
     }
 
     @Override

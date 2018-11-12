@@ -20,6 +20,7 @@
 package com.earnix.webk.resource;
 
 import com.earnix.webk.dom.Jsoup;
+import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.util.Configuration;
 import com.earnix.webk.util.XRLog;
 import com.earnix.webk.util.XRRuntimeException;
@@ -78,7 +79,7 @@ public class XMLResource extends AbstractResource {
 
     // region draft
 
-    private static com.earnix.webk.dom.nodes.Document getJsoup(InputStream stream) {
+    private static DocumentModel getJsoup(InputStream stream) {
         try {
             String source = IOUtils.toString(stream, "UTF-8");
             return Jsoup.parse(source);
@@ -87,26 +88,26 @@ public class XMLResource extends AbstractResource {
         }
     }
 
-    private static com.earnix.webk.dom.nodes.Document getJsoup(InputSource source) {
+    private static DocumentModel getJsoup(InputSource source) {
         return getJsoup(source.getByteStream());
     }
 
 
-    private static com.earnix.webk.dom.nodes.Document getJsoup(Reader reader) {
+    private static DocumentModel getJsoup(Reader reader) {
         return getJsoup(new ReaderInputStream(reader, Charset.forName("UTF-8")));
     }
 
     // endregion
 
-    public static com.earnix.webk.dom.nodes.Document load(InputStream stream) {
+    public static DocumentModel load(InputStream stream) {
         return getJsoup(stream);
     }
 
-    public static com.earnix.webk.dom.nodes.Document load(InputSource source) {
+    public static DocumentModel load(InputSource source) {
         return getJsoup(source);
     }
 
-    public static com.earnix.webk.dom.nodes.Document load(Reader reader) {
+    public static DocumentModel load(Reader reader) {
         return getJsoup(reader);
     }
 
@@ -235,7 +236,7 @@ public class XMLResource extends AbstractResource {
 //            return target;
 //        }
 
-        private com.earnix.webk.dom.nodes.Document transform(com.earnix.webk.dom.nodes.Document source) {
+        private DocumentModel transform(DocumentModel source) {
             return source;
         }
 

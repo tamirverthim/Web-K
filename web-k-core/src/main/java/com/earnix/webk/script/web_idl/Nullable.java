@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * @author Taras Maslov
  * 6/21/2018
  */
-@Target({ElementType.PARAMETER, ElementType.METHOD})
+@Target({ElementType.PARAMETER, ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Nullable {
 }

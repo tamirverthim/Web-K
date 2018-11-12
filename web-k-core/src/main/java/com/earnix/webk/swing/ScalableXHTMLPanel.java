@@ -20,7 +20,7 @@
 
 package com.earnix.webk.swing;
 
-import com.earnix.webk.dom.nodes.Document;
+import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.layout.Layer;
 import com.earnix.webk.layout.PaintingInfo;
@@ -60,7 +60,7 @@ public class ScalableXHTMLPanel extends XHTMLPanel {
     private Dimension lastLayoutSize = null;
 
     /**
-     * Instantiates an XHTMLPanel with no {@link Document} loaded by default.
+     * Instantiates an XHTMLPanel with no {@link DocumentModel} loaded by default.
      */
     public ScalableXHTMLPanel() {
         super();
@@ -85,7 +85,7 @@ public class ScalableXHTMLPanel extends XHTMLPanel {
      * @param doc The new document value
      * @param url The new document value
      */
-    public void setDocument(Document doc, String url) {
+    public void setDocument(DocumentModel doc, String url) {
         resetScaleAccordingToPolicy();
         lastLayoutSize = null;
         super.setDocument(doc, url);

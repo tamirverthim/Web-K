@@ -1,7 +1,7 @@
 package com.earnix.webk.dom.parser;
 
 import com.earnix.webk.dom.MultiLocaleRule;
-import com.earnix.webk.dom.nodes.Attributes;
+import com.earnix.webk.dom.nodes.AttributesModel;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -45,10 +45,10 @@ public class ParserSettingsTest {
     @MultiLocaleRule.MultiLocaleTest
     public void attributesCaseNormalization() throws Exception {
         ParseSettings parseSettings = new ParseSettings(false, false);
-        Attributes attributes = new Attributes();
+        AttributesModel attributes = new AttributesModel();
         attributes.put("ITEM", "1");
 
-        Attributes normalizedAttributes = parseSettings.normalizeAttributes(attributes);
+        AttributesModel normalizedAttributes = parseSettings.normalizeAttributes(attributes);
 
         assertEquals("item", normalizedAttributes.asList().get(0).getKey());
     }

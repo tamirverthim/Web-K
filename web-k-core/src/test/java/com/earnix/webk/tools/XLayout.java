@@ -19,7 +19,7 @@
  */
 package com.earnix.webk.tools;
 
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.layout.LayoutContext;
 
 import java.awt.Dimension;
@@ -48,7 +48,7 @@ public class XLayout /*extends CustomBlockLayout*/ {
      * @param elem PARAM
      * @return The intrinsicDimensions value
      */
-    public Dimension getIntrinsicDimensions(LayoutContext c, Element elem) {
+    public Dimension getIntrinsicDimensions(LayoutContext c, ElementModel elem) {
         return new Dimension(50, 50);
     }
 

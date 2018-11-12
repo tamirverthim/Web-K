@@ -1,12 +1,12 @@
 package com.earnix.webk.dom.parser;
 
 import com.earnix.webk.dom.internal.StringUtil;
-import com.earnix.webk.dom.nodes.Attribute;
-import com.earnix.webk.dom.nodes.Attributes;
-import com.earnix.webk.dom.nodes.Document;
-import com.earnix.webk.dom.nodes.DocumentType;
-import com.earnix.webk.dom.nodes.Element;
-import com.earnix.webk.dom.nodes.Node;
+import com.earnix.webk.dom.nodes.AttributeModel;
+import com.earnix.webk.dom.nodes.AttributesModel;
+import com.earnix.webk.dom.nodes.DocumentModel;
+import com.earnix.webk.dom.nodes.DocumentTypeModel;
+import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.dom.nodes.NodeModel;
 
 import java.util.ArrayList;
 
@@ -24,12 +24,12 @@ enum HtmlTreeBuilderState {
                 // todo: parse error check on expected doctypes
                 // todo: quirk state check on doctype ids
                 Token.Doctype d = t.asDoctype();
-                DocumentType doctype = new DocumentType(
+                DocumentTypeModel doctype = new DocumentTypeModel(
                         tb.settings.normalizeTag(d.getName()), d.getPublicIdentifier(), d.getSystemIdentifier());
                 doctype.setPubSysKey(d.getPubSysKey());
                 tb.getDocument().appendChild(doctype);
                 if (d.isForceQuirks())
-                    tb.getDocument().quirksMode(Document.QuirksMode.quirks);
+                    tb.getDocument().quirksMode(DocumentModel.QuirksMode.quirks);
                 tb.transition(BeforeHtml);
             } else {
                 // todo: check not iframe srcdoc
@@ -80,7 +80,7 @@ enum HtmlTreeBuilderState {
             } else if (t.isStartTag() && t.asStartTag().normalName().equals("html")) {
                 return InBody.process(t, tb); // does not transition
             } else if (t.isStartTag() && t.asStartTag().normalName().equals("head")) {
-                Element head = tb.insert(t.asStartTag());
+                ElementModel head = tb.insert(t.asStartTag());
                 tb.setHeadElement(head);
                 tb.transition(InHead);
             } else if (t.isEndTag() && (StringUtil.in(t.asEndTag().normalName(), "head", "body", "html", "br"))) {
@@ -115,12 +115,12 @@ enum HtmlTreeBuilderState {
                     if (name.equals("html")) {
                         return InBody.process(t, tb);
                     } else if (StringUtil.in(name, "base", "basefont", "bgsound", "command", "link")) {
-                        Element el = tb.insertEmpty(start);
+                        ElementModel el = tb.insertEmpty(start);
                         // jsoup special: update base the frist time it is seen
                         if (name.equals("base") && el.hasAttr("href"))
                             tb.maybeSetBaseUri(el);
                     } else if (name.equals("meta")) {
-                        Element meta = tb.insertEmpty(start);
+                        ElementModel meta = tb.insertEmpty(start);
                         // todo: charset switches
                     } else if (name.equals("title")) {
                         handleRcData(start, tb);
@@ -219,7 +219,7 @@ enum HtmlTreeBuilderState {
                     tb.transition(InFrameset);
                 } else if (StringUtil.in(name, "base", "basefont", "bgsound", "link", "meta", "noframes", "script", "style", "title")) {
                     tb.error(this);
-                    Element head = tb.getHeadElement();
+                    ElementModel head = tb.getHeadElement();
                     tb.push(head);
                     tb.process(t, InHead);
                     tb.removeFromStack(head);
@@ -285,14 +285,14 @@ enum HtmlTreeBuilderState {
                             tb.processEndTag("a");
 
                             // still on stack?
-                            Element remainingA = tb.getFromStack("a");
+                            ElementModel remainingA = tb.getFromStack("a");
                             if (remainingA != null) {
                                 tb.removeFromActiveFormattingElements(remainingA);
                                 tb.removeFromStack(remainingA);
                             }
                         }
                         tb.reconstructFormattingElements();
-                        Element a = tb.insert(startTag);
+                        ElementModel a = tb.insert(startTag);
                         tb.pushActiveFormattingElements(a);
                     } else if (StringUtil.inSorted(name, Constants.InBodyStartEmptyFormatters)) {
                         tb.reconstructFormattingElements();
@@ -309,9 +309,9 @@ enum HtmlTreeBuilderState {
                         tb.insert(startTag);
                     } else if (name.equals("li")) {
                         tb.framesetOk(false);
-                        ArrayList<Element> stack = tb.getStack();
+                        ArrayList<ElementModel> stack = tb.getStack();
                         for (int i = stack.size() - 1; i > 0; i--) {
-                            Element el = stack.get(i);
+                            ElementModel el = stack.get(i);
                             if (el.nodeName().equals("li")) {
                                 tb.processEndTag("li");
                                 break;
@@ -326,8 +326,8 @@ enum HtmlTreeBuilderState {
                     } else if (name.equals("html")) {
                         tb.error(this);
                         // merge attributes onto real html
-                        Element html = tb.getStack().get(0);
-                        for (Attribute attribute : startTag.getAttributes()) {
+                        ElementModel html = tb.getStack().get(0);
+                        for (AttributeModel attribute : startTag.getAttributes()) {
                             if (!html.hasAttr(attribute.getKey()))
                                 html.attributes().put(attribute);
                         }
@@ -335,28 +335,28 @@ enum HtmlTreeBuilderState {
                         return tb.process(t, InHead);
                     } else if (name.equals("body")) {
                         tb.error(this);
-                        ArrayList<Element> stack = tb.getStack();
+                        ArrayList<ElementModel> stack = tb.getStack();
                         if (stack.size() == 1 || (stack.size() > 2 && !stack.get(1).nodeName().equals("body"))) {
                             // only in fragment case
                             return false; // ignore
                         } else {
                             tb.framesetOk(false);
-                            Element body = stack.get(1);
-                            for (Attribute attribute : startTag.getAttributes()) {
+                            ElementModel body = stack.get(1);
+                            for (AttributeModel attribute : startTag.getAttributes()) {
                                 if (!body.hasAttr(attribute.getKey()))
                                     body.attributes().put(attribute);
                             }
                         }
                     } else if (name.equals("frameset")) {
                         tb.error(this);
-                        ArrayList<Element> stack = tb.getStack();
+                        ArrayList<ElementModel> stack = tb.getStack();
                         if (stack.size() == 1 || (stack.size() > 2 && !stack.get(1).nodeName().equals("body"))) {
                             // only in fragment case
                             return false; // ignore
                         } else if (!tb.framesetOk()) {
                             return false; // ignore frameset
                         } else {
-                            Element second = stack.get(1);
+                            ElementModel second = stack.get(1);
                             if (second.parent() != null)
                                 second.remove();
                             // pop up to html element
@@ -392,9 +392,9 @@ enum HtmlTreeBuilderState {
                         tb.insertForm(startTag, true);
                     } else if (StringUtil.inSorted(name, Constants.DdDt)) {
                         tb.framesetOk(false);
-                        ArrayList<Element> stack = tb.getStack();
+                        ArrayList<ElementModel> stack = tb.getStack();
                         for (int i = stack.size() - 1; i > 0; i--) {
-                            Element el = stack.get(i);
+                            ElementModel el = stack.get(i);
                             if (StringUtil.inSorted(el.nodeName(), Constants.DdDt)) {
                                 tb.processEndTag(el.nodeName());
                                 break;
@@ -425,7 +425,7 @@ enum HtmlTreeBuilderState {
                         }
                     } else if (StringUtil.inSorted(name, Constants.Formatters)) {
                         tb.reconstructFormattingElements();
-                        Element el = tb.insert(startTag);
+                        ElementModel el = tb.insert(startTag);
                         tb.pushActiveFormattingElements(el);
                     } else if (name.equals("nobr")) {
                         tb.reconstructFormattingElements();
@@ -434,7 +434,7 @@ enum HtmlTreeBuilderState {
                             tb.processEndTag("nobr");
                             tb.reconstructFormattingElements();
                         }
-                        Element el = tb.insert(startTag);
+                        ElementModel el = tb.insert(startTag);
                         tb.pushActiveFormattingElements(el);
                     } else if (StringUtil.inSorted(name, Constants.InBodyStartApplets)) {
                         tb.reconstructFormattingElements();
@@ -442,7 +442,7 @@ enum HtmlTreeBuilderState {
                         tb.insertMarkerToFormattingElements();
                         tb.framesetOk(false);
                     } else if (name.equals("table")) {
-                        if (tb.getDocument().quirksMode() != Document.QuirksMode.quirks && tb.inButtonScope("p")) {
+                        if (tb.getDocument().quirksMode() != DocumentModel.QuirksMode.quirks && tb.inButtonScope("p")) {
                             tb.processEndTag("p");
                         }
                         tb.insert(startTag);
@@ -450,7 +450,7 @@ enum HtmlTreeBuilderState {
                         tb.transition(InTable);
                     } else if (name.equals("input")) {
                         tb.reconstructFormattingElements();
-                        Element el = tb.insertEmpty(startTag);
+                        ElementModel el = tb.insertEmpty(startTag);
                         if (!el.attr("type").equalsIgnoreCase("hidden"))
                             tb.framesetOk(false);
                     } else if (StringUtil.inSorted(name, Constants.InBodyStartMedia)) {
@@ -474,7 +474,7 @@ enum HtmlTreeBuilderState {
 
                         tb.processStartTag("form");
                         if (startTag.attributes.hasKey("action")) {
-                            Element form = tb.getFormElement();
+                            ElementModel form = tb.getFormElement();
                             form.attr("action", startTag.attributes.get("action"));
                         }
                         tb.processStartTag("hr");
@@ -487,8 +487,8 @@ enum HtmlTreeBuilderState {
                         tb.process(new Token.Character().data(prompt));
 
                         // input
-                        Attributes inputAttribs = new Attributes();
-                        for (Attribute attr : startTag.attributes) {
+                        AttributesModel inputAttribs = new AttributesModel();
+                        for (AttributeModel attr : startTag.attributes) {
                             if (!StringUtil.inSorted(attr.getKey(), Constants.InBodyStartInputAttribs))
                                 inputAttribs.put(attr);
                         }
@@ -564,7 +564,7 @@ enum HtmlTreeBuilderState {
                     if (StringUtil.inSorted(name, Constants.InBodyEndAdoptionFormatters)) {
                         // Adoption Agency Algorithm.
                         for (int i = 0; i < 8; i++) {
-                            Element formatEl = tb.getActiveFormattingElement(name);
+                            ElementModel formatEl = tb.getActiveFormattingElement(name);
                             if (formatEl == null)
                                 return anyOtherEndTag(t, tb);
                             else if (!tb.onStack(formatEl)) {
@@ -577,15 +577,15 @@ enum HtmlTreeBuilderState {
                             } else if (tb.currentElement() != formatEl)
                                 tb.error(this);
 
-                            Element furthestBlock = null;
-                            Element commonAncestor = null;
+                            ElementModel furthestBlock = null;
+                            ElementModel commonAncestor = null;
                             boolean seenFormattingElement = false;
-                            ArrayList<Element> stack = tb.getStack();
+                            ArrayList<ElementModel> stack = tb.getStack();
                             // the spec doesn't limit to < 64, but in degenerate cases (9000+ stack depth) this prevents
                             // run-aways
                             final int stackSize = stack.size();
                             for (int si = 0; si < stackSize && si < 64; si++) {
-                                Element el = stack.get(si);
+                                ElementModel el = stack.get(si);
                                 if (el == formatEl) {
                                     commonAncestor = stack.get(si - 1);
                                     seenFormattingElement = true;
@@ -602,8 +602,8 @@ enum HtmlTreeBuilderState {
 
                             // todo: Let a bookmark note the position of the formatting element in the list of active formatting elements relative to the elements on either side of it in the list.
                             // does that mean: int pos of format el in list?
-                            Element node = furthestBlock;
-                            Element lastNode = furthestBlock;
+                            ElementModel node = furthestBlock;
+                            ElementModel lastNode = furthestBlock;
                             for (int j = 0; j < 3; j++) {
                                 if (tb.onStack(node))
                                     node = tb.aboveOnStack(node);
@@ -613,7 +613,7 @@ enum HtmlTreeBuilderState {
                                 } else if (node == formatEl)
                                     break;
 
-                                Element replacement = new Element(Tag.valueOf(node.nodeName(), ParseSettings.preserveCase), tb.getBaseUri());
+                                ElementModel replacement = new ElementModel(Tag.valueOf(node.nodeName(), ParseSettings.preserveCase), tb.getBaseUri());
                                 // case will follow the original node (so honours ParseSettings)
                                 tb.replaceActiveFormattingElement(node, replacement);
                                 tb.replaceOnStack(node, replacement);
@@ -640,10 +640,10 @@ enum HtmlTreeBuilderState {
                                 commonAncestor.appendChild(lastNode);
                             }
 
-                            Element adopter = new Element(formatEl.tag(), tb.getBaseUri());
+                            ElementModel adopter = new ElementModel(formatEl.tag(), tb.getBaseUri());
                             adopter.attributes().addAll(formatEl.attributes());
-                            Node[] childNodes = furthestBlock.childNodes().toArray(new Node[furthestBlock.childNodeSize()]);
-                            for (Node childNode : childNodes) {
+                            NodeModel[] childNodes = furthestBlock.childNodes().toArray(new NodeModel[furthestBlock.childNodeSize()]);
+                            for (NodeModel childNode : childNodes) {
                                 adopter.appendChild(childNode); // append will reparent. thus the clone to avoid concurrent mod.
                             }
                             furthestBlock.appendChild(adopter);
@@ -689,7 +689,7 @@ enum HtmlTreeBuilderState {
                         if (notIgnored)
                             return tb.process(endTag);
                     } else if (name.equals("form")) {
-                        Element currentForm = tb.getFormElement();
+                        ElementModel currentForm = tb.getFormElement();
                         tb.setFormElement(null);
                         if (currentForm == null || !tb.inScope(name)) {
                             tb.error(this);
@@ -766,9 +766,9 @@ enum HtmlTreeBuilderState {
 
         boolean anyOtherEndTag(Token t, HtmlTreeBuilder tb) {
             String name = tb.settings.normalizeTag(t.asEndTag().name()); // matches with case sensitivity if enabled
-            ArrayList<Element> stack = tb.getStack();
+            ArrayList<ElementModel> stack = tb.getStack();
             for (int pos = stack.size() - 1; pos >= 0; pos--) {
-                Element node = stack.get(pos);
+                ElementModel node = stack.get(pos);
                 if (node.nodeName().equals(name)) {
                     tb.generateImpliedEndTags(name);
                     if (!name.equals(tb.currentElement().nodeName()))

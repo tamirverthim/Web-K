@@ -19,7 +19,7 @@
  */
 package com.earnix.webk.extend;
 
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
 import com.earnix.webk.simple.extend.FormSubmissionListener;
@@ -36,7 +36,7 @@ public interface ReplacedElementFactory {
      * @return The <code>ReplacedElement</code> or <code>null</code> if no
      * <code>ReplacedElement</code> applies
      */
-    public ReplacedElement createReplacedElement(
+    ReplacedElement createReplacedElement(
             LayoutContext c, BlockBox box,
             UserAgentCallback uac, int cssWidth, int cssHeight);
 
@@ -44,14 +44,14 @@ public interface ReplacedElementFactory {
      * Instructs the <code>ReplacedElementFactory</code> to discard any cached
      * data (typically because a new page is about to be loaded).
      */
-    public void reset();
+    void reset();
 
     /**
      * Removes any reference to <code>Element</code> <code>e</code>.
      *
      * @param e
      */
-    public void remove(Element e);
+    void remove(ElementModel e);
 
     /**
      * Identifies the FSL which will be used for callbacks when a form submit action is executed; you can use a
@@ -59,5 +59,5 @@ public interface ReplacedElementFactory {
      *
      * @param listener the listener instance to receive callbacks on form submission.
      */
-    public void setFormSubmissionListener(FormSubmissionListener listener);
+    void setFormSubmissionListener(FormSubmissionListener listener);
 }

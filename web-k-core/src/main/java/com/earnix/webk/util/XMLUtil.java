@@ -21,7 +21,7 @@
 package com.earnix.webk.util;
 
 import com.earnix.webk.dom.Jsoup;
-import com.earnix.webk.dom.nodes.Document;
+import com.earnix.webk.dom.nodes.DocumentModel;
 
 import java.io.File;
 
@@ -35,11 +35,11 @@ import java.io.File;
  */
 public class XMLUtil {
 
-    public static Document documentFromString(final String documentContents) {
+    public static DocumentModel documentFromString(final String documentContents) {
         return Jsoup.parse(documentContents);
     }
 
-    public static Document documentFromFile(final String filename)
+    public static DocumentModel documentFromFile(final String filename)
             throws Exception {
 
         return Jsoup.parse(new File(filename), "UTF-8");

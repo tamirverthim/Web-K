@@ -2,12 +2,15 @@ package com.earnix.webk.script.geom;
 
 import com.earnix.webk.script.web_idl.Dictionary;
 import com.earnix.webk.script.web_idl.Unrestricted;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 
 /**
  * @author Taras Maslov
  * 6/20/2018
  */
 @Dictionary
+@FieldDefaults(level = AccessLevel.PUBLIC)
 public class DOMMatrix2DInit {
     @Unrestricted double a;
     @Unrestricted double b;

@@ -109,8 +109,7 @@ public interface Document {
     @CEReactions
     Document open(@Optional @DOMString String type, @Optional @DefaultString("") @DOMString String replace); // type is ignored
 
-    @WindowProxy
-    Object open(@USVString String url, @DOMString String name, @DOMString String features);
+    WindowProxy open(@USVString String url, @DOMString String name, @DOMString String features);
 
     @CEReactions
     void close();
@@ -124,8 +123,7 @@ public interface Document {
     // user interaction
     @ReadonlyAttribute
     @Nullable
-    @WindowProxy
-    Object defaultView();
+    WindowProxy defaultView();
 
     @ReadonlyAttribute
     @Nullable

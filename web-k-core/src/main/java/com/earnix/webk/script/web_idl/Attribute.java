@@ -1,6 +1,6 @@
 package com.earnix.webk.script.web_idl;
 
-import com.earnix.webk.dom.nodes.Node;
+import com.earnix.webk.dom.nodes.NodeModel;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -35,7 +35,7 @@ public interface Attribute<T> {
         };
     }
 
-    static Attribute<String> forNode(Node node, String attributeName) {
+    static Attribute<String> forNode(NodeModel node, String attributeName) {
         return Attribute.<String>receive((domString) -> node.attr(attributeName)).give(() -> node.attr(attributeName));
     }
 

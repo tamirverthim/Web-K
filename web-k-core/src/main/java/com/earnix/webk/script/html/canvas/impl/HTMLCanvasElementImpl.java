@@ -1,6 +1,7 @@
 package com.earnix.webk.script.html.canvas.impl;
 
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.html.canvas.BlobCallback;
 import com.earnix.webk.script.html.canvas.HTMLCanvasElement;
 import com.earnix.webk.script.html.canvas.OffscreenCanvas;
@@ -17,12 +18,11 @@ import com.earnix.webk.util.GeneralUtil;
  * 6/21/2018
  */
 public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElement {
-
-
+    
     private final CanvasRenderingContext2DImpl context;
 
-    public HTMLCanvasElementImpl(Element target, BasicPanel panel) {
-        super(target, panel);
+    public HTMLCanvasElementImpl(ElementModel target) {
+        super(target);
         if (!target.hasAttr("width")) {
             target.attr("width", String.valueOf(300));
         }

@@ -21,7 +21,7 @@ package com.earnix.webk.swing;
 
 import com.earnix.webk.css.style.CalculatedStyle;
 import com.earnix.webk.css.style.derived.RectPropertySet;
-import com.earnix.webk.dom.nodes.Document;
+import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.extend.NamespaceHandler;
 import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.layout.Layer;
@@ -342,19 +342,19 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
 =========== set document utility methods =============== */
 
     public void setDocument(InputStream stream, String url, NamespaceHandler nsh) {
-        Document dom = XMLResource.load(stream);
+        DocumentModel dom = XMLResource.load(stream);
 
         setDocument(dom, url, nsh);
     }
 
     public void setDocumentFromString(String content, String url, NamespaceHandler nsh) {
         InputSource is = new InputSource(new BufferedReader(new StringReader(content)));
-        Document dom = XMLResource.load(is);
+        DocumentModel dom = XMLResource.load(is);
 
         setDocument(dom, url, nsh);
     }
 
-    public void setDocument(Document doc, String url) {
+    public void setDocument(DocumentModel doc, String url) {
         setDocument(doc, url, new NoNamespaceHandler());
     }
 
@@ -397,7 +397,7 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
                 return;
             }
         }
-        Document dom = loadDocument(url);
+        DocumentModel dom = loadDocument(url);
         setDocument(dom, url);
     }
 
@@ -425,7 +425,7 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
      *
      * @param doc The document to reload.
      */
-    public void reloadDocument(Document doc) {
+    public void reloadDocument(DocumentModel doc) {
         if (this.doc == null) {
             XRLog.render("Reload called on BasicPanel, but there is no document set on the panel yet.");
             return;
@@ -445,7 +445,7 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
         return base;
     }
 
-    public Document getDocument() {
+    public DocumentModel getDocument() {
         return doc;
     }
 
@@ -460,8 +460,8 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
         return doc == null ? "" : getSharedContext().getNamespaceHandler().getDocumentTitle(doc);
     }
 
-    protected Document loadDocument(final String uri) {
-        Document xmlResource = sharedContext.getUac().getXMLResource(uri);
+    protected DocumentModel loadDocument(final String uri) {
+        DocumentModel xmlResource = sharedContext.getUac().getXMLResource(uri);
         return xmlResource;
     }
 

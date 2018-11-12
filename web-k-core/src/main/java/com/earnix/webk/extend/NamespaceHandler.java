@@ -22,8 +22,8 @@ package com.earnix.webk.extend;
 
 import com.earnix.webk.css.extend.StylesheetFactory;
 import com.earnix.webk.css.sheet.StylesheetInfo;
-import com.earnix.webk.dom.nodes.Document;
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.DocumentModel;
+import com.earnix.webk.dom.nodes.ElementModel;
 
 /**
  * Provides knowledge specific to a certain document type, like resolving
@@ -47,14 +47,14 @@ public interface NamespaceHandler {
      * @param doc
      * @return the title for this document, if any exists
      */
-    String getDocumentTitle(Document doc);
+    String getDocumentTitle(DocumentModel doc);
 
     /**
      * @param doc
      * @return all links to CSS stylesheets (type="text/css") in this
      * document
      */
-    StylesheetInfo[] getStylesheets(Document doc);
+    StylesheetInfo[] getStylesheets(DocumentModel doc);
 
     /**
      * may return null. Required to return null if attribute does not exist and
@@ -64,9 +64,9 @@ public interface NamespaceHandler {
      * @param attrName PARAM
      * @return The attributeValue value
      */
-    String getAttributeValue(Element e, String attrName);
+    String getAttributeValue(ElementModel e, String attrName);
 
-    String getAttributeValue(Element e, String namespaceURI, String attrName);
+    String getAttributeValue(ElementModel e, String namespaceURI, String attrName);
 
     /**
      * may return null
@@ -74,7 +74,7 @@ public interface NamespaceHandler {
      * @param e PARAM
      * @return The class value
      */
-    String getClass(Element e);
+    String getClass(ElementModel e);
 
     /**
      * may return null
@@ -82,7 +82,7 @@ public interface NamespaceHandler {
      * @param e PARAM
      * @return The iD value
      */
-    String getID(Element e);
+    String getID(ElementModel e);
 
     /**
      * may return null
@@ -90,7 +90,7 @@ public interface NamespaceHandler {
      * @param e PARAM
      * @return The elementStyling value (style attribute)
      */
-    String getElementStyling(Element e);
+    String getElementStyling(ElementModel e);
 
     /**
      * may return null
@@ -98,7 +98,7 @@ public interface NamespaceHandler {
      * @param e
      * @return The corresponding css properties for styling that is obtained in other ways.
      */
-    String getNonCssStyling(Element e);
+    String getNonCssStyling(ElementModel e);
 
     /**
      * may return null
@@ -106,7 +106,7 @@ public interface NamespaceHandler {
      * @param e PARAM
      * @return The lang value
      */
-    String getLang(Element e);
+    String getLang(ElementModel e);
 
     /**
      * should return null if element is not a link
@@ -114,17 +114,17 @@ public interface NamespaceHandler {
      * @param e PARAM
      * @return The linkUri value
      */
-    String getLinkUri(Element e);
+    String getLinkUri(ElementModel e);
 
     /**
      * @param e
      */
-    String getAnchorName(Element e);
+    String getAnchorName(ElementModel e);
 
     /**
      * @return Returns true if the Element represents an image.
      */
-    boolean isImageElement(Element e);
+    boolean isImageElement(ElementModel e);
 
     /**
      * Determines whether or not the specified Element represents a
@@ -133,7 +133,7 @@ public interface NamespaceHandler {
      * @param e The Element to evaluate.
      * @return true if the Element is a &lt;form&gt; element, false otherwise.
      */
-    boolean isFormElement(Element e);
+    boolean isFormElement(ElementModel e);
 
     /**
      * For an element where isImageElement returns true, retrieves the URI associated with that Image, as
@@ -145,10 +145,10 @@ public interface NamespaceHandler {
      * @param e The element to extract image info from.
      * @return String containing the URI for the image.
      */
-    String getImageSourceURI(Element e);
+    String getImageSourceURI(ElementModel e);
 
-    boolean isCanvasElement(Element element);
+    boolean isCanvasElement(ElementModel element);
 
-    boolean isSvgElement(Element element);
+    boolean isSvgElement(ElementModel element);
 }
 

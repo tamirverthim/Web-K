@@ -3,10 +3,10 @@ package com.earnix.webk.dom.examples;
 import com.earnix.webk.dom.Jsoup;
 import com.earnix.webk.dom.helper.Validate;
 import com.earnix.webk.dom.internal.StringUtil;
-import com.earnix.webk.dom.nodes.Document;
-import com.earnix.webk.dom.nodes.Element;
-import com.earnix.webk.dom.nodes.Node;
-import com.earnix.webk.dom.nodes.TextNode;
+import com.earnix.webk.dom.nodes.DocumentModel;
+import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.dom.nodes.NodeModel;
+import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.dom.select.Elements;
 import com.earnix.webk.dom.select.NodeTraversor;
 import com.earnix.webk.dom.select.NodeVisitor;
@@ -37,13 +37,13 @@ public class HtmlToPlainText {
         final String selector = args.length == 2 ? args[1] : null;
 
         // fetch the specified URL and parse to a HTML DOM
-        Document doc = Jsoup.connect(url).userAgent(userAgent).timeout(timeout).get();
+        DocumentModel doc = Jsoup.connect(url).userAgent(userAgent).timeout(timeout).get();
 
         HtmlToPlainText formatter = new HtmlToPlainText();
 
         if (selector != null) {
             Elements elements = doc.select(selector); // get each element that matches the CSS selector
-            for (Element element : elements) {
+            for (ElementModel element : elements) {
                 String plainText = formatter.getPlainText(element); // format that element to plain text
                 System.out.println(plainText);
             }
@@ -59,7 +59,7 @@ public class HtmlToPlainText {
      * @param element the root element to format
      * @return formatted text
      */
-    public String getPlainText(Element element) {
+    public String getPlainText(ElementModel element) {
         FormattingVisitor formatter = new FormattingVisitor();
         NodeTraversor.traverse(formatter, element); // walk the DOM, and call .head() and .tail() for each node
 
@@ -73,20 +73,21 @@ public class HtmlToPlainText {
         private StringBuilder accum = new StringBuilder(); // holds the accumulated text
 
         // hit when the node is first seen
-        public void head(Node node, int depth) {
+        public void head(NodeModel node, int depth) {
             String name = node.nodeName();
-            if (node instanceof TextNode)
-                append(((TextNode) node).getWholeText()); // TextNodes carry all user-readable text in the DOM.
-            else if (name.equals("li"))
+            if (node instanceof TextNodeModel) {
+                append(((TextNodeModel) node).getWholeText()); // TextNodes carry all user-readable text in the DOM.
+            } else if (name.equals("li")) {
                 append("\n * ");
-            else if (name.equals("dt"))
+            } else if (name.equals("dt")) {
                 append("  ");
-            else if (StringUtil.in(name, "p", "h1", "h2", "h3", "h4", "h5", "tr"))
+            } else if (StringUtil.in(name, "p", "h1", "h2", "h3", "h4", "h5", "tr")) {
                 append("\n");
+            }
         }
 
         // hit when all of the node's children (if any) have been visited
-        public void tail(Node node, int depth) {
+        public void tail(NodeModel node, int depth) {
             String name = node.nodeName();
             if (StringUtil.in(name, "br", "dd", "dt", "p", "h1", "h2", "h3", "h4", "h5"))
                 append("\n");

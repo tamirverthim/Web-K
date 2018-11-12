@@ -1,6 +1,7 @@
 package com.earnix.webk.script.impl;
 
-import com.earnix.webk.dom.nodes.Comment;
+import com.earnix.webk.dom.nodes.CommentModel;
+import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.web_idl.Attribute;
 import com.earnix.webk.script.web_idl.DOMException;
 import com.earnix.webk.script.web_idl.DOMString;
@@ -18,22 +19,21 @@ import lombok.val;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentImpl extends NodeImpl implements com.earnix.webk.script.whatwg_dom.Comment {
-    Comment target;
+    CommentModel target;
 
     ChildNodeImpl childNodeMixin;
     NonDocumentTypeChildNode nonDocumentTypeChildNodeMixin;
 
     Attribute<String> dataAttribute = Attribute.<String>receive(val -> {
-        val next = new Comment(val);
+        val next = new CommentModel(val);
         target.replaceWith(next);
-//        Binder.remove(target);
     }).give(() -> target.getData());
 
-    public CommentImpl(Comment target, BasicPanel panel) {
-        super(target, panel);
+    public CommentImpl(CommentModel target) {
+        super(target);
         this.target = target;
         childNodeMixin = new ChildNodeImpl(target);
-        nonDocumentTypeChildNodeMixin = new NonDocumentTypeChildNodeImpl(target, panel);
+        nonDocumentTypeChildNodeMixin = new NonDocumentTypeChildNodeImpl(target);
     }
 
 
@@ -58,7 +58,7 @@ public class CommentImpl extends NodeImpl implements com.earnix.webk.script.what
 
     @Override
     public void appendData(String data) {
-        val next = new Comment(target.getData() + data);
+        val next = new CommentModel(target.getData() + data);
         target.replaceWith(next);
         target = next;
     }
@@ -68,7 +68,7 @@ public class CommentImpl extends NodeImpl implements com.earnix.webk.script.what
         StringBuilder stringBuilder = new StringBuilder(target.getData());
         try {
             stringBuilder.insert(offset, data);
-            val next = new Comment(stringBuilder.toString());
+            val next = new CommentModel(stringBuilder.toString());
             target.replaceWith(next);
         } catch (StringIndexOutOfBoundsException e) {
             throw new DOMException("RangeError");
@@ -80,7 +80,7 @@ public class CommentImpl extends NodeImpl implements com.earnix.webk.script.what
         val stringBuilder = new StringBuilder(target.getData());
         try {
             stringBuilder.delete(offset, offset + count + 1);
-            val next = new Comment(stringBuilder.toString());
+            val next = new CommentModel(stringBuilder.toString());
             target.replaceWith(next);
         } catch (StringIndexOutOfBoundsException e) {
             throw new DOMException("RangeError");
@@ -92,7 +92,7 @@ public class CommentImpl extends NodeImpl implements com.earnix.webk.script.what
         val stringBuilder = new StringBuilder(target.getData());
         try {
             stringBuilder.replace(offset, offset + count + 1, data);
-            val next = new Comment(stringBuilder.toString());
+            val next = new CommentModel(stringBuilder.toString());
             target.replaceWith(next);
         } catch (StringIndexOutOfBoundsException e) {
             throw new DOMException("RangeError");
@@ -136,8 +136,8 @@ public class CommentImpl extends NodeImpl implements com.earnix.webk.script.what
     }
 
     @Override
-    public void construct(@DOMString String data) {
-        target = new Comment(data);
+    public void constructor(@DOMString String data) {
+        target = new CommentModel(data);
     }
 
     // endregion

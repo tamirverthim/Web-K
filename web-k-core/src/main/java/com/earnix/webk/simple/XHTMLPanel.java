@@ -19,7 +19,7 @@
  */
 package com.earnix.webk.simple;
 
-import com.earnix.webk.dom.nodes.Document;
+import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.layout.SharedContext;
 import com.earnix.webk.render.RenderingContext;
@@ -60,14 +60,14 @@ import java.net.URL;
  * }
  * </pre>
  * <p/>
- * <p>XHTMLPanel renders XHTML and XML which can be loaded as valid {@link Document}
+ * <p>XHTMLPanel renders XHTML and XML which can be loaded as valid {@link DocumentModel}
  * instances. You should make sure the document you want to render is well-formed. For XHTML,
  * there is always a default stylesheet available, even if no CSS is attached to the
  * XHTML you are loading. For XML, there is no default stylesheet, so you should have
  * one attached to your XML before trying to render it using the xml-stylesheer processing
  * instruction. XHTMLPanel has methods to load
  * documents from a uri ({@link #setDocument(String uri)}),
- * from a Document instance ({@link #setDocument(Document)}) or from an InputStream
+ * from a Document instance ({@link #setDocument(DocumentModel)}) or from an InputStream
  * ({@link BasicPanel#setDocument(java.io.InputStream, String)}).</p>
  * <p/>
  * <p/>
@@ -105,7 +105,7 @@ public class XHTMLPanel extends BasicPanel {
     private float maxFontScale = 3.0F;
 
     /**
-     * Instantiates an XHTMLPanel with no {@link Document} loaded by default.
+     * Instantiates an XHTMLPanel with no {@link DocumentModel} loaded by default.
      */
     public XHTMLPanel() {
         setupListeners();
@@ -165,7 +165,7 @@ public class XHTMLPanel extends BasicPanel {
      *
      * @param doc The document to render.
      */
-    public void setDocument(Document doc) {
+    public void setDocument(DocumentModel doc) {
         setDocument(doc, "");
     }
 
@@ -176,7 +176,7 @@ public class XHTMLPanel extends BasicPanel {
      * @param doc The new document value
      * @param url The new document value
      */
-    public void setDocument(Document doc, String url) {
+    public void setDocument(DocumentModel doc, String url) {
         resetListeners();
         setDocument(doc, url, new XhtmlNamespaceHandler());
     }

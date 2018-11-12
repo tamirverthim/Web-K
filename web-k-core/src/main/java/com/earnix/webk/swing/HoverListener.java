@@ -20,8 +20,8 @@
 package com.earnix.webk.swing;
 
 import com.earnix.webk.context.StyleReference;
-import com.earnix.webk.dom.nodes.Element;
-import com.earnix.webk.dom.nodes.Node;
+import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.layout.PaintingInfo;
 import com.earnix.webk.render.Box;
@@ -57,7 +57,7 @@ public class HoverListener extends DefaultFSMouseListener {
 
         boolean needRepaint = false;
 
-        Element currentlyHovered = getHoveredElement(c.getCss(), box);
+        ElementModel currentlyHovered = getHoveredElement(c.getCss(), box);
 
         if (currentlyHovered == panel.hovered_element) {
             return;
@@ -116,17 +116,17 @@ public class HoverListener extends DefaultFSMouseListener {
     }
 
     // look up the Element that corresponds to the Box we are hovering over
-    private Element getHoveredElement(StyleReference style, Box ib) {
+    private ElementModel getHoveredElement(StyleReference style, Box ib) {
         if (ib == null) {
             return null;
         }
 
-        Element element = ib.getElement();
+        ElementModel element = ib.getElement();
 
         while (element != null && !style.isHoverStyled(element)) {
-            Node node = element.parentNode();
-            if (node instanceof Element) {
-                element = (Element) node;
+            NodeModel node = element.parentNode();
+            if (node instanceof ElementModel) {
+                element = (ElementModel) node;
             } else {
                 element = null;
             }

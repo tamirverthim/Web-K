@@ -1,6 +1,6 @@
 package com.earnix.webk.dom.parser;
 
-import com.earnix.webk.dom.nodes.Attributes;
+import com.earnix.webk.dom.nodes.AttributesModel;
 
 import static com.earnix.webk.dom.internal.Normalizer.lowerCase;
 
@@ -50,7 +50,7 @@ public class ParseSettings {
         return name;
     }
 
-    Attributes normalizeAttributes(Attributes attributes) {
+    AttributesModel normalizeAttributes(AttributesModel attributes) {
         if (!preserveAttributeCase) {
             attributes.normalize();
         }

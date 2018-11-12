@@ -2,10 +2,10 @@ package com.earnix.webk.dom.parser;
 
 import com.earnix.webk.dom.Jsoup;
 import com.earnix.webk.dom.TextUtil;
-import com.earnix.webk.dom.nodes.Comment;
-import com.earnix.webk.dom.nodes.Document;
-import com.earnix.webk.dom.nodes.Element;
-import com.earnix.webk.dom.nodes.TextNode;
+import com.earnix.webk.dom.nodes.CommentModel;
+import com.earnix.webk.dom.nodes.DocumentModel;
+import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.dom.select.Elements;
 import org.junit.Assert;
 import org.junit.Test;
@@ -39,7 +39,7 @@ public class TokeniserStateTest {
     @Test
     public void testCharacterReferenceInRcdata() {
         String body = "<textarea>You&I</textarea>";
-        Document doc = Jsoup.parse(body);
+        DocumentModel doc = Jsoup.parse(body);
         Elements els = doc.select("textarea");
         assertEquals("You&I", els.text());
     }
@@ -48,7 +48,7 @@ public class TokeniserStateTest {
     public void testBeforeTagName() {
         for (char c : whiteSpace) {
             String body = String.format("<div%c>test</div>", c);
-            Document doc = Jsoup.parse(body);
+            DocumentModel doc = Jsoup.parse(body);
             Elements els = doc.select("div");
             assertEquals("test", els.text());
         }
@@ -57,7 +57,7 @@ public class TokeniserStateTest {
     @Test
     public void testEndTagOpen() {
         String body;
-        Document doc;
+        DocumentModel doc;
         Elements els;
 
         body = "<div>hello world</";
@@ -84,7 +84,7 @@ public class TokeniserStateTest {
     @Test
     public void testRcdataLessthanSign() {
         String body;
-        Document doc;
+        DocumentModel doc;
         Elements els;
 
         body = "<textarea><fake></textarea>";
@@ -107,7 +107,7 @@ public class TokeniserStateTest {
     public void testRCDATAEndTagName() {
         for (char c : whiteSpace) {
             String body = String.format("<textarea>data</textarea%c>", c);
-            Document doc = Jsoup.parse(body);
+            DocumentModel doc = Jsoup.parse(body);
             Elements els = doc.select("textarea");
             assertEquals("data", els.text());
         }
@@ -116,26 +116,26 @@ public class TokeniserStateTest {
     @Test
     public void testCommentEndCoverage() {
         String html = "<html><head></head><body><img src=foo><!-- <table><tr><td></table> --! --- --><p>Hello</p></body></html>";
-        Document doc = Jsoup.parse(html);
+        DocumentModel doc = Jsoup.parse(html);
 
-        Element body = doc.body();
-        Comment comment = (Comment) body.childNode(1);
+        ElementModel body = doc.body();
+        CommentModel comment = (CommentModel) body.childNode(1);
         assertEquals(" <table><tr><td></table> --! --- ", comment.getData());
-        Element p = body.child(1);
-        TextNode text = (TextNode) p.childNode(0);
+        ElementModel p = body.child(1);
+        TextNodeModel text = (TextNodeModel) p.childNode(0);
         assertEquals("Hello", text.getWholeText());
     }
 
     @Test
     public void testCommentEndBangCoverage() {
         String html = "<html><head></head><body><img src=foo><!-- <table><tr><td></table> --!---!>--><p>Hello</p></body></html>";
-        Document doc = Jsoup.parse(html);
+        DocumentModel doc = Jsoup.parse(html);
 
-        Element body = doc.body();
-        Comment comment = (Comment) body.childNode(1);
+        ElementModel body = doc.body();
+        CommentModel comment = (CommentModel) body.childNode(1);
         assertEquals(" <table><tr><td></table> --!-", comment.getData());
-        Element p = body.child(1);
-        TextNode text = (TextNode) p.childNode(0);
+        ElementModel p = body.child(1);
+        TextNodeModel text = (TextNodeModel) p.childNode(0);
         assertEquals("Hello", text.getWholeText());
     }
 
@@ -153,7 +153,7 @@ public class TokeniserStateTest {
                         String.format("<!DOCTYPE html PUBLIC%c-//W3C//DTD HTML 4.0//EN%c%c>", q, q, ws)
                 };
                 for (String html : htmls) {
-                    Document doc = Jsoup.parse(html);
+                    DocumentModel doc = Jsoup.parse(html);
                     assertEquals(expectedOutput, doc.childNode(0).outerHtml());
                 }
             }
@@ -174,7 +174,7 @@ public class TokeniserStateTest {
                         String.format("<!DOCTYPE html SYSTEM%chttp://www.w3.org/TR/REC-html40/strict.dtd%c%c>", q, q, ws)
                 };
                 for (String html : htmls) {
-                    Document doc = Jsoup.parse(html);
+                    DocumentModel doc = Jsoup.parse(html);
                     assertEquals(expectedOutput, doc.childNode(0).outerHtml());
                 }
             }
@@ -194,7 +194,7 @@ public class TokeniserStateTest {
                                 + "%chttp://www.w3.org/TR/REC-html40/strict.dtd%c>", q, q, q, q)
                 };
                 for (String html : htmls) {
-                    Document doc = Jsoup.parse(html);
+                    DocumentModel doc = Jsoup.parse(html);
                     assertEquals(expectedOutput, doc.childNode(0).outerHtml());
                 }
             }
@@ -205,7 +205,7 @@ public class TokeniserStateTest {
     public void handlesLessInTagThanAsNewTag() {
         // out of spec, but clear author intent
         String html = "<p\n<p<div id=one <span>Two";
-        Document doc = Jsoup.parse(html);
+        DocumentModel doc = Jsoup.parse(html);
         Assert.assertEquals("<p></p><p></p><div id=\"one\"><span>Two</span></div>", TextUtil.stripNewlines(doc.body().html()));
     }
 }

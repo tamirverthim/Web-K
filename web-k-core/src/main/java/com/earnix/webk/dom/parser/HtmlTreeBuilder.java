@@ -2,14 +2,14 @@ package com.earnix.webk.dom.parser;
 
 import com.earnix.webk.dom.helper.Validate;
 import com.earnix.webk.dom.internal.StringUtil;
-import com.earnix.webk.dom.nodes.CDataNode;
-import com.earnix.webk.dom.nodes.Comment;
-import com.earnix.webk.dom.nodes.DataNode;
-import com.earnix.webk.dom.nodes.Document;
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.CDataNodeModel;
+import com.earnix.webk.dom.nodes.CommentModel;
+import com.earnix.webk.dom.nodes.DataNodeModel;
+import com.earnix.webk.dom.nodes.DocumentModel;
+import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.FormElement;
-import com.earnix.webk.dom.nodes.Node;
-import com.earnix.webk.dom.nodes.TextNode;
+import com.earnix.webk.dom.nodes.NodeModel;
+import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.dom.select.Elements;
 
 import java.io.Reader;
@@ -45,10 +45,10 @@ public class HtmlTreeBuilder extends TreeBuilder {
     private HtmlTreeBuilderState originalState; // original / marked state
 
     private boolean baseUriSetFromDoc;
-    private Element headElement; // the current head element
+    private ElementModel headElement; // the current head element
     private FormElement formElement; // the current form element
-    private Element contextElement; // fragment parse context -- could be null even if fragment parsing
-    private ArrayList<Element> formattingElements; // active (open) formatting elements
+    private ElementModel contextElement; // fragment parse context -- could be null even if fragment parsing
+    private ArrayList<ElementModel> formattingElements; // active (open) formatting elements
     private List<String> pendingTableCharacters; // chars in table to be shifted out
     private Token.EndTag emptyEnd; // reused empty end tag
 
@@ -79,13 +79,13 @@ public class HtmlTreeBuilder extends TreeBuilder {
         fragmentParsing = false;
     }
 
-    List<Node> parseFragment(String inputFragment, Element context, String baseUri, Parser parser) {
+    List<NodeModel> parseFragment(String inputFragment, ElementModel context, String baseUri, Parser parser) {
         // context may be null
         state = HtmlTreeBuilderState.Initial;
         initialiseParse(new StringReader(inputFragment), baseUri, parser);
         contextElement = context;
         fragmentParsing = true;
-        Element root = null;
+        ElementModel root = null;
 
         if (context != null) {
             if (context.ownerDocument() != null) // quirks setup:
@@ -106,7 +106,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
             else
                 tokeniser.transition(TokeniserState.Data); // default
 
-            root = new Element(Tag.valueOf("html", settings), baseUri);
+            root = new ElementModel(Tag.valueOf("html", settings), baseUri);
             doc.appendChild(root);
             stack.add(root);
             resetInsertionMode();
@@ -115,7 +115,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
             // with form correctly
             Elements contextChain = context.parents();
             contextChain.add(0, context);
-            for (Element parent : contextChain) {
+            for (ElementModel parent : contextChain) {
                 if (parent instanceof FormElement) {
                     formElement = (FormElement) parent;
                     break;
@@ -165,7 +165,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
         return framesetOk;
     }
 
-    Document getDocument() {
+    DocumentModel getDocument() {
         return doc;
     }
 
@@ -173,7 +173,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
         return baseUri;
     }
 
-    void maybeSetBaseUri(Element base) {
+    void maybeSetBaseUri(ElementModel base) {
         if (baseUriSetFromDoc) // only listen to the first <base href> in parse
             return;
 
@@ -194,36 +194,36 @@ public class HtmlTreeBuilder extends TreeBuilder {
             parser.getErrors().add(new ParseError(reader.pos(), "Unexpected token [%s] when in state [%s]", currentToken.tokenType(), state));
     }
 
-    Element insert(Token.StartTag startTag) {
+    ElementModel insert(Token.StartTag startTag) {
         // handle empty unknown tags
         // when the spec expects an empty tag, will directly hit insertEmpty, so won't generate this fake end tag.
         if (startTag.isSelfClosing()) {
-            Element el = insertEmpty(startTag);
+            ElementModel el = insertEmpty(startTag);
             stack.add(el);
             tokeniser.transition(TokeniserState.Data); // handles <script />, otherwise needs breakout steps from script data
             tokeniser.emit(emptyEnd.reset().name(el.tagName()));  // ensure we get out of whatever state we are in. emitted for yielded processing
             return el;
         }
 
-        Element el = new Element(Tag.valueOf(startTag.name(), settings), baseUri, settings.normalizeAttributes(startTag.attributes));
+        ElementModel el = new ElementModel(Tag.valueOf(startTag.name(), settings), baseUri, settings.normalizeAttributes(startTag.attributes));
         insert(el);
         return el;
     }
 
-    Element insertStartTag(String startTagName) {
-        Element el = new Element(Tag.valueOf(startTagName, settings), baseUri);
+    ElementModel insertStartTag(String startTagName) {
+        ElementModel el = new ElementModel(Tag.valueOf(startTagName, settings), baseUri);
         insert(el);
         return el;
     }
 
-    void insert(Element el) {
+    void insert(ElementModel el) {
         insertNode(el);
         stack.add(el);
     }
 
-    Element insertEmpty(Token.StartTag startTag) {
+    ElementModel insertEmpty(Token.StartTag startTag) {
         Tag tag = Tag.valueOf(startTag.name(), settings);
-        Element el = new Element(tag, baseUri, startTag.attributes);
+        ElementModel el = new ElementModel(tag, baseUri, startTag.attributes);
         insertNode(el);
         if (startTag.isSelfClosing()) {
             if (tag.isKnownTag()) {
@@ -246,26 +246,26 @@ public class HtmlTreeBuilder extends TreeBuilder {
     }
 
     void insert(Token.Comment commentToken) {
-        Comment comment = new Comment(commentToken.getData());
+        CommentModel comment = new CommentModel(commentToken.getData());
         insertNode(comment);
     }
 
     void insert(Token.Character characterToken) {
-        final Node node;
-        final Element el = currentElement();
+        final NodeModel node;
+        final ElementModel el = currentElement();
         final String tagName = el.tagName();
         final String data = characterToken.getData();
 
         if (characterToken.isCData())
-            node = new CDataNode(data);
+            node = new CDataNodeModel(data);
         else if (tagName.equals("script") || tagName.equals("style"))
-            node = new DataNode(data);
+            node = new DataNodeModel(data);
         else
-            node = new TextNode(data);
+            node = new TextNodeModel(data);
         el.appendChild(node); // doesn't use insertNode, because we don't foster these; and will always have a stack.
     }
 
-    private void insertNode(Node node) {
+    private void insertNode(NodeModel node) {
         // if the stack hasn't been set up yet, elements (doctype, comments) go into the doc
         if (stack.size() == 0)
             doc.appendChild(node);
@@ -275,32 +275,32 @@ public class HtmlTreeBuilder extends TreeBuilder {
             currentElement().appendChild(node);
 
         // connect form controls to their form element
-        if (node instanceof Element && ((Element) node).tag().isFormListed()) {
+        if (node instanceof ElementModel && ((ElementModel) node).tag().isFormListed()) {
             if (formElement != null)
-                formElement.addElement((Element) node);
+                formElement.addElement((ElementModel) node);
         }
     }
 
-    Element pop() {
+    ElementModel pop() {
         int size = stack.size();
         return stack.remove(size - 1);
     }
 
-    void push(Element element) {
+    void push(ElementModel element) {
         stack.add(element);
     }
 
-    ArrayList<Element> getStack() {
+    ArrayList<ElementModel> getStack() {
         return stack;
     }
 
-    boolean onStack(Element el) {
+    boolean onStack(ElementModel el) {
         return isElementInQueue(stack, el);
     }
 
-    private boolean isElementInQueue(ArrayList<Element> queue, Element element) {
+    private boolean isElementInQueue(ArrayList<ElementModel> queue, ElementModel element) {
         for (int pos = queue.size() - 1; pos >= 0; pos--) {
-            Element next = queue.get(pos);
+            ElementModel next = queue.get(pos);
             if (next == element) {
                 return true;
             }
@@ -308,9 +308,9 @@ public class HtmlTreeBuilder extends TreeBuilder {
         return false;
     }
 
-    Element getFromStack(String elName) {
+    ElementModel getFromStack(String elName) {
         for (int pos = stack.size() - 1; pos >= 0; pos--) {
-            Element next = stack.get(pos);
+            ElementModel next = stack.get(pos);
             if (next.nodeName().equals(elName)) {
                 return next;
             }
@@ -318,9 +318,9 @@ public class HtmlTreeBuilder extends TreeBuilder {
         return null;
     }
 
-    boolean removeFromStack(Element el) {
+    boolean removeFromStack(ElementModel el) {
         for (int pos = stack.size() - 1; pos >= 0; pos--) {
-            Element next = stack.get(pos);
+            ElementModel next = stack.get(pos);
             if (next == el) {
                 stack.remove(pos);
                 return true;
@@ -331,7 +331,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 
     void popStackToClose(String elName) {
         for (int pos = stack.size() - 1; pos >= 0; pos--) {
-            Element next = stack.get(pos);
+            ElementModel next = stack.get(pos);
             stack.remove(pos);
             if (next.nodeName().equals(elName))
                 break;
@@ -341,7 +341,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
     // elnames is sorted, comes from Constants
     void popStackToClose(String... elNames) {
         for (int pos = stack.size() - 1; pos >= 0; pos--) {
-            Element next = stack.get(pos);
+            ElementModel next = stack.get(pos);
             stack.remove(pos);
             if (inSorted(next.nodeName(), elNames))
                 break;
@@ -350,7 +350,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 
     void popStackToBefore(String elName) {
         for (int pos = stack.size() - 1; pos >= 0; pos--) {
-            Element next = stack.get(pos);
+            ElementModel next = stack.get(pos);
             if (next.nodeName().equals(elName)) {
                 break;
             } else {
@@ -373,7 +373,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 
     private void clearStackToContext(String... nodeNames) {
         for (int pos = stack.size() - 1; pos >= 0; pos--) {
-            Element next = stack.get(pos);
+            ElementModel next = stack.get(pos);
             if (StringUtil.in(next.nodeName(), nodeNames) || next.nodeName().equals("html"))
                 break;
             else
@@ -381,10 +381,10 @@ public class HtmlTreeBuilder extends TreeBuilder {
         }
     }
 
-    Element aboveOnStack(Element el) {
+    ElementModel aboveOnStack(ElementModel el) {
         assert onStack(el);
         for (int pos = stack.size() - 1; pos >= 0; pos--) {
-            Element next = stack.get(pos);
+            ElementModel next = stack.get(pos);
             if (next == el) {
                 return stack.get(pos - 1);
             }
@@ -392,17 +392,17 @@ public class HtmlTreeBuilder extends TreeBuilder {
         return null;
     }
 
-    void insertOnStackAfter(Element after, Element in) {
+    void insertOnStackAfter(ElementModel after, ElementModel in) {
         int i = stack.lastIndexOf(after);
         Validate.isTrue(i != -1);
         stack.add(i + 1, in);
     }
 
-    void replaceOnStack(Element out, Element in) {
+    void replaceOnStack(ElementModel out, ElementModel in) {
         replaceInQueue(stack, out, in);
     }
 
-    private void replaceInQueue(ArrayList<Element> queue, Element out, Element in) {
+    private void replaceInQueue(ArrayList<ElementModel> queue, ElementModel out, ElementModel in) {
         int i = queue.lastIndexOf(out);
         Validate.isTrue(i != -1);
         queue.set(i, in);
@@ -411,7 +411,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
     void resetInsertionMode() {
         boolean last = false;
         for (int pos = stack.size() - 1; pos >= 0; pos--) {
-            Element node = stack.get(pos);
+            ElementModel node = stack.get(pos);
             if (pos == 0) {
                 last = true;
                 node = contextElement;
@@ -512,7 +512,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 
     boolean inSelectScope(String targetName) {
         for (int pos = stack.size() - 1; pos >= 0; pos--) {
-            Element el = stack.get(pos);
+            ElementModel el = stack.get(pos);
             String elName = el.nodeName();
             if (elName.equals(targetName))
                 return true;
@@ -523,11 +523,11 @@ public class HtmlTreeBuilder extends TreeBuilder {
         return false;
     }
 
-    void setHeadElement(Element headElement) {
+    void setHeadElement(ElementModel headElement) {
         this.headElement = headElement;
     }
 
-    Element getHeadElement() {
+    ElementModel getHeadElement() {
         return headElement;
     }
 
@@ -574,18 +574,18 @@ public class HtmlTreeBuilder extends TreeBuilder {
         generateImpliedEndTags(null);
     }
 
-    boolean isSpecial(Element el) {
+    boolean isSpecial(ElementModel el) {
         // todo: mathml's mi, mo, mn
         // todo: svg's foreigObject, desc, title
         String name = el.nodeName();
         return inSorted(name, TagSearchSpecial);
     }
 
-    Element lastFormattingElement() {
+    ElementModel lastFormattingElement() {
         return formattingElements.size() > 0 ? formattingElements.get(formattingElements.size() - 1) : null;
     }
 
-    Element removeLastFormattingElement() {
+    ElementModel removeLastFormattingElement() {
         int size = formattingElements.size();
         if (size > 0)
             return formattingElements.remove(size - 1);
@@ -594,10 +594,10 @@ public class HtmlTreeBuilder extends TreeBuilder {
     }
 
     // active formatting elements
-    void pushActiveFormattingElements(Element in) {
+    void pushActiveFormattingElements(ElementModel in) {
         int numSeen = 0;
         for (int pos = formattingElements.size() - 1; pos >= 0; pos--) {
-            Element el = formattingElements.get(pos);
+            ElementModel el = formattingElements.get(pos);
             if (el == null) // marker
                 break;
 
@@ -612,7 +612,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
         formattingElements.add(in);
     }
 
-    private boolean isSameFormattingElement(Element a, Element b) {
+    private boolean isSameFormattingElement(ElementModel a, ElementModel b) {
         // same if: same namespace, tag, and attributes. Element.equals only checks tag, might in future check children
         return a.nodeName().equals(b.nodeName()) &&
                 // a.namespace().equals(b.namespace()) &&
@@ -621,11 +621,11 @@ public class HtmlTreeBuilder extends TreeBuilder {
     }
 
     void reconstructFormattingElements() {
-        Element last = lastFormattingElement();
+        ElementModel last = lastFormattingElement();
         if (last == null || onStack(last))
             return;
 
-        Element entry = last;
+        ElementModel entry = last;
         int size = formattingElements.size();
         int pos = size - 1;
         boolean skip = false;
@@ -645,7 +645,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 
             // 8. create new element from element, 9 insert into current node, onto stack
             skip = false; // can only skip increment from 4.
-            Element newEl = insertStartTag(entry.nodeName()); // todo: avoid fostering here?
+            ElementModel newEl = insertStartTag(entry.nodeName()); // todo: avoid fostering here?
             // newEl.namespace(entry.namespace()); // todo: namespaces
             newEl.attributes().addAll(entry.attributes());
 
@@ -660,15 +660,15 @@ public class HtmlTreeBuilder extends TreeBuilder {
 
     void clearFormattingElementsToLastMarker() {
         while (!formattingElements.isEmpty()) {
-            Element el = removeLastFormattingElement();
+            ElementModel el = removeLastFormattingElement();
             if (el == null)
                 break;
         }
     }
 
-    void removeFromActiveFormattingElements(Element el) {
+    void removeFromActiveFormattingElements(ElementModel el) {
         for (int pos = formattingElements.size() - 1; pos >= 0; pos--) {
-            Element next = formattingElements.get(pos);
+            ElementModel next = formattingElements.get(pos);
             if (next == el) {
                 formattingElements.remove(pos);
                 break;
@@ -676,13 +676,13 @@ public class HtmlTreeBuilder extends TreeBuilder {
         }
     }
 
-    boolean isInActiveFormattingElements(Element el) {
+    boolean isInActiveFormattingElements(ElementModel el) {
         return isElementInQueue(formattingElements, el);
     }
 
-    Element getActiveFormattingElement(String nodeName) {
+    ElementModel getActiveFormattingElement(String nodeName) {
         for (int pos = formattingElements.size() - 1; pos >= 0; pos--) {
-            Element next = formattingElements.get(pos);
+            ElementModel next = formattingElements.get(pos);
             if (next == null) // scope marker
                 break;
             else if (next.nodeName().equals(nodeName))
@@ -691,7 +691,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
         return null;
     }
 
-    void replaceActiveFormattingElement(Element out, Element in) {
+    void replaceActiveFormattingElement(ElementModel out, ElementModel in) {
         replaceInQueue(formattingElements, out, in);
     }
 
@@ -699,9 +699,9 @@ public class HtmlTreeBuilder extends TreeBuilder {
         formattingElements.add(null);
     }
 
-    void insertInFosterParent(Node in) {
-        Element fosterParent;
-        Element lastTable = getFromStack("table");
+    void insertInFosterParent(NodeModel in) {
+        ElementModel fosterParent;
+        ElementModel lastTable = getFromStack("table");
         boolean isLastTableParent = false;
         if (lastTable != null) {
             if (lastTable.parent() != null) {

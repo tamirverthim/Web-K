@@ -12,6 +12,7 @@
         <appender-ref ref="STDOUT"/>
     </root>
 
-    <logger name="com.earnix.webk.script" level="debug"/>
+    <!--<logger name="com.earnix.webk.script" level="error"/>-->
+    <!--<logger name="com.earnix.webk.script.console" level="info"/>-->
 
 </configuration>

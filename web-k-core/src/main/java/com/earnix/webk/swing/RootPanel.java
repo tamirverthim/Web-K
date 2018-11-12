@@ -27,8 +27,8 @@ import com.earnix.webk.css.style.CalculatedStyle;
 import com.earnix.webk.css.style.derived.ColorValue;
 import com.earnix.webk.css.style.derived.LengthValue;
 import com.earnix.webk.css.style.derived.StringValue;
-import com.earnix.webk.dom.nodes.Document;
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.DocumentModel;
+import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.event.DocumentListener;
 import com.earnix.webk.extend.FSCanvas;
 import com.earnix.webk.extend.NamespaceHandler;
@@ -86,14 +86,14 @@ public class RootPanel extends JPanel implements Scrollable, UserInterface, FSCa
     // initialize to JViewport default mode
     private int default_scroll_mode = JViewport.BLIT_SCROLL_MODE;
 
-    protected Document doc = null;
+    protected DocumentModel doc = null;
 
     /*
      * ========= UserInterface implementation ===============
      */
-    public Element hovered_element = null;
-    public Element active_element = null;
-    public Element focus_element = null;
+    public ElementModel hovered_element = null;
+    public ElementModel active_element = null;
+    public ElementModel focus_element = null;
 
     // On-demand repaint requests for async image loading
     private long lastRepaintRunAt = System.currentTimeMillis();
@@ -116,7 +116,7 @@ public class RootPanel extends JPanel implements Scrollable, UserInterface, FSCa
         return scriptContext;
     }
 
-    public void setDocument(Document doc, String url, NamespaceHandler nsh) {
+    public void setDocument(DocumentModel doc, String url, NamespaceHandler nsh) {
         fireDocumentStarted();
         resetScrollPosition();
         setRootBox(null);
@@ -545,15 +545,15 @@ public class RootPanel extends JPanel implements Scrollable, UserInterface, FSCa
     }
 
 
-    public boolean isHover(Element e) {
+    public boolean isHover(ElementModel e) {
         return e == hovered_element;
     }
 
-    public boolean isActive(Element e) {
+    public boolean isActive(ElementModel e) {
         return e == active_element;
     }
 
-    public boolean isFocus(Element e) {
+    public boolean isFocus(ElementModel e) {
         return e == focus_element;
     }
 

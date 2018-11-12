@@ -14,7 +14,7 @@ import java.util.List;
  * A HTML Form Element provides ready access to the form fields/controls that are associated with it. It also allows a
  * form to easily be submitted.
  */
-public class FormElement extends Element {
+public class FormElement extends ElementModel {
     private final Elements elements = new Elements();
 
     /**
@@ -24,7 +24,7 @@ public class FormElement extends Element {
      * @param baseUri    the base URI
      * @param attributes initial attributes
      */
-    public FormElement(Tag tag, String baseUri, Attributes attributes) {
+    public FormElement(Tag tag, String baseUri, AttributesModel attributes) {
         super(tag, baseUri, attributes);
     }
 
@@ -43,13 +43,13 @@ public class FormElement extends Element {
      * @param element form control to add
      * @return this form element, for chaining
      */
-    public FormElement addElement(Element element) {
+    public FormElement addElement(ElementModel element) {
         elements.add(element);
         return this;
     }
 
     @Override
-    protected void removeChild(Node out) {
+    protected void removeChild(NodeModel out) {
         super.removeChild(out);
         elements.remove(out);
     }
@@ -83,7 +83,7 @@ public class FormElement extends Element {
         ArrayList<Connection.KeyVal> data = new ArrayList<>();
 
         // iterate the form control elements and accumulate their values
-        for (Element el : elements) {
+        for (ElementModel el : elements) {
             if (!el.tag().isFormSubmittable()) continue; // contents are form listable, superset of submitable
             if (el.hasAttr("disabled")) continue; // skip disabled form inputs
             String name = el.attr("name");
@@ -93,12 +93,12 @@ public class FormElement extends Element {
             if ("select".equals(el.tagName())) {
                 Elements options = el.select("option[selected]");
                 boolean set = false;
-                for (Element option : options) {
+                for (ElementModel option : options) {
                     data.add(HttpConnection.KeyVal.create(name, option.val()));
                     set = true;
                 }
                 if (!set) {
-                    Element option = el.select("option").first();
+                    ElementModel option = el.select("option").first();
                     if (option != null)
                         data.add(HttpConnection.KeyVal.create(name, option.val()));
                 }

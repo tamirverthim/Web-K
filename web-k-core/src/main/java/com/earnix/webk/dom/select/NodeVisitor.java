@@ -1,6 +1,6 @@
 package com.earnix.webk.dom.select;
 
-import com.earnix.webk.dom.nodes.Node;
+import com.earnix.webk.dom.nodes.NodeModel;
 
 /**
  * Node visitor interface. Provide an implementing class to {@link NodeTraversor} to iterate through nodes.
@@ -18,7 +18,7 @@ public interface NodeVisitor {
      * @param depth the depth of the node, relative to the root node. E.g., the root node has depth 0, and a child node
      *              of that will have depth 1.
      */
-    void head(Node node, int depth);
+    void head(NodeModel node, int depth);
 
     /**
      * Callback for when a node is last visited, after all of its descendants have been visited.
@@ -27,5 +27,5 @@ public interface NodeVisitor {
      * @param depth the depth of the node, relative to the root node. E.g., the root node has depth 0, and a child node
      *              of that will have depth 1.
      */
-    void tail(Node node, int depth);
+    void tail(NodeModel node, int depth);
 }

@@ -59,7 +59,7 @@ public class PageElementPosition {
     }
 
     public boolean equals(Object o) {
-        if (o == null || !(o instanceof PageElementPosition)) {
+        if (!(o instanceof PageElementPosition)) {
             return false;
         }
 

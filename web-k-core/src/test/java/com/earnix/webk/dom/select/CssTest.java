@@ -1,7 +1,7 @@
 package com.earnix.webk.dom.select;
 
 import com.earnix.webk.dom.Jsoup;
-import com.earnix.webk.dom.nodes.Document;
+import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.parser.Tag;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -13,7 +13,7 @@ import static org.junit.Assert.assertTrue;
 
 public class CssTest {
 
-    private Document html = null;
+    private DocumentModel html = null;
     private static String htmlString;
 
     @BeforeClass

@@ -12,9 +12,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Path2DImpl implements Path2D {
 
-
     @Override
-    public void construct(@DOMString(oneOfIndex = 1) Object path) {
+    public void constructor(@DOMString(oneOfIndex = 1) Object path) {
 
     }
 

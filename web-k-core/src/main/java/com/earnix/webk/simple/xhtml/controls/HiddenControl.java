@@ -19,12 +19,12 @@
  */
 package com.earnix.webk.simple.xhtml.controls;
 
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.simple.xhtml.XhtmlForm;
 
 public class HiddenControl extends AbstractControl {
 
-    public HiddenControl(XhtmlForm form, Element e) {
+    public HiddenControl(XhtmlForm form, ElementModel e) {
         super(form, e);
     }
 

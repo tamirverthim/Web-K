@@ -19,7 +19,7 @@
  */
 package com.earnix.webk.simple.xhtml.controls;
 
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.simple.xhtml.FormControl;
 import com.earnix.webk.simple.xhtml.XhtmlForm;
 
@@ -29,7 +29,7 @@ public class CheckControl extends AbstractControl {
 
     private boolean _initialValue, _radio;
 
-    public CheckControl(XhtmlForm form, Element e) {
+    public CheckControl(XhtmlForm form, ElementModel e) {
         super(form, e);
 
         _initialValue = e.attr("checked").length() != 0;

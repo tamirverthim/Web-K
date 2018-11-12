@@ -1,6 +1,7 @@
 package com.earnix.webk.script.whatwg_dom.impl;
 
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.web_idl.DOMString;
 import com.earnix.webk.script.whatwg_dom.Attr;
 import com.earnix.webk.script.whatwg_dom.NamedNodeMap;
@@ -16,12 +17,12 @@ import lombok.val;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NamedNodeMapImpl implements NamedNodeMap {
 
-    Element modelElement;
-    BasicPanel panel;
+    ElementModel modelElement;
+    ScriptContext ctx;
 
-    public NamedNodeMapImpl(Element modelElement, BasicPanel panel) {
+    public NamedNodeMapImpl(ElementModel modelElement, ScriptContext ctx) {
         this.modelElement = modelElement;
-        this.panel = panel;
+        this.ctx = ctx;
     }
 
     @Override
@@ -32,13 +33,13 @@ public class NamedNodeMapImpl implements NamedNodeMap {
     @Override
     public Attr item(int index) {
         val attribute = modelElement.attributes().asList().get(index);
-        return new AttrImpl(modelElement, attribute, panel);
+        return new AttrImpl(modelElement, attribute, ctx);
     }
 
     @Override
     public Attr getNamedItem(@DOMString String qualifiedName) {
         val attribute = modelElement.attributes().asList().stream().filter(a -> a.getKey().equals(qualifiedName.toString())).findFirst();
-        return attribute.map(attribute1 -> new AttrImpl(modelElement, attribute1, panel)).orElse(null);
+        return attribute.map(attribute1 -> new AttrImpl(modelElement, attribute1, ctx)).orElse(null);
     }
 
     @Override

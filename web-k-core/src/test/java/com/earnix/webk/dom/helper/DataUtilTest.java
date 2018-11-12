@@ -1,7 +1,7 @@
 package com.earnix.webk.dom.helper;
 
 import com.earnix.webk.dom.Jsoup;
-import com.earnix.webk.dom.nodes.Document;
+import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.parser.Parser;
 import org.junit.Test;
 
@@ -54,14 +54,14 @@ public class DataUtilTest {
     @Test
     public void discardsSpuriousByteOrderMark() throws IOException {
         String html = "\uFEFF<html><head><title>One</title></head><body>Two</body></html>";
-        Document doc = DataUtil.parseInputStream(stream(html), "UTF-8", "http://foo.com/", Parser.htmlParser());
+        DocumentModel doc = DataUtil.parseInputStream(stream(html), "UTF-8", "http://foo.com/", Parser.htmlParser());
         assertEquals("One", doc.head().text());
     }
 
     @Test
     public void discardsSpuriousByteOrderMarkWhenNoCharsetSet() throws IOException {
         String html = "\uFEFF<html><head><title>One</title></head><body>Two</body></html>";
-        Document doc = DataUtil.parseInputStream(stream(html), null, "http://foo.com/", Parser.htmlParser());
+        DocumentModel doc = DataUtil.parseInputStream(stream(html), null, "http://foo.com/", Parser.htmlParser());
         assertEquals("One", doc.head().text());
         assertEquals("UTF-8", doc.outputSettings().charset().displayName());
     }
@@ -101,7 +101,7 @@ public class DataUtilTest {
     public void wrongMetaCharsetFallback() throws IOException {
         String html = "<html><head><meta charset=iso-8></head><body></body></html>";
 
-        Document doc = DataUtil.parseInputStream(stream(html), null, "http://example.com", Parser.htmlParser());
+        DocumentModel doc = DataUtil.parseInputStream(stream(html), null, "http://example.com", Parser.htmlParser());
 
         final String expected = "<html>\n" +
                 " <head>\n" +
@@ -120,7 +120,7 @@ public class DataUtilTest {
                 "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=euc-kr\">" +
                 "</head><body>한국어</body></html>";
 
-        Document doc = DataUtil.parseInputStream(stream(html, "euc-kr"), null, "http://example.com", Parser.htmlParser());
+        DocumentModel doc = DataUtil.parseInputStream(stream(html, "euc-kr"), null, "http://example.com", Parser.htmlParser());
 
         assertEquals("한국어", doc.body().text());
     }
@@ -132,7 +132,7 @@ public class DataUtilTest {
                 "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=koi8-u\">" +
                 "</head><body>Übergrößenträger</body></html>";
 
-        Document doc = DataUtil.parseInputStream(stream(html, "iso-8859-1"), null, "http://example.com", Parser.htmlParser());
+        DocumentModel doc = DataUtil.parseInputStream(stream(html, "iso-8859-1"), null, "http://example.com", Parser.htmlParser());
 
         assertEquals("Übergrößenträger", doc.body().text());
     }
@@ -141,7 +141,7 @@ public class DataUtilTest {
     public void supportsBOMinFiles() throws IOException {
         // test files from http://www.i18nl10n.com/korean/utftest/
         File in = getFile("/bomtests/bom_utf16be.html");
-        Document doc = Jsoup.parse(in, null, "http://example.com");
+        DocumentModel doc = Jsoup.parse(in, null, "http://example.com");
         assertTrue(doc.title().contains("UTF-16BE"));
         assertTrue(doc.text().contains("가각갂갃간갅"));
 
@@ -164,7 +164,7 @@ public class DataUtilTest {
     @Test
     public void supportsUTF8BOM() throws IOException {
         File in = getFile("/bomtests/bom_utf8.html");
-        Document doc = Jsoup.parse(in, null, "http://example.com");
+        DocumentModel doc = Jsoup.parse(in, null, "http://example.com");
         assertEquals("OK", doc.head().select("title").text());
     }
 
@@ -177,7 +177,7 @@ public class DataUtilTest {
                         "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\" xml:lang=\"en\">Hellö Wörld!</html>"
         ).getBytes(encoding));
 
-        Document doc = Jsoup.parse(soup, null, "");
+        DocumentModel doc = Jsoup.parse(soup, null, "");
         assertEquals("Hellö Wörld!", doc.body().text());
     }
 }

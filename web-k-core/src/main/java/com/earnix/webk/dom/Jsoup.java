@@ -2,7 +2,7 @@ package com.earnix.webk.dom;
 
 import com.earnix.webk.dom.helper.DataUtil;
 import com.earnix.webk.dom.helper.HttpConnection;
-import com.earnix.webk.dom.nodes.Document;
+import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.parser.Parser;
 import com.earnix.webk.dom.safety.Cleaner;
 import com.earnix.webk.dom.safety.Whitelist;
@@ -29,7 +29,7 @@ public class Jsoup {
      *                before the HTML declares a {@code <base href>} tag.
      * @return sane HTML
      */
-    public static Document parse(String html, String baseUri) {
+    public static DocumentModel parse(String html, String baseUri) {
         return Parser.parse(html, baseUri);
     }
 
@@ -43,7 +43,7 @@ public class Jsoup {
      * @param parser  alternate {@link Parser#xmlParser() parser} to use.
      * @return sane HTML
      */
-    public static Document parse(String html, String baseUri, Parser parser) {
+    public static DocumentModel parse(String html, String baseUri, Parser parser) {
         return parser.parseInput(html, baseUri);
     }
 
@@ -55,7 +55,7 @@ public class Jsoup {
      * @return sane HTML
      * @see #parse(String, String)
      */
-    public static Document parse(String html) {
+    public static DocumentModel parse(String html) {
         return Parser.parse(html, "");
     }
 
@@ -85,7 +85,7 @@ public class Jsoup {
      * @return sane HTML
      * @throws IOException if the file could not be found, or read, or if the charsetName is invalid.
      */
-    public static Document parse(File in, String charsetName, String baseUri) throws IOException {
+    public static DocumentModel parse(File in, String charsetName, String baseUri) throws IOException {
         return DataUtil.load(in, charsetName, baseUri);
     }
 
@@ -99,7 +99,7 @@ public class Jsoup {
      * @throws IOException if the file could not be found, or read, or if the charsetName is invalid.
      * @see #parse(File, String, String)
      */
-    public static Document parse(File in, String charsetName) throws IOException {
+    public static DocumentModel parse(File in, String charsetName) throws IOException {
         return DataUtil.load(in, charsetName, in.getAbsolutePath());
     }
 
@@ -113,7 +113,7 @@ public class Jsoup {
      * @return sane HTML
      * @throws IOException if the file could not be found, or read, or if the charsetName is invalid.
      */
-    public static Document parse(InputStream in, String charsetName, String baseUri) throws IOException {
+    public static DocumentModel parse(InputStream in, String charsetName, String baseUri) throws IOException {
         return DataUtil.load(in, charsetName, baseUri);
     }
 
@@ -129,7 +129,7 @@ public class Jsoup {
      * @return sane HTML
      * @throws IOException if the file could not be found, or read, or if the charsetName is invalid.
      */
-    public static Document parse(InputStream in, String charsetName, String baseUri, Parser parser) throws IOException {
+    public static DocumentModel parse(InputStream in, String charsetName, String baseUri, Parser parser) throws IOException {
         return DataUtil.load(in, charsetName, baseUri, parser);
     }
 
@@ -139,9 +139,9 @@ public class Jsoup {
      * @param bodyHtml body HTML fragment
      * @param baseUri  URL to resolve relative URLs against.
      * @return sane HTML document
-     * @see Document#body()
+     * @see DocumentModel#body()
      */
-    public static Document parseBodyFragment(String bodyHtml, String baseUri) {
+    public static DocumentModel parseBodyFragment(String bodyHtml, String baseUri) {
         return Parser.parseBodyFragment(bodyHtml, baseUri);
     }
 
@@ -150,9 +150,9 @@ public class Jsoup {
      *
      * @param bodyHtml body HTML fragment
      * @return sane HTML document
-     * @see Document#body()
+     * @see DocumentModel#body()
      */
-    public static Document parseBodyFragment(String bodyHtml) {
+    public static DocumentModel parseBodyFragment(String bodyHtml) {
         return Parser.parseBodyFragment(bodyHtml, "");
     }
 
@@ -171,7 +171,7 @@ public class Jsoup {
      * @throws IOException                     if a connection or read error occurs
      * @see #connect(String)
      */
-    public static Document parse(URL url, int timeoutMillis) throws IOException {
+    public static DocumentModel parse(URL url, int timeoutMillis) throws IOException {
         Connection con = HttpConnection.connect(url);
         con.timeout(timeoutMillis);
         return con.get();
@@ -185,12 +185,12 @@ public class Jsoup {
      * @param baseUri   URL to resolve relative URLs against
      * @param whitelist white-list of permitted HTML elements
      * @return safe HTML (body fragment)
-     * @see Cleaner#clean(Document)
+     * @see Cleaner#clean(DocumentModel)
      */
     public static String clean(String bodyHtml, String baseUri, Whitelist whitelist) {
-        Document dirty = parseBodyFragment(bodyHtml, baseUri);
+        DocumentModel dirty = parseBodyFragment(bodyHtml, baseUri);
         Cleaner cleaner = new Cleaner(whitelist);
-        Document clean = cleaner.clean(dirty);
+        DocumentModel clean = cleaner.clean(dirty);
         return clean.body().html();
     }
 
@@ -201,7 +201,7 @@ public class Jsoup {
      * @param bodyHtml  input untrusted HTML (body fragment)
      * @param whitelist white-list of permitted HTML elements
      * @return safe HTML (body fragment)
-     * @see Cleaner#clean(Document)
+     * @see Cleaner#clean(DocumentModel)
      */
     public static String clean(String bodyHtml, Whitelist whitelist) {
         return clean(bodyHtml, "", whitelist);
@@ -211,7 +211,7 @@ public class Jsoup {
      * Get safe HTML from untrusted input HTML, by parsing input HTML and filtering it through a white-list of
      * permitted tags and attributes.
      * <p>The HTML is treated as a body fragment; it's expected the cleaned HTML will be used within the body of an
-     * existing document. If you want to clean full documents, use {@link Cleaner#clean(Document)} instead, and add
+     * existing document. If you want to clean full documents, use {@link Cleaner#clean(DocumentModel)} instead, and add
      * structural tags (<code>html, head, body</code> etc) to the whitelist.
      *
      * @param bodyHtml       input untrusted HTML (body fragment)
@@ -219,12 +219,12 @@ public class Jsoup {
      * @param whitelist      white-list of permitted HTML elements
      * @param outputSettings document output settings; use to control pretty-printing and entity escape modes
      * @return safe HTML (body fragment)
-     * @see Cleaner#clean(Document)
+     * @see Cleaner#clean(DocumentModel)
      */
-    public static String clean(String bodyHtml, String baseUri, Whitelist whitelist, Document.OutputSettings outputSettings) {
-        Document dirty = parseBodyFragment(bodyHtml, baseUri);
+    public static String clean(String bodyHtml, String baseUri, Whitelist whitelist, DocumentModel.OutputSettings outputSettings) {
+        DocumentModel dirty = parseBodyFragment(bodyHtml, baseUri);
         Cleaner cleaner = new Cleaner(whitelist);
-        Document clean = cleaner.clean(dirty);
+        DocumentModel clean = cleaner.clean(dirty);
         clean.outputSettings(outputSettings);
         return clean.body().html();
     }

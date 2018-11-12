@@ -7,7 +7,7 @@ import com.earnix.webk.dom.UncheckedIOException;
 import com.earnix.webk.dom.UnsupportedMimeTypeException;
 import com.earnix.webk.dom.internal.ConstrainableInputStream;
 import com.earnix.webk.dom.internal.StringUtil;
-import com.earnix.webk.dom.nodes.Document;
+import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.parser.Parser;
 import com.earnix.webk.dom.parser.TokenQueue;
 
@@ -281,13 +281,13 @@ public class HttpConnection implements Connection {
         return this;
     }
 
-    public Document get() throws IOException {
+    public DocumentModel get() throws IOException {
         req.method(Method.GET);
         execute();
         return res.parse();
     }
 
-    public Document post() throws IOException {
+    public DocumentModel post() throws IOException {
         req.method(Method.POST);
         execute();
         return res.parse();
@@ -824,14 +824,14 @@ public class HttpConnection implements Connection {
             return contentType;
         }
 
-        public Document parse() throws IOException {
+        public DocumentModel parse() throws IOException {
             Validate.isTrue(executed, "Request must be executed (with .execute(), .get(), or .post() before parsing response");
             if (byteData != null) { // bytes have been read in to the buffer, parse that
                 bodyStream = new ByteArrayInputStream(byteData.array());
                 inputStreamRead = false; // ok to reparse if in bytes
             }
             Validate.isFalse(inputStreamRead, "Input stream already read and parsed, cannot re-read.");
-            Document doc = DataUtil.parseInputStream(bodyStream, charset, url.toExternalForm(), req.parser());
+            DocumentModel doc = DataUtil.parseInputStream(bodyStream, charset, url.toExternalForm(), req.parser());
             charset = doc.outputSettings().charset().name(); // update charset from meta-equiv, possibly
             inputStreamRead = true;
             safeClose();

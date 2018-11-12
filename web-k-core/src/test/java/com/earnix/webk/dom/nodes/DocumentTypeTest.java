@@ -14,31 +14,31 @@ import static org.junit.Assert.assertEquals;
 public class DocumentTypeTest {
     @Test
     public void constructorValidationOkWithBlankName() {
-        DocumentType fail = new DocumentType("", "", "");
+        DocumentTypeModel fail = new DocumentTypeModel("", "", "");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void constructorValidationThrowsExceptionOnNulls() {
-        DocumentType fail = new DocumentType("html", null, null);
+        DocumentTypeModel fail = new DocumentTypeModel("html", null, null);
     }
 
     @Test
     public void constructorValidationOkWithBlankPublicAndSystemIds() {
-        DocumentType fail = new DocumentType("html", "", "");
+        DocumentTypeModel fail = new DocumentTypeModel("html", "", "");
     }
 
     @Test
     public void outerHtmlGeneration() {
-        DocumentType html5 = new DocumentType("html", "", "");
+        DocumentTypeModel html5 = new DocumentTypeModel("html", "", "");
         assertEquals("<!doctype html>", html5.outerHtml());
 
-        DocumentType publicDocType = new DocumentType("html", "-//IETF//DTD HTML//", "");
+        DocumentTypeModel publicDocType = new DocumentTypeModel("html", "-//IETF//DTD HTML//", "");
         assertEquals("<!DOCTYPE html PUBLIC \"-//IETF//DTD HTML//\">", publicDocType.outerHtml());
 
-        DocumentType systemDocType = new DocumentType("html", "", "http://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd");
+        DocumentTypeModel systemDocType = new DocumentTypeModel("html", "", "http://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd");
         assertEquals("<!DOCTYPE html \"http://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd\">", systemDocType.outerHtml());
 
-        DocumentType combo = new DocumentType("notHtml", "--public", "--system");
+        DocumentTypeModel combo = new DocumentTypeModel("notHtml", "--public", "--system");
         assertEquals("<!DOCTYPE notHtml PUBLIC \"--public\" \"--system\">", combo.outerHtml());
     }
 
@@ -62,7 +62,7 @@ public class DocumentTypeTest {
     }
 
     private String htmlOutput(String in) {
-        DocumentType type = (DocumentType) Jsoup.parse(in).childNode(0);
+        DocumentTypeModel type = (DocumentTypeModel) Jsoup.parse(in).childNode(0);
         return type.outerHtml();
     }
 

@@ -19,7 +19,7 @@
  */
 package com.earnix.webk.simple.extend.form;
 
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
 import com.earnix.webk.simple.extend.XhtmlForm;
@@ -31,7 +31,7 @@ import javax.swing.JTextArea;
 
 public class TextAreaField extends AbstractTextField {
 
-    public TextAreaField(Element e, XhtmlForm form, LayoutContext context, BlockBox box) {
+    public TextAreaField(ElementModel e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }
 

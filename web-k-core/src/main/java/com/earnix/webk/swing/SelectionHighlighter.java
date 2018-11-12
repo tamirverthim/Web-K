@@ -20,10 +20,10 @@
 package com.earnix.webk.swing;
 
 import com.earnix.webk.css.style.CalculatedStyle;
-import com.earnix.webk.dom.nodes.Document;
-import com.earnix.webk.dom.nodes.Element;
-import com.earnix.webk.dom.nodes.Node;
-import com.earnix.webk.dom.nodes.TextNode;
+import com.earnix.webk.dom.nodes.DocumentModel;
+import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.dom.nodes.NodeModel;
+import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.Box;
 import com.earnix.webk.render.InlineLayoutBox;
@@ -110,7 +110,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
 
     private TransferHandler handler;
 
-    private Document document;
+    private DocumentModel document;
 
     public void addChangeListener(ChangeListener l) {
         listenerList.add(ChangeListener.class, l);
@@ -488,7 +488,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
         s.push(panel.getRootBox());
         while (!s.empty()) {
             Box b = (Box) s.pop();
-            Element element = b.getElement();
+            ElementModel element = b.getElement();
             if (element != null && !elementBoxMap.containsKey(element)) {
                 elementBoxMap.put(element, b);
             }
@@ -498,7 +498,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
                     Object o = it.next();
                     if (o instanceof InlineText) {
                         InlineText t = (InlineText) o;
-                        TextNode txt = t.getTextNode();
+                        TextNodeModel txt = t.getTextNode();
                         if (!textInlineMap.containsKey(txt)) {
                             textInlineMap.put(txt, new ArrayList());
                         }
@@ -518,11 +518,11 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
 
     }
 
-    private List getInlineTextsForText(TextNode t) {
+    private List getInlineTextsForText(TextNodeModel t) {
         return (List) textInlineMap.get(t);
     }
 
-    private Box getBoxForElement(Element elt) {
+    private Box getBoxForElement(ElementModel elt) {
         return (Box) elementBoxMap.get(elt);
     }
 
@@ -589,7 +589,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
         if (box == null) {
             return null;
         }
-        Element elt = null;
+        ElementModel elt = null;
         int offset = 0;
         InlineLayoutBox ilb = null;
         boolean containsWholeIlb = false;
@@ -686,7 +686,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
             }
         }
 
-        Node node = fndTxt.getTextNode();
+        NodeModel node = fndTxt.getTextNode();
 //        try {
 //            r.setStart(node, offset);
 //        } catch (Exception ex) {

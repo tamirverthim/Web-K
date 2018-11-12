@@ -19,7 +19,7 @@
  */
 package com.earnix.webk.extend;
 
-import com.earnix.webk.dom.nodes.Document;
+import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.resource.CSSResource;
 import com.earnix.webk.resource.ImageResource;
 import com.earnix.webk.swing.BasicPanel;
@@ -72,7 +72,7 @@ public interface UserAgentCallback {
      * @param uri Location of the XML
      * @return A XMLResource for the content at the URI.
      */
-    Document getXMLResource(String uri);
+    DocumentModel getXMLResource(String uri);
 
     /**
      * Retrieves a binary resource located at a given URI and returns its contents

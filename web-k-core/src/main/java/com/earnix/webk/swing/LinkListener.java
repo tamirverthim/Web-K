@@ -19,8 +19,8 @@
  */
 package com.earnix.webk.swing;
 
-import com.earnix.webk.dom.nodes.Element;
-import com.earnix.webk.dom.nodes.Node;
+import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.render.Box;
 
 
@@ -67,11 +67,11 @@ public class LinkListener extends DefaultFSMouseListener {
 
     // looks to see if the given element has a link URI associated with it; if so, returns the URI as a string, if
     // not, returns null
-    private String findLink(BasicPanel panel, Element e) {
+    private String findLink(BasicPanel panel, ElementModel e) {
         String uri = null;
 
-        for (Node node = e; node instanceof Element; node = node.parentNode()) {
-            uri = panel.getSharedContext().getNamespaceHandler().getLinkUri((Element) node);
+        for (NodeModel node = e; node instanceof ElementModel; node = node.parentNode()) {
+            uri = panel.getSharedContext().getNamespaceHandler().getLinkUri((ElementModel) node);
 
             if (uri != null) {
                 break;

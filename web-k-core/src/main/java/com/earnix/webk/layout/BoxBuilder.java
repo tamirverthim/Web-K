@@ -34,9 +34,10 @@ import com.earnix.webk.css.sheet.StylesheetInfo;
 import com.earnix.webk.css.style.CalculatedStyle;
 import com.earnix.webk.css.style.EmptyStyle;
 import com.earnix.webk.css.style.FSDerivedValue;
-import com.earnix.webk.dom.nodes.Element;
-import com.earnix.webk.dom.nodes.Node;
-import com.earnix.webk.dom.nodes.TextNode;
+import com.earnix.webk.dom.nodes.DocumentModel;
+import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.dom.nodes.NodeModel;
+import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.newtable.TableBox;
 import com.earnix.webk.newtable.TableCellBox;
 import com.earnix.webk.newtable.TableColumn;
@@ -80,8 +81,8 @@ public class BoxBuilder {
     private static final int CONTENT_LIST_DOCUMENT = 1;
     private static final int CONTENT_LIST_MARGIN_BOX = 2;
 
-    public static BlockBox createRootBox(LayoutContext c, com.earnix.webk.dom.nodes.Document document) {
-        Element root = document.child(0); // "html" element
+    public static BlockBox createRootBox(LayoutContext c, DocumentModel document) {
+        ElementModel root = document.child(0); // "html" element
 
         CalculatedStyle style = c.getSharedContext().getStyle(root);
 
@@ -140,7 +141,7 @@ public class BoxBuilder {
             return null;
         }
 
-        Element source = c.getRootLayer().getMaster().getElement(); // HACK
+        ElementModel source = c.getRootLayer().getMaster().getElement(); // HACK
 
         ChildBoxInfo info = new ChildBoxInfo();
         CalculatedStyle pageStyle = new EmptyStyle().deriveStyle(pageInfo.getPageStyle());
@@ -384,7 +385,7 @@ public class BoxBuilder {
             Styleable styleable = (Styleable) i.next();
             if (styleable instanceof InlineBox) {
                 InlineBox iB = (InlineBox) styleable;
-                Element elem = iB.getElement();
+                ElementModel elem = iB.getElement();
 
                 if (!boxesByElement.containsKey(elem)) {
                     iB.setStartsHere(true);
@@ -782,13 +783,13 @@ public class BoxBuilder {
         }
     }
 
-    private static String getAttributeValue(FSFunction attrFunc, Element e) {
+    private static String getAttributeValue(FSFunction attrFunc, ElementModel e) {
         PropertyValue value = (PropertyValue) attrFunc.getParameters().get(0);
         return e.attr(value.getStringValue());
     }
 
     private static List createGeneratedContentList(
-            LayoutContext c, Element element, PropertyValue propValue,
+            LayoutContext c, ElementModel element, PropertyValue propValue,
             String peName, CalculatedStyle style, int mode, ChildBoxInfo info) {
         List values = propValue.getValues();
 
@@ -895,7 +896,7 @@ public class BoxBuilder {
     }
 
     private static void insertGeneratedContent(
-            LayoutContext c, Element element, CalculatedStyle parentStyle,
+            LayoutContext c, ElementModel element, CalculatedStyle parentStyle,
             String peName, List children, ChildBoxInfo info) {
         CascadedStyle peStyle = c.getCss().getPseudoElementStyle(element, peName);
         if (peStyle != null) {
@@ -932,7 +933,7 @@ public class BoxBuilder {
     }
 
     private static List createGeneratedContent(
-            LayoutContext c, Element element, String peName,
+            LayoutContext c, ElementModel element, String peName,
             CalculatedStyle style, PropertyValue property, ChildBoxInfo info) {
         if (style.isDisplayNone() || style.isIdent(CSSName.DISPLAY, IdentValue.TABLE_COLUMN)
                 || style.isIdent(CSSName.DISPLAY, IdentValue.TABLE_COLUMN_GROUP)) {
@@ -974,7 +975,7 @@ public class BoxBuilder {
     }
 
     private static List createGeneratedMarginBoxContent(
-            LayoutContext c, Element element, PropertyValue property,
+            LayoutContext c, ElementModel element, PropertyValue property,
             CalculatedStyle style, ChildBoxInfo info) {
         List result = createGeneratedContentList(
                 c, element, property, null, style, CONTENT_LIST_MARGIN_BOX, info);
@@ -1028,11 +1029,11 @@ public class BoxBuilder {
     private static void addColumns(LayoutContext c, TableBox table, TableColumn parent) {
         SharedContext sharedContext = c.getSharedContext();
 
-        Node working = parent.getElement().childNodeSize() > 0 ? parent.getElement().childNode(0) : null;
+        NodeModel working = parent.getElement().childNodeSize() > 0 ? parent.getElement().childNode(0) : null;
         boolean found = false;
         while (working != null) {
-            if (working instanceof Element) {
-                Element element = (Element) working;
+            if (working instanceof ElementModel) {
+                ElementModel element = (ElementModel) working;
                 CalculatedStyle style = sharedContext.getStyle(element);
 
                 if (style.isIdent(CSSName.DISPLAY, IdentValue.TABLE_COLUMN)) {
@@ -1050,7 +1051,7 @@ public class BoxBuilder {
     }
 
     private static void addColumnOrColumnGroup(
-            LayoutContext c, TableBox table, Element e, CalculatedStyle style) {
+            LayoutContext c, TableBox table, ElementModel e, CalculatedStyle style) {
         if (style.isIdent(CSSName.DISPLAY, IdentValue.TABLE_COLUMN)) {
             table.addStyleColumn(new TableColumn(e, style));
         } else { /* style.isIdent(CSSName.DISPLAY, IdentValue.TABLE_COLUMN_GROUP) */
@@ -1059,7 +1060,7 @@ public class BoxBuilder {
     }
 
     private static InlineBox createInlineBox(
-            String text, Element parent, CalculatedStyle parentStyle, TextNode node) {
+            String text, ElementModel parent, CalculatedStyle parentStyle, TextNodeModel node) {
         InlineBox result = new InlineBox(text, node);
 
         if (parentStyle.isInline() && !(parent.parentNode() instanceof Document)) {
@@ -1075,7 +1076,7 @@ public class BoxBuilder {
     }
 
     private static void createChildren(
-            LayoutContext c, BlockBox blockParent, Element parent,
+            LayoutContext c, BlockBox blockParent, ElementModel parent,
             List children, ChildBoxInfo info, boolean inline) {
         SharedContext sharedContext = c.getSharedContext();
 
@@ -1083,7 +1084,7 @@ public class BoxBuilder {
 
         insertGeneratedContent(c, parent, parentStyle, "before", children, info);
 
-        Node working = parent.childNodeSize() > 0 ? parent.childNode(0) : null;
+        NodeModel working = parent.childNodeSize() > 0 ? parent.childNode(0) : null;
         boolean needStartText = inline;
         boolean needEndText = inline;
         if (working != null) {
@@ -1091,8 +1092,8 @@ public class BoxBuilder {
             do {
                 Styleable child = null;
 //                short nodeType = working.getNodeType();
-                if (working instanceof Element) {
-                    Element element = (Element) working;
+                if (working instanceof ElementModel) {
+                    ElementModel element = (ElementModel) working;
                     CalculatedStyle style = sharedContext.getStyle(element);
 
                     if (style.isDisplayNone()) {
@@ -1182,11 +1183,11 @@ public class BoxBuilder {
                         //I think we need to do this to evaluate counters correctly
                         block.ensureChildren(c);
                     }
-                } else if (working instanceof TextNode) {
+                } else if (working instanceof TextNodeModel) {
                     needStartText = false;
                     needEndText = false;
 
-                    TextNode textNode = (TextNode) working;
+                    TextNodeModel textNode = (TextNodeModel) working;
 
                     /*
                     StringBuffer text = new StringBuffer(textNode.getData());

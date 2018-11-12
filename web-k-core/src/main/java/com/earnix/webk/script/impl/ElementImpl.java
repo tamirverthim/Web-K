@@ -1,6 +1,10 @@
 package com.earnix.webk.script.impl;
 
-import com.earnix.webk.script.Binder;
+import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
+import com.earnix.webk.script.ScriptContext;
+import com.earnix.webk.script.cssom.CSSStyleDeclaration;
+import com.earnix.webk.script.cssom.impl.CSSStyleDeclarationImpl;
 import com.earnix.webk.script.cssom_view.ScrollToOptions;
 import com.earnix.webk.script.geom.DOMRect;
 import com.earnix.webk.script.geom.DOMRectList;
@@ -18,10 +22,8 @@ import com.earnix.webk.script.whatwg_dom.NamedNodeMap;
 import com.earnix.webk.script.whatwg_dom.NodeList;
 import com.earnix.webk.script.whatwg_dom.ShadowRoot;
 import com.earnix.webk.script.whatwg_dom.ShadowRootInit;
-import com.earnix.webk.script.whatwg_dom.css_style_attribute.CSSStyleAttribute;
 import com.earnix.webk.script.whatwg_dom.impl.HTMLCollectionImpl;
 import com.earnix.webk.script.whatwg_dom.impl.NamedNodeMapImpl;
-import com.earnix.webk.swing.BasicPanel;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -37,18 +39,17 @@ import java.util.HashSet;
 @Slf4j
 public class ElementImpl extends NodeImpl implements HTMLElement {
 
-    final com.earnix.webk.dom.nodes.Element model;
+    final ElementModel model;
     final ChildNodeImpl childNodeMixin;
-    final BasicPanel panel;
+//    final ScriptContext ctx;
 
-    public ElementImpl(com.earnix.webk.dom.nodes.Element model, BasicPanel panel) {
-        super(model, panel);
+    public ElementImpl(ElementModel model) {
+        super(model);
         this.model = model;
-        this.panel = panel;
         childNodeMixin = new ChildNodeImpl(model);
     }
 
-    public com.earnix.webk.dom.nodes.Element getModel() {
+    public ElementModel getModel() {
         return model;
     }
 
@@ -99,7 +100,7 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public NamedNodeMap attributes() {
-        return new NamedNodeMapImpl(model, panel);
+        return new NamedNodeMapImpl(model, ctx);
     }
 
     @Override
@@ -209,7 +210,7 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public HTMLCollection getElementsByTagName(@DOMString String qualifiedName) {
-        return new HTMLCollectionImpl(model.getElementsByTag(qualifiedName.toString()), panel);
+        return new HTMLCollectionImpl(model.getElementsByTag(qualifiedName));
     }
 
     @Override
@@ -219,7 +220,7 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public HTMLCollection getElementsByClassName(@DOMString String classNames) {
-        return new HTMLCollectionImpl(model.getElementsByClass(classNames), panel);
+        return new HTMLCollectionImpl(model.getElementsByClass(classNames));
     }
 
     @Override
@@ -258,17 +259,17 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public Element previousElementSibling() {
-        return Binder.getElement(model.previousElementSibling(), panel);
+        return ScriptDOMFactory.getElement(model.previousElementSibling());
     }
 
     @Override
     public Element nextElementSibling() {
-        return Binder.getElement(model.nextElementSibling(), panel);
+        return ScriptDOMFactory.getElement(model.nextElementSibling());
     }
 
     @Override
     public HTMLCollection children() {
-        return new HTMLCollectionImpl(model.children(), panel);
+        return new HTMLCollectionImpl(model.children());
     }
 
     @Override
@@ -394,9 +395,8 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
     }
 
     @Override
-    public Attribute<CSSStyleAttribute> style() {
-        return Attribute.<CSSStyleAttribute>receive((a) -> model.attr("style", a.toCSSString()))
-                .give(() -> new CSSStyleAttribute(model, panel));
+    public CSSStyleDeclaration style() {
+        return new CSSStyleDeclarationImpl(model, ctx);
     }
 
     @Override
@@ -537,7 +537,7 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
     public int clientWidth() {
         val box = model.getView();
         if (box != null) {
-            val paddingStyle = box.getPadding(panel.getLayoutContext());
+            val paddingStyle = box.getPadding(ctx.getPanel().getLayoutContext());
             return (int) (box.getContentWidth() + paddingStyle.left() + paddingStyle.right());
         } else {
             return 0;

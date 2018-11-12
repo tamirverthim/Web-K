@@ -12,7 +12,7 @@ import com.earnix.webk.script.web_idl.SameObject;
 import com.earnix.webk.script.web_idl.Sequence;
 import com.earnix.webk.script.web_idl.TreatNullAs;
 import com.earnix.webk.script.web_idl.Unscopable;
-import com.earnix.webk.script.whatwg_dom.css_style_attribute.CSSStyleAttribute;
+
 
 /**
  * @author Taras Maslov
@@ -166,8 +166,6 @@ public interface Element extends Node, ParentNode, NonDocumentTypeChildNode, Chi
     Attribute<String> nonce();
 
     Attribute<String> spellcheck();
-
-    Attribute<CSSStyleAttribute> style();
 
     Attribute<String> tabindex();
 

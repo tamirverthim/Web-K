@@ -1,7 +1,7 @@
 package com.earnix.webk.dom.parser;
 
 import com.earnix.webk.dom.helper.Validate;
-import com.earnix.webk.dom.nodes.Attributes;
+import com.earnix.webk.dom.nodes.AttributesModel;
 
 import static com.earnix.webk.dom.internal.Normalizer.lowerCase;
 
@@ -81,7 +81,7 @@ abstract class Token {
         private boolean hasEmptyAttributeValue = false; // distinguish boolean attribute from empty string value
         private boolean hasPendingAttributeValue = false;
         boolean selfClosing = false;
-        Attributes attributes; // start tags get attributes on construction. End tags get attributes on first new attribute (but only for parser convenience, not used).
+        AttributesModel attributes; // start tags get attributes on construction. End tags get attributes on first new attribute (but only for parser convenience, not used).
 
         @Override
         Tag reset() {
@@ -99,7 +99,7 @@ abstract class Token {
 
         final void newAttribute() {
             if (attributes == null)
-                attributes = new Attributes();
+                attributes = new AttributesModel();
 
             if (pendingAttributeName != null) {
                 // the tokeniser has skipped whitespace control chars, but trimming could collapse to empty for other control codes, so verify here
@@ -150,7 +150,7 @@ abstract class Token {
         }
 
         @SuppressWarnings({"TypeMayBeWeakened"})
-        final Attributes getAttributes() {
+        final AttributesModel getAttributes() {
             return attributes;
         }
 
@@ -215,19 +215,19 @@ abstract class Token {
     final static class StartTag extends Tag {
         StartTag() {
             super();
-            attributes = new Attributes();
+            attributes = new AttributesModel();
             type = TokenType.StartTag;
         }
 
         @Override
         Tag reset() {
             super.reset();
-            attributes = new Attributes();
+            attributes = new AttributesModel();
             // todo - would prefer these to be null, but need to check Element assertions
             return this;
         }
 
-        StartTag nameAttr(String name, Attributes attributes) {
+        StartTag nameAttr(String name, AttributesModel attributes) {
             this.tagName = name;
             this.attributes = attributes;
             normalName = lowerCase(tagName);

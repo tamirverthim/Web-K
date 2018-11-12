@@ -1,0 +1,42 @@
+<html>
+<head>
+    <style>
+
+    </style>
+    <script>
+
+        window.onload = function () {
+            var button = document.querySelector("button.alert");
+            button.addEventListener("click", function (e) {
+                e.target.innerHtml = "Pressed.";
+                alert("Hello");
+            });
+
+
+            var button2 = document.querySelector("button.add-div");
+            button2.addEventListener("click", function () {
+                var div = document.createElement("div");
+                div.innerHTML = "Hello";
+                div.classList.add("new");
+                document.body.appendChild(div);
+            });
+
+
+            var button3 = document.querySelector("button.apply-color");
+            button3.addEventListener("click", function (e) {
+                document.querySelector("div.new").style.backgroundColor = "red";
+            })
+
+
+        }
+
+    </script>
+</head>
+<body>
+<div id="main">
+    <button class="alert">Show alert</button>
+    <button class="add-div">Append div with text</button>
+    <button class="apply-color">Apply div color</button>
+</div>
+</body>
+</html>

@@ -2,13 +2,13 @@ package com.earnix.webk.dom.safety;
 
 import com.earnix.webk.dom.Jsoup;
 import com.earnix.webk.dom.helper.Validate;
-import com.earnix.webk.dom.nodes.Attribute;
-import com.earnix.webk.dom.nodes.Attributes;
-import com.earnix.webk.dom.nodes.DataNode;
-import com.earnix.webk.dom.nodes.Document;
-import com.earnix.webk.dom.nodes.Element;
-import com.earnix.webk.dom.nodes.Node;
-import com.earnix.webk.dom.nodes.TextNode;
+import com.earnix.webk.dom.nodes.AttributeModel;
+import com.earnix.webk.dom.nodes.AttributesModel;
+import com.earnix.webk.dom.nodes.DataNodeModel;
+import com.earnix.webk.dom.nodes.DocumentModel;
+import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.dom.nodes.NodeModel;
+import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.dom.parser.ParseErrorList;
 import com.earnix.webk.dom.parser.Parser;
 import com.earnix.webk.dom.parser.Tag;
@@ -53,10 +53,10 @@ public class Cleaner {
      * @param dirtyDocument Untrusted base document to clean.
      * @return cleaned document.
      */
-    public Document clean(Document dirtyDocument) {
+    public DocumentModel clean(DocumentModel dirtyDocument) {
         Validate.notNull(dirtyDocument);
 
-        Document clean = Document.createShell(dirtyDocument.baseUri());
+        DocumentModel clean = DocumentModel.createShell(dirtyDocument.baseUri());
         if (dirtyDocument.body() != null) // frameset documents won't have a body. the clean doc will have empty body.
             copySafeNodes(dirtyDocument.body(), clean.body());
 
@@ -68,27 +68,27 @@ public class Cleaner {
      * in the input HTML are allowed by the whitelist, and that there is no content in the <code>head</code>.
      * <p>
      * This method can be used as a validator for user input. An invalid document will still be cleaned successfully
-     * using the {@link #clean(Document)} document. If using as a validator, it is recommended to still clean the document
+     * using the {@link #clean(DocumentModel)} document. If using as a validator, it is recommended to still clean the document
      * to ensure enforced attributes are set correctly, and that the output is tidied.
      * </p>
      *
      * @param dirtyDocument document to test
      * @return true if no tags or attributes need to be removed; false if they do
      */
-    public boolean isValid(Document dirtyDocument) {
+    public boolean isValid(DocumentModel dirtyDocument) {
         Validate.notNull(dirtyDocument);
 
-        Document clean = Document.createShell(dirtyDocument.baseUri());
+        DocumentModel clean = DocumentModel.createShell(dirtyDocument.baseUri());
         int numDiscarded = copySafeNodes(dirtyDocument.body(), clean.body());
         return numDiscarded == 0
                 && dirtyDocument.head().childNodes().size() == 0; // because we only look at the body, but we start from a shell, make sure there's nothing in the head
     }
 
     public boolean isValidBodyHtml(String bodyHtml) {
-        Document clean = Document.createShell("");
-        Document dirty = Document.createShell("");
+        DocumentModel clean = DocumentModel.createShell("");
+        DocumentModel dirty = DocumentModel.createShell("");
         ParseErrorList errorList = ParseErrorList.tracking(1);
-        List<Node> nodes = Parser.parseFragment(bodyHtml, dirty.body(), "", errorList);
+        List<NodeModel> nodes = Parser.parseFragment(bodyHtml, dirty.body(), "", errorList);
         dirty.body().insertChildren(0, nodes);
         int numDiscarded = copySafeNodes(dirty.body(), clean.body());
         return numDiscarded == 0 && errorList.size() == 0;
@@ -99,21 +99,21 @@ public class Cleaner {
      */
     private final class CleaningVisitor implements NodeVisitor {
         private int numDiscarded = 0;
-        private final Element root;
-        private Element destination; // current element to append nodes to
+        private final ElementModel root;
+        private ElementModel destination; // current element to append nodes to
 
-        private CleaningVisitor(Element root, Element destination) {
+        private CleaningVisitor(ElementModel root, ElementModel destination) {
             this.root = root;
             this.destination = destination;
         }
 
-        public void head(Node source, int depth) {
-            if (source instanceof Element) {
-                Element sourceEl = (Element) source;
+        public void head(NodeModel source, int depth) {
+            if (source instanceof ElementModel) {
+                ElementModel sourceEl = (ElementModel) source;
 
                 if (whitelist.isSafeTag(sourceEl.tagName())) { // safe, clone and copy safe attrs
                     ElementMeta meta = createSafeElement(sourceEl);
-                    Element destChild = meta.el;
+                    ElementModel destChild = meta.el;
                     destination.appendChild(destChild);
 
                     numDiscarded += meta.numAttribsDiscarded;
@@ -121,56 +121,56 @@ public class Cleaner {
                 } else if (source != root) { // not a safe tag, so don't add. don't count root against discarded.
                     numDiscarded++;
                 }
-            } else if (source instanceof TextNode) {
-                TextNode sourceText = (TextNode) source;
-                TextNode destText = new TextNode(sourceText.getWholeText());
+            } else if (source instanceof TextNodeModel) {
+                TextNodeModel sourceText = (TextNodeModel) source;
+                TextNodeModel destText = new TextNodeModel(sourceText.getWholeText());
                 destination.appendChild(destText);
-            } else if (source instanceof DataNode && whitelist.isSafeTag(source.parent().nodeName())) {
-                DataNode sourceData = (DataNode) source;
-                DataNode destData = new DataNode(sourceData.getWholeData());
+            } else if (source instanceof DataNodeModel && whitelist.isSafeTag(source.parent().nodeName())) {
+                DataNodeModel sourceData = (DataNodeModel) source;
+                DataNodeModel destData = new DataNodeModel(sourceData.getWholeData());
                 destination.appendChild(destData);
             } else { // else, we don't care about comments, xml proc instructions, etc
                 numDiscarded++;
             }
         }
 
-        public void tail(Node source, int depth) {
-            if (source instanceof Element && whitelist.isSafeTag(source.nodeName())) {
+        public void tail(NodeModel source, int depth) {
+            if (source instanceof ElementModel && whitelist.isSafeTag(source.nodeName())) {
                 destination = destination.parent(); // would have descended, so pop destination stack
             }
         }
     }
 
-    private int copySafeNodes(Element source, Element dest) {
+    private int copySafeNodes(ElementModel source, ElementModel dest) {
         CleaningVisitor cleaningVisitor = new CleaningVisitor(source, dest);
         NodeTraversor.traverse(cleaningVisitor, source);
         return cleaningVisitor.numDiscarded;
     }
 
-    private ElementMeta createSafeElement(Element sourceEl) {
+    private ElementMeta createSafeElement(ElementModel sourceEl) {
         String sourceTag = sourceEl.tagName();
-        Attributes destAttrs = new Attributes();
-        Element dest = new Element(Tag.valueOf(sourceTag), sourceEl.baseUri(), destAttrs);
+        AttributesModel destAttrs = new AttributesModel();
+        ElementModel dest = new ElementModel(Tag.valueOf(sourceTag), sourceEl.baseUri(), destAttrs);
         int numDiscarded = 0;
 
-        Attributes sourceAttrs = sourceEl.attributes();
-        for (Attribute sourceAttr : sourceAttrs) {
+        AttributesModel sourceAttrs = sourceEl.attributes();
+        for (AttributeModel sourceAttr : sourceAttrs) {
             if (whitelist.isSafeAttribute(sourceTag, sourceEl, sourceAttr))
                 destAttrs.put(sourceAttr);
             else
                 numDiscarded++;
         }
-        Attributes enforcedAttrs = whitelist.getEnforcedAttributes(sourceTag);
+        AttributesModel enforcedAttrs = whitelist.getEnforcedAttributes(sourceTag);
         destAttrs.addAll(enforcedAttrs);
 
         return new ElementMeta(dest, numDiscarded);
     }
 
     private static class ElementMeta {
-        Element el;
+        ElementModel el;
         int numAttribsDiscarded;
 
-        ElementMeta(Element el, int numAttribsDiscarded) {
+        ElementMeta(ElementModel el, int numAttribsDiscarded) {
             this.el = el;
             this.numAttribsDiscarded = numAttribsDiscarded;
         }

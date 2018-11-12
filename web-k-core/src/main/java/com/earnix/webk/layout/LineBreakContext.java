@@ -19,7 +19,7 @@
  */
 package com.earnix.webk.layout;
 
-import com.earnix.webk.dom.nodes.TextNode;
+import com.earnix.webk.dom.nodes.TextNodeModel;
 
 /**
  * A bean which serves as a way for the layout code to pass information to the
@@ -35,7 +35,7 @@ public class LineBreakContext {
     private boolean _needsNewLine;
     private int _width;
     private boolean _endsOnNL;
-    private TextNode _textNode;
+    private TextNodeModel _textNode;
 
     public int getLast() {
         return _master.length();
@@ -130,11 +130,11 @@ public class LineBreakContext {
         _endsOnNL = b;
     }
 
-    public TextNode getTextNode() {
+    public TextNodeModel getTextNode() {
         return this._textNode;
     }
 
-    public void setTextNode(TextNode _text) {
+    public void setTextNode(TextNodeModel _text) {
         this._textNode = _text;
     }
 }

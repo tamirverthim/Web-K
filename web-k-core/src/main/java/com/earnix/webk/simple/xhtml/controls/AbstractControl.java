@@ -19,9 +19,9 @@
  */
 package com.earnix.webk.simple.xhtml.controls;
 
-import com.earnix.webk.dom.nodes.Element;
-import com.earnix.webk.dom.nodes.Node;
-import com.earnix.webk.dom.nodes.TextNode;
+import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.dom.nodes.NodeModel;
+import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.simple.xhtml.FormControl;
 import com.earnix.webk.simple.xhtml.FormControlListener;
 import com.earnix.webk.simple.xhtml.FormListener;
@@ -34,7 +34,7 @@ import java.util.List;
 public abstract class AbstractControl implements FormControl {
 
     private XhtmlForm _form;
-    private Element _element;
+    private ElementModel _element;
     private String _name;
 
     private String _initialValue;
@@ -44,7 +44,7 @@ public abstract class AbstractControl implements FormControl {
 
     private List _listeners = new ArrayList();
 
-    public AbstractControl(XhtmlForm form, Element e) {
+    public AbstractControl(XhtmlForm form, ElementModel e) {
         _form = form;
         _element = e;
         _name = e.attr("name");
@@ -94,7 +94,7 @@ public abstract class AbstractControl implements FormControl {
         _listeners.remove(listener);
     }
 
-    public Element getElement() {
+    public ElementModel getElement() {
         return _element;
     }
 
@@ -168,13 +168,13 @@ public abstract class AbstractControl implements FormControl {
         setValue(_initialValue);
     }
 
-    public static String collectText(Element e) {
+    public static String collectText(ElementModel e) {
         StringBuffer result = new StringBuffer();
-        Node node = e.childNodeSize() > 0 ? e.childNode(0) : null;
+        NodeModel node = e.childNodeSize() > 0 ? e.childNode(0) : null;
         if (node != null) {
             do {
-                if (node instanceof TextNode) {
-                    TextNode text = (TextNode) node;
+                if (node instanceof TextNodeModel) {
+                    TextNodeModel text = (TextNodeModel) node;
                     result.append(text.getWholeText());
                 }
             } while ((node = node.nextSibling()) != null);
@@ -182,7 +182,7 @@ public abstract class AbstractControl implements FormControl {
         return result.toString().trim();
     }
 
-    public static int getIntAttribute(Element e, String attribute, int def) {
+    public static int getIntAttribute(ElementModel e, String attribute, int def) {
         int result = def;
         String str = e.attr(attribute);
         if (str.length() > 0) {

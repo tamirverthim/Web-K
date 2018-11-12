@@ -1,6 +1,6 @@
 package com.earnix.webk.simple.extend;
 
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.extend.ReplacedElement;
 import com.earnix.webk.extend.ReplacedElementFactory;
 import com.earnix.webk.extend.UserAgentCallback;
@@ -14,7 +14,7 @@ public class NoReplacedElementFactory implements ReplacedElementFactory {
         return null;
     }
 
-    public void remove(Element e) {
+    public void remove(ElementModel e) {
 
     }
 

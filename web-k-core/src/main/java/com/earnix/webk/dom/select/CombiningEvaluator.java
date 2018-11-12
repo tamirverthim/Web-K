@@ -1,7 +1,7 @@
 package com.earnix.webk.dom.select;
 
 import com.earnix.webk.dom.internal.StringUtil;
-import com.earnix.webk.dom.nodes.Element;
+import com.earnix.webk.dom.nodes.ElementModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,7 +48,7 @@ abstract class CombiningEvaluator extends Evaluator {
         }
 
         @Override
-        public boolean matches(Element root, Element node) {
+        public boolean matches(ElementModel root, ElementModel node) {
             for (int i = 0; i < num; i++) {
                 Evaluator s = evaluators.get(i);
                 if (!s.matches(root, node))
@@ -92,7 +92,7 @@ abstract class CombiningEvaluator extends Evaluator {
         }
 
         @Override
-        public boolean matches(Element root, Element node) {
+        public boolean matches(ElementModel root, ElementModel node) {
             for (int i = 0; i < num; i++) {
                 Evaluator s = evaluators.get(i);
                 if (s.matches(root, node))

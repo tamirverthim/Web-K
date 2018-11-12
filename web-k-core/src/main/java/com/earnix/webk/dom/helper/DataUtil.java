@@ -3,11 +3,11 @@ package com.earnix.webk.dom.helper;
 import com.earnix.webk.dom.UncheckedIOException;
 import com.earnix.webk.dom.internal.ConstrainableInputStream;
 import com.earnix.webk.dom.internal.StringUtil;
-import com.earnix.webk.dom.nodes.Comment;
-import com.earnix.webk.dom.nodes.Document;
-import com.earnix.webk.dom.nodes.Element;
-import com.earnix.webk.dom.nodes.Node;
-import com.earnix.webk.dom.nodes.XmlDeclaration;
+import com.earnix.webk.dom.nodes.CommentModel;
+import com.earnix.webk.dom.nodes.DocumentModel;
+import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.dom.nodes.NodeModel;
+import com.earnix.webk.dom.nodes.XmlDeclarationModel;
 import com.earnix.webk.dom.parser.Parser;
 import com.earnix.webk.dom.select.Elements;
 
@@ -51,7 +51,7 @@ public final class DataUtil {
      * @return Document
      * @throws IOException on IO error
      */
-    public static Document load(File in, String charsetName, String baseUri) throws IOException {
+    public static DocumentModel load(File in, String charsetName, String baseUri) throws IOException {
         return parseInputStream(new FileInputStream(in), charsetName, baseUri, Parser.htmlParser());
     }
 
@@ -64,7 +64,7 @@ public final class DataUtil {
      * @return Document
      * @throws IOException on IO error
      */
-    public static Document load(InputStream in, String charsetName, String baseUri) throws IOException {
+    public static DocumentModel load(InputStream in, String charsetName, String baseUri) throws IOException {
         return parseInputStream(in, charsetName, baseUri, Parser.htmlParser());
     }
 
@@ -78,7 +78,7 @@ public final class DataUtil {
      * @return Document
      * @throws IOException on IO error
      */
-    public static Document load(InputStream in, String charsetName, String baseUri, Parser parser) throws IOException {
+    public static DocumentModel load(InputStream in, String charsetName, String baseUri, Parser parser) throws IOException {
         return parseInputStream(in, charsetName, baseUri, parser);
     }
 
@@ -97,12 +97,12 @@ public final class DataUtil {
         }
     }
 
-    static Document parseInputStream(InputStream input, String charsetName, String baseUri, Parser parser) throws IOException {
+    static DocumentModel parseInputStream(InputStream input, String charsetName, String baseUri, Parser parser) throws IOException {
         if (input == null) // empty body
-            return new Document(baseUri);
+            return new DocumentModel(baseUri);
         input = ConstrainableInputStream.wrap(input, bufferSize, 0);
 
-        Document doc = null;
+        DocumentModel doc = null;
         boolean fullyRead = false;
 
         // read the start of the stream and look for a BOM or meta charset
@@ -123,7 +123,7 @@ public final class DataUtil {
             // look for <meta http-equiv="Content-Type" content="text/html;charset=gb2312"> or HTML5 <meta charset="gb2312">
             Elements metaElements = doc.select("meta[http-equiv=content-type], meta[charset]");
             String foundCharset = null; // if not found, will keep utf-8 as best attempt
-            for (Element meta : metaElements) {
+            for (ElementModel meta : metaElements) {
                 if (meta.hasAttr("http-equiv"))
                     foundCharset = getCharsetFromContentType(meta.attr("content"));
                 if (foundCharset == null && meta.hasAttr("charset"))
@@ -134,12 +134,12 @@ public final class DataUtil {
 
             // look for <?xml encoding='ISO-8859-1'?>
             if (foundCharset == null && doc.childNodeSize() > 0) {
-                Node first = doc.childNode(0);
-                XmlDeclaration decl = null;
-                if (first instanceof XmlDeclaration)
-                    decl = (XmlDeclaration) first;
-                else if (first instanceof Comment) {
-                    Comment comment = (Comment) first;
+                NodeModel first = doc.childNode(0);
+                XmlDeclarationModel decl = null;
+                if (first instanceof XmlDeclarationModel)
+                    decl = (XmlDeclarationModel) first;
+                else if (first instanceof CommentModel) {
+                    CommentModel comment = (CommentModel) first;
                     if (comment.isXmlDeclaration())
                         decl = comment.asXmlDeclaration();
                 }
