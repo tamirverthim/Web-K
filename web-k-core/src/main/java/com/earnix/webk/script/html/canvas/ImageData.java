@@ -14,14 +14,14 @@ import com.earnix.webk.script.whatwg_dom.Window;
  * @author Taras Maslov
  * 6/21/2018
  */
-@Constructor(true)
+@Constructor
 @Exposed({Window.class, Worker.class})
 @Serializable
 public interface ImageData {
 
-    void construct(@Unsigned long sw, @Unsigned long sh);
+    void constructor(@Unsigned long sw, @Unsigned long sh);
 
-    void construct(Uint8ClampedArray data, @Unsigned long sw, @Optional @Unsigned Long sh);
+    void constructor(Uint8ClampedArray data, @Unsigned long sw, @Optional @Unsigned Long sh);
 
     @ReadonlyAttribute
     @Unsigned

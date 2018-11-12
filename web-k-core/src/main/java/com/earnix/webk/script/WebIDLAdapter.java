@@ -110,7 +110,7 @@ public class WebIDLAdapter<T> implements JSObject {
             if (callback != null) {
                 return (T) callback.call(ctx, args);
             } else {
-                XRLog.script(Level.WARNING, "No matching function to call with given args count");
+                log.error("No matching function to call with given args count");
                 throw new RuntimeException();
             }
         }
@@ -253,7 +253,7 @@ public class WebIDLAdapter<T> implements JSObject {
             }
 
             // it is NULL if was overriden with null during runtime,
-            // actually LegacyUnenumerableNamedProperties are tot set-able, so this should be used for similar cases
+            // actually LegacyUnenumerableNamedProperties are not set-able, so this should be used for similar cases
             if (namedItem == NULL || namedItem != null) {
                 return wrapIfNeeded(namedItem);
             }

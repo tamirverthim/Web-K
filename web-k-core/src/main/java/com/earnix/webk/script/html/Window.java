@@ -160,5 +160,5 @@ public interface Window extends
     void postMessage(Object message, @Optional WindowPostMessageOptions options);
 
     // is not in WebIDL, exposed as namespace. Spec connection.
-    Console console();
+    @ReadonlyAttribute Console console();
 }

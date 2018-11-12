@@ -14,5 +14,5 @@ import com.earnix.webk.script.whatwg_dom.Element;
 public interface Window {
     
     @NewObject
-    CSSStyleDeclaration getComputedStyle(Element elt, @Optional @CSSOMString @Nullable CSSOMString pseudoElt);
+    CSSStyleDeclaration getComputedStyle(Element elt, @Optional @CSSOMString @Nullable String pseudoElt);
 }

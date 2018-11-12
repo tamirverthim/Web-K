@@ -15,7 +15,7 @@ public class UIEventImpl extends EventImpl implements UIEvent {
     
     @Override
     public void constructor(String type, UIEventInit eventInitDict) {
-        super.construct(type, eventInitDict);
+        super.constructor(type, eventInitDict);
     }
 
     @Override

@@ -2,6 +2,8 @@ package com.earnix.webk.script.impl;
 
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
+import com.earnix.webk.script.whatwg_dom.EventTarget;
+import com.earnix.webk.script.whatwg_dom.impl.EventTargetImpl;
 import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
 import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.web_idl.Attribute;
@@ -15,6 +17,7 @@ import com.earnix.webk.script.whatwg_dom.Node;
 import com.earnix.webk.script.whatwg_dom.NodeList;
 import com.earnix.webk.script.whatwg_dom.impl.EventImpl;
 import lombok.AccessLevel;
+import lombok.experimental.Delegate;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.var;
 import lombok.extern.slf4j.Slf4j;
@@ -32,8 +35,13 @@ import java.util.List;
 @Slf4j
 public class NodeImpl implements Node {
 
+
     NodeModel target;
+    
     protected ScriptContext ctx;
+    
+    @Delegate(types = {EventTarget.class})
+    EventTargetImpl eventTargetImpl;
 
     public NodeImpl(NodeModel target, ScriptContext ctx) {
         this.target = target;
@@ -190,43 +198,4 @@ public class NodeImpl implements Node {
     public Node removeChild(Node child) {
         return null;
     }
-
-    // region EventTarget
-
-    private LinkedHashMap<String, List<EventListener>> listeners = new LinkedHashMap<>();
-
-    @Override
-    public void addEventListener(String type, EventListener callback, Object options) { //callback is NashorJavaAdapter here, check if any adaptaion needed
-        var typeListeners = listeners.computeIfAbsent(type, k -> new ArrayList<>());
-        typeListeners.add(callback);
-
-        // workaround for ChartJS
-        if (type.equals("animationstart")) {
-            dispatchEvent(new EventImpl("animationstart", new EventInit()));
-        }
-    }
-
-    @Override
-    public void removeEventListener(@DOMString String type, EventListener callback, Object options) {
-        val typeListeners = listeners.get(type);
-        if (typeListeners != null) {
-            typeListeners.remove(callback);
-            if (typeListeners.isEmpty()) {
-                listeners.remove(type);
-            }
-        }
-    }
-
-    @Override
-    public boolean dispatchEvent(Event event) {
-        val typeListeners = listeners.get(event.type());
-        if (typeListeners != null) {
-            typeListeners.forEach(l -> l.handleEvent(event));
-            return true;
-        }
-        return false;
-    }
-
-
-    // endregion
 }

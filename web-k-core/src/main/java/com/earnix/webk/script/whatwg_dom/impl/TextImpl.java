@@ -36,7 +36,7 @@ public class TextImpl extends NodeImpl implements Text {
     }
 
     @Override
-    public void construct(@DOMString String data) {
+    public void constructor(@DOMString String data) {
 
     }
 

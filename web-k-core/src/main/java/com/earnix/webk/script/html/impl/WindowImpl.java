@@ -250,14 +250,13 @@ public class WindowImpl implements Window {
 
     @Override
     public boolean confirm(@DOMString String message) {
-        val res = JOptionPane.showConfirmDialog(null, message) == JOptionPane.OK_OPTION;
-//        repaintPanel();
-        return res;
+        //        repaintPanel();
+        return JOptionPane.showConfirmDialog(null, message, "Confirm", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
     }
 
     @Override
     public @DOMString String prompt(@DOMString String message, @DOMString String _default) {
-        return null;
+        return JOptionPane.showInputDialog(scriptContext.getPanel(), message, "Prompt", JOptionPane.QUESTION_MESSAGE);
     }
 
     @Override
@@ -771,7 +770,7 @@ public class WindowImpl implements Window {
     }
 
     @Override
-    public CSSStyleDeclaration getComputedStyle(Element elt, CSSOMString pseudoElt) {
+    public CSSStyleDeclaration getComputedStyle(Element elt, String pseudoElt) {
         val element = ((ElementImpl) elt).getModel();
         return new CSSStyleDeclarationImpl(
                 scriptContext.getPanel().getSharedContext().getStyle(element).toString(),

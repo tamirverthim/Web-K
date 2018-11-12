@@ -4,6 +4,7 @@ import com.earnix.webk.script.console.Console;
 import com.earnix.webk.script.web_idl.DOMString;
 import com.earnix.webk.script.web_idl.Sequence;
 import com.earnix.webk.util.XRLog;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 
@@ -15,6 +16,7 @@ import java.util.stream.StreamSupport;
  * @author Taras Maslov
  * 11/11/2018
  */
+@Slf4j
 public class ConsoleImpl implements Console {
 
     @Override
@@ -44,7 +46,7 @@ public class ConsoleImpl implements Console {
 
         // data appending not done, need mutable varargs support
 
-        XRLog.script(Level.WARNING, "assert " + StringUtils.join(strings, " "));
+        log.info("assert " + StringUtils.join(strings, " "));
 
     }
 
@@ -55,29 +57,29 @@ public class ConsoleImpl implements Console {
 
     @Override
     public void debug(Object... data) {
-        XRLog.script(Level.WARNING, "Debug: \n" + toString(data));
+        log.info("Debug: \n" + toString(data));
     }
 
     @Override
     public void error(Object... data) {
-        XRLog.script(Level.WARNING, "Error: \n" + toString(data));
+        log.info("Error: \n" + toString(data));
     }
 
     @Override
     public void info(Object... data) {
-        XRLog.script(Level.WARNING, "Info: \n" + toString(data));
+        log.info("Info: \n" + toString(data));
     }
 
     @Override
     public void log(Object... data) {
-        XRLog.script(Level.WARNING, "Log: \n" + toString(data));
+        log.info( "Log: \n" + toString(data));
     }
 
     @Override
     public void table(Object tabularData, Sequence<@DOMString String> properties) {
-        XRLog.script(Level.WARNING, "Table: \n" + String.valueOf(tabularData));
+        log.info("Table: \n" + String.valueOf(tabularData));
         //noinspection unchecked
-        XRLog.script(Level.WARNING, StringUtils.join(
+        log.info(StringUtils.join(
                 StreamSupport.<String>stream(properties.spliterator(), false).toArray(String[]::new),
                 " "
         ));
@@ -86,8 +88,7 @@ public class ConsoleImpl implements Console {
 
     @Override
     public void trace(Object... data) {
-        XRLog.script(Level.WARNING, "Trace: \n" + toString(data));
-
+        log.info("Trace: \n" + toString(data));
     }
 
     @Override

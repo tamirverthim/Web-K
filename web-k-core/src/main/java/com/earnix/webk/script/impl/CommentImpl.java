@@ -136,7 +136,7 @@ public class CommentImpl extends NodeImpl implements com.earnix.webk.script.what
     }
 
     @Override
-    public void construct(@DOMString String data) {
+    public void constructor(@DOMString String data) {
         target = new CommentModel(data);
     }
 

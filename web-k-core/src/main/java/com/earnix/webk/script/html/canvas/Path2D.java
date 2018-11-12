@@ -12,5 +12,5 @@ import com.earnix.webk.script.whatwg_dom.Window;
  */
 @Exposed(Window.class)
 public interface Path2D extends CanvasPath {
-    void construct(@Optional @DOMString(oneOfIndex = 1) @OneOf({Path2D.class, String.class}) Object path);
+    void constructor(@Optional @DOMString(oneOfIndex = 1) @OneOf({Path2D.class, String.class}) Object path);
 }

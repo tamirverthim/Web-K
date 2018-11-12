@@ -13,11 +13,11 @@ import com.earnix.webk.script.web_idl.Unsigned;
  * @author Taras Maslov
  * 6/21/2018
  */
-@Constructor(true)
+@Constructor
 @Exposed(Window.class)
 public interface Text extends CharacterData, Slotable {
 
-    void construct(@Optional @DefaultString("") @DOMString String data);
+    void constructor(@Optional @DefaultString("") @DOMString String data);
 
     @NewObject
     Text splitText(@Unsigned long offset);

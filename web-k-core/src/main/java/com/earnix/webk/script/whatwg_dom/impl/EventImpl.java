@@ -45,11 +45,11 @@ public class EventImpl implements Event {
     };
     
     public EventImpl(String type, EventInit eventInit) {
-        construct(type, eventInit);
+        constructor(type, eventInit);
     }
 
     @Override
-    public void construct(@DOMString String type, EventInit init) {
+    public void constructor(@DOMString String type, EventInit init) {
         this.type = type;
         this.bubbles = init.bubbles;
         this.cancellable = init.cancelable;

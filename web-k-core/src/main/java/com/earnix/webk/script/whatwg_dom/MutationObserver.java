@@ -12,7 +12,7 @@ import com.earnix.webk.script.web_idl.Sequence;
 @Exposed(Window.class)
 @Constructor
 public interface MutationObserver {
-    void construct(MutationCallback callback);
+    void constructor(MutationCallback callback);
 
     void observe(Node target, @Optional MutationObserverInit options);
 

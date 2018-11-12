@@ -49,11 +49,11 @@ import com.earnix.webk.script.web_idl.Unsigned;
  * @author Taras Maslov
  * 6/18/2018
  */
-@Constructor(true)
+@Constructor
 @Exposed({Window.class, Worker.class, AudioWorker.class})
 public interface Event {
 
-    void construct(@DOMString String type, @Optional EventInit init);
+    void constructor(@DOMString String type, @Optional EventInit init);
 
     @ReadonlyAttribute
     @DOMString String type();

@@ -10,6 +10,7 @@ import com.earnix.webk.script.ui_events.UIEventImpl;
 import com.earnix.webk.script.ui_events.UIEventInit;
 import com.earnix.webk.script.web_idl.Exposed;
 import com.earnix.webk.script.whatwg_dom.impl.EventManager;
+import com.earnix.webk.script.xhr.impl.XMLHttpRequestImpl;
 import com.earnix.webk.swing.BasicPanel;
 import jdk.nashorn.api.scripting.AbstractJSObject;
 import jdk.nashorn.api.scripting.NashornException;
@@ -148,6 +149,7 @@ public class ScriptContext implements DocumentListener {
 
         expose(CanvasGradientImpl.class);
         expose(CanvasPatternImpl.class);
+        expose(XMLHttpRequestImpl.class);
         
         window = new WindowImpl(this);
         windowAdapter = WebIDLAdapter.obtain(this, window);
@@ -175,6 +177,7 @@ public class ScriptContext implements DocumentListener {
 
                             val target = implementationClass.newInstance();
                             val adapter = WebIDLAdapter.obtain(ScriptContext.this, target);
+                            // todo check here @Constructor annotation
                             FunctionAdapter constructor = (FunctionAdapter) adapter.getMember("constructor");
                             if (constructor != null) {
                                 constructor.call(this, args);
