@@ -6,6 +6,7 @@ import com.earnix.webk.script.whatwg_dom.EventInit;
 import com.earnix.webk.script.whatwg_dom.EventListener;
 import com.earnix.webk.script.whatwg_dom.EventTarget;
 import lombok.experimental.var;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.List;
  * @author Taras Maslov
  * 11/12/2018
  */
+@Slf4j
 public class EventTargetImpl implements EventTarget {
 
     private LinkedHashMap<String, List<EventListener>> listeners = new LinkedHashMap<>();
@@ -44,6 +46,7 @@ public class EventTargetImpl implements EventTarget {
 
     @Override
     public boolean dispatchEvent(Event event) {
+        log.trace("Dispatched event {} on target {}", event.type(), toString());
         val typeListeners = listeners.get(event.type());
         if (typeListeners != null) {
             typeListeners.forEach(l -> l.handleEvent(event));

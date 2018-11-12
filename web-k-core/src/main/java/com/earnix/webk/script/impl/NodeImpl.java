@@ -41,7 +41,7 @@ public class NodeImpl implements Node {
     protected ScriptContext ctx;
     
     @Delegate(types = {EventTarget.class})
-    EventTargetImpl eventTargetImpl;
+    EventTargetImpl eventTargetImpl = new EventTargetImpl();
 
     public NodeImpl(NodeModel target) {
         this.target = target;

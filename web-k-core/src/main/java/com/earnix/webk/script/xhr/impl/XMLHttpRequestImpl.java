@@ -25,16 +25,18 @@ import lombok.experimental.Delegate;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpRequestFactory;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpHead;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.HttpTrace;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicHttpRequest;
 import org.apache.http.protocol.HttpContext;
-import sun.net.www.http.HttpClient;
 
 import javax.swing.SwingUtilities;
 import java.io.IOException;
@@ -56,28 +58,29 @@ import java.util.concurrent.Future;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class XMLHttpRequestImpl implements XMLHttpRequest {
-    
+
     @Delegate(types = EventTarget.class)
     EventTargetImpl eventTarget = new EventTargetImpl();
     short readyState = 0;
-    
+
     EventHandler onReadyStateChange;
     URL url;
     HttpMethod method;
     boolean async = true;
     HashMap<String, String> headers = new HashMap<>();
-    
+
     static ExecutorService executor = Executors.newFixedThreadPool(10);
 
     static CloseableHttpClient HTTP_CLIENT = HttpClients.createDefault();
 
     Level1EventTarget level1EventTarget = new Level1EventTarget(this);
-    
+
     byte[] response;
     String username;
     String password;
+    private Object body;
 
-    public XMLHttpRequestImpl(){
+    public XMLHttpRequestImpl() {
         EventListener onReadyStateChangeListener = event -> {
             if (onReadyStateChange != null) {
                 onReadyStateChange.call(event);
@@ -85,7 +88,7 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
         };
         eventTarget.addEventListener("onreadystatechange", onReadyStateChangeListener, null);
     }
-    
+
     @Override
     public Attribute<EventHandler> onreadystatechange() {
         return new Attribute<EventHandler>() {
@@ -124,7 +127,7 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
         } catch (MalformedURLException e) {
             throw new DOMException("Malformed URL");
         }
-        
+
         this.async = async;
         this.username = username;
         this.password = password;
@@ -153,42 +156,66 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
 
     @Override
     public void send(Object body) {
+        this.body = body;
         if (async) {
             executor.submit(this::sendImpl);
         } else {
             sendImpl();
         }
     }
-    
-    private void sendImpl(){
-        executor.submit(() -> {
-            HttpGet get = null;
-            try {
-                get = new HttpGet(url.toURI());
-            } catch (URISyntaxException e) {
-                throw new RuntimeException();
-            }
 
-            HttpContext ctx = new HttpClientContext();
-            headers.forEach((k,v) -> {
-                ctx.setAttribute(k, v);
-            });
-            try (CloseableHttpResponse response = HTTP_CLIENT.execute(get, ctx)){
-                
-                SwingUtilities.invokeLater(() -> {
-                    eventTarget.dispatchEvent(new EventImpl("loadstart", null));
-                });
-                
-                this.response = IOUtils.toByteArray(response.getEntity().getContent());
-                
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+    private void sendImpl() {
+
+        HttpRequestBase request = null;
+
+        request = createRequest();
+
+        HttpContext ctx = new HttpClientContext();
+        headers.forEach(ctx::setAttribute);
+        try (CloseableHttpResponse response = HTTP_CLIENT.execute(request, ctx)) {
 
             SwingUtilities.invokeLater(() -> {
-                eventTarget.dispatchEvent(new EventImpl("loadend", null));
+                eventTarget.dispatchEvent(new EventImpl("loadstart", null));
             });
+
+            this.response = IOUtils.toByteArray(response.getEntity().getContent());
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        SwingUtilities.invokeLater(() -> {
+            val loadEvent = new EventImpl("load", null);
+            loadEvent.setTarget(XMLHttpRequestImpl.this);
+            eventTarget.dispatchEvent(loadEvent);
+
+            val loadEndEvent = new EventImpl("loadend", null);
+            loadEvent.setTarget(XMLHttpRequestImpl.this);
+            eventTarget.dispatchEvent(loadEndEvent);
         });
+
+    }
+
+    private HttpRequestBase createRequest() {
+        val urlString = url.toString();
+        switch (method) {
+            case GET:
+                return new HttpGet(urlString);
+            case PUT:
+                return new HttpPut(urlString);
+            case HEAD:
+                return new HttpHead(urlString);
+            case POST:
+                return new HttpPost(urlString);
+            case TRACE:
+                return new HttpTrace(urlString);
+            case DELETE:
+                return new HttpDelete(urlString);
+            case CONNECT:
+                throw new DOMException("Unsupported method");
+            default:
+                throw new IllegalStateException();
+        }
     }
 
     @Override
@@ -207,7 +234,8 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
     }
 
     @Override
-    public @ByteString String statusText() {
+    public @ByteString
+    String statusText() {
         return null;
     }
 
@@ -255,7 +283,6 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
         }
     }
 
-    
 
     // region -- EventTarget --
 
@@ -295,8 +322,8 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
     }
 
     // endregion
-    
-    private void setReadyState(short readyState){
+
+    private void setReadyState(short readyState) {
         this.readyState = readyState;
         val event = new EventImpl("readystatechange", null);
         eventTarget.dispatchEvent(event);

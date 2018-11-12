@@ -27,7 +27,7 @@ public class EventImpl implements Event {
     @Getter @Setter short phase;
     @Getter boolean propagationStopped;
     @Getter @Setter EventTarget currentTarget;
-    EventTarget target;
+    @Setter EventTarget target;
     @Setter Sequence<EventTarget> composedPath;
     @Getter @Setter boolean trusted;
     boolean defaultPrevented;
