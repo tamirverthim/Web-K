@@ -1,6 +1,7 @@
 package com.earnix.webk.script;
 
-import com.earnix.webk.render.Box;
+import com.earnix.webk.script.ui_events.MouseEventImpl;
+import com.earnix.webk.script.ui_events.MouseEventInit;
 import com.earnix.webk.script.whatwg_dom.Event;
 import com.earnix.webk.script.whatwg_dom.impl.EventImpl;
 import com.earnix.webk.script.whatwg_dom.impl.EventManager;
@@ -26,45 +27,7 @@ import java.awt.event.MouseWheelListener;
 public class MouseEventsAdapter implements MouseListener, MouseMotionListener, MouseWheelListener {
 
     EventManager eventManager;
-    
-    
-    
-//
-//    @Override
-//    public void onMouseClick(BasicPanel basicPanel, Box box) {
-//        
-//        eventManager.publishEvent(box.getElement(), "click");
-//    }
-//
-//    @Override
-//    public void onMouseOver(BasicPanel panel, Box box) {
-//        eventManager.publishEvent(box.getElement(), "mouseover");
-//    }
-//
-//    @Override
-//    public void onMouseOut(BasicPanel panel, Box box) {
-//
-//    }
-//
-//    @Override
-//    public void onMouseUp(BasicPanel panel, Box box) {
-//
-//    }
-//
-//    @Override
-//    public void onMousePressed(BasicPanel panel, MouseEvent e) {
-//
-//    }
-//
-//    @Override
-//    public void onMouseDragged(BasicPanel panel, MouseEvent e) {
-//
-//    }
-//
-//    @Override
-//    public void reset() {
-//
-//    }
+    BasicPanel panel;
     
     private Event createEvent(String type) {
         return new EventImpl(type, null);
@@ -72,7 +35,17 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        val box = panel.find(e.getX(), e.getY());
         
+        if (box != null) {
+            MouseEventInit init = new MouseEventInit();
+            init.clientX = e.getX();
+            init.clientY = e.getY();
+            init.screenX = e.getXOnScreen();
+            init.screenY = e.getYOnScreen();
+            MouseEventImpl event = new MouseEventImpl("click", init);
+            eventManager.publishEvent(box.getElement(), event);
+        }
     }
 
     @Override

@@ -14,6 +14,7 @@ import com.earnix.webk.script.impl.CommentImpl;
 import com.earnix.webk.script.impl.DocumentTypeImpl;
 import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.impl.NodeImpl;
+import com.earnix.webk.script.whatwg_dom.Element;
 import com.earnix.webk.script.whatwg_dom.Node;
 import com.earnix.webk.util.AssertHelper;
 import lombok.experimental.var;
@@ -55,8 +56,8 @@ public class ScriptDOMFactory {
         return result;
     }
 
-    public static com.earnix.webk.script.whatwg_dom.Element getElement(ElementModel key, ScriptContext ctx) {
-        return (com.earnix.webk.script.whatwg_dom.Element) get(key, ctx);
+    public static Element getElement(ElementModel key, ScriptContext ctx) {
+        return (Element) get(key, ctx);
     }
 
     public static Node put(NodeModel key, Node value) {

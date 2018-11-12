@@ -465,8 +465,10 @@ public class WebIDLAdapter<T> implements JSObject {
                                     log.warn("Non-nullable non-optional parameter {} of method {} received null", parameter, method);
                                 }
                             }
-                        } else {
+                        } else if (!hasAnnotation(parameter, Nullable.class)) {
                             log.warn("Absent required parameter {} for method {}", parameter, method);
+                            arg = null;
+                        } else {
                             arg = null;
                         }
                     }

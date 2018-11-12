@@ -39,7 +39,9 @@ public class ScriptContext implements DocumentListener {
 
     BasicPanel panel;
     DocumentModel document;
-    EventManager eventManager = new EventManager(this);
+    EventManager eventManager;
+    MouseEventsAdapter mouseEventsAdapter;
+    
     
     WindowImpl window;
     private WebIDLAdapter<WindowImpl> windowAdapter;
@@ -47,7 +49,12 @@ public class ScriptContext implements DocumentListener {
     public ScriptContext(BasicPanel panel) {
         this.panel = panel;
 
-//        panel.addMouseTrackingListener(new MouseEventsAdapter(eventManager));
+        // initializing mouse events translation
+        eventManager = new EventManager(this);
+        mouseEventsAdapter = new MouseEventsAdapter(eventManager, panel);
+        panel.addMouseListener(mouseEventsAdapter);
+        panel.addMouseMotionListener(mouseEventsAdapter);
+        panel.addMouseWheelListener(mouseEventsAdapter);
     }
 
     public void onload() {
