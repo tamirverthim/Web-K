@@ -18,7 +18,6 @@ import com.earnix.webk.script.web_idl.TreatNullAs;
 import com.earnix.webk.script.web_idl.Typedef;
 import com.earnix.webk.script.web_idl.impl.MultiTypedef;
 import com.earnix.webk.script.web_idl.impl.SequenceImpl;
-import com.earnix.webk.util.XRLog;
 import jdk.nashorn.api.scripting.JSObject;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import jdk.nashorn.api.scripting.ScriptUtils;
@@ -45,7 +44,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.WeakHashMap;
-import java.util.logging.Level;
 import java.util.stream.Stream;
 
 
@@ -177,7 +175,7 @@ public class WebIDLAdapter<T> implements JSObject {
                             } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | IllegalArgumentException e) {
                                 throw new RuntimeException(e);
                             }
-                            return wrapIfNeeded(res);
+                            return toScriptPresentation(res);
                         };
 //                        val function = new Function<>(js, 
 //
@@ -240,11 +238,11 @@ public class WebIDLAdapter<T> implements JSObject {
 
             if (member instanceof WebIDLAdapter.AttributeLink) {
 
-                return wrapIfNeeded((((AttributeLink) member).attribute).get());
+                return toScriptPresentation((((AttributeLink) member).attribute).get());
 
             } else if (readonlyAttributeMark.equals(member)) {
                 try {
-                    return wrapIfNeeded(MethodUtils.invokeMethod(target, s));
+                    return toScriptPresentation(MethodUtils.invokeMethod(target, s));
                 } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(e);
                 }
@@ -255,7 +253,7 @@ public class WebIDLAdapter<T> implements JSObject {
             // it is NULL if was overriden with null during runtime,
             // actually LegacyUnenumerableNamedProperties are not set-able, so this should be used for similar cases
             if (namedItem == NULL || namedItem != null) {
-                return wrapIfNeeded(namedItem);
+                return toScriptPresentation(namedItem);
             }
 
             // function or custom value set by js runtime
@@ -270,11 +268,11 @@ public class WebIDLAdapter<T> implements JSObject {
     @Override
     public Object getSlot(int i) {
         if (target instanceof Indexed) {
-            return wrapIfNeeded(((Indexed) target).elementAtIndex(i));
+            return toScriptPresentation(((Indexed) target).elementAtIndex(i));
         } else if (target instanceof LegacyUnenumerableNamedProperties) {
-            return wrapIfNeeded(((LegacyUnenumerableNamedProperties) target).item(i));
+            return toScriptPresentation(((LegacyUnenumerableNamedProperties) target).item(i));
         } else if (target instanceof Iterable) {
-            return wrapIfNeeded(((Iterable) target).item(i));
+            return toScriptPresentation(((Iterable) target).item(i));
         } else {
             return null;
         }
@@ -310,8 +308,8 @@ public class WebIDLAdapter<T> implements JSObject {
         if (member instanceof WebIDLAdapter.AttributeLink) {
             try {
                 val att = ((AttributeLink) member).attribute;
-                val unwrapped = autoCast(o);
-                val adapted = autoCast(unwrapped, ((AttributeLink) member).attributeClass);
+                val unwrapped = toJavaPresentation(o);
+                val adapted = toJavaPresentation(unwrapped, ((AttributeLink) member).attributeClass);
 
                 att.set(adapted);
             } catch (Exception e) {
@@ -387,7 +385,7 @@ public class WebIDLAdapter<T> implements JSObject {
     }
 
 
-    public Object wrapIfNeeded(Object res) {
+    public Object toScriptPresentation(Object res) {
 
         if (res instanceof JSObject) {
             return res;
@@ -447,7 +445,7 @@ public class WebIDLAdapter<T> implements JSObject {
 
                 if (rawArg != null) {
 
-                    arg = autoCast(rawArg, parameterType, genericType);
+                    arg = toJavaPresentation(rawArg, parameterType, genericType);
 
                 } else {
                     // null parameter
@@ -475,7 +473,7 @@ public class WebIDLAdapter<T> implements JSObject {
                 }
             }
 
-            result[i] = autoCast(arg, parameterType);
+            result[i] = toJavaPresentation(arg, parameterType);
 
         }
 
@@ -484,7 +482,7 @@ public class WebIDLAdapter<T> implements JSObject {
             val varArgsArrayType = method.getParameterTypes()[method.getParameterCount() - 1];
             val varArgsElementType = varArgsArrayType.getComponentType();
             for (int i = varargFromIndex; i < rawArgs.length; i++) {
-                varArgs.add(autoCast(rawArgs[i], varArgsElementType));
+                varArgs.add(toJavaPresentation(rawArgs[i], varArgsElementType));
             }
             result[varargFromIndex] = varArgs.toArray((Object[]) Array.newInstance(varArgsElementType, rawArgs.length - varargFromIndex));
         }
@@ -516,17 +514,17 @@ public class WebIDLAdapter<T> implements JSObject {
 //            val sequenceComponentType = getTypeOfInterfaceGeneric(parameterType);
 //            val array = (NativeArray) rawArg;
 //            val objectsArray = array.asObjectArray();
-//            arg = new SequenceImpl<>(Stream.of(objectsArray).map(obj -> autoCast(obj, (Class)sequenceComponentType)).collect(Collectors.toList()));
+//            arg = new SequenceImpl<>(Stream.of(objectsArray).map(obj -> toJavaPresentation(obj, (Class)sequenceComponentType)).collect(Collectors.toList()));
 //        } else if (parameterType.equals(Sequence.class) && rawArg instanceof ScriptObjectMirror) {
 //            val sequenceComponentType = getTypeOfInterfaceGeneric(parameterType);
 //            val mirror = (ScriptObjectMirror) rawArg;
 //            
 //            val objects = new ArrayList<>();
 //            for (int i = 0; i < mirror.size(); i++) {
-//                objects.add(autoCast(mirror.getSlot(i), sequenceComponentType));
+//                objects.add(toJavaPresentation(mirror.getSlot(i), sequenceComponentType));
 //            }
 //            
-//            arg = new SequenceImpl<>(Stream.of(objects).map(obj -> autoCast(obj, sequenceComponentType), sequenceComponentType)).collect(Collectors.toList()));
+//            arg = new SequenceImpl<>(Stream.of(objects).map(obj -> toJavaPresentation(obj, sequenceComponentType), sequenceComponentType)).collect(Collectors.toList()));
 //        } else {
 //            arg = rawArg;
 //        }
@@ -536,15 +534,15 @@ public class WebIDLAdapter<T> implements JSObject {
 //    }
 
 
-    private Object autoCast(Object object) {
-        return autoCast(object, null, null);
+    private Object toJavaPresentation(Object object) {
+        return toJavaPresentation(object, null, null);
     }
 
-    private Object autoCast(Object object, Class target) {
-        return autoCast(object, target, null);
+    private Object toJavaPresentation(Object object, Class target) {
+        return toJavaPresentation(object, target, null);
     }
 
-    private Object autoCast(Object object, Class target, @Nullable Class targetClassGeneric) {
+    private Object toJavaPresentation(Object object, Class target, @Nullable Class targetClassGeneric) {
         
         if (object == null) {
             return null;
@@ -571,7 +569,7 @@ public class WebIDLAdapter<T> implements JSObject {
                 val size = scriptObjectMirror.size();
                 List<Object> items = new ArrayList<>();
                 for (int i = 0; i < size; i++) {
-                    items.add(autoCast(scriptObjectMirror.getSlot(i), targetClassGeneric == null ? Object.class : targetClassGeneric));
+                    items.add(toJavaPresentation(scriptObjectMirror.getSlot(i), targetClassGeneric == null ? Object.class : targetClassGeneric));
                 }
                 return new SequenceImpl<>(items);
             } else if (object instanceof ScriptObjectMirror && target.equals(Function.class)) {
@@ -585,7 +583,7 @@ public class WebIDLAdapter<T> implements JSObject {
                 Object casted = null;
 
                 for (int i = 0; i < classes.length; i++) {
-                    casted = autoCast(object, classes[i]);
+                    casted = toJavaPresentation(object, classes[i]);
                     if (casted != null) {
                         break;
                     }

@@ -16,6 +16,6 @@ public interface NavigatorLanguage {
     @DOMString String language();
 
     @ReadonlyAttribute
-    @DOMString FrozenArray<DOMString> languages();
+    @DOMString FrozenArray<@DOMString String> languages();
     
 }
