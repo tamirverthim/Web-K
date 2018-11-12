@@ -29,7 +29,7 @@ public class EventManager {
     };
     
     public void publishEvent(ElementModel targetModel, EventImpl event) {
-        val target = Binder.getElement(targetModel, scriptContext.getPanel());
+        val target = Binder.getElement(targetModel, scriptContext);
 
         // preparing propagation path 
         val propagationPath = new ArrayList<EventTarget>();
@@ -37,7 +37,7 @@ public class EventManager {
         do {
             propagationPath.add(current);
             current = current.parentElement();
-        } while (current != Binder.get(scriptContext.getPanel().getDocument(), scriptContext.getPanel()));
+        } while (current != Binder.get(scriptContext.getPanel().getDocument(), scriptContext));
         
         
         event.setTrusted(true);

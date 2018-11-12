@@ -10,6 +10,6 @@ import java.lang.annotation.Target;
  * 6/19/2018
  */
 @Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RetentionPolicy.SOURCE)
 public @interface CEReactions {
 }

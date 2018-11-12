@@ -10,6 +10,6 @@ import java.lang.annotation.Target;
  * 6/19/2018
  */
 @Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RetentionPolicy.SOURCE)
 public @interface Mixin {
 }

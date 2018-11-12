@@ -3,6 +3,7 @@ package com.earnix.webk.script.whatwg_dom.impl;
 import com.earnix.webk.dom.nodes.AttributeModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.script.Binder;
+import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.web_idl.DOMString;
 import com.earnix.webk.script.web_idl.USVString;
 import com.earnix.webk.script.whatwg_dom.Attr;
@@ -25,14 +26,14 @@ public class AttrImpl implements Attr {
 
     AttributeModel model;
     ElementModel modelNode;
-    BasicPanel panel;
+    ScriptContext ctx;
 
 
-    public AttrImpl(ElementModel modelNode, AttributeModel attribute, BasicPanel panel) {
+    public AttrImpl(ElementModel modelNode, AttributeModel attribute, ScriptContext ctx) {
         super();
         this.modelNode = modelNode;
         this.model = attribute;
-        this.panel = panel;
+        this.ctx = ctx;
     }
 
 
@@ -74,7 +75,7 @@ public class AttrImpl implements Attr {
 
     @Override
     public com.earnix.webk.script.whatwg_dom.Element ownerElement() {
-        return Binder.getElement(modelNode, panel);
+        return Binder.getElement(modelNode, ctx);
     }
 
     @Override
@@ -120,7 +121,7 @@ public class AttrImpl implements Attr {
 
     @Override
     public com.earnix.webk.script.whatwg_dom.Element parentElement() {
-        return Binder.getElement(modelNode.parent(), panel);
+        return Binder.getElement(modelNode.parent(), ctx);
     }
 
     @Override

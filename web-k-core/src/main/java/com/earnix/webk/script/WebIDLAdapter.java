@@ -15,6 +15,8 @@ import com.earnix.webk.script.web_idl.Nullable;
 import com.earnix.webk.script.web_idl.ReadonlyAttribute;
 import com.earnix.webk.script.web_idl.Sequence;
 import com.earnix.webk.script.web_idl.TreatNullAs;
+import com.earnix.webk.script.web_idl.Typedef;
+import com.earnix.webk.script.web_idl.impl.MultiTypedef;
 import com.earnix.webk.script.web_idl.impl.SequenceImpl;
 import com.earnix.webk.util.XRLog;
 import jdk.nashorn.api.scripting.JSObject;
@@ -78,7 +80,7 @@ public class WebIDLAdapter<T> implements JSObject {
     public T getTarget() {
         return target;
     }
-    
+
     public static <T> WebIDLAdapter<T> obtain(ScriptContext js, T target) {
         WebIDLAdapter result = all.get(target);
         if (result == null) {
@@ -105,7 +107,7 @@ public class WebIDLAdapter<T> implements JSObject {
             // calling callback with closest but larger args count
             // todo thing about NPE
             val callback = get(args.length);
-            if (callback != null){
+            if (callback != null) {
                 return (T) callback.call(ctx, args);
             } else {
                 XRLog.script(Level.WARNING, "No matching function to call with given args count");
@@ -259,7 +261,7 @@ public class WebIDLAdapter<T> implements JSObject {
             // function or custom value set by js runtime
             return member;
 
-        } catch (RuntimeException e){
+        } catch (RuntimeException e) {
             log.error("Error getting member {} of {}", s, target, e);
             return null;
         }
@@ -541,18 +543,27 @@ public class WebIDLAdapter<T> implements JSObject {
     }
 
     private Object autoCast(Object object, Class target, @Nullable Class targetClassGeneric) {
-        Object result;
+        
+        if (object == null) {
+            return null;
+        }
+        
         if (object instanceof WebIDLAdapter) {
             object = ((WebIDLAdapter) object).target;
         }
-        
-        if (object instanceof  FunctionAdapter) {
-            object = ((FunctionAdapter)object).getCallback();
+
+        if (object instanceof FunctionAdapter) {
+            object = ((FunctionAdapter) object).getCallback();
         }
 
         if (target != null) {
+
+            if (target.isAssignableFrom(object.getClass())) {
+                return object;
+            }
+
             if (target.isEnum() && (object instanceof String /*|| object instanceof DOMString || object instanceof USVString*/)) {
-                result = Enum.valueOf((Class<Enum>) target, object.toString());
+                return Enum.valueOf((Class<Enum>) target, object.toString());
             } else if (object instanceof ScriptObjectMirror && target.equals(Sequence.class)) {
                 val scriptObjectMirror = ((ScriptObjectMirror) object);
                 val size = scriptObjectMirror.size();
@@ -561,18 +572,46 @@ public class WebIDLAdapter<T> implements JSObject {
                     items.add(autoCast(scriptObjectMirror.getSlot(i), targetClassGeneric == null ? Object.class : targetClassGeneric));
                 }
                 return new SequenceImpl<>(items);
+            } else if (object instanceof ScriptObjectMirror && target.equals(Function.class)) {
+                return (Function<Object>) ((ScriptObjectMirror) object)::call;
+            } else if (object instanceof ScriptObjectMirror && target.equals(String.class)) {
+                // we do not want to expose js entities as code strings for now
+                return null;
+            } else if (MultiTypedef.class.isAssignableFrom(target)) {
+                Typedef typedefAnn = (Typedef) target.getAnnotation(Typedef.class);
+                val classes = typedefAnn.value();
+                Object casted = null;
+
+                for (int i = 0; i < classes.length; i++) {
+                    casted = autoCast(object, classes[i]);
+                    if (casted != null) {
+                        break;
+                    }
+                }
+
+                if (casted == null) {
+                    return null;
+                } else {
+                    try {
+                        Object result = target.newInstance();
+                        ((MultiTypedef) result).set(casted);
+                        return result;
+                    } catch (InstantiationException | IllegalAccessException e) {
+                        return null;
+                    }
+                }
+
             } else {
                 try {
-                    result = ScriptUtils.convert(object, target);
+                    return ScriptUtils.convert(object, target);
                 } catch (ClassCastException e) {
                     e.printStackTrace();
                     return null;
                 }
             }
         } else {
-            result = object;
+            return object;
         }
-        return result;
     }
 
     private boolean hasAnnotation(Parameter parameter, Class<? extends Annotation> annotation) {

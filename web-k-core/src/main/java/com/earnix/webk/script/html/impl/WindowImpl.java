@@ -3,6 +3,9 @@ package com.earnix.webk.script.html.impl;
 import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.console.Console;
 import com.earnix.webk.script.console.impl.ConsoleImpl;
+import com.earnix.webk.script.cssom.CSSOMString;
+import com.earnix.webk.script.cssom.CSSStyleDeclaration;
+import com.earnix.webk.script.cssom.impl.CSSStyleDeclarationImpl;
 import com.earnix.webk.script.fetch.RequestInfo;
 import com.earnix.webk.script.fetch.RequestInit;
 import com.earnix.webk.script.fetch.Response;
@@ -21,6 +24,7 @@ import com.earnix.webk.script.html.TimerHandler;
 import com.earnix.webk.script.html.Window;
 import com.earnix.webk.script.html.WindowPostMessageOptions;
 import com.earnix.webk.script.html.WindowProxy;
+import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.web_idl.Attribute;
 import com.earnix.webk.script.web_idl.DOMString;
 import com.earnix.webk.script.web_idl.Function;
@@ -52,8 +56,8 @@ public class WindowImpl implements Window {
 
     final ScriptContext scriptContext;
     @Setter DocumentImpl document;
-    
-    
+
+
     @Override
     public WindowProxy window() {
         return new WindowProxyImpl(this);
@@ -294,7 +298,6 @@ public class WindowImpl implements Window {
             }
         });
     }
-
 
 
     @Override
@@ -759,12 +762,20 @@ public class WindowImpl implements Window {
         };
     }
 
-    
+
     ConsoleImpl console = new ConsoleImpl();
-    
+
     @Override
     public Console console() {
         return console;
+    }
+
+    @Override
+    public CSSStyleDeclaration getComputedStyle(Element elt, CSSOMString pseudoElt) {
+        val element = ((ElementImpl) elt).getModel();
+        return new CSSStyleDeclarationImpl(
+                scriptContext.getPanel().getSharedContext().getStyle(element).toString(),
+                scriptContext);
     }
 
     private void repaintPanel() {

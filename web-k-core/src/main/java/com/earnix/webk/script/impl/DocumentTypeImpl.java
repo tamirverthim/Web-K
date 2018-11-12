@@ -1,6 +1,7 @@
 package com.earnix.webk.script.impl;
 
 import com.earnix.webk.dom.nodes.DocumentTypeModel;
+import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.swing.BasicPanel;
 
 /**
@@ -11,8 +12,8 @@ public class DocumentTypeImpl extends NodeImpl implements com.earnix.webk.script
 
     private DocumentTypeModel target;
 
-    public DocumentTypeImpl(DocumentTypeModel target, BasicPanel panel) {
-        super(target, panel);
+    public DocumentTypeImpl(DocumentTypeModel target, ScriptContext ctx) {
+        super(target, ctx);
         this.target = target;
     }
 

@@ -108,13 +108,13 @@ public class DocumentImpl implements Document {
 
     @Override
     public Element documentElement() {
-        return (Element) Binder.get(document, panel);
+        return (Element) Binder.get(document, ctx);
     }
 
     @Override
     public HTMLCollection getElementsByTagName(String qualifiedName) {
         val elements = document.getElementsByTag(qualifiedName.toString());
-        return new HTMLCollectionImpl(elements, panel);
+        return new HTMLCollectionImpl(elements, ctx);
     }
 
     @Override
@@ -125,12 +125,12 @@ public class DocumentImpl implements Document {
     @Override
     public HTMLCollection getElementsByClassName(String classNames) {
         val modelElements = document.getElementsByClass(classNames.toString());
-        return new HTMLCollectionImpl(modelElements, panel);
+        return new HTMLCollectionImpl(modelElements, ctx);
     }
 
     @Override
     public Element createElement(String localName, Object options) {
-        return Binder.getElement(new ElementModel(localName), panel);
+        return Binder.getElement(new ElementModel(localName), ctx);
     }
 
     @Override
@@ -146,7 +146,7 @@ public class DocumentImpl implements Document {
     @Override
     public Text createTextNode(String data) {
         TextNodeModel textNode = new TextNodeModel(data);
-        val result = new TextImpl(textNode, panel);
+        val result = new TextImpl(textNode, ctx);
         Binder.put(textNode, result);
         return result;
     }
@@ -209,7 +209,7 @@ public class DocumentImpl implements Document {
     @Override
     public Element getElementById(String elementId) {
         val jsoupEl = document.getElementById(elementId.toString());
-        return (Element) Binder.get(jsoupEl, panel);
+        return (Element) Binder.get(jsoupEl, ctx);
     }
 
     @Override
@@ -246,9 +246,9 @@ public class DocumentImpl implements Document {
     public Element querySelector(String selectors) {
         val selected = document.select(selectors);
         if (selected.size() > 0) {
-            Element bound = (Element) Binder.get(selected.first(), panel);
+            Element bound = (Element) Binder.get(selected.first(), ctx);
             if (bound == null) {
-                bound = new ElementImpl(selected.first(), panel);
+                bound = new ElementImpl(selected.first(), ctx);
                 Binder.put(selected.first(), bound);
             }
 
@@ -261,6 +261,6 @@ public class DocumentImpl implements Document {
     public NodeList querySelectorAll(String selectors) {
         val selected = document.select(selectors);
         val nodes = new ArrayList<NodeModel>(selected);
-        return new NodeListImpl(nodes, panel);
+        return new NodeListImpl(nodes, ctx);
     }
 }

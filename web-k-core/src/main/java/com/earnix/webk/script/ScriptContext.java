@@ -13,7 +13,6 @@ import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.ui_events.UIEventImpl;
 import com.earnix.webk.script.ui_events.UIEventInit;
 import com.earnix.webk.script.web_idl.Exposed;
-import com.earnix.webk.script.whatwg_dom.css_style_attribute.CSSStyleAttribute;
 import com.earnix.webk.script.whatwg_dom.impl.EventManager;
 import com.earnix.webk.swing.BasicPanel;
 import jdk.nashorn.api.scripting.AbstractJSObject;
@@ -154,19 +153,6 @@ public class ScriptContext implements DocumentListener {
 //        }, "alert"), ENGINE_SCOPE);
 //
 //
-//        try {
-//            context.setAttribute("window", engine.eval("this"), ENGINE_SCOPE);
-            
-//        } catch (ScriptException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        // https://www.w3.org/TR/DOM-Level-2-Style/css.html#CSS-CSSview-getComputedStyle
-//
-        context.setAttribute("getComputedStyle", new FunctionAdapter<>(this, (ctx, arg) -> {
-            val element = (ElementImpl) ((WebIDLAdapter) arg[0]).getTarget();
-            return new CSSStyleAttribute(panel.getSharedContext().getStyle(element.getModel()).toString(), panel);
-        }, "getComputedStyle"), ENGINE_SCOPE);
 
         expose(CanvasGradientImpl.class);
         expose(CanvasPatternImpl.class);

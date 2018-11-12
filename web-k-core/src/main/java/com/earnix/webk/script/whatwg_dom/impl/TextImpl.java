@@ -1,6 +1,7 @@
 package com.earnix.webk.script.whatwg_dom.impl;
 
 import com.earnix.webk.dom.nodes.TextNodeModel;
+import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.html.canvas.HTMLSlotElement;
 import com.earnix.webk.script.impl.ChildNodeImpl;
 import com.earnix.webk.script.impl.NodeImpl;
@@ -10,7 +11,6 @@ import com.earnix.webk.script.web_idl.DOMException;
 import com.earnix.webk.script.web_idl.DOMString;
 import com.earnix.webk.script.whatwg_dom.Element;
 import com.earnix.webk.script.whatwg_dom.Text;
-import com.earnix.webk.swing.BasicPanel;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
@@ -28,11 +28,11 @@ public class TextImpl extends NodeImpl implements Text {
 
     // text
 
-    public TextImpl(TextNodeModel target, BasicPanel panel) {
-        super(target, panel);
+    public TextImpl(TextNodeModel target, ScriptContext ctx) {
+        super(target, ctx);
         this.target = target;
         this.childNodeMixin = new ChildNodeImpl(target);
-        this.nonDocumentTypeChildNodeMixin = new NonDocumentTypeChildNodeImpl(target, panel);
+        this.nonDocumentTypeChildNodeMixin = new NonDocumentTypeChildNodeImpl(target, ctx);
     }
 
     @Override
@@ -138,8 +138,7 @@ public class TextImpl extends NodeImpl implements Text {
     }
 
     // non doc type child node
-
-
+    
     @Override
     public Element previousElementSibling() {
         return nonDocumentTypeChildNodeMixin.previousElementSibling();

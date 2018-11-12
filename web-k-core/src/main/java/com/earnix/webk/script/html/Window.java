@@ -34,7 +34,9 @@ public interface Window extends
         com.earnix.webk.script.whatwg_dom.Window,
         LegacyUnenumerableNamedProperties,
         GlobalEventHandlers,
-        WindowOrWorkerGlobalScope {
+        WindowOrWorkerGlobalScope,
+        com.earnix.webk.script.cssom.Window // spec connection
+{
     
     // the current browsing context
     @Unforgeable
@@ -157,7 +159,6 @@ public interface Window extends
 
     void postMessage(Object message, @Optional WindowPostMessageOptions options);
 
-    // is not in WebIDL, exposed as namespace
-
+    // is not in WebIDL, exposed as namespace. Spec connection.
     Console console();
 }

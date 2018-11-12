@@ -5,7 +5,8 @@ import com.earnix.webk.util.AssertHelper;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.val;
-import org.apache.commons.lang3.ArrayUtils;
+
+import java.util.stream.Stream;
 
 /**
  * @author Taras Maslov
@@ -18,8 +19,10 @@ public abstract class MultiTypedef {
     private Object value;
 
     public void set(Object value) {
-        val types = getClass().getAnnotation(Typedef.class).value();
-        AssertHelper.assertState(ArrayUtils.contains(types, value));
+        val correct = Stream.of(getClass().getAnnotation(Typedef.class).value()).anyMatch(clz -> clz.isAssignableFrom(value.getClass()));
+        if(!correct){
+            throw new RuntimeException();
+        } 
         this.value = value;
     }
 
@@ -28,6 +31,6 @@ public abstract class MultiTypedef {
     }
 
     public boolean is(Class<?> clazz) {
-        return value.getClass().equals(clazz);
+        return clazz.isAssignableFrom(value.getClass());
     }
 }

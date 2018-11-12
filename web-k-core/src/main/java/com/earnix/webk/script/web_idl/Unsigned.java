@@ -12,6 +12,6 @@ import java.lang.annotation.Target;
  * 6/1/2018
  */
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RetentionPolicy.SOURCE)
 public @interface Unsigned {
 }

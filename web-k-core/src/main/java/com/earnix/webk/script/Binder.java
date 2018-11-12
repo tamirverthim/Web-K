@@ -13,7 +13,6 @@ import com.earnix.webk.script.impl.CommentImpl;
 import com.earnix.webk.script.impl.DocumentTypeImpl;
 import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.impl.NodeImpl;
-import com.earnix.webk.swing.BasicPanel;
 import com.earnix.webk.util.AssertHelper;
 import lombok.experimental.var;
 
@@ -31,31 +30,31 @@ public class Binder {
     private static HashMap<String, NodeCreator> elementsCreators = new HashMap<>();
 
     private interface NodeCreator {
-        com.earnix.webk.script.whatwg_dom.Node createNode(NodeModel parsedNode, BasicPanel panel);
+        com.earnix.webk.script.whatwg_dom.Node createNode(NodeModel parsedNode, ScriptContext panel);
     }
 
     static {
-        elementsCreators.put("canvas", (element, panel) -> new HTMLCanvasElementImpl(
+        elementsCreators.put("canvas", (element, ctx) -> new HTMLCanvasElementImpl(
                 (ElementModel) element,
-                panel
+                ctx
         ));
     }
 
-    public static com.earnix.webk.script.whatwg_dom.Node get(NodeModel key, BasicPanel panel) {
+    public static com.earnix.webk.script.whatwg_dom.Node get(NodeModel key, ScriptContext ctx) {
         if (key == null) {
             return null;
         }
 
         var result = key.getScriptNode();
         if (result == null) {
-            result = (NodeImpl) createJSNode(key, panel);
+            result = (NodeImpl) createJSNode(key, ctx);
             key.setScriptNode(result);
         }
         return result;
     }
 
-    public static com.earnix.webk.script.whatwg_dom.Element getElement(ElementModel key, BasicPanel panel) {
-        return (com.earnix.webk.script.whatwg_dom.Element) get(key, panel);
+    public static com.earnix.webk.script.whatwg_dom.Element getElement(ElementModel key, ScriptContext ctx) {
+        return (com.earnix.webk.script.whatwg_dom.Element) get(key, ctx);
     }
 
     public static com.earnix.webk.script.whatwg_dom.Node put(NodeModel key, com.earnix.webk.script.whatwg_dom.Node value) {
@@ -64,24 +63,24 @@ public class Binder {
     }
 
 
-    public static com.earnix.webk.script.whatwg_dom.Node createJSNode(NodeModel parsedNode, BasicPanel panel) {
+    public static com.earnix.webk.script.whatwg_dom.Node createJSNode(NodeModel parsedNode, ScriptContext ctx) {
         AssertHelper.assertNotNull(parsedNode);
 
         com.earnix.webk.script.whatwg_dom.Node result;
 
         if (parsedNode instanceof CDataNodeModel) {
-            result = new CharacterDataImpl((CDataNodeModel) parsedNode, panel);
+            result = new CharacterDataImpl((CDataNodeModel) parsedNode, ctx);
         } else if (parsedNode instanceof CommentModel) {
-            result = new CommentImpl((CommentModel) parsedNode, panel);
+            result = new CommentImpl((CommentModel) parsedNode, ctx);
         } else if (parsedNode instanceof DocumentTypeModel) {
-            result = new DocumentTypeImpl((DocumentTypeModel) parsedNode, panel);
+            result = new DocumentTypeImpl((DocumentTypeModel) parsedNode, ctx);
         } else if (parsedNode instanceof DocumentModel) {
-            result = new ElementImpl((ElementModel) parsedNode, panel);
+            result = new ElementImpl((ElementModel) parsedNode, ctx);
         } else if (parsedNode instanceof ElementModel) {
             if (elementsCreators.containsKey(parsedNode.nodeName())) {
-                result = elementsCreators.get(parsedNode.nodeName()).createNode(parsedNode, panel);
+                result = elementsCreators.get(parsedNode.nodeName()).createNode(parsedNode, ctx);
             } else {
-                result = new ElementImpl((ElementModel) parsedNode, panel);
+                result = new ElementImpl((ElementModel) parsedNode, ctx);
             }
         } else {
             throw new RuntimeException();

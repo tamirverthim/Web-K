@@ -95,7 +95,7 @@ public class DocumentImpl extends com.earnix.webk.script.impl.DocumentImpl imple
                 if (bodyModel.isEmpty()) {
                     return null;
                 }
-                return (HTMLElement) Binder.getElement(bodyModel.get(0), panel);
+                return (HTMLElement) Binder.getElement(bodyModel.get(0), ctx);
             }
 
             @Override

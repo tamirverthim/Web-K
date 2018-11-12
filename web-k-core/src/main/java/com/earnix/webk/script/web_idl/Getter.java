@@ -12,6 +12,6 @@ import java.lang.annotation.Target;
  * 6/21/2018
  */
 @Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RetentionPolicy.SOURCE)
 public @interface Getter {
 }
