@@ -2,7 +2,6 @@ package com.earnix.webk.script.html.impl;
 
 import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
 import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.html.DocumentReadyState;
 import com.earnix.webk.script.html.HTMLElement;
@@ -18,7 +17,9 @@ import com.earnix.webk.script.whatwg_dom.Element;
 import com.earnix.webk.script.whatwg_dom.EventHandler;
 import com.earnix.webk.script.whatwg_dom.HTMLCollection;
 import com.earnix.webk.script.whatwg_dom.NodeList;
+import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
 import lombok.AccessLevel;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
 
@@ -33,7 +34,9 @@ public class DocumentImpl extends com.earnix.webk.script.whatwg_dom.impl.Documen
     Location location;
     DocumentModel document;
 
-
+    @Setter
+    ElementImpl activeElement;
+    
     public DocumentImpl(ScriptContext ctx) {
         super(ctx.getPanel().getDocument(), ctx.getPanel().getURL().toString());
         location = new LocationImpl(ctx.getPanel());
@@ -187,7 +190,7 @@ public class DocumentImpl extends com.earnix.webk.script.whatwg_dom.impl.Documen
 
     @Override
     public Element activeElement() {
-        return null;
+        return activeElement;
     }
 
     @Override

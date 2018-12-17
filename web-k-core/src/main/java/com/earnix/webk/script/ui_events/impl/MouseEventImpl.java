@@ -1,9 +1,9 @@
-package com.earnix.webk.script.ui_events;
+package com.earnix.webk.script.ui_events.impl;
 
+import com.earnix.webk.script.ui_events.MouseEvent;
+import com.earnix.webk.script.ui_events.MouseEventInit;
 import com.earnix.webk.script.web_idl.DOMString;
-import com.earnix.webk.script.whatwg_dom.EventInit;
 import com.earnix.webk.script.whatwg_dom.EventTarget;
-import com.earnix.webk.script.whatwg_dom.impl.EventImpl;
 
 /**
  * @author Taras Maslov

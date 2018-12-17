@@ -1,5 +1,7 @@
-package com.earnix.webk.script.ui_events;
+package com.earnix.webk.script.ui_events.impl;
 
+import com.earnix.webk.script.ui_events.UIEvent;
+import com.earnix.webk.script.ui_events.UIEventInit;
 import com.earnix.webk.script.whatwg_dom.Window;
 import com.earnix.webk.script.whatwg_dom.impl.EventImpl;
 
