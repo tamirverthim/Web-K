@@ -13,6 +13,7 @@ import com.earnix.webk.dom.select.NodeVisitor;
 import com.earnix.webk.dom.select.QueryParser;
 import com.earnix.webk.dom.select.Selector;
 import com.earnix.webk.render.Box;
+import lombok.val;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -24,6 +25,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -1517,7 +1519,7 @@ public class ElementModel extends NodeModel {
         // simpler than implementing a clone version with no child copy
         return new ElementModel(tag, baseUri, attributes);
     }
-
+    
     @Override
     protected ElementModel doClone(NodeModel parent) {
         ElementModel clone = (ElementModel) super.doClone(parent);
@@ -1540,5 +1542,10 @@ public class ElementModel extends NodeModel {
         public void onContentsChanged() {
             owner.nodelistChanged();
         }
+    }
+
+    public void walkElementsTree(Consumer<ElementModel> consumer){
+        consumer.accept(this);
+        children().forEach(c -> c.walkElementsTree(consumer));
     }
 }

@@ -3,7 +3,6 @@ package com.earnix.webk.script.html.impl;
 import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.console.Console;
 import com.earnix.webk.script.console.impl.ConsoleImpl;
-import com.earnix.webk.script.cssom.CSSOMString;
 import com.earnix.webk.script.cssom.CSSStyleDeclaration;
 import com.earnix.webk.script.cssom.impl.CSSStyleDeclarationImpl;
 import com.earnix.webk.script.fetch.RequestInfo;
@@ -32,9 +31,13 @@ import com.earnix.webk.script.web_idl.Sequence;
 import com.earnix.webk.script.web_idl.VoidFunction;
 import com.earnix.webk.script.whatwg_dom.Element;
 import com.earnix.webk.script.whatwg_dom.EventHandler;
+import com.earnix.webk.script.whatwg_dom.EventTarget;
+import com.earnix.webk.script.whatwg_dom.impl.EventTargetImpl;
+import com.earnix.webk.script.whatwg_dom.impl.Level1EventTarget;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Delegate;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -58,7 +61,10 @@ public class WindowImpl implements Window {
     @Setter DocumentImpl document;
     final NavigatorImpl navigator = new NavigatorImpl();
     final LocationImpl location;
-
+    ConsoleImpl console = new ConsoleImpl();
+    @Delegate(types = EventTarget.class)
+    EventTargetImpl eventTargetImpl = new EventTargetImpl();
+    Level1EventTarget level1EventTarget = new Level1EventTarget(eventTargetImpl);
 
     public WindowImpl(ScriptContext scriptContext) {
         this.scriptContext = scriptContext;
@@ -284,25 +290,7 @@ public class WindowImpl implements Window {
     private HashMap<String, Attribute<EventHandler>> handlers = new HashMap<>();
 
     private Attribute<EventHandler> getEventHandler(String event) {
-        return handlers.computeIfAbsent(event, new java.util.function.Function<String, Attribute<EventHandler>>() {
-            @Override
-            public Attribute<EventHandler> apply(String s) {
-                return new Attribute<EventHandler>() {
-
-                    EventHandler handler;
-
-                    @Override
-                    public EventHandler get() {
-                        return handler;
-                    }
-
-                    @Override
-                    public void set(EventHandler eventHandler) {
-                        this.handler = eventHandler;
-                    }
-                };
-            }
-        });
+        return level1EventTarget.getHandlerAttribute(event);
     }
 
 
@@ -767,9 +755,6 @@ public class WindowImpl implements Window {
             }
         };
     }
-
-
-    ConsoleImpl console = new ConsoleImpl();
 
     @Override
     public Console console() {

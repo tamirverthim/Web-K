@@ -26,7 +26,7 @@ public class Level1EventTarget {
 
     }
 
-    public Attribute<EventHandler> getHanlderAttribute(String eventType) {
+    public Attribute<EventHandler> getHandlerAttribute(String eventType) {
         var handler = handlers.get(eventType);
         if (handler == null) {
             handler = new EventHandlerAttribute();

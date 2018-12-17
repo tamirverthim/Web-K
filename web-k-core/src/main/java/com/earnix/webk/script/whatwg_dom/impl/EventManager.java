@@ -36,7 +36,7 @@ public class EventManager {
         do {
             propagationPath.add(current);
             current = current.parentElement();
-        } while (current != ScriptDOMFactory.get(scriptContext.getPanel().getDocument()));
+        } while (current != null);
         
         
         event.setTrusted(true);

@@ -7,7 +7,6 @@ import com.earnix.webk.script.web_idl.DOMException;
 import com.earnix.webk.script.web_idl.DOMString;
 import com.earnix.webk.script.web_idl.USVString;
 import com.earnix.webk.script.whatwg_dom.Document;
-import com.earnix.webk.script.whatwg_dom.Event;
 import com.earnix.webk.script.whatwg_dom.EventHandler;
 import com.earnix.webk.script.whatwg_dom.EventListener;
 import com.earnix.webk.script.whatwg_dom.EventTarget;
@@ -18,8 +17,6 @@ import com.earnix.webk.script.whatwg_dom.impl.Level1EventTarget;
 import com.earnix.webk.script.xhr.XMLHttpRequest;
 import com.earnix.webk.script.xhr.XMLHttpRequestResponseType;
 import com.earnix.webk.script.xhr.XMLHttpRequestUpload;
-import com.helger.commons.http.EHttpMethod;
-import com.sun.java.browser.plugin2.DOM;
 import lombok.AccessLevel;
 import lombok.experimental.Delegate;
 import lombok.experimental.FieldDefaults;
@@ -42,15 +39,11 @@ import javax.swing.SwingUtilities;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 /**
  * @author Taras Maslov
@@ -288,37 +281,37 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
 
     @Override
     public Attribute<EventHandler> onloadstart() {
-        return level1EventTarget.getHanlderAttribute("onloadstart");
+        return level1EventTarget.getHandlerAttribute("onloadstart");
     }
 
     @Override
     public Attribute<EventHandler> onprogress() {
-        return level1EventTarget.getHanlderAttribute("onprogress");
+        return level1EventTarget.getHandlerAttribute("onprogress");
     }
 
     @Override
     public Attribute<EventHandler> onabort() {
-        return level1EventTarget.getHanlderAttribute("onabort");
+        return level1EventTarget.getHandlerAttribute("onabort");
     }
 
     @Override
     public Attribute<EventHandler> onerror() {
-        return level1EventTarget.getHanlderAttribute("onerror");
+        return level1EventTarget.getHandlerAttribute("onerror");
     }
 
     @Override
     public Attribute<EventHandler> onload() {
-        return level1EventTarget.getHanlderAttribute("onload");
+        return level1EventTarget.getHandlerAttribute("onload");
     }
 
     @Override
     public Attribute<EventHandler> ontimeout() {
-        return level1EventTarget.getHanlderAttribute("ontimeout");
+        return level1EventTarget.getHandlerAttribute("ontimeout");
     }
 
     @Override
     public Attribute<EventHandler> onloadend() {
-        return level1EventTarget.getHanlderAttribute("onloadend");
+        return level1EventTarget.getHandlerAttribute("onloadend");
     }
 
     // endregion

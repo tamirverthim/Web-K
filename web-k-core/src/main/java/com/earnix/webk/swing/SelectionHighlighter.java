@@ -58,6 +58,8 @@ import java.util.Stack;
 import java.util.logging.Level;
 
 /**
+ * // TODO migrate to new DOM model
+ * 
  * <p>
  * A simple Selection and Highlighter class for
  * {@link com.earnix.webk.simple.XHTMLPanel}.
@@ -446,7 +448,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
 //        String s = normalizeSpaces(hlText.toString());
 //        getComponent().repaint();
 //        lastHighlightedString = Util.replace(s, PARA_EQUIV, "\n\n");
-        // lastModified = modified;
+//        // lastModified = modified;
     }
 
     public String normalizeSpaces(String s) {

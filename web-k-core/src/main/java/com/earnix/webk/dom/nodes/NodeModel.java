@@ -7,6 +7,7 @@ import com.earnix.webk.dom.select.NodeFilter;
 import com.earnix.webk.dom.select.NodeTraversor;
 import com.earnix.webk.dom.select.NodeVisitor;
 import com.earnix.webk.script.impl.NodeImpl;
+import lombok.val;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -243,6 +244,15 @@ public abstract class NodeModel implements Cloneable {
         return children;
     }
 
+    public List<NodeModel> getAllNodes () {
+        val result = new ArrayList<NodeModel>();
+        childNodes().forEach(node -> {
+            result.add(node);
+            result.addAll(node.getAllNodes());
+        });
+        return result;
+    }
+    
     /**
      * Get the number of child nodes that this node holds.
      *

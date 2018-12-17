@@ -1,9 +1,11 @@
 package com.earnix.webk.script.whatwg_dom.impl;
 
+import com.earnix.webk.dom.nodes.CommentModel;
 import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.dom.nodes.TextNodeModel;
+import com.earnix.webk.script.impl.CommentImpl;
 import com.earnix.webk.script.impl.DOMImplementationImpl;
 import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.impl.NodeListImpl;
@@ -154,12 +156,12 @@ public class DocumentImpl implements Document {
 
     @Override
     public CDATASection createCDATASection(String data) {
-        return null;
+        return new CDATASectionImpl(new TextNodeModel(data));
     }
 
     @Override
     public Comment createComment(String data) {
-        return null;
+        return new CommentImpl(new CommentModel(data));
     }
 
     @Override
@@ -215,17 +217,27 @@ public class DocumentImpl implements Document {
 
     @Override
     public HTMLCollection children() {
-        return null;
+        return new HTMLCollectionImpl(document.children());
     }
 
     @Override
     public Element firstElementChild() {
-        return null;
+        val firstModel = document.children().first();
+        if (firstModel != null) {
+            return ScriptDOMFactory.getElement(firstModel);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public Element lastElementChild() {
-        return null;
+        val lastModel = document.children().last();
+        if (lastModel != null) {
+            return ScriptDOMFactory.getElement(lastModel);
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -235,7 +247,7 @@ public class DocumentImpl implements Document {
 
     @Override
     public void prepend(Object... nodes) {
-
+        
     }
 
     @Override

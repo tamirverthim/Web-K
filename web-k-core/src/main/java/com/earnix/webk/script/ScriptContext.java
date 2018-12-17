@@ -10,7 +10,6 @@ import com.earnix.webk.script.ui_events.UIEventImpl;
 import com.earnix.webk.script.ui_events.UIEventInit;
 import com.earnix.webk.script.web_idl.Exposed;
 import com.earnix.webk.script.whatwg_dom.impl.EventManager;
-import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
 import com.earnix.webk.script.xhr.impl.XMLHttpRequestImpl;
 import com.earnix.webk.swing.BasicPanel;
 import jdk.nashorn.api.scripting.AbstractJSObject;
@@ -26,8 +25,6 @@ import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.script.ScriptException;
-
-import java.io.InputStreamReader;
 
 import static javax.script.ScriptContext.ENGINE_SCOPE;
 
@@ -62,8 +59,8 @@ public class ScriptContext implements DocumentListener {
         panel.addMouseWheelListener(mouseEventsAdapter);
     }
 
-    public void onload() {
-        eval("window.onload && window.onload()");
+    public void dispatchLoadEvents() {
+//        eval("window.onload && window.onload()");
 
         //Type	load
         //Interface	UIEvent if generated from a user interface, Event otherwise.
@@ -77,14 +74,49 @@ public class ScriptContext implements DocumentListener {
         //Event.target : common object whose contained resources have loaded
         //UIEvent.view : Window
         //UIEvent.detail : 0
+        
+        document.walkElementsTree(e -> {
+            val eventInit = new UIEventInit();
+            eventInit.bubbles = false;
+            eventInit.cancelable = false;
+            eventInit.view = window;
 
+//            eventInit.composed = false;
+//        eventInit.view = getWindow() // todo
+
+            val event = new UIEventImpl("load", eventInit);
+            eventManager.publishEvent(e, event);
+        });
+        
         val eventInit = new UIEventInit();
         eventInit.bubbles = false;
         eventInit.cancelable = false;
+        eventInit.view = window;
+        eventManager.publishEvent(window, new UIEventImpl("load", eventInit));
+//        eventManager.publishEvent(document, event);
+    }
+    
+    private void dispatchUnloadEvents() {
+        val eventInit = new UIEventInit();
+        eventInit.bubbles = false;
+        eventInit.cancelable = false;
+        eventInit.view = window;
+        eventManager.publishEvent(window, new UIEventImpl("unload", eventInit));
+        
+        document.walkElementsTree(e -> {
+            val init = new UIEventInit();
+            eventInit.bubbles = false;
+            eventInit.cancelable = false;
+            eventInit.view = window;
+
+//            eventInit.composed = false;
 //        eventInit.view = getWindow() // todo
 
-        val event = new UIEventImpl("load", eventInit);
-//        eventManager.publishEvent(document, event);
+            val event = new UIEventImpl("unload", eventInit);
+            eventManager.publishEvent(e, event);
+        });
+
+      
     }
 
     public BasicPanel getPanel() {
@@ -218,6 +250,11 @@ public class ScriptContext implements DocumentListener {
     private void handleNewDocument() {
         val nextDocument = panel.getDocument();
         if (nextDocument != document) {
+            
+            if(document != null){
+                dispatchUnloadEvents();
+            }
+            
             initEngine();
 
             window.setDocument(new DocumentImpl(this));
@@ -247,7 +284,7 @@ public class ScriptContext implements DocumentListener {
                     }
                 }
 
-                onload();
+                dispatchLoadEvents();
             }
             document = nextDocument;
         }

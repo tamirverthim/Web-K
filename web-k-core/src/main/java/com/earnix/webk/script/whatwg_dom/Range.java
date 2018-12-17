@@ -18,6 +18,7 @@ import com.earnix.webk.script.web_idl.Unsigned;
 @Exposed(Window.class)
 @Stringifier
 public interface Range extends AbstractRange {
+    
     @ReadonlyAttribute
     Node commonAncestorContainer();
 

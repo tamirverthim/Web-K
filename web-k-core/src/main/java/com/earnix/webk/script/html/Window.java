@@ -21,6 +21,7 @@ import com.earnix.webk.script.web_idl.USVString;
 import com.earnix.webk.script.web_idl.Unforgeable;
 import com.earnix.webk.script.web_idl.Unsigned;
 import com.earnix.webk.script.whatwg_dom.Element;
+import com.earnix.webk.script.whatwg_dom.EventTarget;
 
 import java.util.Objects;
 
@@ -31,6 +32,7 @@ import java.util.Objects;
 @Exposed(Window.class) // todo we have multiple windows, fix it
 @Global(Window.class)
 public interface Window extends
+        EventTarget,
         com.earnix.webk.script.whatwg_dom.Window,
         LegacyUnenumerableNamedProperties,
         GlobalEventHandlers,

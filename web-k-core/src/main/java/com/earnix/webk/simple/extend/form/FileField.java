@@ -50,5 +50,4 @@ public class FileField extends InputField {
         FileInputComponent com = (FileInputComponent) getComponent();
         return new String[]{com.getFilePath()};
     }
-
 }
