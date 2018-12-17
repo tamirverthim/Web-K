@@ -31,7 +31,7 @@ public class Level1EventTarget {
         if (handler == null) {
             handler = new EventHandlerAttribute();
             handlers.put(eventType, handler);
-            eventTarget.addEventListener(eventType, handler, null);
+            eventTarget.addEventListener(eventType.substring(2), handler, null);
         }
         return handler;
     }

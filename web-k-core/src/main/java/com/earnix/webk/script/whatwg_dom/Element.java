@@ -12,6 +12,7 @@ import com.earnix.webk.script.web_idl.SameObject;
 import com.earnix.webk.script.web_idl.Sequence;
 import com.earnix.webk.script.web_idl.TreatNullAs;
 import com.earnix.webk.script.web_idl.Unscopable;
+import com.earnix.webk.script.web_idl.custom.AttributeSetter;
 
 
 /**

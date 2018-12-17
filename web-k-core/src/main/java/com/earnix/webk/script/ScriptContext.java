@@ -71,19 +71,20 @@ public class ScriptContext implements DocumentListener {
         //Event.target : common object whose contained resources have loaded
         //UIEvent.view : Window
         //UIEvent.detail : 0
-        
-        document.walkElementsTree(e -> {
-            val eventInit = new UIEventInit();
-            eventInit.bubbles = false;
-            eventInit.cancelable = false;
-            eventInit.view = window;
 
-//            eventInit.composed = false;
-//        eventInit.view = getWindow() // todo
-
-            val event = new UIEventImpl("load", eventInit);
-            eventManager.publishEvent(e, event);
-        });
+//        document.walkElementsTree(e -> {
+//
+//            Element element = ScriptDOMFactory.getElement(e);
+//            
+//            
+//            val eventInit = new UIEventInit();
+//            eventInit.bubbles = false;
+//            eventInit.cancelable = false;
+//            eventInit.view = window;
+//
+//            val event = new UIEventImpl("load", eventInit);
+//            eventManager.publishEvent(e, event);
+//        });
         
         val eventInit = new UIEventInit();
         eventInit.bubbles = false;
@@ -200,16 +201,18 @@ public class ScriptContext implements DocumentListener {
         window = new WindowImpl(this);
         windowAdapter = WebIDLAdapter.obtain(this, window);
 
+        // no way to track attributes write operation on global scope...
+        // limitation - to use "window" property
         windowAdapter.keySet().forEach(key -> {
             context.setAttribute(key, windowAdapter.getMember(key), ENGINE_SCOPE);
         });
 
-        try {
-            context.setAttribute("window", engine.eval("this"), ENGINE_SCOPE);
-            context.setAttribute("self", engine.eval("this"), ENGINE_SCOPE);
-        } catch (ScriptException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+        context.setAttribute("window", windowAdapter, ENGINE_SCOPE);
+        context.setAttribute("self", eval("window"), ENGINE_SCOPE);
+//        } catch (ScriptException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
     private void expose(Class implementationClass) {
@@ -281,9 +284,10 @@ public class ScriptContext implements DocumentListener {
                     }
                 }
 
-                dispatchLoadEvents();
             }
             document = nextDocument;
+            dispatchLoadEvents();
+
         }
     }
 

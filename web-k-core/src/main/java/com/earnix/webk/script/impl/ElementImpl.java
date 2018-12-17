@@ -1,8 +1,6 @@
 package com.earnix.webk.script.impl;
 
 import com.earnix.webk.dom.nodes.ElementModel;
-import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
-import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.cssom.CSSStyleDeclaration;
 import com.earnix.webk.script.cssom.impl.CSSStyleDeclarationImpl;
 import com.earnix.webk.script.cssom_view.ScrollToOptions;
@@ -17,6 +15,7 @@ import com.earnix.webk.script.whatwg_dom.Attr;
 import com.earnix.webk.script.whatwg_dom.DOMTokenList;
 import com.earnix.webk.script.whatwg_dom.DOMTokenListImpl;
 import com.earnix.webk.script.whatwg_dom.Element;
+import com.earnix.webk.script.whatwg_dom.EventHandler;
 import com.earnix.webk.script.whatwg_dom.HTMLCollection;
 import com.earnix.webk.script.whatwg_dom.NamedNodeMap;
 import com.earnix.webk.script.whatwg_dom.NodeList;
@@ -24,6 +23,7 @@ import com.earnix.webk.script.whatwg_dom.ShadowRoot;
 import com.earnix.webk.script.whatwg_dom.ShadowRootInit;
 import com.earnix.webk.script.whatwg_dom.impl.HTMLCollectionImpl;
 import com.earnix.webk.script.whatwg_dom.impl.NamedNodeMapImpl;
+import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +41,6 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     final ElementModel model;
     final ChildNodeImpl childNodeMixin;
-//    final ScriptContext ctx;
 
     public ElementImpl(ElementModel model) {
         super(model);
@@ -547,6 +546,311 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
     @Override
     public int clientHeight() {
         return 0;
+    }
+
+    @Override
+    public Attribute<EventHandler> onabort() {
+        return level1EventTarget.getHandlerAttribute("onabort");
+    }
+
+    @Override
+    public Attribute<EventHandler> onauxclick() {
+        return level1EventTarget.getHandlerAttribute("onauxclick");
+    }
+
+    @Override
+    public Attribute<EventHandler> onblur() {
+        return level1EventTarget.getHandlerAttribute("onblur");
+    }
+
+    @Override
+    public Attribute<EventHandler> oncancel() {
+        return level1EventTarget.getHandlerAttribute("oncancel");
+    }
+
+    @Override
+    public Attribute<EventHandler> oncanplay() {
+        return level1EventTarget.getHandlerAttribute("oncanplay");
+    }
+
+    @Override
+    public Attribute<EventHandler> oncanplaythrough() {
+        return level1EventTarget.getHandlerAttribute("oncanplaythrough");
+    }
+
+    @Override
+    public Attribute<EventHandler> onchange() {
+        return level1EventTarget.getHandlerAttribute("onchange");
+    }
+
+    @Override
+    public Attribute<EventHandler> onclick() {
+        return level1EventTarget.getHandlerAttribute("onclick");
+    }
+
+    @Override
+    public Attribute<EventHandler> onclose() {
+        return level1EventTarget.getHandlerAttribute("onclose");
+    }
+
+    @Override
+    public Attribute<EventHandler> oncontextmenu() {
+        return level1EventTarget.getHandlerAttribute("oncontextmenu");
+    }
+
+    @Override
+    public Attribute<EventHandler> oncuechange() {
+        return level1EventTarget.getHandlerAttribute("oncuechange");
+    }
+
+    @Override
+    public Attribute<EventHandler> ondblclick() {
+        return level1EventTarget.getHandlerAttribute("ondblclick");
+    }
+
+    @Override
+    public Attribute<EventHandler> ondrag() {
+        return level1EventTarget.getHandlerAttribute("ondrag");
+    }
+
+    @Override
+    public Attribute<EventHandler> ondragend() {
+        return level1EventTarget.getHandlerAttribute("ondragend");
+    }
+
+    @Override
+    public Attribute<EventHandler> ondragenter() {
+        return level1EventTarget.getHandlerAttribute("ondragenter");
+    }
+
+    @Override
+    public Attribute<EventHandler> ondragexit() {
+        return level1EventTarget.getHandlerAttribute("ondragexit");
+    }
+
+    @Override
+    public Attribute<EventHandler> ondragleave() {
+        return level1EventTarget.getHandlerAttribute("ondragleave");
+    }
+
+    @Override
+    public Attribute<EventHandler> ondragover() {
+        return level1EventTarget.getHandlerAttribute("ondragover");
+    }
+
+    @Override
+    public Attribute<EventHandler> ondragstart() {
+        return level1EventTarget.getHandlerAttribute("ondragstart");
+    }
+
+    @Override
+    public Attribute<EventHandler> ondrop() {
+        return level1EventTarget.getHandlerAttribute("ondrop");
+    }
+
+    @Override
+    public Attribute<EventHandler> ondurationchange() {
+        return level1EventTarget.getHandlerAttribute("ondurationchange");
+    }
+
+    @Override
+    public Attribute<EventHandler> onemptied() {
+        return level1EventTarget.getHandlerAttribute("onemptied");
+    }
+
+    @Override
+    public Attribute<EventHandler> onended() {
+        return level1EventTarget.getHandlerAttribute("onended");
+    }
+
+    @Override
+    public Attribute<EventHandler> onfocus() {
+        return level1EventTarget.getHandlerAttribute("onfocus");
+    }
+
+    @Override
+    public Attribute<EventHandler> oninput() {
+        return level1EventTarget.getHandlerAttribute("oninput");
+    }
+
+    @Override
+    public Attribute<EventHandler> oninvalid() {
+        return level1EventTarget.getHandlerAttribute("oninvalid");
+    }
+
+    @Override
+    public Attribute<EventHandler> onkeydown() {
+        return level1EventTarget.getHandlerAttribute("onkeydown");
+    }
+
+    @Override
+    public Attribute<EventHandler> onkeypress() {
+        return level1EventTarget.getHandlerAttribute("onkeypress");
+    }
+
+    @Override
+    public Attribute<EventHandler> onkeyup() {
+        return level1EventTarget.getHandlerAttribute("onkeyup");
+    }
+
+    @Override
+    public Attribute<EventHandler> onload() {
+        return level1EventTarget.getHandlerAttribute("onload");
+    }
+
+    @Override
+    public Attribute<EventHandler> onloadeddata() {
+        return level1EventTarget.getHandlerAttribute("onloadeddata");
+    }
+
+    @Override
+    public Attribute<EventHandler> onloadedmetadata() {
+        return level1EventTarget.getHandlerAttribute("onloadedmetadata");
+    }
+
+    @Override
+    public Attribute<EventHandler> onloadend() {
+        return level1EventTarget.getHandlerAttribute("onloadend");
+    }
+
+    @Override
+    public Attribute<EventHandler> onloadstart() {
+        return level1EventTarget.getHandlerAttribute("onloadstart");
+    }
+
+    @Override
+    public Attribute<EventHandler> onmousedown() {
+        return level1EventTarget.getHandlerAttribute("onmousedown");
+    }
+
+    @Override
+    public Attribute<EventHandler> onmouseenter() {
+        return level1EventTarget.getHandlerAttribute("onmouseenter");
+    }
+
+    @Override
+    public Attribute<EventHandler> onmouseleave() {
+        return level1EventTarget.getHandlerAttribute("onmouseleave");
+    }
+
+    @Override
+    public Attribute<EventHandler> onmousemove() {
+        return level1EventTarget.getHandlerAttribute("onmousemove");
+    }
+
+    @Override
+    public Attribute<EventHandler> onmouseout() {
+        return level1EventTarget.getHandlerAttribute("onmouseout");
+    }
+
+    @Override
+    public Attribute<EventHandler> onmouseover() {
+        return level1EventTarget.getHandlerAttribute("onmouseover");
+    }
+
+    @Override
+    public Attribute<EventHandler> onmouseup() {
+        return level1EventTarget.getHandlerAttribute("onmouseup");
+    }
+
+    @Override
+    public Attribute<EventHandler> onwheel() {
+        return level1EventTarget.getHandlerAttribute("onwheel");
+    }
+
+    @Override
+    public Attribute<EventHandler> onpause() {
+        return level1EventTarget.getHandlerAttribute("onpause");
+    }
+
+    @Override
+    public Attribute<EventHandler> onplay() {
+        return level1EventTarget.getHandlerAttribute("onplay");
+    }
+
+    @Override
+    public Attribute<EventHandler> onplaying() {
+        return level1EventTarget.getHandlerAttribute("onplaying");
+    }
+
+    @Override
+    public Attribute<EventHandler> onprogress() {
+        return level1EventTarget.getHandlerAttribute("onprogress");
+    }
+
+    @Override
+    public Attribute<EventHandler> onratechange() {
+        return level1EventTarget.getHandlerAttribute("onratechange");
+    }
+
+    @Override
+    public Attribute<EventHandler> onreset() {
+        return level1EventTarget.getHandlerAttribute("onreset");
+    }
+
+    @Override
+    public Attribute<EventHandler> onresize() {
+        return level1EventTarget.getHandlerAttribute("onresize");
+    }
+
+    @Override
+    public Attribute<EventHandler> onscroll() {
+        return level1EventTarget.getHandlerAttribute("onscroll");
+    }
+
+    @Override
+    public Attribute<EventHandler> onsecuritypolicyviolation() {
+        return level1EventTarget.getHandlerAttribute("onsecuritypolicyviolation");
+    }
+
+    @Override
+    public Attribute<EventHandler> onseeked() {
+        return level1EventTarget.getHandlerAttribute("onseeked");
+    }
+
+    @Override
+    public Attribute<EventHandler> onseeking() {
+        return level1EventTarget.getHandlerAttribute("onseeking");
+    }
+
+    @Override
+    public Attribute<EventHandler> onselect() {
+        return level1EventTarget.getHandlerAttribute("onselect");
+    }
+
+    @Override
+    public Attribute<EventHandler> onstalled() {
+        return level1EventTarget.getHandlerAttribute("onstalled");
+    }
+
+    @Override
+    public Attribute<EventHandler> onsubmit() {
+        return level1EventTarget.getHandlerAttribute("onsubmit");
+    }
+
+    @Override
+    public Attribute<EventHandler> onsuspend() {
+        return level1EventTarget.getHandlerAttribute("onsuspend");
+    }
+
+    @Override
+    public Attribute<EventHandler> ontimeupdate() {
+        return level1EventTarget.getHandlerAttribute("ontimeupdate");
+    }
+
+    @Override
+    public Attribute<EventHandler> ontoggle() {
+        return level1EventTarget.getHandlerAttribute("ontoggle");
+    }
+
+    @Override
+    public Attribute<EventHandler> onvolumechange() {
+        return level1EventTarget.getHandlerAttribute("onvolumechange");
+    }
+
+    @Override
+    public Attribute<EventHandler> onwaiting() {
+        return level1EventTarget.getHandlerAttribute("onwaiting");
     }
 
 

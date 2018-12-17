@@ -7,5 +7,6 @@ import com.earnix.webk.script.whatwg_dom.Element;
  * @author Taras Maslov
  * 7/17/2018
  */
-public interface HTMLElement extends Element, ElementCSSInlineStyle {
+public interface HTMLElement extends Element, ElementCSSInlineStyle, GlobalEventHandlers {
+    
 }

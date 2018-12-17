@@ -23,8 +23,8 @@ public class EventManager {
 
     ScriptContext scriptContext;
 
-    public void publishEvent(EventTarget target, Event event){
-        
+    public void publishEvent(EventTarget target, EventImpl event){
+        target.dispatchEvent(event);
     };
     
     public void publishEvent(ElementModel targetModel, EventImpl event) {

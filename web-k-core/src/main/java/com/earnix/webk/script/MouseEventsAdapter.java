@@ -341,8 +341,7 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
         } else if (SwingUtilities.isRightMouseButton(event)) {
             return 2;
         } else {
-            // todo
-            throw new IllegalStateException();
+            return 0; // not sure
         }
     }
 
