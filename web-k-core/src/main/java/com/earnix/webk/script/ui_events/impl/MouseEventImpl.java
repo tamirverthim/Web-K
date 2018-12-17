@@ -4,12 +4,37 @@ import com.earnix.webk.script.ui_events.MouseEvent;
 import com.earnix.webk.script.ui_events.MouseEventInit;
 import com.earnix.webk.script.web_idl.DOMString;
 import com.earnix.webk.script.whatwg_dom.EventTarget;
+import lombok.AccessLevel;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 /**
  * @author Taras Maslov
  * 10/30/2018
  */
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class MouseEventImpl extends UIEventImpl implements MouseEvent {
+
+    @Setter
+    boolean alt;
+
+    @Setter
+    boolean shift;
+
+    @Setter
+    boolean ctrl;
+
+    @Setter
+    boolean meta;
+
+    int screenX;
+    int screenY;
+    int clientX;
+    int clientY;
+    short button;
+    short buttons;
+
+    EventTarget relatedTarget;
 
     public MouseEventImpl(String type, MouseEventInit eventInit){
         super(type, eventInit);
@@ -17,57 +42,57 @@ public class MouseEventImpl extends UIEventImpl implements MouseEvent {
 
     @Override
     public int screenX() {
-        return 0;
+        return screenX;
     }
 
     @Override
     public int screenY() {
-        return 0;
+        return screenY;
     }
 
     @Override
     public int clientX() {
-        return 0;
+        return clientX;
     }
 
     @Override
     public int clientY() {
-        return 0;
+        return clientY;
     }
 
     @Override
     public boolean ctrlKey() {
-        return false;
+        return ctrl;
     }
 
     @Override
     public boolean shiftKey() {
-        return false;
+        return shift;
     }
 
     @Override
     public boolean altKey() {
-        return false;
+        return alt;
     }
 
     @Override
     public boolean metaKey() {
-        return false;
+        return meta;
     }
 
     @Override
     public short button() {
-        return 0;
+        return button;
     }
 
     @Override
     public short buttons() {
-        return 0;
+        return buttons;
     }
 
     @Override
     public EventTarget relatedTarget() {
-        return null;
+        return relatedTarget;
     }
 
     @Override
@@ -76,7 +101,14 @@ public class MouseEventImpl extends UIEventImpl implements MouseEvent {
     }
 
     @Override
-    public void constructor(@DOMString String type, MouseEventInit eventInitDict) {
-        super.constructor(type, eventInitDict);
+    public void constructor(@DOMString String type, MouseEventInit eventInit) {
+        super.constructor(type, eventInit);
+        clientX = eventInit.clientX;
+        clientY = eventInit.clientY;
+        screenX = eventInit.screenX;
+        screenY = eventInit.screenY;
+        button = eventInit.button;
+        buttons = eventInit.buttons;
+        relatedTarget = eventInit.relatedTarget;
     }
 }

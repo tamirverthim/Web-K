@@ -6,8 +6,8 @@ import com.earnix.webk.script.html.canvas.impl.CanvasGradientImpl;
 import com.earnix.webk.script.html.canvas.impl.CanvasPatternImpl;
 import com.earnix.webk.script.html.impl.DocumentImpl;
 import com.earnix.webk.script.html.impl.WindowImpl;
-import com.earnix.webk.script.ui_events.impl.UIEventImpl;
 import com.earnix.webk.script.ui_events.UIEventInit;
+import com.earnix.webk.script.ui_events.impl.UIEventImpl;
 import com.earnix.webk.script.web_idl.Exposed;
 import com.earnix.webk.script.whatwg_dom.impl.EventManager;
 import com.earnix.webk.script.xhr.impl.XMLHttpRequestImpl;
@@ -54,9 +54,6 @@ public class ScriptContext implements DocumentListener {
         // initializing mouse events translation
         eventManager = new EventManager(this);
         mouseEventsAdapter = new MouseEventsAdapter(eventManager, this);
-        panel.addMouseListener(mouseEventsAdapter);
-        panel.addMouseMotionListener(mouseEventsAdapter);
-        panel.addMouseWheelListener(mouseEventsAdapter);
     }
 
     public void dispatchLoadEvents() {

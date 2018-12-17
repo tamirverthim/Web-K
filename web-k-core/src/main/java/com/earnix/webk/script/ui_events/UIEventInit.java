@@ -4,7 +4,6 @@ import com.earnix.webk.script.web_idl.Dictionary;
 import com.earnix.webk.script.web_idl.Nullable;
 import com.earnix.webk.script.whatwg_dom.EventInit;
 import com.earnix.webk.script.whatwg_dom.Window;
-import lombok.AllArgsConstructor;
 
 /**
  * @author Taras Maslov
@@ -13,5 +12,5 @@ import lombok.AllArgsConstructor;
 @Dictionary
 public class UIEventInit extends EventInit {
     public @Nullable Window view = null;
-    public long detail = 0;
+    public int detail = 0;
 }
