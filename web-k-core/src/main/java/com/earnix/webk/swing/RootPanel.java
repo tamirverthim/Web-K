@@ -117,7 +117,8 @@ public class RootPanel extends JPanel implements Scrollable, UserInterface, FSCa
     }
 
     public void setDocument(DocumentModel doc, String url, NamespaceHandler nsh) {
-        fireDocumentStarted();
+        documentListeners.forEach(DocumentListener::documentStarted);
+
         resetScrollPosition();
         setRootBox(null);
         this.doc = doc;
@@ -135,6 +136,7 @@ public class RootPanel extends JPanel implements Scrollable, UserInterface, FSCa
         getSharedContext().getCss().setDocumentContext(getSharedContext(), getSharedContext().getNamespaceHandler(), doc, this);
 
         repaint();
+        documentListeners.forEach(DocumentListener::documentLoaded);
     }
 
     public void reset() {
@@ -324,89 +326,88 @@ public class RootPanel extends JPanel implements Scrollable, UserInterface, FSCa
     }
 
     public void doDocumentLayout(Graphics g) {
-        try {
-            this.removeAll();
-            if (g == null) {
-                return;
-            }
-            if (doc == null) {
-                return;
-            }
+        this.removeAll();
+        if (g == null) {
+            return;
+        }
+        if (doc == null) {
+            return;
+        }
 
-            LayoutContext c = newLayoutContext((Graphics2D) g);
-            synchronized (this) {
-                this.layoutContext = c;
-            }
+        LayoutContext c = newLayoutContext((Graphics2D) g);
+        synchronized (this) {
+            this.layoutContext = c;
+        }
 
-            long start = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
 
-            BlockBox root = (BlockBox) getRootBox();
-            if (root != null && isNeedRelayout()) {
-                root.reset(c);
-            } else {
-                root = BoxBuilder.createRootBox(c, doc);
-                setRootBox(root);
-            }
+        BlockBox root = (BlockBox) getRootBox();
+        if (root != null && isNeedRelayout()) {
+            root.reset(c);
+        } else {
+            root = BoxBuilder.createRootBox(c, doc);
+            setRootBox(root);
+        }
 
-            initFontFromComponent(root);
+        initFontFromComponent(root);
 
-            Rectangle initialExtents = getInitialExtents(c);
-            root.setContainingBlock(new ViewportBox(initialExtents));
+        Rectangle initialExtents = getInitialExtents(c);
+        root.setContainingBlock(new ViewportBox(initialExtents));
 
-            root.layout(c);
+        root.layout(c);
 
-            long end = System.currentTimeMillis();
+        long end = System.currentTimeMillis();
 
-            XRLog.layout(Level.INFO, "Layout took " + (end - start) + "ms");
+        XRLog.layout(Level.INFO, "Layout took " + (end - start) + "ms");
 
             /*
             System.out.println(root.dump(c, "", BlockBox.DUMP_LAYOUT));
             */
 
-            // if there is a fixed child then we need to set opaque to false
-            // so that the entire viewport will be repainted. this is slower
-            // but that's the hit you get from using fixed layout
-            if (root.getLayer().containsFixedContent()) {
-                super.setOpaque(false);
-            } else {
-                super.setOpaque(true);
-            }
+        // if there is a fixed child then we need to set opaque to false
+        // so that the entire viewport will be repainted. this is slower
+        // but that's the hit you get from using fixed layout
+        if (root.getLayer().containsFixedContent()) {
+            super.setOpaque(false);
+        } else {
+            super.setOpaque(true);
+        }
 
-            XRLog.layout(Level.FINEST, "after layout: " + root);
+        XRLog.layout(Level.FINEST, "after layout: " + root);
 
-            Dimension intrinsic_size = root.getLayer().getPaintingDimension(c);
+        Dimension intrinsic_size = root.getLayer().getPaintingDimension(c);
 
-            if (c.isPrint()) {
-                root.getLayer().trimEmptyPages(c, intrinsic_size.height);
-                root.getLayer().layoutPages(c);
-            }
+        if (c.isPrint()) {
+            root.getLayer().trimEmptyPages(c, intrinsic_size.height);
+            root.getLayer().layoutPages(c);
+        }
 
-            // If the initial size we fed into the layout matches the width
-            // of the layout generated then we can set the scrollable property
-            // that matches width of the view pane to the width of this panel.
-            // Otherwise, if the intrinsic width is different then we can't
-            // couple the width of the view pane to the width of this panel
-            // (we hit the minimum size threshold).
-            viewportMatchWidth = (initialExtents.width == intrinsic_size.width);
+        // If the initial size we fed into the layout matches the width
+        // of the layout generated then we can set the scrollable property
+        // that matches width of the view pane to the width of this panel.
+        // Otherwise, if the intrinsic width is different then we can't
+        // couple the width of the view pane to the width of this panel
+        // (we hit the minimum size threshold).
+        viewportMatchWidth = (initialExtents.width == intrinsic_size.width);
 
-            setPreferredSize(intrinsic_size);
-            revalidate();
+        setPreferredSize(intrinsic_size);
+        revalidate();
 
-            if (enclosingScrollPane != null) {
-                JViewport viewPort = enclosingScrollPane.getViewport();
-                if (viewPort != null) {
-                    // turn on simple scrolling mode if there's any fixed elements
-                    if (root.getLayer().containsFixedContent()) {
-                        // Uu.p("is fixed");
-                        viewPort.setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
-                    } else {
-                        // Uu.p("is not fixed");
-                        viewPort.setScrollMode(default_scroll_mode);
-                    }
+        if (enclosingScrollPane != null) {
+            JViewport viewPort = enclosingScrollPane.getViewport();
+            if (viewPort != null) {
+                // turn on simple scrolling mode if there's any fixed elements
+                if (root.getLayer().containsFixedContent()) {
+                    // Uu.p("is fixed");
+                    viewPort.setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
+                } else {
+                    // Uu.p("is not fixed");
+                    viewPort.setScrollMode(default_scroll_mode);
                 }
             }
+        }
 
-            this.fireDocumentLoaded();
+        documentListeners.forEach(DocumentListener::documentRendered);
             /* FIXME
             if (Configuration.isTrue("xr.image.background.greedy", false)) {
                 EventQueue.invokeLater(new Runnable() {
@@ -416,23 +417,6 @@ public class RootPanel extends JPanel implements Scrollable, UserInterface, FSCa
                     }
                 });
             }*/
-        } catch (ThreadDeath t) {
-            throw t;
-        } catch (Throwable t) {
-            if (hasDocumentListeners()) {
-                fireOnLayoutException(t);
-            } else {
-                if (t instanceof Error) {
-                    throw (Error) t;
-                }
-                if (t instanceof RuntimeException) {
-                    throw (RuntimeException) t;
-                }
-
-                // "Shouldn't" happen
-                XRLog.exception(t.getMessage(), t);
-            }
-        }
     }
 
     private void initFontFromComponent(BlockBox root) {
@@ -501,16 +485,6 @@ public class RootPanel extends JPanel implements Scrollable, UserInterface, FSCa
         }
     }
 
-    protected void fireDocumentLoaded() {
-        for (DocumentListener list : documentListeners) {
-            try {
-                list.documentLoaded();
-            } catch (Exception e) {
-                e.printStackTrace();
-                XRLog.load(Level.WARNING, "Document listener threw an exception; continuing processing", e);
-            }
-        }
-    }
 
     protected void fireOnLayoutException(Throwable t) {
         for (DocumentListener list : documentListeners) {

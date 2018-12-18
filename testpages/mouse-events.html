@@ -1,0 +1,50 @@
+<html>
+
+<head>
+    <script>
+
+        window.onload = function () {
+            console.log("loaded")
+            const button = document.querySelector("button");
+            console.log('here')
+            button.onclick = function () {
+                alert("hello");
+            };
+
+            //button.addEventListener
+
+            const div = document.querySelector("div");
+            //div.style.position = 'absolute';
+            div.style.width = '300px';
+            div.style.height = '300px';
+            div.style.backgroundColor = 'grey';
+            const colors = ['red', 'green', 'blue'];
+
+            let i = 0;
+            let handle;
+            div.onmouseenter = function () {
+                console.log(123)
+                handle = setInterval(function () {
+                    div.style.backgroundColor = colors[i];
+                    if (i === 2) {
+                        i = 0;
+                    } else {
+                        i++;
+                    }
+                }, 100);
+            };
+
+            div.onmouseleave = function () {
+                clearInterval(handle);
+            }
+        }
+
+    </script>
+
+</head>
+
+<body>
+<button onclick="alert()">Show alert</button>
+<div>Hover Me</div>
+</body>
+</html>

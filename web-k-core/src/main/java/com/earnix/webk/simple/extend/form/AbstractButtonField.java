@@ -58,10 +58,10 @@ public abstract class AbstractButtonField extends InputField {
         Integer paddingRight = getLengthValue(style, CSSName.PADDING_RIGHT);
 
 
-        int top = paddingTop == null ? 2 : Math.max(2, paddingTop.intValue());
-        int left = paddingLeft == null ? 12 : Math.max(12, paddingLeft.intValue());
-        int bottom = paddingBottom == null ? 2 : Math.max(2, paddingBottom.intValue());
-        int right = paddingRight == null ? 12 : Math.max(12, paddingRight.intValue());
+        int top = paddingTop == null ? 2 : Math.max(2, paddingTop);
+        int left = paddingLeft == null ? 12 : Math.max(12, paddingLeft);
+        int bottom = paddingBottom == null ? 2 : Math.max(2, paddingBottom);
+        int right = paddingRight == null ? 12 : Math.max(12, paddingRight);
 
         button.setMargin(new Insets(top, left, bottom, right));
 

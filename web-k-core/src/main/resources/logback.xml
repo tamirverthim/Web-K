@@ -14,5 +14,6 @@
 
     <!--<logger name="com.earnix.webk.script" level="error"/>-->
     <!--<logger name="com.earnix.webk.script.console" level="info"/>-->
+    <logger name="com.earnix.webk.script.web_idl.impl" level="info"/>
 
 </configuration>

@@ -119,7 +119,7 @@ ctx.stroke();
 2. Inside target package (like `com.earnix.webk.script.html` for general features of [WHATWG HTML standard](https://html.spec.whatwg.org/)), create or locate `impl` package, and implement interfaces created before (see `com.earnix.webk.script.html.canvas.impl.CanvasRenderingContext2DImpl` as example)
 3. If something new shoud be added to global `window` object, describe it in `com.earnix.webk.script.ScriptContext#initEngine`. If you just need to expose a constructor it's enough to use `com.earnix.webk.script.web_idl.Exposed` on target WebIDL interface.
 
-The core of analyze and adaptation of WebIDL implementations is done by `com.earnix.webk.script.WebIDLAdapter`, so if you need to support new WebILD feature (like annotation), you need to handle it there. It adapts Nashorn JavaScript object API to concrete WebIDL Java implementation classes.
+The core of analyze and adaptation of WebIDL implementations is done by `com.earnix.webk.script.web_idl.impl.WebIDLAdapter`, so if you need to support new WebILD feature (like annotation), you need to handle it there. It adapts Nashorn JavaScript object API to concrete WebIDL Java implementation classes.
 
 
 ## license

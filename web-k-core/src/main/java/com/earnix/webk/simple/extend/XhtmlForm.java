@@ -25,11 +25,13 @@ import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.layout.LayoutContext;
+import com.earnix.webk.layout.SharedContext;
 import com.earnix.webk.render.BlockBox;
 import com.earnix.webk.simple.extend.form.FormField;
 import com.earnix.webk.simple.extend.form.SwingComponentFactory;
 import com.earnix.webk.util.XRLog;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
 
@@ -59,22 +61,19 @@ public class XhtmlForm {
     HashMap<String, ButtonGroupWrapper> buttonGroups;
     ElementModel parentFormElement;
     FormSubmissionListener formSubmissionListener;
+    @Getter
+    SharedContext sharedContext;
 
-
-    public XhtmlForm(UserAgentCallback uac, ElementModel e, FormSubmissionListener fsListener) {
-        userAgentCallback = uac;
+    public XhtmlForm(SharedContext sharedContext, ElementModel e, FormSubmissionListener fsListener) {
+        this.sharedContext = sharedContext;
         buttonGroups = new HashMap<>();
         componentCache = new LinkedHashMap<>();
         parentFormElement = e;
         formSubmissionListener = fsListener;
     }
 
-    public XhtmlForm(UserAgentCallback uac, ElementModel e) {
-        this(uac, e, new DefaultFormSubmissionListener());
-    }
-
-    public UserAgentCallback getUserAgentCallback() {
-        return userAgentCallback;
+    public XhtmlForm(SharedContext sharedContext, ElementModel e) {
+        this(sharedContext, e, new DefaultFormSubmissionListener());
     }
 
     public void addButtonToGroup(String groupName, AbstractButton button) {
@@ -100,7 +99,7 @@ public class XhtmlForm {
     private static boolean isFormField(ElementModel e) {
         String nodeName = e.nodeName();
 
-        if (nodeName.equals("input") || nodeName.equals("select") || nodeName.equals("textarea")) {
+        if (nodeName.equals("input") || nodeName.equals("select") || nodeName.equals("textarea") || nodeName.equals("button")) {
             return true;
         }
 

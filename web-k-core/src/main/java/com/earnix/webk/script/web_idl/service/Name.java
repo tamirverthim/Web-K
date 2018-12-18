@@ -1,4 +1,4 @@
-package com.earnix.webk.script.web_idl.custom;
+package com.earnix.webk.script.web_idl.service;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

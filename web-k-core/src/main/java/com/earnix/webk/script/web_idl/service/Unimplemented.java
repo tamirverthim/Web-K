@@ -1,4 +1,4 @@
-package com.earnix.webk.script.web_idl.custom;
+package com.earnix.webk.script.web_idl.service;
 
 /**
  * @author Taras Maslov

@@ -26,7 +26,6 @@ import com.earnix.webk.css.style.CalculatedStyle;
 import com.earnix.webk.css.style.FSDerivedValue;
 import com.earnix.webk.css.style.derived.LengthValue;
 import com.earnix.webk.dom.nodes.ElementModel;
-import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
 import com.earnix.webk.render.FSFont;
@@ -95,10 +94,6 @@ public abstract class FormField {
 
     public void reset() {
         applyOriginalState();
-    }
-
-    protected UserAgentCallback getUserAgentCallback() {
-        return parentForm.getUserAgentCallback();
     }
 
     protected FormFieldState getOriginalState() {

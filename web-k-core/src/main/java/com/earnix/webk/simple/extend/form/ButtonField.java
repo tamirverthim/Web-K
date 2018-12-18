@@ -26,37 +26,27 @@ import com.earnix.webk.simple.extend.XhtmlForm;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JOptionPane;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class ButtonField extends AbstractButtonField {
+
     public ButtonField(ElementModel e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }
 
     public JComponent create() {
-        JButton button = new JButton();
+        JButton button = SwingComponentFactory.getInstance().createButton(this);
 
-        String value = getAttribute("value");
-
-        if (value == null || value.length() == 0)
-            value = " ";    //otherwise we get a very short button
+        String value;//
+        if (getElement().nodeName().equals("button")) {
+            value = getElement().text();
+        } else {
+            // <input type=button>
+            value = getAttribute("value");
+        }
 
         applyComponentStyle(button);
 
         button.setText(value);
-
-        button.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(
-                        null,
-                        "<input type=\"button\" .../> doesn't make much " +
-                                "sense without <script>! (Volunteers wanted)",
-                        "We need <script> support!",
-                        JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
 
         return button;
     }

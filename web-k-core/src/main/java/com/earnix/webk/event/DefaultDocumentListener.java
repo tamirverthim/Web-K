@@ -39,6 +39,14 @@ public class DefaultDocumentListener implements DocumentListener {
     /**
      * {@inheritDoc}
      */
+    @Override
+    public void documentRendered() {
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public void onLayoutException(Throwable t) {
     }
 

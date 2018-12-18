@@ -349,14 +349,20 @@ public class BrowserPanel extends JPanel implements DocumentListener {
         return cause == null ? ex.getMessage() : cause.getMessage();
     }
 
+    @Override
     public void documentStarted() {
         // TODO...
     }
 
+    @Override
     public void documentLoaded() {
+    }
+
+    @Override
+    public void documentRendered() {
         view.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
-    
+
     public void setStatus(String txt) {
         status.getText().setText(txt);
     }

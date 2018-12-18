@@ -853,6 +853,10 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
         return level1EventTarget.getHandlerAttribute("onwaiting");
     }
 
+    @Override
+    public String toString() {
+        return model.toString();
+    }
 
     // endregion
 }

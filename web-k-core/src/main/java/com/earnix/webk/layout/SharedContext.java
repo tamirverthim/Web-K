@@ -27,7 +27,6 @@ import com.earnix.webk.css.value.FontSpecification;
 import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.extend.FSCanvas;
 import com.earnix.webk.extend.FontContext;
 import com.earnix.webk.extend.FontResolver;
 import com.earnix.webk.extend.NamespaceHandler;
@@ -44,6 +43,7 @@ import com.earnix.webk.simple.extend.FormSubmissionListener;
 import com.earnix.webk.simple.extend.form.DefaultFormFieldFactory;
 import com.earnix.webk.simple.extend.form.FormFieldFactory;
 import com.earnix.webk.swing.Java2DTextRenderer;
+import com.earnix.webk.swing.RootPanel;
 import com.earnix.webk.swing.SwingReplacedElementFactory;
 import com.earnix.webk.util.XRLog;
 import lombok.AccessLevel;
@@ -175,7 +175,7 @@ public class SharedContext {
     protected boolean debug_draw_line_boxes;
     protected boolean debug_draw_inline_boxes;
     protected boolean debug_draw_font_metrics;
-    protected FSCanvas canvas;
+    protected RootPanel canvas;
 
     /*
      * selection management code
@@ -233,11 +233,11 @@ public class SharedContext {
         this.css = css;
     }
 
-    public FSCanvas getCanvas() {
+    public RootPanel getCanvas() {
         return canvas;
     }
 
-    public void setCanvas(FSCanvas canvas) {
+    public void setCanvas(RootPanel canvas) {
         this.canvas = canvas;
     }
 

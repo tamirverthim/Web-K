@@ -4,21 +4,21 @@
     <script>
 	
 	window.onload = function() {
-        console.log("loaded")
-		let button = document.querySelector("button");
-		console.log('here')
-		button.onclick = function(){
-			alert("hello");
-		}
-		
-		}
+        console.log("loaded");
+        const button = document.querySelector("button");
+        console.log('here');
+        button.onclick = function () {
+            console.log("hello");
+        };
+
+    }
 		
     </script>
 
 </head>
 
 <body>
-<button>Show alert</button>
-
+<button onclick="alert()">Show alert</button>
+<div>Hover Me</div>
 </body>
 </html>

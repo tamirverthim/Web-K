@@ -51,7 +51,7 @@ public class ImageField extends InputField {
         Image image = null;
 
         if (hasAttribute("src")) {
-            FSImage fsImage = getUserAgentCallback().getImageResource(getAttribute("src")).getImage();
+            FSImage fsImage = getParentForm().getSharedContext().getUserAgentCallback().getImageResource(getAttribute("src")).getImage();
 
             if (fsImage != null) {
                 image = ((AWTFSImage) fsImage).getImage();

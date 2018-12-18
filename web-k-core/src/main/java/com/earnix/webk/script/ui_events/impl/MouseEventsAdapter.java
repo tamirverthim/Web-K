@@ -1,12 +1,11 @@
-package com.earnix.webk.script;
+package com.earnix.webk.script.ui_events.impl;
 
 import com.earnix.webk.render.Box;
+import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.html.impl.DocumentImpl;
 import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.ui_events.FocusEventInit;
 import com.earnix.webk.script.ui_events.MouseEventInit;
-import com.earnix.webk.script.ui_events.impl.FocusEventImpl;
-import com.earnix.webk.script.ui_events.impl.MouseEventImpl;
 import com.earnix.webk.script.whatwg_dom.Element;
 import com.earnix.webk.script.whatwg_dom.Event;
 import com.earnix.webk.script.whatwg_dom.impl.EventImpl;
@@ -14,10 +13,15 @@ import com.earnix.webk.script.whatwg_dom.impl.EventManager;
 import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
 import com.earnix.webk.swing.BasicPanel;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
+import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -25,43 +29,88 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * @author Taras Maslov
  * 10/26/2018
  */
+@Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MouseEventsAdapter implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener {
 
     final EventManager eventManager;
     final ScriptContext context;
     final BasicPanel panel;
+//    private final JComponent target;
 
     Box focusHolderBox;
+    @Getter
     Box hoveredBox;
+    @Getter
+    MouseEvent lastAwtMouseEvent;
+    JFrame currentFrame;
+
+    FrameEventsListener frameEventsListener = new FrameEventsListener(this);
 
     Set<Integer> pressedKeys = new HashSet<>();
     Set<Integer> pressedMouseButtons = new HashSet<>();
 
-    public MouseEventsAdapter(EventManager eventManager, ScriptContext context) {
-        this.eventManager = eventManager;
+    public MouseEventsAdapter(ScriptContext context) {
+        this.eventManager = context.getEventManager();
         this.context = context;
         panel = context.getPanel();
-        panel.addMouseListener(this);
         panel.addMouseMotionListener(this);
         panel.addMouseWheelListener(this);
         panel.addKeyListener(this);
+        addChildrenListeners();
+
+        panel.addHierarchyListener(e -> {
+            JFrame frame = (JFrame) SwingUtilities.getRoot(panel);
+            if (frame != currentFrame) {
+                if (currentFrame != null) {
+                    currentFrame.removeWindowListener(frameEventsListener);
+                }
+                if (frame != null) {
+                    frame.addWindowListener(frameEventsListener);
+                }
+                currentFrame = frame;
+            }
+            ;
+        });
+
     }
 
+    public void addChildrenListeners() {
+        List<JComponent> children = new ArrayList<>();
+        getAllChildren(panel, children);
+        children.forEach(child -> {
+            child.addMouseListener(this);
+            child.addMouseMotionListener(this);
+            child.addMouseWheelListener(this);
+            child.addKeyListener(this);
+        });
+    }
+
+    private void getAllChildren(JComponent component, List<JComponent> target) {
+        Stream.of(component.getComponents()).filter(c -> c instanceof JComponent).map(c -> (JComponent) c).forEach(child -> {
+            target.add(child);
+            getAllChildren(child, target);
+        });
+    }
+    
     private Event createEvent(String type) {
         return new EventImpl(type, null);
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        val box = context.getPanel().find(e.getX(), e.getY());
+        Point point = SwingUtilities.convertPoint((JComponent) e.getSource(), e.getX(), e.getY(), panel);
+        val box = context.getPanel().find(point.x, point.y);
 
         if (box != null) {
             Element element = ScriptDOMFactory.getElement(box.getElement());
@@ -97,7 +146,7 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
             }
         }
 
-
+        lastAwtMouseEvent = e;
     }
 
     @Override
@@ -113,50 +162,62 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
     @Override
     public void mouseReleased(MouseEvent e) {
         pressedMouseButtons.remove(e.getButton());
+
+        lastAwtMouseEvent = e;
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-
+        lastAwtMouseEvent = e;
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-
+        if (hoveredBox != null) {
+            val el = getElement(hoveredBox);
+            mouseleave(el, e);
+            mouseout(el, e);
+        }
+        lastAwtMouseEvent = e;
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-
+        lastAwtMouseEvent = e;
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        Box box = panel.find(e.getX(), e.getY());
+        val box = panel.find(e.getX(), e.getY());
+
         if (hoveredBox != box) {
 
             if (hoveredBox != null) {
+                log.trace("leaving {}", hoveredBox.getElement());
                 mouseleave(getElement(hoveredBox), e);
                 mouseout(getElement(hoveredBox), e);
             }
 
             if (box != null) {
+                log.trace("entering {}", box.getElement());
                 Element element = getElement(box);
                 mouseenter(element, e);
                 mouseover(element, e);
             }
-
-            hoveredBox = box;
         }
+
+        hoveredBox = box;
 
         if (box != null) {
             mousemove(getElement(box), e);
         }
+
+        lastAwtMouseEvent = e;
     }
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-
+        lastAwtMouseEvent = e;
     }
 
     private void focusOut(Element gainer, Element loser) {
@@ -204,7 +265,7 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
 
     // region mouse events
 
-    private void auxclick(Element target, MouseEvent awtEvent) {
+    void auxclick(Element target, MouseEvent awtEvent) {
         MouseEventInit init = createMouseEventInit(awtEvent);
         init.bubbles = true;
         init.cancelable = true;
@@ -214,7 +275,7 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
         eventManager.publishEvent(target, mouseEvent);
     }
 
-    private void click(Element target, MouseEvent awtEvent) {
+    void click(Element target, MouseEvent awtEvent) {
         MouseEventInit init = createMouseEventInit(awtEvent);
         init.bubbles = true;
         init.cancelable = true;
@@ -225,7 +286,7 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
     }
 
 
-    private void dblclick(Element target, MouseEvent awtEvent) {
+    void dblclick(Element target, MouseEvent awtEvent) {
         MouseEventInit init = createMouseEventInit(awtEvent);
         init.bubbles = true;
         init.cancelable = true;
@@ -235,7 +296,7 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
         eventManager.publishEvent(target, mouseEvent);
     }
 
-    private void mousedown(Element target, MouseEvent awtEvent) {
+    void mousedown(Element target, MouseEvent awtEvent) {
         MouseEventInit init = createMouseEventInit(awtEvent);
         init.bubbles = true;
         init.cancelable = true;
@@ -246,7 +307,7 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
     }
 
 
-    private void mouseenter(Element target, MouseEvent awtEvent) {
+    void mouseenter(Element target, MouseEvent awtEvent) {
         MouseEventInit init = createMouseEventInit(awtEvent);
         init.bubbles = false;
         init.cancelable = false;
@@ -256,17 +317,17 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
         eventManager.publishEvent(target, mouseEvent);
     }
 
-    private void mouseleave(Element target, MouseEvent awtEvent) {
+    void mouseleave(Element target, MouseEvent awtEvent) {
         MouseEventInit init = createMouseEventInit(awtEvent);
         init.bubbles = false;
         init.cancelable = false;
         init.composed = false;
         init.detail = 0;
-        MouseEventImpl mouseEvent = createMouseEventImpl("mouseleve", init, awtEvent);
+        MouseEventImpl mouseEvent = createMouseEventImpl("mouseleave", init, awtEvent);
         eventManager.publishEvent(target, mouseEvent);
     }
 
-    private void mousemove(Element target, MouseEvent awtEvent) {
+    void mousemove(Element target, MouseEvent awtEvent) {
         MouseEventInit init = createMouseEventInit(awtEvent);
         init.bubbles = true;
         init.cancelable = true;
@@ -276,7 +337,7 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
         eventManager.publishEvent(target, mouseEvent);
     }
 
-    private void mouseout(Element target, MouseEvent awtEvent) {
+    void mouseout(Element target, MouseEvent awtEvent) {
         MouseEventInit init = createMouseEventInit(awtEvent);
         init.bubbles = true;
         init.cancelable = true;
@@ -286,13 +347,13 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
         eventManager.publishEvent(target, mouseEvent);
     }
 
-    private void mouseover(Element target, MouseEvent awtEvent) {
+    void mouseover(Element target, MouseEvent awtEvent) {
         MouseEventInit init = createMouseEventInit(awtEvent);
         init.bubbles = true;
         init.cancelable = true;
         init.composed = true;
         init.detail = 0;
-        MouseEventImpl mouseEvent = createMouseEventImpl("mouseenter", init, awtEvent);
+        MouseEventImpl mouseEvent = createMouseEventImpl("mouseover", init, awtEvent);
         eventManager.publishEvent(target, mouseEvent);
     }
 
@@ -301,10 +362,12 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
 
     private MouseEventInit createMouseEventInit(MouseEvent awtEvent) {
         MouseEventInit init = new MouseEventInit();
-        init.screenX = awtEvent.getXOnScreen();
-        init.screenY = awtEvent.getYOnScreen();
-        init.clientX = awtEvent.getX();
-        init.clientY = awtEvent.getY();
+        Point locationOnScreen = SwingUtilities.convertPoint((JComponent) awtEvent.getSource(), awtEvent.getLocationOnScreen(), panel);
+        Point location = SwingUtilities.convertPoint((JComponent) (awtEvent.getSource()), awtEvent.getPoint(), panel);
+        init.screenX = locationOnScreen.x;
+        init.screenY = locationOnScreen.y;
+        init.clientX = location.x;
+        init.clientY = location.y;
         init.button = getButton(awtEvent);
         init.buttons = translatePressedMouseButtons();
         init.view = context.getWindow();
@@ -375,6 +438,9 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
     }
 
     private Element getElement(Box box) {
+        if (box == null) {
+            return null;
+        }
         return ScriptDOMFactory.getElement(box.getElement());
     }
 }

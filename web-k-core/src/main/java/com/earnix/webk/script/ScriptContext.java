@@ -7,8 +7,10 @@ import com.earnix.webk.script.html.canvas.impl.CanvasPatternImpl;
 import com.earnix.webk.script.html.impl.DocumentImpl;
 import com.earnix.webk.script.html.impl.WindowImpl;
 import com.earnix.webk.script.ui_events.UIEventInit;
+import com.earnix.webk.script.ui_events.impl.MouseEventsAdapter;
 import com.earnix.webk.script.ui_events.impl.UIEventImpl;
 import com.earnix.webk.script.web_idl.Exposed;
+import com.earnix.webk.script.web_idl.impl.WebIDLAdapter;
 import com.earnix.webk.script.whatwg_dom.impl.EventManager;
 import com.earnix.webk.script.xhr.impl.XMLHttpRequestImpl;
 import com.earnix.webk.swing.BasicPanel;
@@ -18,6 +20,7 @@ import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import jdk.nashorn.api.scripting.URLReader;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -41,6 +44,7 @@ public class ScriptContext implements DocumentListener {
 
     BasicPanel panel;
     DocumentModel document;
+    @Getter
     EventManager eventManager;
     MouseEventsAdapter mouseEventsAdapter;
 
@@ -48,16 +52,17 @@ public class ScriptContext implements DocumentListener {
     WindowImpl window;
     private WebIDLAdapter<WindowImpl> windowAdapter;
 
+    int documentHash;
+    
     public ScriptContext(BasicPanel panel) {
         this.panel = panel;
 
         // initializing mouse events translation
         eventManager = new EventManager(this);
-        mouseEventsAdapter = new MouseEventsAdapter(eventManager, this);
+        mouseEventsAdapter = new MouseEventsAdapter(this);
     }
 
     public void dispatchLoadEvents() {
-//        eval("window.onload && window.onload()");
 
         //Type	load
         //Interface	UIEvent if generated from a user interface, Event otherwise.
@@ -122,7 +127,13 @@ public class ScriptContext implements DocumentListener {
     }
 
     @Override
-    public void documentStarted() {
+    public void documentStarted() { 
+    }
+
+    @Override
+    public void documentRendered() {
+        // on render all replaced elements are re-created, need to update their listeners
+        mouseEventsAdapter.addChildrenListeners();
     }
 
     @Override
@@ -310,5 +321,14 @@ public class ScriptContext implements DocumentListener {
         return window;
     }
 
-    ;
+
+    public void storeDocumentHash() {
+        documentHash = document.outerHtml().hashCode();
+    }
+
+    public void handleDocumentHashUpdate() {
+        if (documentHash != document.outerHtml().hashCode()) {
+            panel.reset();
+        }
+    }
 }

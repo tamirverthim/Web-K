@@ -46,7 +46,7 @@ public class EventTargetImpl implements EventTarget {
 
     @Override
     public boolean dispatchEvent(Event event) {
-        log.trace("Dispatched event {} on target {}", event.type(), toString());
+//        log.trace("Dispatched event {} on target {}", event.type(), toString());
         val typeListeners = listeners.get(event.type());
         if (typeListeners != null) {
             typeListeners.forEach(l -> l.handleEvent(event));

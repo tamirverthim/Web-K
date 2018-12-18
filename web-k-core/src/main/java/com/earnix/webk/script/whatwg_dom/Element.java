@@ -12,7 +12,8 @@ import com.earnix.webk.script.web_idl.SameObject;
 import com.earnix.webk.script.web_idl.Sequence;
 import com.earnix.webk.script.web_idl.TreatNullAs;
 import com.earnix.webk.script.web_idl.Unscopable;
-import com.earnix.webk.script.web_idl.custom.AttributeSetter;
+import com.earnix.webk.script.web_idl.service.PropertyGetter;
+import com.earnix.webk.script.web_idl.service.PropertySetter;
 
 
 /**
@@ -64,12 +65,15 @@ public interface Element extends Node, ParentNode, NonDocumentTypeChildNode, Chi
     @DOMString
     Sequence<String> getAttributeNames();
 
+    @PropertyGetter
     @Nullable
-    @DOMString String getAttribute(@DOMString String qualifiedName);
+    @DOMString
+    String getAttribute(@DOMString String qualifiedName);
 
     @Nullable
     @DOMString String getAttributeNS(@Nullable @DOMString String namespace, @DOMString String localName);
 
+    @PropertySetter
     @CEReactions
     void setAttribute(
             @DOMString String qualifiedName,

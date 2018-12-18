@@ -44,6 +44,9 @@ public class DefaultFormFieldFactory implements FormFieldFactory {
             case "select":
                 typeKey = "select";
                 break;
+            case "button":
+                typeKey = "button";
+                break;
             default:
                 return null;
         }

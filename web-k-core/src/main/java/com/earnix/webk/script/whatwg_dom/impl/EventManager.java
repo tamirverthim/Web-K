@@ -9,6 +9,7 @@ import com.earnix.webk.script.whatwg_dom.EventTarget;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
 import java.util.ArrayList;
@@ -19,16 +20,19 @@ import java.util.ArrayList;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
+@Slf4j
 public class EventManager {
 
     ScriptContext scriptContext;
 
-    public void publishEvent(EventTarget target, EventImpl event){
-        target.dispatchEvent(event);
-    };
-    
-    public void publishEvent(ElementModel targetModel, EventImpl event) {
-        val target = ScriptDOMFactory.getElement(targetModel);
+    public void publishEvent(ElementModel elementModel, EventImpl event) {
+        publishEvent(ScriptDOMFactory.getElement(elementModel), event);
+    }
+
+    public void publishEvent(Element target, EventImpl event) {
+        log.debug("Dispatching event {} to {}", event, target);
+
+        scriptContext.storeDocumentHash();
 
         // preparing propagation path 
         val propagationPath = new ArrayList<EventTarget>();
@@ -37,9 +41,9 @@ public class EventManager {
             propagationPath.add(current);
             current = current.parentElement();
         } while (current != null);
-        
-        
-        event.setTrusted(true);
+
+
+//        event.setTrusted(true);
         event.setPhase(Event.CAPTURING_PHASE);
         event.setComposedPath(new SequenceImpl<>(propagationPath));
 
@@ -60,7 +64,7 @@ public class EventManager {
             }
         }
 
-        if (!event.isPropagationStopped()) {
+        if (event.bubbles() && !event.isPropagationStopped()) {
             // bubbling
             event.setPhase(Event.BUBBLING_PHASE);
             for (EventTarget eventTarget : propagationPath) {
@@ -71,6 +75,12 @@ public class EventManager {
                 eventTarget.dispatchEvent(event);
             }
         }
-        scriptContext.getPanel().reset();
+        
+        scriptContext.handleDocumentHashUpdate();
+    }
+
+    public void publishEvent(EventTarget target, EventImpl event) {
+        event.setTarget(target);
+        target.dispatchEvent(event);
     }
 }

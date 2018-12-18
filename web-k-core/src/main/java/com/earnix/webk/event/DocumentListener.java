@@ -34,12 +34,17 @@ public interface DocumentListener {
     void documentStarted();
 
     /**
-     * Indicates document layout has complete, e.g. document is fully "loaded"
-     * for display; this is not a callback for the document source (e.g. XML)
-     * being loaded. This method will be called on every layout run (including,
-     * for example, after panel resizes).
+     * Indicates document that ned panel received new doument
      */
     void documentLoaded();
+
+
+    /**
+     * Indicates document layout has and painting complete, e.g. document is fully "loaded"
+     * for display. This method will be called on every layout run (including,
+     * for example, after panel resizes).
+     */
+    void documentRendered();
 
     /**
      * Called when document layout failed with an exception. All

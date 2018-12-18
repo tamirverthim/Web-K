@@ -63,6 +63,7 @@ public class WindowImpl implements Window {
     final LocationImpl location;
     ConsoleImpl console = new ConsoleImpl();
     @Delegate(types = EventTarget.class)
+
     EventTargetImpl eventTargetImpl = new EventTargetImpl();
     Level1EventTarget level1EventTarget = new Level1EventTarget(eventTargetImpl);
 
@@ -257,14 +258,16 @@ public class WindowImpl implements Window {
 
     @Override
     public void alert(@DOMString String message) {
-        JOptionPane.showMessageDialog(null, message);
-//        repaintPanel();
+        JOptionPane.showMessageDialog(scriptContext.getPanel(), message);
     }
 
     @Override
     public boolean confirm(@DOMString String message) {
-        //        repaintPanel();
-        return JOptionPane.showConfirmDialog(null, message, "Confirm", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+        return JOptionPane.showConfirmDialog(
+                scriptContext.getPanel(),
+                message, 
+                "Confirm",
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
     }
 
     @Override
@@ -690,7 +693,7 @@ public class WindowImpl implements Window {
                 public void run() {
                     SwingUtilities.invokeLater(() -> {
                         handler.<Function>get().call(this, arguments);
-                        scriptContext.getPanel().relayout();
+                        scriptContext.getPanel().reset();
                     });
                 }
             };
@@ -705,10 +708,10 @@ public class WindowImpl implements Window {
 
     @Override
     public void clearInterval(int handle) {
-        val task = timeoutTasks.get(handle);
+        val task = intervalTasks.get(handle);
         if (task != null) {
             task.cancel();
-            timeoutTasks.remove(handle);
+            intervalTasks.remove(handle);
         } else {
             log.trace("No task to cancel for handle {}", handle);
         }

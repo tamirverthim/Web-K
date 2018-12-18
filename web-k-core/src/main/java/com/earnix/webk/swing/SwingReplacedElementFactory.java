@@ -29,8 +29,8 @@ import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
 import com.earnix.webk.resource.ImageResource;
-import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
 import com.earnix.webk.script.html.canvas.impl.HTMLCanvasElementImpl;
+import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
 import com.earnix.webk.simple.extend.DefaultFormSubmissionListener;
 import com.earnix.webk.simple.extend.FormSubmissionListener;
 import com.earnix.webk.simple.extend.XhtmlForm;
@@ -139,12 +139,12 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
         if (context.getNamespaceHandler().isImageElement(e)) {
             return replaceImage(uac, context, e, cssWidth, cssHeight);
         } else if (context.getNamespaceHandler().isCanvasElement(e)) {
-            
-            HTMLCanvasElementImpl canvasElement = (HTMLCanvasElementImpl) ScriptDOMFactory.get(
-                    e
+
+            HTMLCanvasElementImpl canvasElement = (HTMLCanvasElementImpl) ScriptDOMFactory.get(e
             );
             
             return new CanvasReplacedElement(canvasElement);
+
         } else if (context.getNamespaceHandler().isSvgElement(e)) {
             return new SVGReplacedElement(e, cssWidth, cssHeight);
         } else {
@@ -153,7 +153,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
             //parentForm may be null! No problem! Assume action is this document and method is get.
             XhtmlForm form = getForm(parentForm);
             if (form == null) {
-                form = new XhtmlForm(uac, parentForm, formSubmissionListener);
+                form = new XhtmlForm(context.getSharedContext(), parentForm, formSubmissionListener);
                 addForm(parentForm, form);
             }
 

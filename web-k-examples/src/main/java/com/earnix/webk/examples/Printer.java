@@ -205,6 +205,10 @@ public class Printer implements Runnable, DocumentListener, Printable, PrintJobL
         log.info("document loaded");
     }
 
+    public void documentRendered() {
+        
+    }
+
     public void onLayoutException(Throwable t) {
 
     }

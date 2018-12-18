@@ -1,5 +1,8 @@
-package com.earnix.webk.script;
+package com.earnix.webk.script.web_idl.impl;
 
+import com.earnix.webk.script.FunctionAdapter;
+import com.earnix.webk.script.ReflectionHelper;
+import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.web_idl.Attribute;
 import com.earnix.webk.script.web_idl.DefaultBoolean;
 import com.earnix.webk.script.web_idl.DefaultDouble;
@@ -16,8 +19,9 @@ import com.earnix.webk.script.web_idl.ReadonlyAttribute;
 import com.earnix.webk.script.web_idl.Sequence;
 import com.earnix.webk.script.web_idl.TreatNullAs;
 import com.earnix.webk.script.web_idl.Typedef;
-import com.earnix.webk.script.web_idl.impl.MultiTypedef;
-import com.earnix.webk.script.web_idl.impl.SequenceImpl;
+import com.earnix.webk.script.web_idl.service.PropertyGetter;
+import com.earnix.webk.script.web_idl.service.PropertySetter;
+import com.earnix.webk.util.AssertHelper;
 import jdk.nashorn.api.scripting.JSObject;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import jdk.nashorn.api.scripting.ScriptUtils;
@@ -68,6 +72,9 @@ public class WebIDLAdapter<T> implements JSObject {
     ScriptContext js;
     HashMap<String, Object> members = new HashMap<>();
 
+    Method propertyGetter;
+    Method propertySetter;
+
 
     private WebIDLAdapter(ScriptContext js, T target) {
         this.target = target;
@@ -114,7 +121,6 @@ public class WebIDLAdapter<T> implements JSObject {
         }
 
         MultiArgFunctionCallback add(Function callback, int argsCount) {
-
             callbacks.put(argsCount, callback);
             return this;
         }
@@ -142,6 +148,7 @@ public class WebIDLAdapter<T> implements JSObject {
                     .stream()
                     .flatMap(i -> Stream.of(i.getMethods()))
                     .forEach(m -> {
+
 
                         // Attribute member
                         try {
@@ -175,8 +182,20 @@ public class WebIDLAdapter<T> implements JSObject {
                             } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | IllegalArgumentException e) {
                                 throw new RuntimeException(e);
                             }
-                            return toScriptPresentation(res);
+                            return convertToScript(res);
                         };
+
+                        if (m.getAnnotation(PropertyGetter.class) != null) {
+                            AssertHelper.assertState(propertyGetter == null);
+                            propertyGetter = m;
+                        }
+
+
+                        if (m.getAnnotation(PropertySetter.class) != null) {
+                            AssertHelper.assertState(propertySetter == null);
+                            propertySetter = m;
+                        }
+                        
 //                        val function = new Function<>(js, 
 //
 //                        }, m.getName());
@@ -211,6 +230,8 @@ public class WebIDLAdapter<T> implements JSObject {
         } catch (RuntimeException e) {
             e.printStackTrace();
         }
+        
+        AssertHelper.assertState(propertyGetter != null ^ propertySetter == null, target.toString());
     }
 
     @Override
@@ -237,15 +258,15 @@ public class WebIDLAdapter<T> implements JSObject {
             Object namedItem = null;
 
             if (member instanceof WebIDLAdapter.AttributeLink) {
-
-                return toScriptPresentation((((AttributeLink) member).attribute).get());
-
+                return convertToScript((((AttributeLink) member).attribute).get());
             } else if (readonlyAttributeMark.equals(member)) {
+                
                 try {
-                    return toScriptPresentation(MethodUtils.invokeMethod(target, s));
+                    return convertToScript(MethodUtils.invokeMethod(target, s));
                 } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(e);
                 }
+                
             } else if (target instanceof LegacyUnenumerableNamedProperties) {
                 namedItem = ((LegacyUnenumerableNamedProperties) target).namedItem(s);
             }
@@ -253,7 +274,11 @@ public class WebIDLAdapter<T> implements JSObject {
             // it is NULL if was overriden with null during runtime,
             // actually LegacyUnenumerableNamedProperties are not set-able, so this should be used for similar cases
             if (namedItem == NULL || namedItem != null) {
-                return toScriptPresentation(namedItem);
+                return convertToScript(namedItem);
+            }
+//
+            if (propertyGetter != null) {
+                return convertToScript(ReflectionHelper.relaxedInvoke(target, propertyGetter, s));
             }
 
             // function or custom value set by js runtime
@@ -268,11 +293,11 @@ public class WebIDLAdapter<T> implements JSObject {
     @Override
     public Object getSlot(int i) {
         if (target instanceof Indexed) {
-            return toScriptPresentation(((Indexed) target).elementAtIndex(i));
+            return convertToScript(((Indexed) target).elementAtIndex(i));
         } else if (target instanceof LegacyUnenumerableNamedProperties) {
-            return toScriptPresentation(((LegacyUnenumerableNamedProperties) target).item(i));
+            return convertToScript(((LegacyUnenumerableNamedProperties) target).item(i));
         } else if (target instanceof Iterable) {
-            return toScriptPresentation(((Iterable) target).item(i));
+            return convertToScript(((Iterable) target).item(i));
         } else {
             return null;
         }
@@ -320,7 +345,10 @@ public class WebIDLAdapter<T> implements JSObject {
 
         } else if (target instanceof LegacyUnenumerableNamedProperties) {
             members.put(s, o);
+        } else if (propertySetter != null) {
+            ReflectionHelper.relaxedInvoke(target, propertySetter, s, o);
         }
+        
     }
 
     @Override
@@ -385,25 +413,25 @@ public class WebIDLAdapter<T> implements JSObject {
     }
 
 
-    public Object toScriptPresentation(Object res) {
+    public Object convertToScript(Object source) {
 
-        if (res instanceof JSObject) {
-            return res;
+        if (source instanceof JSObject) {
+            return source;
         }
 
 
-        if (res == null || ClassUtils.isPrimitiveOrWrapper(res.getClass())) {
-            return res;
+        if (source == null || ClassUtils.isPrimitiveOrWrapper(source.getClass())) {
+            return source;
         }
 
 //        if (res instanceof DOMString || res instanceof USVString) {
 //            return res.toString();
 //        }
 
-        if (res.getClass().getPackage().getName().startsWith("com.earnix.webk.script")) {
-            return WebIDLAdapter.obtain(js, res);
+        if (source.getClass().getPackage().getName().startsWith("com.earnix.webk.script")) {
+            return WebIDLAdapter.obtain(js, source);
         } else {
-            return res;
+            return source;
         }
     }
 

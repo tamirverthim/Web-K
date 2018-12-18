@@ -1,6 +1,6 @@
 package com.earnix.webk.script.cssom_view;
 
-import com.earnix.webk.script.web_idl.custom.Unimplemented;
+import com.earnix.webk.script.web_idl.service.Unimplemented;
 
 /**
  * @author Taras Maslov

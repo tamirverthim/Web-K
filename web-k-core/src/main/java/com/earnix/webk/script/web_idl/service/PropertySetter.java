@@ -1,4 +1,4 @@
-package com.earnix.webk.script.web_idl.custom;
+package com.earnix.webk.script.web_idl.service;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,9 +7,9 @@ import java.lang.annotation.Target;
 
 /**
  * @author Taras Maslov
- * 7/25/2018
+ * 12/17/2018
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface NoWrap {
+public @interface PropertySetter {
 }

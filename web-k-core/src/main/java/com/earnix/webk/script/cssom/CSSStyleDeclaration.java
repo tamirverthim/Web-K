@@ -11,6 +11,8 @@ import com.earnix.webk.script.web_idl.Optional;
 import com.earnix.webk.script.web_idl.ReadonlyAttribute;
 import com.earnix.webk.script.web_idl.TreatNullAs;
 import com.earnix.webk.script.web_idl.Unsigned;
+import com.earnix.webk.script.web_idl.service.PropertyGetter;
+import com.earnix.webk.script.web_idl.service.PropertySetter;
 
 /**
  * @author Taras Maslov
@@ -31,16 +33,19 @@ public interface CSSStyleDeclaration {
     @CSSOMString
     String item(@Unsigned int index);
 
+    @PropertyGetter
     @CSSOMString
     String getPropertyValue(@CSSOMString String property);
 
     @CSSOMString
     String getPropertyPriority(@CSSOMString String property);
 
+
+    @PropertySetter
     @CEReactions
     void setProperty(
-            @CSSOMString String property, 
-            @TreatNullAs(NullTreat.EmptyString) @CSSOMString String value, 
+            @CSSOMString String property,
+            @TreatNullAs(NullTreat.EmptyString) @CSSOMString String value,
             @TreatNullAs(NullTreat.EmptyString) @Optional @DefaultString("") @CSSOMString String priority
     );
 

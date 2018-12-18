@@ -217,6 +217,8 @@ public class DelegatingUserAgent implements UserAgentCallback, DocumentListener 
     }
 
     public void documentLoaded() { /* ignore*/ }
+    
+    public void documentRendered() { /* ignore*/ }
 
     public void onLayoutException(Throwable t) { /* ignore*/ }
 

@@ -1,6 +1,6 @@
 package com.earnix.webk.script.xhr;
 
-import com.earnix.webk.script.web_idl.custom.Name;
+import com.earnix.webk.script.web_idl.service.Name;
 
 /**
  * @author Taras Maslov

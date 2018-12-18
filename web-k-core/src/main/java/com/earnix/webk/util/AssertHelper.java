@@ -7,12 +7,25 @@ package com.earnix.webk.util;
 public class AssertHelper {
 
     public static void assertState(boolean condition) {
+        assertState("Must be true");
+    }
+
+    public static void assertState(boolean condition, String message) {
         if (!condition) {
-            throw new IllegalStateException("Must be true");
+            throw new IllegalStateException(message);
         }
     }
 
+    public static void assertState(Object object) {
+        assertState(object, "Must be not null");
+    }
 
+    public static void assertState(Object object, String message) {
+        if (object == null) {
+            throw new IllegalStateException(message);
+        }
+    }
+    
     public static void assertArgument(boolean condition) {
         if (!condition) {
             throw new IllegalStateException("Must be true");

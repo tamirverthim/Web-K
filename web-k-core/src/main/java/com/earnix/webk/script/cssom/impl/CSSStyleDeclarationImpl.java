@@ -87,7 +87,7 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration {
 
     @Override
     public void setProperty(String property, String value, String priority) {
-        map.put(toKebabCase(priority), value);
+        map.put(toKebabCase(property), value);
         synchronize();
     }
 

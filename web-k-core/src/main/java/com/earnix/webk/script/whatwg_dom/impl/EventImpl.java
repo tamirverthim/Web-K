@@ -147,4 +147,9 @@ public class EventImpl implements Event {
     public void initEvent(@DOMString String type, boolean bubbles, boolean cancelable) {
 
     }
+
+    @Override
+    public String toString() {
+        return type;
+    }
 }
