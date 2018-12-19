@@ -29,6 +29,8 @@ import lombok.val;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 import javax.swing.Popup;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.Color;
 import java.util.Optional;
 import java.util.OptionalDouble;
@@ -47,6 +49,24 @@ public class TextField extends AbstractTextField {
 
     public JComponent create() {
         JTextField textfield = SwingComponentFactory.getInstance().createTextField(this);
+        textfield.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                getElement().attr("value", textfield.getText());
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                getElement().attr("value", textfield.getText());
+
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                getElement().attr("value", textfield.getText());
+
+            }
+        });
         textfield.setColumns(XHTMLUtils.getIntValue(getElement(), "size", 15));
 
         XHTMLUtils.getOptionalIntValue(getElement(), "maxlength").ifPresent(m ->

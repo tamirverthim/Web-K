@@ -265,7 +265,7 @@ public class WindowImpl implements Window {
     public boolean confirm(@DOMString String message) {
         return JOptionPane.showConfirmDialog(
                 scriptContext.getPanel(),
-                message, 
+                message,
                 "Confirm",
                 JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
     }

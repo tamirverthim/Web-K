@@ -1,0 +1,37 @@
+<html>
+<head>
+    <script>
+
+        window.onload = function () {
+
+            const content = document.querySelector("#content");
+
+            let request;
+
+            function onGet() {
+                content.innerHTML = request.responseText;
+            }
+
+            const button = document.querySelector("button");
+
+            button.onclick = function () {
+                request = new XMLHttpRequest();
+                const url = document.querySelector("#url").value;
+                console.log(url);
+                request.addEventListener("load", onGet);
+                request.open("GET", url);
+                request.send();
+            };
+        };
+
+    </script>
+
+</head>
+<body>
+<input id="url" type="text" placeholder="Enter url" value="xhr/fragment1.html"/>
+<button>
+    Do Request
+</button>
+<div id="content"></div>
+</body>
+</html>

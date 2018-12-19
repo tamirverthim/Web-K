@@ -1,6 +1,7 @@
 package com.earnix.webk.script.xhr.impl;
 
 import com.earnix.webk.dom.Jsoup;
+import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.web_idl.Attribute;
 import com.earnix.webk.script.web_idl.ByteString;
 import com.earnix.webk.script.web_idl.DOMException;
@@ -20,6 +21,7 @@ import com.earnix.webk.script.xhr.XMLHttpRequestUpload;
 import lombok.AccessLevel;
 import lombok.experimental.Delegate;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -37,6 +39,7 @@ import org.apache.http.protocol.HttpContext;
 
 import javax.swing.SwingUtilities;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -50,8 +53,11 @@ import java.util.concurrent.Executors;
  * 11/12/2018
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Slf4j
 public class XMLHttpRequestImpl implements XMLHttpRequest {
 
+    private final ScriptContext context;
+    
     @Delegate(types = EventTarget.class)
     EventTargetImpl eventTarget = new EventTargetImpl();
     short readyState = 0;
@@ -73,7 +79,8 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
     String password;
     private Object body;
 
-    public XMLHttpRequestImpl() {
+    public XMLHttpRequestImpl(ScriptContext scriptContext) {
+        this.context = scriptContext;
         EventListener onReadyStateChangeListener = event -> {
             if (onReadyStateChange != null) {
                 onReadyStateChange.call(event);
@@ -116,7 +123,7 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
         }
 
         try {
-            this.url = new URL(url);
+            this.url = new URL(context.getPanel().getSharedContext().getUac().resolveURI(url));
         } catch (MalformedURLException e) {
             throw new DOMException("Malformed URL");
         }
@@ -159,34 +166,50 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
 
     private void sendImpl() {
 
-        HttpRequestBase request = null;
+        try {
+            if (url.getProtocol().equalsIgnoreCase("file")) {
+                try (InputStream stream = url.openStream()) {
+                    this.response = IOUtils.toByteArray(stream);
+                }
+            } else if (url.getProtocol().toLowerCase().startsWith("http")) {
+                HttpRequestBase request = null;
+                request = createRequest();
 
-        request = createRequest();
+                HttpContext ctx = new HttpClientContext();
+                headers.forEach(ctx::setAttribute);
+                try (CloseableHttpResponse response = HTTP_CLIENT.execute(request, ctx)) {
 
-        HttpContext ctx = new HttpClientContext();
-        headers.forEach(ctx::setAttribute);
-        try (CloseableHttpResponse response = HTTP_CLIENT.execute(request, ctx)) {
+                    SwingUtilities.invokeLater(() -> {
+                        eventTarget.dispatchEvent(new EventImpl("loadstart", null));
+                    });
 
-            SwingUtilities.invokeLater(() -> {
-                eventTarget.dispatchEvent(new EventImpl("loadstart", null));
-            });
+                    this.response = IOUtils.toByteArray(response.getEntity().getContent());
 
-            this.response = IOUtils.toByteArray(response.getEntity().getContent());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            Runnable dispatcEvents = () -> {
+                val loadEvent = new EventImpl("load", null);
+                loadEvent.setTarget(XMLHttpRequestImpl.this);
+                eventTarget.dispatchEvent(loadEvent);
+
+                val loadEndEvent = new EventImpl("loadend", null);
+                loadEvent.setTarget(XMLHttpRequestImpl.this);
+                eventTarget.dispatchEvent(loadEndEvent);
+            };
+            
+            if (async) {
+                SwingUtilities.invokeLater(dispatcEvents);
+            } else {
+                dispatcEvents.run();
+            }
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            log.debug(e.getMessage(), e);
+            throw new DOMException("NetworkError");
         }
-
-        SwingUtilities.invokeLater(() -> {
-            val loadEvent = new EventImpl("load", null);
-            loadEvent.setTarget(XMLHttpRequestImpl.this);
-            eventTarget.dispatchEvent(loadEvent);
-
-            val loadEndEvent = new EventImpl("loadend", null);
-            loadEvent.setTarget(XMLHttpRequestImpl.this);
-            eventTarget.dispatchEvent(loadEndEvent);
-        });
-
     }
 
     private HttpRequestBase createRequest() {

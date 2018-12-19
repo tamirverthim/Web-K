@@ -257,6 +257,7 @@ public class WebIDLAdapter<T> implements JSObject {
             val member = members.get(s);
             Object namedItem = null;
 
+
             if (member instanceof WebIDLAdapter.AttributeLink) {
                 return convertToScript((((AttributeLink) member).attribute).get());
             } else if (readonlyAttributeMark.equals(member)) {
@@ -277,7 +278,7 @@ public class WebIDLAdapter<T> implements JSObject {
                 return convertToScript(namedItem);
             }
 //
-            if (propertyGetter != null) {
+            if (member == null && propertyGetter != null) {
                 return convertToScript(ReflectionHelper.relaxedInvoke(target, propertyGetter, s));
             }
 

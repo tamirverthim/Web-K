@@ -1,5 +1,6 @@
 package com.earnix.webk.script.impl;
 
+import com.earnix.webk.dom.nodes.AttributeModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.script.cssom.CSSStyleDeclaration;
 import com.earnix.webk.script.cssom.impl.CSSStyleDeclarationImpl;
@@ -21,6 +22,7 @@ import com.earnix.webk.script.whatwg_dom.NamedNodeMap;
 import com.earnix.webk.script.whatwg_dom.NodeList;
 import com.earnix.webk.script.whatwg_dom.ShadowRoot;
 import com.earnix.webk.script.whatwg_dom.ShadowRootInit;
+import com.earnix.webk.script.whatwg_dom.impl.AttrImpl;
 import com.earnix.webk.script.whatwg_dom.impl.HTMLCollectionImpl;
 import com.earnix.webk.script.whatwg_dom.impl.NamedNodeMapImpl;
 import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
@@ -109,12 +111,12 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public @DOMString String getAttribute(@DOMString String qualifiedName) {
-        return null;
+        return model.attr(qualifiedName);
     }
 
     @Override
     public @DOMString String getAttributeNS(@DOMString String namespace, @DOMString String localName) {
-        return null;
+        return model.attr(localName);
     }
 
     @Override
@@ -133,7 +135,6 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public void removeAttributeNS(@DOMString String namespace, @DOMString String localName) {
-
     }
 
     @Override

@@ -28,6 +28,7 @@ import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.script.ScriptException;
+import java.lang.reflect.InvocationTargetException;
 
 import static javax.script.ScriptContext.ENGINE_SCOPE;
 
@@ -235,7 +236,14 @@ public class ScriptContext implements DocumentListener {
                     public Object newObject(Object... args) {
                         try {
 
-                            val target = implementationClass.newInstance();
+                            Object target;
+                            try {
+                                @SuppressWarnings("unchecked") val constructor = implementationClass.getDeclaredConstructor(ScriptContext.class);
+                                target = constructor.newInstance(ScriptContext.this);
+                            } catch (NoSuchMethodException e) {
+                                target = implementationClass.newInstance();
+                            } 
+
                             val adapter = WebIDLAdapter.obtain(ScriptContext.this, target);
                             // todo check here @Constructor annotation
                             FunctionAdapter constructor = (FunctionAdapter) adapter.getMember("constructor");
@@ -243,7 +251,7 @@ public class ScriptContext implements DocumentListener {
                                 constructor.call(this, args);
                             }
                             return adapter;
-                        } catch (InstantiationException | IllegalAccessException e) {
+                        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                             throw new RuntimeException();
                         }
                     }
