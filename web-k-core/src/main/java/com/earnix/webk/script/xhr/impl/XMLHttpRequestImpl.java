@@ -9,7 +9,6 @@ import com.earnix.webk.script.web_idl.DOMString;
 import com.earnix.webk.script.web_idl.USVString;
 import com.earnix.webk.script.whatwg_dom.Document;
 import com.earnix.webk.script.whatwg_dom.EventHandler;
-import com.earnix.webk.script.whatwg_dom.EventListener;
 import com.earnix.webk.script.whatwg_dom.EventTarget;
 import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
 import com.earnix.webk.script.whatwg_dom.impl.EventImpl;
@@ -47,6 +46,7 @@ import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Stream;
 
 /**
  * @author Taras Maslov
@@ -60,13 +60,13 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
     
     @Delegate(types = EventTarget.class)
     EventTargetImpl eventTarget = new EventTargetImpl();
-    short readyState = 0;
 
-    EventHandler onReadyStateChange;
+    //    EventHandler onReadyStateChange;
     URL url;
     HttpMethod method;
     boolean async = true;
     HashMap<String, String> headers = new HashMap<>();
+    boolean withCredentials;
 
     static ExecutorService executor = Executors.newFixedThreadPool(10);
 
@@ -77,36 +77,25 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
     byte[] response;
     String username;
     String password;
-    private Object body;
+    Object body;
+
+    boolean aborted;
+    short readyState = UNSENT;
+
+    HashMap<String, String> responseHeaders = new HashMap<>();
 
     public XMLHttpRequestImpl(ScriptContext scriptContext) {
         this.context = scriptContext;
-        EventListener onReadyStateChangeListener = event -> {
-            if (onReadyStateChange != null) {
-                onReadyStateChange.call(event);
-            }
-        };
-        eventTarget.addEventListener("onreadystatechange", onReadyStateChangeListener, null);
     }
 
     @Override
     public Attribute<EventHandler> onreadystatechange() {
-        return new Attribute<EventHandler>() {
-            @Override
-            public EventHandler get() {
-                return onReadyStateChange;
-            }
-
-            @Override
-            public void set(EventHandler eventHandler) {
-                onReadyStateChange = eventHandler;
-            }
-        };
+        return level1EventTarget.getHandlerAttribute("onreadystatechange");
     }
 
     @Override
     public short readyState() {
-        return 0;
+        return readyState;
     }
 
     @Override
@@ -116,6 +105,8 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
 
     @Override
     public void open(@ByteString String method, @USVString String url, boolean async, String username, String password) {
+        reset();
+        
         try {
             this.method = HttpMethod.valueOf(method.trim().toUpperCase());
         } catch (NoSuchElementException e) {
@@ -146,12 +137,25 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
 
     @Override
     public Attribute<Boolean> withCredentials() {
-        return null;
+        return new Attribute<Boolean>() {
+            @Override
+            public Boolean get() {
+                return withCredentials;
+            }
+
+            @Override
+            public void set(Boolean aBoolean) {
+                if (readyState != UNSENT && readyState != OPENED) {
+                    throw new DOMException("InvalidStateError");
+                }
+            }
+        };
     }
 
     @Override
     public XMLHttpRequestUpload upload() {
-        return null;
+        // todo bind events
+        return new XMLHttpRequestUploadImpl();
     }
 
     @Override
@@ -164,33 +168,42 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
         }
     }
 
+    private void reset() {
+        responseHeaders.clear();
+        response = null;
+        setReadyState(UNSENT);
+    }
+    
     private void sendImpl() {
 
         try {
+
             if (url.getProtocol().equalsIgnoreCase("file")) {
+                val allowedProperty = System.getProperty("com.earnix.eo.webk.network.xhr-file-url");
+                if (allowedProperty != null && !Boolean.parseBoolean(allowedProperty)) {
+                    throw new DOMException("Forbidden");
+                }
                 try (InputStream stream = url.openStream()) {
                     this.response = IOUtils.toByteArray(stream);
                 }
             } else if (url.getProtocol().toLowerCase().startsWith("http")) {
-                HttpRequestBase request = null;
-                request = createRequest();
-
+                HttpRequestBase request = createRequest();
                 HttpContext ctx = new HttpClientContext();
+
                 headers.forEach(ctx::setAttribute);
                 try (CloseableHttpResponse response = HTTP_CLIENT.execute(request, ctx)) {
-
-                    SwingUtilities.invokeLater(() -> {
-                        eventTarget.dispatchEvent(new EventImpl("loadstart", null));
-                    });
+                    SwingUtilities.invokeLater(() -> eventTarget.dispatchEvent(new EventImpl("loadstart", null)));
 
                     this.response = IOUtils.toByteArray(response.getEntity().getContent());
+                    Stream.of(response.getAllHeaders()).forEach(header -> {
 
+                    });
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    throw new DOMException("NetworkError");
                 }
             }
 
-            Runnable dispatcEvents = () -> {
+            Runnable dispatchEvents = () -> {
                 val loadEvent = new EventImpl("load", null);
                 loadEvent.setTarget(XMLHttpRequestImpl.this);
                 eventTarget.dispatchEvent(loadEvent);
@@ -201,9 +214,9 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
             };
             
             if (async) {
-                SwingUtilities.invokeLater(dispatcEvents);
+                SwingUtilities.invokeLater(dispatchEvents);
             } else {
-                dispatcEvents.run();
+                dispatchEvents.run();
             }
 
         } catch (IOException e) {
@@ -236,7 +249,7 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
 
     @Override
     public void abort() {
-
+        aborted = true;
     }
 
     @Override
@@ -257,7 +270,7 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
 
     @Override
     public String getResponseHeader(String name) {
-        return null;
+        return responseHeaders.get(name);
     }
 
     @Override
@@ -273,12 +286,22 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
 
     @Override
     public Attribute<XMLHttpRequestResponseType> responseType() {
-        return null;
+        return new Attribute<XMLHttpRequestResponseType>() {
+            @Override
+            public XMLHttpRequestResponseType get() {
+                return null;
+            }
+
+            @Override
+            public void set(XMLHttpRequestResponseType xmlHttpRequestResponseType) {
+
+            }
+        };
     }
 
     @Override
     public Object response() {
-        return null;
+        return response;
     }
 
     @Override

@@ -54,6 +54,13 @@ ctx.restore();
 ctx.stroke();
 ```
 
+##### Important technical limitations
+* Setting attributes of global `window` object should be done via `window` reference.
+
+##### JS Runtime support
+
+Web-K provides current Nashorn ES6 features as `let` and `const` support, and also features provided by [es6-shim](https://github.com/paulmillr/es6-shim) polyfill. 
+
 ##### List of supported browser JS APIs
 * HTMLCanvasElement
 * CanvasRenderingContext2D (but not images-related functions)
@@ -113,6 +120,11 @@ ctx.stroke();
 * Window.setTimeout
 * Window.location
 * Window.getComputedStyle
+
+##### Web-K System Properties
+| Property name | Default value |
+|---------------|---------------|
+|com.earnix.eo.webk.network.xhr-file-url|true|
 
 ##### For developers: Adding new JS features
 1. Package `com.earnix.webk.script.web_idl` contains set of classes which provide apis to describe [Web IDL specifications](https://heycam.github.io/webidl/) with java language features (see `com.earnix.webk.script.html.canvas.CanvasRenderingContext2D` as example interface which is [CanvasRenderingContext2D WebIDL specification](https://html.spec.whatwg.org/multipage/canvas.html#canvasrenderingcontext2d) described with Java). To add new APIs, firstly select / create package of feature (or standard) in `com.earnix.webk.script`, and and describe there new APIs (as Java interfaces based on WebIDL)

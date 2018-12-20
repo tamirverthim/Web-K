@@ -58,7 +58,6 @@ public class TextField extends AbstractTextField {
             @Override
             public void removeUpdate(DocumentEvent e) {
                 getElement().attr("value", textfield.getText());
-
             }
 
             @Override
