@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.logging.Level;
 
 public class UriResolver {
+
     private String _baseUri;
 
     public String resolve(final String uri) {

@@ -196,8 +196,9 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
 
                     this.response = IOUtils.toByteArray(response.getEntity().getContent());
                     Stream.of(response.getAllHeaders()).forEach(header -> {
-
+                        responseHeaders.put(header.getName(), header.getValue());
                     });
+                    
                 } catch (IOException e) {
                     throw new DOMException("NetworkError");
                 }
@@ -254,7 +255,7 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
 
     @Override
     public String responseURL() {
-        return null;
+        return url.toString();
     }
 
     @Override

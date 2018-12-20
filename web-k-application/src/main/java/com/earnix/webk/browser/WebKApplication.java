@@ -50,7 +50,7 @@ public class WebKApplication {
     @Setter JFrame validationConsole = null;
 
     WebKApplication() {
-        this(System.getProperty("url", "demo:demos/splash/splash.html"));
+        this(System.getProperty("url", "demo:demos/index.html"));
     }
 
     private WebKApplication(String startPage) {

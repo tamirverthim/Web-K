@@ -50,12 +50,12 @@ import java.util.logging.Level;
  */
 @Slf4j
 public class PanelManager extends DelegatingUserAgent {
+    
     private int index = -1;
     private ArrayList history = new ArrayList();
 
-
     /**
-     * {@inheritdoc}.
+     * {@inheritDoc}.
      */
     public String resolveURI(String uri) {
         final String burl = getBaseURL();
