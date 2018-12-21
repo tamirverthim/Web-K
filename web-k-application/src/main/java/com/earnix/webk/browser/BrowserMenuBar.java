@@ -20,6 +20,7 @@
 package com.earnix.webk.browser;
 
 import com.earnix.webk.browser.actions.ZoomAction;
+import com.earnix.webk.render.Box;
 import com.earnix.webk.swing.BasicPanel;
 import com.earnix.webk.swing.DOMInspector;
 import com.earnix.webk.swing.FSMouseListener;
@@ -43,26 +44,15 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
-import javax.swing.KeyStroke;
 import java.awt.BorderLayout;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import static java.awt.event.KeyEvent.VK_F;
 import static java.awt.event.KeyEvent.VK_I;
 import static java.awt.event.KeyEvent.VK_L;
-import static java.awt.event.KeyEvent.VK_N;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class BrowserMenuBar extends JMenuBar {
@@ -293,20 +283,15 @@ class BrowserMenuBar extends JMenuBar {
                 }
             }
 
-//            root.getPanel().getView().addMouseTrackingListener(new LinkListener() {
-//                public void linkClicked(BasicPanel panel, String uri) {
-//                    if (uri.startsWith("demoNav")) {
-//                        String pg = uri.split(":")[1];
-//                        if (pg.equals("back")) {
-//                            navigateToPriorDemo();
-//                        } else {
-//                            navigateToNextDemo();
-//                        }
-//                    } else {
-//                        super.linkClicked(panel, uri);
-//                    }
-//                }
-//            });
+            root.getPanel().getView().addMouseTrackingListener(new LinkListener() {
+                @Override
+                public void onMouseOver(BasicPanel panel, Box box) {
+                    super.onMouseOver(panel, box);
+                    if (box.getElement().is("a")) {
+                        root.getPanel().getStatus().getText().setText(box.getElement().attr("href"));
+                    }
+                }
+            });
         }
     }
 

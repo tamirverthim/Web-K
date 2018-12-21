@@ -191,6 +191,9 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
 
     @Override
     public void send(String body) {
+        if (send) {
+            throw new DOMException("InvalidStateError");
+        }
         this.requestBody = body;
         fireEvent("loadstart");
         if (async) {

@@ -69,7 +69,7 @@ public class BrowserPanel extends JPanel implements DocumentListener {
     BrowserPanelListener listener;
     ScalableXHTMLPanel view;
     BrowserStatus status;
-    PanelManager manager;
+    BrowserUserAgent manager;
 
     JButton forward;
     JButton backward;
@@ -110,7 +110,7 @@ public class BrowserPanel extends JPanel implements DocumentListener {
         });
 
 
-        manager = new PanelManager();
+        manager = new BrowserUserAgent();
         view = new ScalableXHTMLPanel(manager);
         manager.setRepaintListener(view);
         ImageResourceLoader irl = new ImageResourceLoader();

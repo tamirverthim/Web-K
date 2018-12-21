@@ -102,4 +102,6 @@ public class DefaultSwingComponentFactory extends SwingComponentFactory {
     public void showErrorDialog(String message, JComponent parent) {
         JOptionPane.showMessageDialog(parent, message, "Error", JOptionPane.WARNING_MESSAGE);
     }
+    
+    
 }

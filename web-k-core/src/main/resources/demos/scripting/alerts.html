@@ -1,0 +1,21 @@
+<html>
+<head>
+    <title>Alerts</title>
+    <link rel="stylesheet" type="text/css" href="../rendering/general.css" title="Style" media="screen"/>
+    <script>
+        document.querySelector("button").onclick = function () {
+            alert("Hello!");
+            const sure = confirm("Are you sure?");
+            const why = prompt("Why?");
+            alert("You are" + (sure ? " " : " not ") + "sure because " + why + "!");
+        };
+    </script>
+</head>
+
+<body>
+<h1>Alerts</h1>
+<p class="link left-link"><a href="demo:demos/index.html">Home</a></p>
+<p class="link right-link"><a href="demo:demos/scripting/canvas.html">Next Page</a></p>
+<button>Show alerts</button>
+</body>
+</html>

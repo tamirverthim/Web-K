@@ -8,10 +8,10 @@
     </head>
     <body>
         <p class="link left-link">
-            <a href="box.xhtml">Previous Page</a>
+            <a href="demo:demos/rendering/forms.xhtml">Previous Page</a>
         </p>
         <p class="link right-link">
-            <a href="position.xhtml">Next Page</a>
+            <a href="demo:demos/rendering/centered-fluid.xhtml">Next Page</a>
         </p>
         <p id="fslogo">Flying Saucer XML/CSS2 Renderer</p>
 

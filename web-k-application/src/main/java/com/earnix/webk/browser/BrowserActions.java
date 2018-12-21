@@ -27,7 +27,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -47,7 +46,6 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.net.URL;
-import java.util.concurrent.Future;
 import java.util.logging.Logger;
 
 @Slf4j
@@ -271,7 +269,7 @@ public class BrowserActions {
         final JDialog aboutDlg = new JDialog(root.getFrame());
         aboutDlg.setSize(new Dimension(500, 450));
 
-        PanelManager uac = new PanelManager();
+        BrowserUserAgent uac = new BrowserUserAgent();
         XHTMLPanel panel = new XHTMLPanel(uac);
         uac.setRepaintListener(panel);
         panel.setOpaque(false);

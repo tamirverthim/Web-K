@@ -41,7 +41,7 @@ import java.util.logging.Level;
 
 
 /**
- * PanelManager is a UserAgentCallback responsible for the Browser's resource (XML, image, CSS) lookup. Most of the
+ * BrowserUserAgent is a UserAgentCallback responsible for the Browser's resource (XML, image, CSS) lookup. Most of the
  * power is in the NaiveUserAgent; the PanelManager adds support for the demo:, file: and demoNav: protocols,
  * and keeps track of the history of visited links. There is always a "current" link, and one can use the
  * {@link #getBack()}, {@link #getForward()} and {@link #hasForward()} methods to navigate within the history.
@@ -49,10 +49,11 @@ import java.util.logging.Level;
  * events (like a RootPanel subclass).
  */
 @Slf4j
-public class PanelManager extends DelegatingUserAgent {
+public class BrowserUserAgent extends DelegatingUserAgent {
     
     private int index = -1;
     private ArrayList history = new ArrayList();
+
 
     /**
      * {@inheritDoc}.
