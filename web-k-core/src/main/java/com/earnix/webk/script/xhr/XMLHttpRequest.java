@@ -1,6 +1,5 @@
 package com.earnix.webk.script.xhr;
 
-import com.earnix.webk.script.future.BodyInit;
 import com.earnix.webk.script.future.DedicatedWorker;
 import com.earnix.webk.script.future.SharedWorker;
 import com.earnix.webk.script.web_idl.Any;
@@ -11,7 +10,6 @@ import com.earnix.webk.script.web_idl.DOMString;
 import com.earnix.webk.script.web_idl.DefaultNull;
 import com.earnix.webk.script.web_idl.Exposed;
 import com.earnix.webk.script.web_idl.Nullable;
-import com.earnix.webk.script.web_idl.OneOf;
 import com.earnix.webk.script.web_idl.Optional;
 import com.earnix.webk.script.web_idl.ReadonlyAttribute;
 import com.earnix.webk.script.web_idl.SameObject;
@@ -58,7 +56,11 @@ public interface XMLHttpRequest extends XMLHttpRequestEventTarget {
     @ReadonlyAttribute
     XMLHttpRequestUpload upload();
 
-    void send(@Optional @OneOf({Document.class, BodyInit.class}) @DefaultNull Object body);
+    /**
+     * optional (ArrayBufferView or Blob or Document or ScalarValueString or FormData)? data = null
+     * Supporting only string body for now
+     */
+    void send(@Optional @DefaultNull String data);
 
     void abort();
 

@@ -23,6 +23,9 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -32,16 +35,20 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpTrace;
 import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.conn.ConnectTimeoutException;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.protocol.HttpContext;
 
 import javax.swing.SwingUtilities;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutorService;
@@ -61,29 +68,40 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
     @Delegate(types = EventTarget.class)
     EventTargetImpl eventTarget = new EventTargetImpl();
 
+    XMLHttpRequestUploadImpl upload;
+    
     //    EventHandler onReadyStateChange;
-    URL url;
-    HttpMethod method;
+    URL requestUrl;
+    HttpMethod requestMethod;
     boolean async = true;
-    HashMap<String, String> headers = new HashMap<>();
+    HashMap<String, String> requestHeaders = new HashMap<>();
+    /**
+     * TODO Requires cookies implementation.
+     */
     boolean withCredentials;
+    int timeout;
+
+    boolean send;
 
     static ExecutorService executor = Executors.newFixedThreadPool(10);
 
-    static CloseableHttpClient HTTP_CLIENT = HttpClients.createDefault();
+//    static CloseableHttpClient HTTP_CLIENT = HttpClients.createDefault();
 
     Level1EventTarget level1EventTarget = new Level1EventTarget(this);
 
     byte[] response;
     String username;
     String password;
-    Object body;
+    String requestBody;
 
     boolean aborted;
+    int loaded;
+    int total;
     short readyState = UNSENT;
 
     HashMap<String, String> responseHeaders = new HashMap<>();
-
+    ByteBuffer responseBytes;
+    
     public XMLHttpRequestImpl(ScriptContext scriptContext) {
         this.context = scriptContext;
     }
@@ -100,7 +118,7 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
 
     @Override
     public void open(@ByteString String method, @USVString String url) {
-        open(method, url, false, null, null);
+        open(method, url, true, null, null);
     }
 
     @Override
@@ -108,15 +126,15 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
         reset();
         
         try {
-            this.method = HttpMethod.valueOf(method.trim().toUpperCase());
+            this.requestMethod = HttpMethod.valueOf(method.trim().toUpperCase());
         } catch (NoSuchElementException e) {
-            throw new DOMException("Unknown request method");
+            throw new DOMException("SyntaxError");
         }
 
         try {
-            this.url = new URL(context.getPanel().getSharedContext().getUac().resolveURI(url));
+            this.requestUrl = new URL(context.getPanel().getSharedContext().getUac().resolveURI(url));
         } catch (MalformedURLException e) {
-            throw new DOMException("Malformed URL");
+            throw new DOMException("SyntaxError");
         }
 
         this.async = async;
@@ -127,12 +145,26 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
 
     @Override
     public void setRequestHeader(@ByteString String name, @ByteString String value) {
-        headers.put(name, value);
+        if (readyState == OPENED) {
+            requestHeaders.put(name, value);
+        } else {
+            throw new DOMException("InvalidStateError");
+        }
     }
 
     @Override
     public Attribute<Integer> timeout() {
-        return null;
+        return new Attribute<Integer>() {
+            @Override
+            public Integer get() {
+                return timeout;
+            }
+
+            @Override
+            public void set(Integer timeout) {
+                XMLHttpRequestImpl.this.timeout = timeout;
+            }
+        };
     }
 
     @Override
@@ -145,7 +177,7 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
 
             @Override
             public void set(Boolean aBoolean) {
-                if (readyState != UNSENT && readyState != OPENED) {
+                if (send || readyState != UNSENT && readyState != OPENED) {
                     throw new DOMException("InvalidStateError");
                 }
             }
@@ -154,13 +186,13 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
 
     @Override
     public XMLHttpRequestUpload upload() {
-        // todo bind events
-        return new XMLHttpRequestUploadImpl();
+        return upload;
     }
 
     @Override
-    public void send(Object body) {
-        this.body = body;
+    public void send(String body) {
+        this.requestBody = body;
+        fireEvent("loadstart");
         if (async) {
             executor.submit(this::sendImpl);
         } else {
@@ -169,66 +201,112 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
     }
 
     private void reset() {
+        send = false;
         responseHeaders.clear();
         response = null;
+        loaded = 0;
+        total = 0;
         setReadyState(UNSENT);
     }
     
     private void sendImpl() {
-
         try {
-
-            if (url.getProtocol().equalsIgnoreCase("file")) {
+            if (requestMethod == HttpMethod.GET && requestUrl.getProtocol().equalsIgnoreCase("file")) {
                 val allowedProperty = System.getProperty("com.earnix.eo.webk.network.xhr-file-url");
                 if (allowedProperty != null && !Boolean.parseBoolean(allowedProperty)) {
                     throw new DOMException("Forbidden");
                 }
-                try (InputStream stream = url.openStream()) {
+                try (InputStream stream = requestUrl.openStream()) {
                     this.response = IOUtils.toByteArray(stream);
                 }
-            } else if (url.getProtocol().toLowerCase().startsWith("http")) {
+            } else if (requestUrl.getProtocol().toLowerCase().startsWith("http")) {
+
                 HttpRequestBase request = createRequest();
-                HttpContext ctx = new HttpClientContext();
+                RequestConfig requestConfig = RequestConfig.custom()
+                        .setConnectionRequestTimeout(timeout)
+                        .setConnectTimeout(timeout)
+                        .setSocketTimeout(timeout)
+                        .setRedirectsEnabled(true)
+                        .build();
+                request.setConfig(requestConfig);
+                
 
-                headers.forEach(ctx::setAttribute);
-                try (CloseableHttpResponse response = HTTP_CLIENT.execute(request, ctx)) {
-                    SwingUtilities.invokeLater(() -> eventTarget.dispatchEvent(new EventImpl("loadstart", null)));
+                val ctx = new HttpClientContext();
 
-                    this.response = IOUtils.toByteArray(response.getEntity().getContent());
+                if (username != null) {
+                    val credentialsProvider = new BasicCredentialsProvider();
+                    credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
+                    ctx.setCredentialsProvider(credentialsProvider);
+                }
+
+                requestHeaders.forEach(ctx::setAttribute);
+                CloseableHttpClient httpClient = HttpClients.createDefault();
+
+                try (CloseableHttpResponse response = httpClient.execute(request, ctx)) {
+
                     Stream.of(response.getAllHeaders()).forEach(header -> {
                         responseHeaders.put(header.getName(), header.getValue());
                     });
+
+                    setReadyState(HEADERS_RECEIVED);
+
+                    responseBytes = ByteBuffer.allocate(0);
+
+                    try (val responseStream = response.getEntity().getContent()) {
+
+                        setReadyState(LOADING);
+
+                        total = (int) response.getEntity().getContentLength();
+                        loaded = 0;
+                        byte[] buffer = new byte[256];
+                        int read;
+                        while ((read = responseStream.read(buffer)) != 0) {
+                            responseBytes.put(buffer, 0, read);
+                            loaded += read;
+                            val event = new ProgressEventImpl("progress", null);
+                            event.setTotal(total);
+                            event.setLoaded(loaded);
+                            SwingUtilities.invokeLater(() -> eventTarget.dispatchEvent(event));
+                            if (aborted) {
+                                fireEvent("abort");
+                                return;
+                            }
+                        }
+                    }
+
+                    setReadyState(DONE);
                     
+                } catch (ConnectTimeoutException | SocketTimeoutException e) {
+
+                    fireEvent("timeout");
+                    setReadyState(DONE);
+                    throw new DOMException("NetworkError");
+
                 } catch (IOException e) {
+                    setReadyState(DONE);
                     throw new DOMException("NetworkError");
                 }
-            }
-
-            Runnable dispatchEvents = () -> {
-                val loadEvent = new EventImpl("load", null);
-                loadEvent.setTarget(XMLHttpRequestImpl.this);
-                eventTarget.dispatchEvent(loadEvent);
-
-                val loadEndEvent = new EventImpl("loadend", null);
-                loadEvent.setTarget(XMLHttpRequestImpl.this);
-                eventTarget.dispatchEvent(loadEndEvent);
-            };
-            
-            if (async) {
-                SwingUtilities.invokeLater(dispatchEvents);
+                
             } else {
-                dispatchEvents.run();
+                setReadyState(DONE);
+                throw new DOMException("SyntaxError");
             }
+
+            fireEvent("load");
+            fireEvent("loadend");
+
 
         } catch (IOException e) {
+            fireEvent("error");
             log.debug(e.getMessage(), e);
+            fireEvent("loadend");
             throw new DOMException("NetworkError");
         }
     }
 
     private HttpRequestBase createRequest() {
-        val urlString = url.toString();
-        switch (method) {
+        val urlString = requestUrl.toString();
+        switch (requestMethod) {
             case GET:
                 return new HttpGet(urlString);
             case PUT:
@@ -236,6 +314,14 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
             case HEAD:
                 return new HttpHead(urlString);
             case POST:
+                val request = new HttpPost(urlString);
+                if (requestBody != null) {
+                    try {
+                        request.setEntity(new StringEntity(requestBody));
+                    } catch (UnsupportedEncodingException e) {
+                        log.error(e.getMessage(), e);
+                    }
+                }
                 return new HttpPost(urlString);
             case TRACE:
                 return new HttpTrace(urlString);
@@ -255,7 +341,7 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
 
     @Override
     public String responseURL() {
-        return url.toString();
+        return requestUrl.toString();
     }
 
     @Override
@@ -317,7 +403,7 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
     @Override
     public Document responseXML() {
         try {
-            return new DocumentImpl(Jsoup.parse(new String(response, "UTF-8")), url.toString());
+            return new DocumentImpl(Jsoup.parse(new String(response, "UTF-8")), requestUrl.toString());
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
@@ -363,9 +449,24 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
 
     // endregion
 
+    private void fireEvent(String type) {
+        val event = new ProgressEventImpl(type, null);
+        event.setLoaded(loaded);
+        event.setTotal(total);
+        fireEvent(event);
+    }
+
+    private void fireEvent(EventImpl event) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            eventTarget.dispatchEvent(event);
+        } else {
+            SwingUtilities.invokeLater(() -> fireEvent(event));
+        }
+    }
+
     private void setReadyState(short readyState) {
         this.readyState = readyState;
         val event = new EventImpl("readystatechange", null);
-        eventTarget.dispatchEvent(event);
+        fireEvent(event);
     }
 }
