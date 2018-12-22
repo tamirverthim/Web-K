@@ -65,7 +65,7 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
         this.context = context;
         panel = context.getPanel();
         panel.addMouseMotionListener(this);
-        panel.addMouseWheelListener(this);
+//        panel.addMouseWheelListener(this);
         panel.addKeyListener(this);
         addChildrenListeners();
 

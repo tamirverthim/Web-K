@@ -1,7 +1,6 @@
 package com.earnix.webk.script.whatwg_dom.impl;
 
 import com.earnix.webk.dom.nodes.TextNodeModel;
-import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.html.canvas.HTMLSlotElement;
 import com.earnix.webk.script.impl.ChildNodeImpl;
 import com.earnix.webk.script.impl.NodeImpl;
@@ -147,5 +146,26 @@ public class TextImpl extends NodeImpl implements Text {
     @Override
     public Element nextElementSibling() {
         return nonDocumentTypeChildNodeMixin.nextElementSibling();
+    }
+
+    @Override
+    public @DOMString Attribute<String> textContent() {
+        return new Attribute<String>() {
+
+            @Override
+            public String get() {
+                return target.getWholeText();
+            }
+
+            @Override
+            public void set(String s) {
+                if (s != null) {
+                    target.text(s);
+                } else {
+                    target.text("");
+                }
+            }
+
+        };
     }
 }

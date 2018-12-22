@@ -1,16 +1,15 @@
 package com.earnix.webk.script.whatwg_dom.impl;
 
 import com.earnix.webk.dom.nodes.CDataNodeModel;
-import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.impl.ChildNodeImpl;
 import com.earnix.webk.script.impl.NodeImpl;
 import com.earnix.webk.script.impl.NonDocumentTypeChildNodeImpl;
 import com.earnix.webk.script.web_idl.Attribute;
 import com.earnix.webk.script.web_idl.DOMException;
+import com.earnix.webk.script.web_idl.DOMString;
 import com.earnix.webk.script.whatwg_dom.CharacterData;
 import com.earnix.webk.script.whatwg_dom.Element;
 import com.earnix.webk.script.whatwg_dom.NonDocumentTypeChildNode;
-import com.earnix.webk.swing.BasicPanel;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
@@ -130,4 +129,24 @@ public class CharacterDataImpl extends NodeImpl implements CharacterData {
     }
 
     // endregion
+
+
+    @Override
+    public @DOMString Attribute<String> textContent() {
+        return new Attribute<String>() {
+            @Override
+            public String get() {
+                return target.getWholeText();
+            }
+
+            @Override
+            public void set(String s) {
+                if (s != null) {
+                    target.text(s);
+                } else {
+                    target.text("");
+                }
+            }
+        };
+    }
 }

@@ -120,72 +120,33 @@
             beizer(ctx);
 
             // canvas animation
-            var x = 500;
-            var y = 500;
-            var i = 2;
-            var j = 0;
-            window.setInterval(function () {
-                ctx.strokeWidth = 4.0;
-                ctx.strokeStyle = "#aa33aa";
-                ctx.beginPath();
-                ctx.moveTo(x, y);
-                ctx.lineTo(x * i, y * i);
-                ctx.stroke();
-                x /= 1.3;
-                y -= y * 0.3;
-                i *= 1.5;
-                j++;
-                if (j % 10 === 0) {
-                    ctx.fillText("Current multiplier: " + i, 0.0, 200.0 + j * 2, 1000.0);
-                }
-            }, 200);
+            // var x = 500;
+            // var y = 500;
+            // var i = 2;
+            // var j = 0;
+            // window.requestAnimationFrame = function () {
+            //     ctx.strokeWidth = 4.0;
+            //     ctx.strokeStyle = "#aa33aa";
+            //     ctx.beginPath();
+            //     ctx.moveTo(x, y);
+            //     ctx.lineTo(x * i, y * i);
+            //     ctx.stroke();
+            //     x /= 1.3;
+            //     y -= y * 0.3;
+            //     i *= 1.5;
+            //     j++;
+            //     if (j % 10 === 0) {
+            //         ctx.fillText("Current multiplier: " + i, 0.0, 200.0 + j * 2, 1000.0);
+            //     }
+            // };
         };
-
-        // lorem ipsum
-        // var lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
-        // var loremIndex = 0;
-        // window.setInterval(function () {
-        //     var loremElement = document.getElementById("lorem");
-        //     loremElement.textContent = loremElement.textContent + " " + (lorem.split(" ")[loremIndex] || "");
-        //     loremIndex++;
-        // }, 1000);
-
     </script>
-    <style>
-        body {
-            width: 100%;
-            height: 100%;
-            background-color: #2b9ddb;
-
-            padding-top: 0;
-            margin: 0;
-        }
-
-        h1 {
-            font-size: 20px;
-            margin: 0;
-            padding: 25px;
-            color: white;
-            font-family: sans-serif;
-        }
-
-        canvas {
-            float: left;
-            margin-right: 10px;
-        }
-
-        p {
-            font-family: sans-serif;
-            margin-right: 10px;
-            color: white;
-            border-width: 1px;
-            border-color: white;
-        }
-    </style>
 </head>
 
 <body>
-<h1>Hello, canvas</h1>
+<h1>Canvas</h1>
+<p class="link left-link"><a href="demo:demos/scripting/alerts.html">Home</a></p>
+<p class="link right-link"><a href="demo:demos/scripting/interval-timeout.html">Next Page</a></p>
 <canvas id="cid" width="800" height="800"></canvas>
 <p id="lorem">
 </p>

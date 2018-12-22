@@ -1,6 +1,7 @@
 package com.earnix.webk.dom.nodes;
 
 import com.earnix.webk.dom.Jsoup;
+import com.earnix.webk.dom.helper.Validate;
 import com.earnix.webk.dom.parser.Parser;
 
 import java.io.IOException;
@@ -44,6 +45,11 @@ public class CommentModel extends LeafNodeModel {
      */
     public String getData() {
         return coreValue();
+    }
+    
+    public void setData(String data) {
+        Validate.notNull(data);
+        coreValue(data);
     }
 
     void outerHtmlHead(Appendable accum, int depth, DocumentModel.OutputSettings out) throws IOException {

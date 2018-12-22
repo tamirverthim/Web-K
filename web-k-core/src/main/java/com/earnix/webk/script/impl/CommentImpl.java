@@ -1,13 +1,11 @@
 package com.earnix.webk.script.impl;
 
 import com.earnix.webk.dom.nodes.CommentModel;
-import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.web_idl.Attribute;
 import com.earnix.webk.script.web_idl.DOMException;
 import com.earnix.webk.script.web_idl.DOMString;
 import com.earnix.webk.script.whatwg_dom.Element;
 import com.earnix.webk.script.whatwg_dom.NonDocumentTypeChildNode;
-import com.earnix.webk.swing.BasicPanel;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
@@ -141,4 +139,26 @@ public class CommentImpl extends NodeImpl implements com.earnix.webk.script.what
     }
 
     // endregion
+
+
+    @Override
+    public @DOMString Attribute<String> textContent() {
+        return new Attribute<String>() {
+
+            @Override
+            public String get() {
+                return target.getData();
+            }
+
+            @Override
+            public void set(String s) {
+                if (s != null) {
+                    target.setData(s);
+                } else {
+                    target.getData();
+                }
+            }
+
+        };
+    }
 }

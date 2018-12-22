@@ -1,6 +1,5 @@
 package com.earnix.webk.script.impl;
 
-import com.earnix.webk.dom.nodes.AttributeModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.script.cssom.CSSStyleDeclaration;
 import com.earnix.webk.script.cssom.impl.CSSStyleDeclarationImpl;
@@ -22,7 +21,6 @@ import com.earnix.webk.script.whatwg_dom.NamedNodeMap;
 import com.earnix.webk.script.whatwg_dom.NodeList;
 import com.earnix.webk.script.whatwg_dom.ShadowRoot;
 import com.earnix.webk.script.whatwg_dom.ShadowRootInit;
-import com.earnix.webk.script.whatwg_dom.impl.AttrImpl;
 import com.earnix.webk.script.whatwg_dom.impl.HTMLCollectionImpl;
 import com.earnix.webk.script.whatwg_dom.impl.NamedNodeMapImpl;
 import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
@@ -860,4 +858,24 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
     }
 
     // endregion
+
+
+    @Override
+    public Attribute<String> textContent() {
+        return new Attribute<String>() {
+            @Override
+            public String get() {
+                return model.wholeText();
+            }
+
+            @Override
+            public void set(String s) {
+                if (s != null) {
+                    model.text(s);
+                } else {
+                    model.text("");
+                }
+            }
+        };
+    }
 }

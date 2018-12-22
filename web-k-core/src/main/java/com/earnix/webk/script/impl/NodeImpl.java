@@ -25,7 +25,7 @@ import lombok.val;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Slf4j
-public class NodeImpl implements Node {
+public abstract class NodeImpl implements Node {
 
 
     NodeModel target;
@@ -117,11 +117,6 @@ public class NodeImpl implements Node {
 
     @Override
     public Attribute<String> nodeValue() {
-        return null;
-    }
-
-    @Override
-    public Attribute<String> textContent() {
         return null;
     }
 
