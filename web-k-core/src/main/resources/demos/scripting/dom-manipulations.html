@@ -3,10 +3,24 @@
     <title>Alerts</title>
     <link rel="stylesheet" type="text/css" href="../rendering/general.css" title="Style" media="screen"/>
     <script>
-        
-        window.onload()
+
+        window.onload = function ()
         {
-            
+            let step = 0;
+            const button = document.querySelector("#actor");
+            button.onclick = function () {
+                if (step === 0) {
+                    let div = document.createElement("div");
+                    div.textContent = "Element text content";
+                    document.body.appendChild(div)
+                } else if (step === 1) {
+                    let div = document.querySelector("div");
+                    div.style.padding = "20px";
+                    div.style.backgroundColor = "#9f9f9f";
+                    div.style.color = "blue";
+                }
+                button.innerText = "Next step";
+            }
         }
 
     </script>
@@ -14,23 +28,34 @@
 
 <body>
 <h1>Interval, timeout</h1>
-
 <p>
     Executing following JS:
 </p>
-<pre style="padding: 10px">
-    window.setInterval(function () {
-        // appending text
-    }, 300);
-    
-    window.setTimeout(function () {
-        // appnding message about elapsed time
-    }, 3000);
-</pre>
+<ul>
+    <li>Step 1
+        <pre style="padding: 10px">
+            let div = document.createElement("div");
+            document.body.appendChild(div)
+        </pre>
+    </li>
+    <li>Step 2
+        <pre style="padding: 10px">
+            let div = document.querySelector("div");
+            div.style.padding = "20px";
+            div.style.backgroundColor = "#9f9f9f";
+            div.style.color = "blue";
+        </pre>
+    </li>
+</ul>
 
-<p class="link left-link"><a href="demo:demos/scripting/canvas.html">Home</a></p>
-<p class="link right-link"><a href="demo:demos/scripting/canvas.html">Next Page</a></p>
+
+<p class="link left-link"><a href="demo:demos/scripting/interval-timeout.html">Home</a></p>
+<p class="link right-link"><a href="demo:demos/scripting/mouse-events.html">Next Page</a></p>
 <!--<button>Show alerts</button>-->
-<div id="lorem"/>
+<!--<div id="lorem"/>-->
+
+
+<button id="actor">Create and append Element</button>
+
 </body>
 </html>
