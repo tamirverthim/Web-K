@@ -18,9 +18,10 @@ JavaScript APIs implementation based on [WHATWG DOM](https://dom.spec.whatwg.org
 
 To see full running example, download sources and launch `com.earnix.webk.browser.WebKApplication`. It will automatically load example web page which demonstrates renderering and scripting features. Small scripting features overview:
 
-Element creation and append:
+Element creation, updates and append:
 ```js
 var div = document.createElement("div");
+div.textContent = "Some text";
 div.style.width = "200px";
 div.style.height = "100px";
 document.body.appendChild(div);

@@ -9,10 +9,12 @@ import com.earnix.webk.script.whatwg_dom.Attr;
 import com.earnix.webk.script.whatwg_dom.Document;
 import com.earnix.webk.script.whatwg_dom.Event;
 import com.earnix.webk.script.whatwg_dom.EventListener;
+import com.earnix.webk.script.whatwg_dom.EventTarget;
 import com.earnix.webk.script.whatwg_dom.GetRootNodeOptions;
 import com.earnix.webk.script.whatwg_dom.Node;
 import com.earnix.webk.script.whatwg_dom.NodeList;
 import lombok.AccessLevel;
+import lombok.experimental.Delegate;
 import lombok.experimental.FieldDefaults;
 
 /**
@@ -25,15 +27,16 @@ public class AttrImpl implements Attr {
     AttributeModel model;
     ElementModel modelNode;
     ScriptContext scriptContext;
-
+    @Delegate(types = {EventTarget.class})
+    EventTargetImpl eventTargetImpl;
 
     public AttrImpl(ElementModel modelNode, AttributeModel attribute, ScriptContext scriptContext) {
         super();
         this.modelNode = modelNode;
         this.model = attribute;
         this.scriptContext = scriptContext;
+        eventTargetImpl = new EventTargetImpl();
     }
-
 
     @Override
     public @DOMString String namespaceURI() {
@@ -236,21 +239,6 @@ public class AttrImpl implements Attr {
     @Override
     public Node removeChild(Node child) {
         return null;
-    }
-
-    @Override
-    public void addEventListener(@DOMString String type, EventListener callback, Object options) {
-
-    }
-
-    @Override
-    public void removeEventListener(@DOMString String type, EventListener callback, Object options) {
-
-    }
-
-    @Override
-    public boolean dispatchEvent(Event event) {
-        return false;
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.web_idl.Attribute;
+import com.earnix.webk.script.web_idl.DOMException;
 import com.earnix.webk.script.web_idl.DOMString;
 import com.earnix.webk.script.whatwg_dom.Document;
 import com.earnix.webk.script.whatwg_dom.EventTarget;
@@ -186,6 +187,14 @@ public abstract class NodeImpl implements Node {
 
     @Override
     public Node removeChild(Node child) {
-        return null;
+        val nodeImpl = (NodeImpl) child;
+
+        if (nodeImpl != null && model.childNodes().contains(nodeImpl.getModel())) {
+            nodeImpl.getModel().remove();
+        } else {
+            throw new DOMException("NotFoundError");
+        }
+        
+        return child;
     }
 }
