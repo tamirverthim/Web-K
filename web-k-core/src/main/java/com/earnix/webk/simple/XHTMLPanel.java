@@ -23,14 +23,18 @@ import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.layout.SharedContext;
 import com.earnix.webk.render.RenderingContext;
-import com.earnix.webk.simple.extend.FormSubmissionListener;
 import com.earnix.webk.simple.extend.XhtmlNamespaceHandler;
 import com.earnix.webk.swing.BasicPanel;
+import com.earnix.webk.swing.ContextMenu;
 import com.earnix.webk.swing.CursorListener;
 import com.earnix.webk.swing.HoverListener;
 import com.earnix.webk.swing.LinkListener;
 import com.earnix.webk.util.Configuration;
+import lombok.val;
 
+import javax.swing.SwingUtilities;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
@@ -108,7 +112,7 @@ public class XHTMLPanel extends BasicPanel {
      * Instantiates an XHTMLPanel with no {@link DocumentModel} loaded by default.
      */
     public XHTMLPanel() {
-        setupListeners();
+        setup();
     }
 
     /**
@@ -119,20 +123,26 @@ public class XHTMLPanel extends BasicPanel {
      */
     public XHTMLPanel(UserAgentCallback uac) {
         super(uac);
-        setupListeners();
+        setup();
     }
 
-    private void setupListeners() {
+    private void setup() {
         if (Configuration.isTrue("xr.use.listeners", true)) {
             addMouseTrackingListener(new HoverListener());
             addMouseTrackingListener(new LinkListener());
             addMouseTrackingListener(new CursorListener());
-            setFormSubmissionListener(new FormSubmissionListener() {
-                public void submit(String query) {
-                    XHTMLPanel.this.setDocumentRelative(query);
-                }
-            });
+            setFormSubmissionListener(XHTMLPanel.this::setDocumentRelative);
         }
+
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    val contextMenu = new ContextMenu(XHTMLPanel.this);
+                    contextMenu.show(XHTMLPanel.this, e.getX(), e.getY());
+                }
+            }
+        });
     }
 
     private void resetListeners() {
