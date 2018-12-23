@@ -272,6 +272,9 @@ public class ScriptContext implements DocumentListener {
     private void handleNewDocument() {
         val nextDocument = panel.getDocument();
         if (nextDocument != document) {
+            if (window != null) {
+                window.clearTasks();
+            }
             
             if(document != null){
                 dispatchUnloadEvents();

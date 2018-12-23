@@ -103,13 +103,13 @@ class BrowserMenuBar extends JMenuBar {
         view.add(actions.getRefresh());
         view.add(actions.getReload());
         view.add(new JSeparator());
-        JMenu text_size = new JMenu("Text Size");
-        text_size.setMnemonic('T');
-        text_size.add(actions.getIncreaseFont());
-        text_size.add(actions.getDecreaseFont());
-        text_size.add(new JSeparator());
-        text_size.add(actions.getResetFont());
-        view.add(text_size);
+        JMenu textSize = new JMenu("Text Size");
+        textSize.setMnemonic('T');
+        textSize.add(actions.getIncreaseFont());
+        textSize.add(actions.getDecreaseFont());
+        textSize.add(new JSeparator());
+        textSize.add(actions.getResetFont());
+        view.add(textSize);
 
         go = new JMenu("Go");
         go.setMnemonic('G');

@@ -717,6 +717,10 @@ public class WindowImpl implements Window {
             log.trace("No task to cancel for handle {}", handle);
         }
     }
+    
+    public void clearTasks() {
+        timer.cancel();
+    }
 
     @Override
     public void queueMicrotask(VoidFunction callback) {

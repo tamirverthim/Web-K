@@ -48,6 +48,21 @@ window.setTimeout(function () {
 }, 3000);
 ```
 
+Basic AJAX with XMLHttpRequset
+
+```js
+const request = new XMLHttpRequest();
+const url = "some url";
+request.addEventListener("load", function(){
+    // And do whatever whatever is needed with response.
+    let element = document.createElement("div");
+    element.innerHTML = request.responseText;
+    document.body.appendChild(element);
+});
+request.open("GET", url);
+request.send();
+``` 
+
 Canvas creation and drawing:
 ```js
 var canvas = document.createElement("canvas");
@@ -150,14 +165,14 @@ Web-K provides current Nashorn ES6 features as `let` and `const` support, and al
 * Window.getComputedStyle
 
 ##### Web-K System Properties
-| Property name | Default value |
-|---------------|---------------|
-|com.earnix.eo.webk.network.xhr-file-url|true|
+| Property name | Default value | Description |
+|---------------|---------------|-------------|
+|com.earnix.eo.webk.network.xhr-file-url|true|Disables sending of AJAX GET requests to local file system|
 
 ##### For developers: Adding new JS features
 1. Package `com.earnix.webk.script.web_idl` contains set of classes which provide apis to describe [Web IDL specifications](https://heycam.github.io/webidl/) with java language features (see `com.earnix.webk.script.html.canvas.CanvasRenderingContext2D` as example interface which is [CanvasRenderingContext2D WebIDL specification](https://html.spec.whatwg.org/multipage/canvas.html#canvasrenderingcontext2d) described with Java). To add new APIs, firstly select / create package of feature (or standard) in `com.earnix.webk.script`, and and describe there new APIs (as Java interfaces based on WebIDL)
 2. Inside target package (like `com.earnix.webk.script.html` for general features of [WHATWG HTML standard](https://html.spec.whatwg.org/)), create or locate `impl` package, and implement interfaces created before (see `com.earnix.webk.script.html.canvas.impl.CanvasRenderingContext2DImpl` as example)
-3. If something new shoud be added to global `window` object, describe it in `com.earnix.webk.script.ScriptContext#initEngine`. If you just need to expose a constructor it's enough to use `com.earnix.webk.script.web_idl.Exposed` on target WebIDL interface.
+3. If something new should be added to global `window` object, describe it in `com.earnix.webk.script.ScriptContext#initEngine`. If you just need to expose a constructor it's enough to use `com.earnix.webk.script.web_idl.Exposed` on target WebIDL interface.
 
 The core of analyze and adaptation of WebIDL implementations is done by `com.earnix.webk.script.web_idl.impl.WebIDLAdapter`, so if you need to support new WebILD feature (like annotation), you need to handle it there. It adapts Nashorn JavaScript object API to concrete WebIDL Java implementation classes.
 

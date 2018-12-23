@@ -1,5 +1,7 @@
 <html>
 <head>
+    <link rel="stylesheet" type="text/css" href="../rendering/general.css" title="Style" media="screen"/>
+
     <script>
 
         window.onload = function () {
@@ -28,6 +30,24 @@
 
 </head>
 <body>
+
+<p class="link left-link"><a href="demo:demos/scripting/mouse-events.html">Home</a></p>
+<p class="link right-link"><a href="demo:demos/scripting/alerts.html">Next Page</a></p>
+
+<h1>AJAX Example</h1>
+<p>Web-K supports AJAX via basic XMLHttpRequest implementation. Use following code to send GET request:</p>
+<pre>
+const request = new XMLHttpRequest();
+const url = ...
+request.addEventListener("load", function(){
+    // And do whatever whatever is needed with response.
+    let element = document.createElement("div");
+    element.innerHTML = request.responseText;
+    document.body.appendChild(element);
+});
+request.open("GET", url);
+request.send();
+</pre>
 <input id="url" type="text" placeholder="Enter url" value="xhr/fragment1.html"/>
 <button>
     Do Request
