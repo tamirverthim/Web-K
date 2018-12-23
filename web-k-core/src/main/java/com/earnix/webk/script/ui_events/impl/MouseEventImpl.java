@@ -38,6 +38,7 @@ public class MouseEventImpl extends UIEventImpl implements MouseEvent {
 
     public MouseEventImpl(String type, MouseEventInit eventInit){
         super(type, eventInit);
+        constructor(type, eventInit);
     }
 
     @Override

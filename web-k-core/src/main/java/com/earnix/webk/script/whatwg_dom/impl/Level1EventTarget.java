@@ -1,6 +1,8 @@
 package com.earnix.webk.script.whatwg_dom.impl;
 
+import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.web_idl.Attribute;
+import com.earnix.webk.script.web_idl.impl.WebIDLAdapter;
 import com.earnix.webk.script.whatwg_dom.Event;
 import com.earnix.webk.script.whatwg_dom.EventHandler;
 import com.earnix.webk.script.whatwg_dom.EventListener;
@@ -23,7 +25,6 @@ public class Level1EventTarget {
 
     public Level1EventTarget(EventTarget eventTarget) {
         this.eventTarget = eventTarget;
-
     }
 
     public Attribute<EventHandler> getHandlerAttribute(String eventType) {
@@ -52,7 +53,7 @@ public class Level1EventTarget {
         @Override
         public void handleEvent(Event event) {
             if (eventHandler != null) {
-                eventHandler.call(event);
+                eventHandler.call(WebIDLAdapter.obtain(ScriptContext.getCurrent(), event));
             }
         }
     }

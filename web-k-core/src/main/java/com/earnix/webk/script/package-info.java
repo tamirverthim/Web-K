@@ -5,6 +5,12 @@
  * - focus
  * - focusin
  * - focusout
+ * - mouseenter
+ * - mouseleave
+ * - click
+ * - mousemove
+ * - mouseup
+ * - mousedown
  * (focus is now triggered with mouse click)
  * <p>
  * Not implemented events:
