@@ -1,5 +1,6 @@
 package com.earnix.webk.script.impl;
 
+import com.earnix.webk.dom.Jsoup;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.script.cssom.CSSStyleDeclaration;
 import com.earnix.webk.script.cssom.impl.CSSStyleDeclarationImpl;
@@ -18,6 +19,7 @@ import com.earnix.webk.script.whatwg_dom.Element;
 import com.earnix.webk.script.whatwg_dom.EventHandler;
 import com.earnix.webk.script.whatwg_dom.HTMLCollection;
 import com.earnix.webk.script.whatwg_dom.NamedNodeMap;
+import com.earnix.webk.script.whatwg_dom.Node;
 import com.earnix.webk.script.whatwg_dom.NodeList;
 import com.earnix.webk.script.whatwg_dom.ShadowRoot;
 import com.earnix.webk.script.whatwg_dom.ShadowRootInit;
@@ -287,12 +289,30 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public void prepend(Object... nodes) {
-
+        for (Object node : nodes) {
+            if (node instanceof String) {
+                model.prepend((String)node);
+            } else {
+                if (node instanceof Node) {
+                    NodeImpl impl = (NodeImpl) node;
+                    model.prependChild(impl.getModel());
+                }
+            }
+        }
     }
 
     @Override
     public void append(Object... nodes) {
-
+        for (Object node : nodes) {
+            if (node instanceof String) {
+                model.append((String)node);
+            } else {
+                if (node instanceof Node) {
+                    NodeImpl impl = (NodeImpl) node;
+                    model.appendChild(impl.getModel());
+                }
+            }
+        }
     }
 
     @Override

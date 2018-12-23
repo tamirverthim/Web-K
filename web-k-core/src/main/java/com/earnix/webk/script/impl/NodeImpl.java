@@ -14,6 +14,7 @@ import com.earnix.webk.script.whatwg_dom.impl.EventTargetImpl;
 import com.earnix.webk.script.whatwg_dom.impl.Level1EventTarget;
 import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.experimental.Delegate;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +28,8 @@ import lombok.val;
 @Slf4j
 public abstract class NodeImpl implements Node {
 
-
-    NodeModel target;
+    @Getter
+    NodeModel model;
     
     protected ScriptContext ctx;
     
@@ -37,8 +38,8 @@ public abstract class NodeImpl implements Node {
 
     protected Level1EventTarget level1EventTarget = new Level1EventTarget(eventTargetImpl);
 
-    public NodeImpl(NodeModel target) {
-        this.target = target;
+    public NodeImpl(NodeModel model) {
+        this.model = model;
     }
 
     @Override
@@ -48,7 +49,7 @@ public abstract class NodeImpl implements Node {
 
     @Override
     public String nodeName() {
-        return target.nodeName();
+        return model.nodeName();
     }
 
     @Override
@@ -63,22 +64,22 @@ public abstract class NodeImpl implements Node {
 
     @Override
     public Document ownerDocument() {
-        return (Document) ScriptDOMFactory.get(target.ownerDocument());
+        return (Document) ScriptDOMFactory.get(model.ownerDocument());
     }
 
     @Override
     public Node getRootNode(GetRootNodeOptions options) {
-        return ScriptDOMFactory.get(target.root());
+        return ScriptDOMFactory.get(model.root());
     }
 
     @Override
     public Node parentNode() {
-        return ScriptDOMFactory.get(target.parentNode());
+        return ScriptDOMFactory.get(model.parentNode());
     }
 
     @Override
     public com.earnix.webk.script.whatwg_dom.Element parentElement() {
-        val modelParent = target.parent();
+        val modelParent = model.parent();
         if (modelParent instanceof ElementModel) {
             return ScriptDOMFactory.getElement((ElementModel) modelParent);
         }
@@ -92,7 +93,7 @@ public abstract class NodeImpl implements Node {
 
     @Override
     public NodeList childNodes() {
-        return new NodeListImpl(target.childNodes());
+        return new NodeListImpl(model.childNodes());
     }
 
     @Override
@@ -173,7 +174,7 @@ public abstract class NodeImpl implements Node {
     @Override
     public Node appendChild(Node node) {
         NodeImpl impl = (NodeImpl) node;
-        ((ElementModel) target).appendChild(impl.target);
+        ((ElementModel) model).appendChild(impl.model);
         return node;
     }
 
