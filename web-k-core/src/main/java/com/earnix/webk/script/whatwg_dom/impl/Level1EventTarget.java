@@ -8,6 +8,7 @@ import com.earnix.webk.script.whatwg_dom.EventHandler;
 import com.earnix.webk.script.whatwg_dom.EventListener;
 import com.earnix.webk.script.whatwg_dom.EventTarget;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.var;
 
@@ -18,14 +19,13 @@ import java.util.HashMap;
  * 11/12/2018
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 public class Level1EventTarget {
 
-    EventTarget eventTarget;
+    final ScriptContext scriptContext;
+    final EventTarget eventTarget;
+    
     HashMap<String, EventHandlerAttribute> handlers = new HashMap<>();
-
-    public Level1EventTarget(EventTarget eventTarget) {
-        this.eventTarget = eventTarget;
-    }
 
     public Attribute<EventHandler> getHandlerAttribute(String eventType) {
         var handler = handlers.get(eventType);
@@ -37,7 +37,7 @@ public class Level1EventTarget {
         return handler;
     }
 
-    private static class EventHandlerAttribute implements Attribute<EventHandler>, EventListener {
+    private class EventHandlerAttribute implements Attribute<EventHandler>, EventListener {
         EventHandler eventHandler;
 
         @Override
@@ -53,7 +53,7 @@ public class Level1EventTarget {
         @Override
         public void handleEvent(Event event) {
             if (eventHandler != null) {
-                eventHandler.call(WebIDLAdapter.obtain(ScriptContext.getCurrent(), event));
+                eventHandler.call(WebIDLAdapter.obtain(Level1EventTarget.this.scriptContext, event));
             }
         }
     }

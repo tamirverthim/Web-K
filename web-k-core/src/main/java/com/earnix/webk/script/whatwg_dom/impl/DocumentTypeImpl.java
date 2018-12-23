@@ -1,6 +1,7 @@
 package com.earnix.webk.script.whatwg_dom.impl;
 
 import com.earnix.webk.dom.nodes.DocumentTypeModel;
+import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.impl.NodeImpl;
 import com.earnix.webk.script.web_idl.Attribute;
 import com.earnix.webk.script.web_idl.DOMString;
@@ -15,8 +16,8 @@ public class DocumentTypeImpl extends NodeImpl implements com.earnix.webk.script
 
     private DocumentTypeModel target;
 
-    public DocumentTypeImpl(DocumentTypeModel target) {
-        super(target);
+    public DocumentTypeImpl(ScriptContext scriptContext, DocumentTypeModel target) {
+        super(scriptContext, target);
         this.target = target;
     }
 

@@ -10,7 +10,6 @@ import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.web_idl.Attribute;
 import com.earnix.webk.script.web_idl.DOMString;
 import com.earnix.webk.script.web_idl.USVString;
-import com.earnix.webk.swing.BasicPanel;
 import com.earnix.webk.util.GeneralUtil;
 
 /**
@@ -21,8 +20,8 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
     
     private final CanvasRenderingContext2DImpl context;
 
-    public HTMLCanvasElementImpl(ElementModel target) {
-        super(target);
+    public HTMLCanvasElementImpl(ScriptContext scriptContext, ElementModel target) {
+        super(scriptContext, target);
         if (!target.hasAttr("width")) {
             target.attr("width", String.valueOf(300));
         }

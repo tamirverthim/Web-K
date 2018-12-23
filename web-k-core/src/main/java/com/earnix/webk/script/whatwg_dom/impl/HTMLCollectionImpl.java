@@ -30,7 +30,7 @@ public class HTMLCollectionImpl implements HTMLCollection {
 
     @Override
     public Element item(int index) {
-        return ScriptDOMFactory.getElement(elements.get(index));
+        return ScriptDOMFactory.getElement(ctx, elements.get(index));
     }
 
     @Override

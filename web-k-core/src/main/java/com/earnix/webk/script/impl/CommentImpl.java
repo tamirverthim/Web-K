@@ -1,6 +1,7 @@
 package com.earnix.webk.script.impl;
 
 import com.earnix.webk.dom.nodes.CommentModel;
+import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.web_idl.Attribute;
 import com.earnix.webk.script.web_idl.DOMException;
 import com.earnix.webk.script.web_idl.DOMString;
@@ -27,11 +28,11 @@ public class CommentImpl extends NodeImpl implements com.earnix.webk.script.what
         target.replaceWith(next);
     }).give(() -> target.getData());
 
-    public CommentImpl(CommentModel target) {
-        super(target);
+    public CommentImpl(ScriptContext scriptContext, CommentModel target) {
+        super(scriptContext, target);
         this.target = target;
         childNodeMixin = new ChildNodeImpl(target);
-        nonDocumentTypeChildNodeMixin = new NonDocumentTypeChildNodeImpl(target);
+        nonDocumentTypeChildNodeMixin = new NonDocumentTypeChildNodeImpl(scriptContext, target);
     }
 
 

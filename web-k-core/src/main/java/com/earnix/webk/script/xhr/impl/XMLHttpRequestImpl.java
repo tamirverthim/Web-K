@@ -87,7 +87,7 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
 
 //    static CloseableHttpClient HTTP_CLIENT = HttpClients.createDefault();
 
-    Level1EventTarget level1EventTarget = new Level1EventTarget(this);
+    final Level1EventTarget level1EventTarget;
 
     byte[] response;
     String username;
@@ -104,6 +104,7 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
     
     public XMLHttpRequestImpl(ScriptContext scriptContext) {
         this.context = scriptContext;
+        level1EventTarget = new Level1EventTarget(context, this);
     }
 
     @Override
@@ -406,7 +407,7 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
     @Override
     public Document responseXML() {
         try {
-            return new DocumentImpl(Jsoup.parse(new String(response, "UTF-8")), requestUrl.toString());
+            return new DocumentImpl(context, Jsoup.parse(new String(response, "UTF-8")), requestUrl.toString());
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }

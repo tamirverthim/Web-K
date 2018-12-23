@@ -16,6 +16,8 @@ JavaScript APIs implementation based on [WHATWG DOM](https://dom.spec.whatwg.org
 
 ##### Examples of supported JS
 
+To see full running example, download sources and launch `com.earnix.webk.browser.WebKApplication`. It will automatically load example web page which demonstrates renderering and scripting features. Small scripting features overview:
+
 Element creation and append:
 ```js
 var div = document.createElement("div");
@@ -28,6 +30,21 @@ Element lookup and update:
 ```js
 var main = document.getElementById("main");
 main.innerHTML = "<p style='background-color: red; color: white'>Red Paragraph</p>"
+```
+
+Intervals and timeouts:
+```js
+// appends dot each 300 milliseconds
+window.setInterval(function () {
+    const target = document.getElementById("target");
+    target.textContent = target.textContent + ".";
+}, 300);
+
+// appends message after 3 seconds timeout
+window.setTimeout(function () {
+    const div = document.createElement("div");
+    document.body.appendChild(div);
+}, 3000);
 ```
 
 Canvas creation and drawing:
@@ -56,6 +73,16 @@ ctx.stroke();
 
 ##### Important technical limitations
 * Setting attributes of global `window` object should be done via `window` reference.
+* `this` of event listening callback may not refer to event target, so event target should be accessed directly. Example:
+```js
+let xhr = new XMLHttpRequest();
+xhr.onreadystatechange = function() {
+    // not working approach:
+    console.log(this.responseText);
+    // working approach:
+    console.log(xhr.responseText);
+}
+```
 
 ##### JS Runtime support
 

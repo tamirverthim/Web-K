@@ -31,30 +31,31 @@ public class ScriptDOMFactory {
     private static HashMap<String, NodeCreator> elementsCreators = new HashMap<>();
 
     private interface NodeCreator {
-        Node createNode(NodeModel parsedNode);
+        Node createNode(ScriptContext scriptContext, NodeModel parsedNode);
     }
 
     static {
-        elementsCreators.put("canvas", (element) -> new HTMLCanvasElementImpl(
+        elementsCreators.put("canvas", (ctx, element) -> new HTMLCanvasElementImpl(
+                ctx, 
                 (ElementModel) element
         ));
     }
 
-    public static Node get(NodeModel key) {
+    public static Node get(ScriptContext scriptContext, NodeModel key) {
         if (key == null) {
             return null;
         }
 
         var result = key.getScriptNode();
         if (result == null) {
-            result = (NodeImpl) createScriptNode(key);
+            result = (NodeImpl) createScriptNode(scriptContext, key);
             key.setScriptNode(result);
         }
         return result;
     }
 
-    public static Element getElement(ElementModel key) {
-        return (Element) get(key);
+    public static Element getElement(ScriptContext scriptContext, ElementModel key) {
+        return (Element) get(scriptContext, key);
     }
 
     public static Node put(NodeModel key, Node value) {
@@ -63,24 +64,24 @@ public class ScriptDOMFactory {
     }
 
 
-    public static Node createScriptNode(NodeModel parsedNode) {
+    public static Node createScriptNode(ScriptContext scriptContext, NodeModel parsedNode) {
         AssertHelper.assertNotNull(parsedNode);
 
         Node result;
 
         if (parsedNode instanceof CDataNodeModel) {
-            result = new CharacterDataImpl((CDataNodeModel) parsedNode);
+            result = new CharacterDataImpl(scriptContext, (CDataNodeModel) parsedNode);
         } else if (parsedNode instanceof CommentModel) {
-            result = new CommentImpl((CommentModel) parsedNode);
+            result = new CommentImpl(scriptContext, (CommentModel) parsedNode);
         } else if (parsedNode instanceof DocumentTypeModel) {
-            result = new DocumentTypeImpl((DocumentTypeModel) parsedNode);
+            result = new DocumentTypeImpl(scriptContext, (DocumentTypeModel) parsedNode);
         } else if (parsedNode instanceof DocumentModel) {
-            result = new ElementImpl((ElementModel) parsedNode);
+            result = new ElementImpl(scriptContext, (ElementModel) parsedNode);
         } else if (parsedNode instanceof ElementModel) {
             if (elementsCreators.containsKey(parsedNode.nodeName())) {
-                result = elementsCreators.get(parsedNode.nodeName()).createNode(parsedNode);
+                result = elementsCreators.get(parsedNode.nodeName()).createNode(scriptContext, parsedNode);
             } else {
-                result = new ElementImpl((ElementModel) parsedNode);
+                result = new ElementImpl(scriptContext, (ElementModel) parsedNode);
             }
         } else {
             throw new RuntimeException();

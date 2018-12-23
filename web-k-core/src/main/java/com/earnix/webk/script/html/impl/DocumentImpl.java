@@ -38,7 +38,7 @@ public class DocumentImpl extends com.earnix.webk.script.whatwg_dom.impl.Documen
     ElementImpl activeElement;
     
     public DocumentImpl(ScriptContext ctx) {
-        super(ctx.getPanel().getDocument(), ctx.getPanel().getURL().toString());
+        super(ctx, ctx.getPanel().getDocument(), ctx.getPanel().getURL().toString());
         location = new LocationImpl(ctx.getPanel());
         document = ctx.getPanel().getDocument();
         this.ctx = ctx;
@@ -99,7 +99,7 @@ public class DocumentImpl extends com.earnix.webk.script.whatwg_dom.impl.Documen
                 if (bodyModel.isEmpty()) {
                     return null;
                 }
-                return (HTMLElement) ScriptDOMFactory.getElement(bodyModel.get(0));
+                return (HTMLElement) ScriptDOMFactory.getElement(ctx, bodyModel.get(0));
             }
 
             @Override

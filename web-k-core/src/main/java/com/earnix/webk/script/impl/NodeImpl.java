@@ -30,16 +30,17 @@ public abstract class NodeImpl implements Node {
 
     @Getter
     NodeModel model;
-    
-    protected ScriptContext ctx;
+
+    protected ScriptContext scriptContext;
     
     @Delegate(types = {EventTarget.class})
     EventTargetImpl eventTargetImpl = new EventTargetImpl();
 
-    protected Level1EventTarget level1EventTarget = new Level1EventTarget(eventTargetImpl);
+    protected Level1EventTarget level1EventTarget = new Level1EventTarget(scriptContext, eventTargetImpl);
 
-    public NodeImpl(NodeModel model) {
+    public NodeImpl(ScriptContext scriptContext, NodeModel model) {
         this.model = model;
+        this.scriptContext = scriptContext;
     }
 
     @Override
@@ -54,7 +55,7 @@ public abstract class NodeImpl implements Node {
 
     @Override
     public String baseURI() {
-        return ctx.getPanel().getURL().toString();
+        return scriptContext.getPanel().getURL().toString();
     }
 
     @Override
@@ -64,24 +65,24 @@ public abstract class NodeImpl implements Node {
 
     @Override
     public Document ownerDocument() {
-        return (Document) ScriptDOMFactory.get(model.ownerDocument());
+        return (Document) ScriptDOMFactory.get(scriptContext, model.ownerDocument());
     }
 
     @Override
     public Node getRootNode(GetRootNodeOptions options) {
-        return ScriptDOMFactory.get(model.root());
+        return ScriptDOMFactory.get(scriptContext, model.root());
     }
 
     @Override
     public Node parentNode() {
-        return ScriptDOMFactory.get(model.parentNode());
+        return ScriptDOMFactory.get(scriptContext, model.parentNode());
     }
 
     @Override
     public com.earnix.webk.script.whatwg_dom.Element parentElement() {
         val modelParent = model.parent();
         if (modelParent instanceof ElementModel) {
-            return ScriptDOMFactory.getElement((ElementModel) modelParent);
+            return ScriptDOMFactory.getElement(scriptContext, (ElementModel) modelParent);
         }
         return null;
     }

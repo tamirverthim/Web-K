@@ -24,14 +24,14 @@ public class AttrImpl implements Attr {
 
     AttributeModel model;
     ElementModel modelNode;
-    ScriptContext ctx;
+    ScriptContext scriptContext;
 
 
-    public AttrImpl(ElementModel modelNode, AttributeModel attribute, ScriptContext ctx) {
+    public AttrImpl(ElementModel modelNode, AttributeModel attribute, ScriptContext scriptContext) {
         super();
         this.modelNode = modelNode;
         this.model = attribute;
-        this.ctx = ctx;
+        this.scriptContext = scriptContext;
     }
 
 
@@ -73,7 +73,7 @@ public class AttrImpl implements Attr {
 
     @Override
     public com.earnix.webk.script.whatwg_dom.Element ownerElement() {
-        return ScriptDOMFactory.getElement(modelNode);
+        return ScriptDOMFactory.getElement(scriptContext, modelNode);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class AttrImpl implements Attr {
 
     @Override
     public com.earnix.webk.script.whatwg_dom.Element parentElement() {
-        return ScriptDOMFactory.getElement(modelNode.parent());
+        return ScriptDOMFactory.getElement(scriptContext, modelNode.parent());
     }
 
     @Override

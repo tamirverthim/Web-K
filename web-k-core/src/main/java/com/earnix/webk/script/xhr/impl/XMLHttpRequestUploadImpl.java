@@ -1,5 +1,6 @@
 package com.earnix.webk.script.xhr.impl;
 
+import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.web_idl.Attribute;
 import com.earnix.webk.script.whatwg_dom.EventHandler;
 import com.earnix.webk.script.whatwg_dom.EventTarget;
@@ -19,7 +20,14 @@ public class XMLHttpRequestUploadImpl implements XMLHttpRequestUpload {
 
     @Delegate(types = {EventTarget.class})
     EventTargetImpl eventTargetImpl = new EventTargetImpl();
-    Level1EventTarget level1EventTarget = new Level1EventTarget(eventTargetImpl);
+    Level1EventTarget level1EventTarget;
+
+    ScriptContext context;
+
+    public XMLHttpRequestUploadImpl(ScriptContext context) {
+        this.context = context;
+        level1EventTarget = new Level1EventTarget(context, this);
+    }
 
     @Override
     public Attribute<EventHandler> onloadstart() {

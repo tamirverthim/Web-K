@@ -1,6 +1,7 @@
 package com.earnix.webk.script.whatwg_dom.impl;
 
 import com.earnix.webk.dom.nodes.TextNodeModel;
+import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.html.canvas.HTMLSlotElement;
 import com.earnix.webk.script.impl.ChildNodeImpl;
 import com.earnix.webk.script.impl.NodeImpl;
@@ -27,11 +28,11 @@ public class TextImpl extends NodeImpl implements Text {
 
     // text
 
-    public TextImpl(TextNodeModel target) {
-        super(target);
+    public TextImpl(ScriptContext scriptContext, TextNodeModel target) {
+        super(scriptContext, target);
         this.target = target;
         this.childNodeMixin = new ChildNodeImpl(target);
-        this.nonDocumentTypeChildNodeMixin = new NonDocumentTypeChildNodeImpl(target);
+        this.nonDocumentTypeChildNodeMixin = new NonDocumentTypeChildNodeImpl(scriptContext, target);
     }
 
     @Override

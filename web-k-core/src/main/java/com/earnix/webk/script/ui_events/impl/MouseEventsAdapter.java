@@ -55,7 +55,7 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
     MouseEvent lastAwtMouseEvent;
     JFrame currentFrame;
 
-    FrameEventsListener frameEventsListener = new FrameEventsListener(this);
+    FrameEventsListener frameEventsListener;
 
     Set<Integer> pressedKeys = new HashSet<>();
     Set<Integer> pressedMouseButtons = new HashSet<>();
@@ -68,6 +68,8 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
 //        panel.addMouseWheelListener(this);
         panel.addKeyListener(this);
         addChildrenListeners();
+
+        frameEventsListener = new FrameEventsListener(context, this);
 
         panel.addHierarchyListener(e -> {
             JFrame frame = (JFrame) SwingUtilities.getRoot(panel);
@@ -113,7 +115,7 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
         val box = context.getPanel().find(point.x, point.y);
 
         if (box != null) {
-            Element element = ScriptDOMFactory.getElement(box.getElement());
+            Element element = ScriptDOMFactory.getElement(context, box.getElement());
 
             if (SwingUtilities.isLeftMouseButton(e)) {
                 click(element, e);
@@ -129,7 +131,7 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
             if (box != focusHolderBox) {
                 Element loser = null;
                 if (focusHolderBox != null) {
-                    loser = ScriptDOMFactory.getElement(box.getElement());
+                    loser = ScriptDOMFactory.getElement(context, box.getElement());
                 }
 
                 focusIn(element, loser);
@@ -154,7 +156,7 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
         pressedMouseButtons.add(e.getButton());
         Box box = panel.find(e.getX(), e.getY());
         if (box != null) {
-            Element element = ScriptDOMFactory.getElement(box.getElement());
+            Element element = ScriptDOMFactory.getElement(context, box.getElement());
             mousedown(element, e);
         }
     }
@@ -441,6 +443,6 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
         if (box == null) {
             return null;
         }
-        return ScriptDOMFactory.getElement(box.getElement());
+        return ScriptDOMFactory.getElement(context, box.getElement());
     }
 }

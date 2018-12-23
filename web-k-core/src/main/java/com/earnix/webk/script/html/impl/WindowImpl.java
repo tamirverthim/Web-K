@@ -65,11 +65,12 @@ public class WindowImpl implements Window {
     @Delegate(types = EventTarget.class)
 
     EventTargetImpl eventTargetImpl = new EventTargetImpl();
-    Level1EventTarget level1EventTarget = new Level1EventTarget(eventTargetImpl);
+    Level1EventTarget level1EventTarget;
 
     public WindowImpl(ScriptContext scriptContext) {
         this.scriptContext = scriptContext;
         location = new LocationImpl(scriptContext.getPanel());
+        level1EventTarget = new Level1EventTarget(scriptContext, eventTargetImpl);
     }
 
     @Override

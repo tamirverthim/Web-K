@@ -1,6 +1,7 @@
 package com.earnix.webk.script.whatwg_dom.impl;
 
 import com.earnix.webk.dom.nodes.CDataNodeModel;
+import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.impl.ChildNodeImpl;
 import com.earnix.webk.script.impl.NodeImpl;
 import com.earnix.webk.script.impl.NonDocumentTypeChildNodeImpl;
@@ -27,11 +28,11 @@ public class CharacterDataImpl extends NodeImpl implements CharacterData {
 
     Attribute<String> dataAttribute = Attribute.<String>receive(val -> target.text(val)).give(() -> target.getWholeText());
 
-    public CharacterDataImpl(CDataNodeModel target) {
-        super(target);
+    public CharacterDataImpl(ScriptContext scriptContext, CDataNodeModel target) {
+        super(scriptContext, target);
         this.target = target;
         childNodeMixin = new ChildNodeImpl(target);
-        nonDocumentTypeChildNodeMixin = new NonDocumentTypeChildNodeImpl(target);
+        nonDocumentTypeChildNodeMixin = new NonDocumentTypeChildNodeImpl(scriptContext, target);
     }
 
 

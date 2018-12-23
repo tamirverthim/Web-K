@@ -26,7 +26,7 @@ public class EventManager {
     ScriptContext scriptContext;
 
     public void publishEvent(ElementModel elementModel, EventImpl event) {
-        publishEvent(ScriptDOMFactory.getElement(elementModel), event);
+        publishEvent(ScriptDOMFactory.getElement(scriptContext, elementModel), event);
     }
 
     public void publishEvent(Element target, EventImpl event) {

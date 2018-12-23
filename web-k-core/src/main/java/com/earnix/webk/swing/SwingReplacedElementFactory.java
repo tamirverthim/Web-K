@@ -140,8 +140,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
             return replaceImage(uac, context, e, cssWidth, cssHeight);
         } else if (context.getNamespaceHandler().isCanvasElement(e)) {
 
-            HTMLCanvasElementImpl canvasElement = (HTMLCanvasElementImpl) ScriptDOMFactory.get(e
-            );
+            HTMLCanvasElementImpl canvasElement = (HTMLCanvasElementImpl) ScriptDOMFactory.get(context.getSharedContext().getCanvas().getScriptContext(), e);
             
             return new CanvasReplacedElement(canvasElement);
 

@@ -5,12 +5,11 @@ import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.dom.nodes.TextNodeModel;
+import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.impl.CommentImpl;
 import com.earnix.webk.script.impl.DOMImplementationImpl;
 import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.impl.NodeListImpl;
-import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
-import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.web_idl.DOMString;
 import com.earnix.webk.script.web_idl.USVString;
 import com.earnix.webk.script.whatwg_dom.Attr;
@@ -31,9 +30,6 @@ import com.earnix.webk.script.whatwg_dom.ProcessingInstruction;
 import com.earnix.webk.script.whatwg_dom.Range;
 import com.earnix.webk.script.whatwg_dom.Text;
 import com.earnix.webk.script.whatwg_dom.TreeWalker;
-import com.earnix.webk.script.whatwg_dom.impl.HTMLCollectionImpl;
-import com.earnix.webk.script.whatwg_dom.impl.TextImpl;
-import com.earnix.webk.swing.BasicPanel;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
@@ -47,13 +43,15 @@ import java.util.ArrayList;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DocumentImpl implements Document {
 
+    ScriptContext scriptContext;
     DocumentModel document;
     DOMImplementation implementation = new DOMImplementationImpl();
     String url;
 
-    public DocumentImpl(DocumentModel model, String url ) {
+    public DocumentImpl(ScriptContext scriptContext, DocumentModel model, String url) {
         this.document = model;
         this.url = url;
+        this.scriptContext = scriptContext;
     }
 
     @Override
@@ -111,7 +109,7 @@ public class DocumentImpl implements Document {
 
     @Override
     public Element documentElement() {
-        return (Element) ScriptDOMFactory.get(document);
+        return (Element) ScriptDOMFactory.get(scriptContext, document);
     }
 
     @Override
@@ -133,7 +131,7 @@ public class DocumentImpl implements Document {
 
     @Override
     public Element createElement(String localName, Object options) {
-        return ScriptDOMFactory.getElement(new ElementModel(localName));
+        return ScriptDOMFactory.getElement(scriptContext, new ElementModel(localName));
     }
 
     @Override
@@ -149,19 +147,19 @@ public class DocumentImpl implements Document {
     @Override
     public Text createTextNode(String data) {
         TextNodeModel textNode = new TextNodeModel(data);
-        val result = new TextImpl(textNode);
+        val result = new TextImpl(scriptContext, textNode);
         ScriptDOMFactory.put(textNode, result);
         return result;
     }
 
     @Override
     public CDATASection createCDATASection(String data) {
-        return new CDATASectionImpl(new TextNodeModel(data));
+        return new CDATASectionImpl(scriptContext, new TextNodeModel(data));
     }
 
     @Override
     public Comment createComment(String data) {
-        return new CommentImpl(new CommentModel(data));
+        return new CommentImpl(scriptContext, new CommentModel(data));
     }
 
     @Override
@@ -212,7 +210,7 @@ public class DocumentImpl implements Document {
     @Override
     public Element getElementById(String elementId) {
         val jsoupEl = document.getElementById(elementId.toString());
-        return (Element) ScriptDOMFactory.get(jsoupEl);
+        return (Element) ScriptDOMFactory.get(scriptContext, jsoupEl);
     }
 
     @Override
@@ -224,7 +222,7 @@ public class DocumentImpl implements Document {
     public Element firstElementChild() {
         val firstModel = document.children().first();
         if (firstModel != null) {
-            return ScriptDOMFactory.getElement(firstModel);
+            return ScriptDOMFactory.getElement(scriptContext, firstModel);
         } else {
             return null;
         }
@@ -234,7 +232,7 @@ public class DocumentImpl implements Document {
     public Element lastElementChild() {
         val lastModel = document.children().last();
         if (lastModel != null) {
-            return ScriptDOMFactory.getElement(lastModel);
+            return ScriptDOMFactory.getElement(scriptContext, lastModel);
         } else {
             return null;
         }
@@ -259,9 +257,9 @@ public class DocumentImpl implements Document {
     public Element querySelector(String selectors) {
         val selected = document.select(selectors);
         if (selected.size() > 0) {
-            Element bound = (Element) ScriptDOMFactory.get(selected.first());
+            Element bound = (Element) ScriptDOMFactory.get(scriptContext, selected.first());
             if (bound == null) {
-                bound = new ElementImpl(selected.first());
+                bound = new ElementImpl(scriptContext, selected.first());
                 ScriptDOMFactory.put(selected.first(), bound);
             }
 

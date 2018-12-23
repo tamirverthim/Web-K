@@ -1,7 +1,7 @@
 package com.earnix.webk.script.impl;
 
-import com.earnix.webk.dom.Jsoup;
 import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.cssom.CSSStyleDeclaration;
 import com.earnix.webk.script.cssom.impl.CSSStyleDeclarationImpl;
 import com.earnix.webk.script.cssom_view.ScrollToOptions;
@@ -43,10 +43,12 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     final ElementModel model;
     final ChildNodeImpl childNodeMixin;
+    final ScriptContext scriptContext;
 
-    public ElementImpl(ElementModel model) {
-        super(model);
+    public ElementImpl(ScriptContext scriptContext, ElementModel model) {
+        super(scriptContext, model);
         this.model = model;
+        this.scriptContext = scriptContext;
         childNodeMixin = new ChildNodeImpl(model);
     }
 
@@ -101,7 +103,7 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public NamedNodeMap attributes() {
-        return new NamedNodeMapImpl(model, ctx);
+        return new NamedNodeMapImpl(model, this.scriptContext);
     }
 
     @Override
@@ -259,12 +261,12 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public Element previousElementSibling() {
-        return ScriptDOMFactory.getElement(model.previousElementSibling());
+        return ScriptDOMFactory.getElement(scriptContext, model.previousElementSibling());
     }
 
     @Override
     public Element nextElementSibling() {
-        return ScriptDOMFactory.getElement(model.nextElementSibling());
+        return ScriptDOMFactory.getElement(scriptContext, model.nextElementSibling());
     }
 
     @Override
@@ -414,7 +416,7 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public CSSStyleDeclaration style() {
-        return new CSSStyleDeclarationImpl(model, ctx);
+        return new CSSStyleDeclarationImpl(model, this.scriptContext);
     }
 
     @Override
@@ -555,7 +557,7 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
     public int clientWidth() {
         val box = model.getView();
         if (box != null) {
-            val paddingStyle = box.getPadding(ctx.getPanel().getLayoutContext());
+            val paddingStyle = box.getPadding(this.scriptContext.getPanel().getLayoutContext());
             return (int) (box.getContentWidth() + paddingStyle.left() + paddingStyle.right());
         } else {
             return 0;
