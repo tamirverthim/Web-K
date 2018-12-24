@@ -13,7 +13,7 @@ Main use case - pure Java web view component. Not intended to be used as standal
 
 ### JavaScript runtime
 
-JavaScript APIs implementation based on [WHATWG DOM](https://dom.spec.whatwg.org/) and [WHATWG HTML](https://html.spec.whatwg.org/multipage/) specifications. It is currently very limited. .
+JavaScript APIs implementation based on [WHATWG DOM](https://dom.spec.whatwg.org/) and [WHATWG HTML](https://html.spec.whatwg.org/multipage/) specifications. It is currently very limited.
 
 ##### Examples of supported JS
 
