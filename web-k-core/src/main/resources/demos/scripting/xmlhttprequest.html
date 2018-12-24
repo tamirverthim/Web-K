@@ -2,15 +2,18 @@
 <head>
     <link rel="stylesheet" type="text/css" href="../rendering/general.css" title="Style" media="screen"/>
     <script>
-
         window.onload = function () {
+            const button = document.querySelector("button");
+            const content = document.querySelector("#response");
+
             window.fragmentNumber = 0;
-            const content = document.querySelector("#content");
+
             let request;
             function onGet() {
                 content.innerHTML = request.responseText;
+                window.fragmentNumber = 1 - window.fragmentNumber;
+                button.textContent = "Load fragment " + (window.fragmentNumber + 1);
             }
-            const button = document.querySelector("button");
             button.onclick = function () {
                 request = new XMLHttpRequest();
                 const url = window.fragmentNumber === 0 ? "xhr/fragment1.html" : "xhr/fragment2.html";
@@ -45,8 +48,8 @@ request.send();
 </pre>
 <br>
 <button>
-    Load first fragment
+    Load fragment 1
 </button>
-<div id="content"></div>
+<div id="response"></div>
 </body>
 </html>

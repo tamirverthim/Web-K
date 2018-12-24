@@ -70,11 +70,11 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
 
     XMLHttpRequestUploadImpl upload;
     
-    //    EventHandler onReadyStateChange;
     URL requestUrl;
     HttpMethod requestMethod;
     boolean async = true;
     HashMap<String, String> requestHeaders = new HashMap<>();
+
     /**
      * TODO Requires cookies implementation.
      */
@@ -84,8 +84,6 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
     boolean send;
 
     static ExecutorService executor = Executors.newFixedThreadPool(10);
-
-//    static CloseableHttpClient HTTP_CLIENT = HttpClients.createDefault();
 
     final Level1EventTarget level1EventTarget;
 
@@ -105,7 +103,8 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
     public XMLHttpRequestImpl(ScriptContext scriptContext) {
         this.context = scriptContext;
         eventTarget = new EventTargetImpl(scriptContext);
-        level1EventTarget = new Level1EventTarget(context, this);
+        level1EventTarget = new Level1EventTarget(context, eventTarget);
+        upload = new XMLHttpRequestUploadImpl(scriptContext);
     }
 
     @Override
@@ -271,7 +270,7 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
                             val event = new ProgressEventImpl("progress", null);
                             event.setTotal(total);
                             event.setLoaded(loaded);
-                            SwingUtilities.invokeLater(() -> eventTarget.dispatchEvent(event));
+                            SwingUtilities.invokeLater(() -> context.getEventManager().publishEvent(eventTarget, event));
                             if (aborted) {
                                 fireEvent("abort");
                                 return;
@@ -463,7 +462,7 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
 
     private void fireEvent(EventImpl event) {
         if (SwingUtilities.isEventDispatchThread()) {
-            eventTarget.dispatchEvent(event);
+            context.getEventManager().publishEvent(eventTarget, event);
         } else {
             SwingUtilities.invokeLater(() -> fireEvent(event));
         }

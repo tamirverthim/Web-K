@@ -81,8 +81,12 @@ public class EventManager {
     }
 
     public void publishEvent(EventTarget target, EventImpl event) {
+        scriptContext.storeDocumentHash();
+
         event.setTarget(target);
         target.dispatchEvent(event);
+
+        scriptContext.handleDocumentHashUpdate();
     }
 
     /**

@@ -450,7 +450,6 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
             @Override
             public void set(String string) {
-                model.outerHtml();
                 model.html(string);
             }
         };
