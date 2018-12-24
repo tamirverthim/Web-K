@@ -24,9 +24,11 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
         super(scriptContext, target);
         if (!target.hasAttr("width")) {
             target.attr("width", String.valueOf(300));
+            scriptContext.getPanel().relayout();
         }
         if (!target.hasAttr("height")) {
             target.attr("height", String.valueOf(150));
+            scriptContext.getPanel().relayout();
         }
         context = new CanvasRenderingContext2DImpl(this);
     }
