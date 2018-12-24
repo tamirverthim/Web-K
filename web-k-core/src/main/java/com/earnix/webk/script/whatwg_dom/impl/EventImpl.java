@@ -75,7 +75,7 @@ public class EventImpl implements Event {
 
     @Override
     public EventTarget currentTarget() {
-        return null;
+        return currentTarget;
     }
 
     @Override
@@ -85,7 +85,7 @@ public class EventImpl implements Event {
 
     @Override
     public Short eventPhase() {
-        return null;
+        return phase;
     }
 
     @Override

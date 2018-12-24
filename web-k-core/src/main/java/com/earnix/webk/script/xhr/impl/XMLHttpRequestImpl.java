@@ -270,7 +270,11 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
                             val event = new ProgressEventImpl("progress", null);
                             event.setTotal(total);
                             event.setLoaded(loaded);
-                            SwingUtilities.invokeLater(() -> context.getEventManager().publishEvent(eventTarget, event));
+                            SwingUtilities.invokeLater(() -> {
+                                context.storeDocumentHash();
+                                context.getEventManager().publishEvent(eventTarget, event);
+                                context.handleDocumentHashUpdate();
+                            });
                             if (aborted) {
                                 fireEvent("abort");
                                 return;
@@ -462,7 +466,9 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
 
     private void fireEvent(EventImpl event) {
         if (SwingUtilities.isEventDispatchThread()) {
+            context.storeDocumentHash();
             context.getEventManager().publishEvent(eventTarget, event);
+            context.handleDocumentHashUpdate();
         } else {
             SwingUtilities.invokeLater(() -> fireEvent(event));
         }

@@ -13,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
+import javax.swing.SwingUtilities;
 import java.util.ArrayList;
 
 /**
@@ -31,6 +32,7 @@ public class EventManager {
     }
 
     public void publishEvent(Element target, EventImpl event) {
+        
         log.debug("Dispatching event {} to {}", event, target);
 
         scriptContext.storeDocumentHash();
@@ -81,12 +83,8 @@ public class EventManager {
     }
 
     public void publishEvent(EventTarget target, EventImpl event) {
-        scriptContext.storeDocumentHash();
-
         event.setTarget(target);
         target.dispatchEvent(event);
-
-        scriptContext.handleDocumentHashUpdate();
     }
 
     /**
