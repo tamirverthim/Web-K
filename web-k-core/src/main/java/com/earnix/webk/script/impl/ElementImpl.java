@@ -573,7 +573,9 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public int clientHeight() {
-        return 0;
+        val view = model.getView();
+        val paddingStyle = view.getPadding(this.scriptContext.getPanel().getLayoutContext());
+        return (int) (view.getHeight() + paddingStyle.top() + paddingStyle.bottom());
     }
 
     @Override

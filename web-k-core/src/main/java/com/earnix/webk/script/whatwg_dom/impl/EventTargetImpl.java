@@ -57,7 +57,6 @@ public class EventTargetImpl implements EventTarget {
 //        log.trace("Dispatched event {} on target {}", event.type(), toString());
         val typeListeners = listeners.get(event.type());
         if (typeListeners != null) {
-            log.error("delivering {}" + event);
             typeListeners.forEach(l -> l.handleEvent(WebIDLAdapter.obtain(context, event)));
             return true;
         }

@@ -4,20 +4,16 @@
     <script>
 
         window.onload = function () {
-
+            window.fragmentNumber = 0;
             const content = document.querySelector("#content");
-
             let request;
-
             function onGet() {
                 content.innerHTML = request.responseText;
             }
-
             const button = document.querySelector("button");
-
             button.onclick = function () {
                 request = new XMLHttpRequest();
-                const url = document.querySelector("#url").value;
+                const url = window.fragmentNumber === 0 ? "xhr/fragment1.html" : "xhr/fragment2.html";
                 console.log(url);
                 request.addEventListener("load", onGet);
                 request.open("GET", url);
@@ -47,9 +43,9 @@ request.addEventListener("load", function(){
 request.open("GET", url);
 request.send();
 </pre>
-<input id="url" type="text" placeholder="Enter url" value="xhr/fragment1.html"/>
+<br>
 <button>
-    Do Request
+    Load first fragment
 </button>
 <div id="content"></div>
 </body>

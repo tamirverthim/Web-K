@@ -18,6 +18,7 @@ import jdk.nashorn.api.scripting.AbstractJSObject;
 import jdk.nashorn.api.scripting.NashornException;
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
+import jdk.nashorn.api.scripting.URLReader;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
@@ -162,12 +163,7 @@ public class ScriptContext implements DocumentListener {
         } catch (ScriptException e) {
             throw new RuntimeException(e);
         }
-//        try {
-//            engine.eval("this.window = this;", context);
-//            engine.eval("this.self = this;", context);
-//        } catch (ScriptException e) {
-//            throw new RuntimeException(e);
-//        }
+
 
         // no way to track attributes write operation on global scope...
         // limitation - to use "window" property
@@ -182,12 +178,12 @@ public class ScriptContext implements DocumentListener {
             }
         });
 
-//        try {
-//            engine.eval(new URLReader(ScriptContext.class.getResource("/symbol-polyfill.js")), context);
-//            engine.eval(new URLReader(ScriptContext.class.getResource("/es6-shim.min.js")), context);
-//        } catch (ScriptException e) {
-//            throw new RuntimeException(e);
-//        }
+        try {
+            engine.eval(new URLReader(ScriptContext.class.getResource("/symbol-polyfill.js")), context);
+            engine.eval(new URLReader(ScriptContext.class.getResource("/es6-shim.min.js")), context);
+        } catch (ScriptException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void expose(Class implementationClass) {
@@ -277,7 +273,7 @@ public class ScriptContext implements DocumentListener {
 
     public Object eval(String scr) {
         Object res;
-        storeDocumentHash();
+//        storeDocumentHash();
         try {
             res = engine.eval(scr, context);
 //             adding window members to global scope
@@ -294,13 +290,14 @@ public class ScriptContext implements DocumentListener {
                 }
             });
             synchronize();
+            panel.reset();
         } catch (ScriptException e) {
             if (e.getCause() instanceof NashornException) {
                 log.error(NashornException.getScriptStackString(e.getCause()));
             }
             throw new RuntimeException(e);
         }
-        handleDocumentHashUpdate();
+//        handleDocumentHashUpdate();
         return res;
     }
 

@@ -21,7 +21,6 @@ import com.earnix.webk.script.html.Location;
 import com.earnix.webk.script.html.Navigator;
 import com.earnix.webk.script.html.TimerHandler;
 import com.earnix.webk.script.html.Window;
-import com.earnix.webk.script.html.WindowPostMessageOptions;
 import com.earnix.webk.script.html.WindowProxy;
 import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.web_idl.Attribute;
@@ -287,10 +286,10 @@ public class WindowImpl implements Window {
 
     }
 
-    @Override
-    public void postMessage(Object message, WindowPostMessageOptions options) {
-
-    }
+//    @Override
+//    public void postMessage(Object message, WindowPostMessageOptions options) {
+//
+//    }
 
     private HashMap<String, Attribute<EventHandler>> handlers = new HashMap<>();
 

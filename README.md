@@ -1,5 +1,6 @@
-# Web-K
 [![Build Status](https://travis-ci.org/Earnix/Web-K.svg?branch=master)](https://travis-ci.org/Earnix/Web-K)
+
+<p align="center"><img src="/web-k-core/src/main/resources/demos/Web-K.png"></img></p>
 
 Web-K is [FlyingSaucer](https://github.com/flyingsaucerproject/flyingsaucer)-based pure Java browser and Swing browser component. In addition to FlyingSaucer features it supports:
 * a `<script>` tag with limited set of JS features (like Canvas). Nashosh JavaScript runtime is used. See features list below. 
@@ -12,7 +13,7 @@ Main use case - pure Java web view component. Not intended to be used as standal
 
 ### JavaScript runtime
 
-JavaScript APIs implementation based on [WHATWG DOM](https://dom.spec.whatwg.org/) and [WHATWG HTML](specification). It is currently very limited. Exapmple of supported library: [ChartJS](http://www.chartjs.org/).
+JavaScript APIs implementation based on [WHATWG DOM](https://dom.spec.whatwg.org/) and [WHATWG HTML](https://html.spec.whatwg.org/multipage/) specifications. It is currently very limited. .
 
 ##### Examples of supported JS
 
@@ -25,10 +26,7 @@ div.textContent = "Some text";
 div.style.width = "200px";
 div.style.height = "100px";
 document.body.appendChild(div);
-```
 
-Element lookup and update:
-```js
 var main = document.getElementById("main");
 main.innerHTML = "<p style='background-color: red; color: white'>Red Paragraph</p>"
 ```
@@ -48,7 +46,29 @@ window.setTimeout(function () {
 }, 3000);
 ```
 
-Basic AJAX with XMLHttpRequset
+Mouse and change events:
+```js
+const div = document.querySelector("div#target");
+
+div.onclick = function (event) {
+    console.log("Click at " + event.clientX + " " + event.clientY);
+};
+
+div.ondblclick = function (event) {
+    console.log("Double click at " + event.clientX + " " + event.clientY);
+};
+
+div.onmouseenter = function (event) {
+    console.log("Mouse entered at " + event.clientX + " " + event.clientY);
+};
+
+const field = document.querySelector("input[type=text]");
+field.onchange = function () {
+    console.log("Input field value changed: " + field.value)
+};
+```
+
+Basic AJAX with XMLHttpRequest:
 
 ```js
 const request = new XMLHttpRequest();
@@ -86,6 +106,7 @@ ctx.stroke();
 ctx.restore();
 ctx.stroke();
 ```
+Browser supports chart based library [ChartJS](http://www.chartjs.org/).
 
 ##### Important technical limitations
 * Setting attributes of global `window` object should be done via `window` reference.

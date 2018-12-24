@@ -154,18 +154,7 @@ class BrowserMenuBar extends JMenuBar {
         go.add(actions.getBackward());
 
         add(go);
-//
-//        demos.add(new NextDemoAction());
-//        demos.add(new PriorDemoAction());
         demos.add(new JSeparator());
-//        allDemos = new LinkedHashMap();
-
-//        populateDemoList();
-//
-//        for (Iterator iter = allDemos.keySet().iterator(); iter.hasNext(); ) {
-//            String s = (String) iter.next();
-//            demos.add(new LoadAction(s, (String) allDemos.get(s)));
-//        }
 
         add(demos);
 
@@ -221,50 +210,6 @@ class BrowserMenuBar extends JMenuBar {
         help.add(root.getActions().getAboutPage());
         add(help);
     }
-
-//    private void populateDemoList() {
-//        List demoList = new ArrayList();
-//        URL url = BrowserMenuBar.class.getResource("/demos/file-list.txt");
-//        InputStream is = null;
-//        LineNumberReader lnr = null;
-//        if (url != null) {
-//            try {
-//                is = url.openStream();
-//                InputStreamReader reader = new InputStreamReader(is);
-//                lnr = new LineNumberReader(reader);
-//                try {
-//                    String line;
-//                    while ((line = lnr.readLine()) != null) {
-//                        demoList.add(line);
-//                    }
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                } finally {
-//                    try {
-//                        lnr.close();
-//                    } catch (IOException e) {
-//                        // swallow
-//                    }
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            } finally {
-//                if (is != null) {
-//                    try {
-//                        is.close();
-//                    } catch (IOException e) {
-//                        // swallow
-//                    }
-//                }
-//            }
-//
-//            for (Iterator itr = demoList.iterator(); itr.hasNext(); ) {
-//                String s = (String) itr.next();
-//                String s1[] = s.split(",");
-//                allDemos.put(s1[0], s1[1]);
-//            }
-//        }
-//    }
 
     private JRadioButtonMenuItem addLevel(JMenu menu, ButtonGroup group, String title, int level) {
         JRadioButtonMenuItem item = new JRadioButtonMenuItem(new AntiAliasedAction(title, level));
@@ -391,88 +336,6 @@ class BrowserMenuBar extends JMenuBar {
             root.getPanel().getView().repaint();
         }
     }
-
-//    class NextDemoAction extends AbstractAction {
-//
-//        public NextDemoAction() {
-//            super("Next Demo Page");
-//            putValue(MNEMONIC_KEY, VK_N);
-//            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(VK_N, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-//        }
-//
-//        /**
-//         * Invoked when an action occurs.
-//         */
-//        public void actionPerformed(ActionEvent e) {
-//            navigateToNextDemo();
-//        }
-//    }
-
-//    private void navigateToNextDemo() {
-//        String nextPage = null;
-//        for (Iterator iter = allDemos.keySet().iterator(); iter.hasNext(); ) {
-//            String s = (String) iter.next();
-//            if (s.equals(lastDemoOpened)) {
-//                if (iter.hasNext()) {
-//                    nextPage = (String) iter.next();
-//                    break;
-//                }
-//            }
-//        }
-//        if (nextPage == null) {
-//            // go to first page
-//            Iterator iter = allDemos.keySet().iterator();
-//            nextPage = (String) iter.next();
-//        }
-//
-//        try {
-//            root.getPanel().loadPage((String) allDemos.get(nextPage));
-//            lastDemoOpened = nextPage;
-//        } catch (Exception ex) {
-//            log.error("", ex);
-//        }
-//    }
-
-//    class PriorDemoAction extends AbstractAction {
-//
-//        public PriorDemoAction() {
-//            super("Prior Demo Page");
-//            putValue(MNEMONIC_KEY, KeyEvent.VK_P);
-//            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-//        }
-//
-//        /**
-//         * Invoked when an action occurs.
-//         */
-//        public void actionPerformed(ActionEvent e) {
-//            navigateToPriorDemo();
-//        }
-//    }
-
-//    private void navigateToPriorDemo() {
-//        String priorPage = null;
-//        for (Iterator iter = allDemos.keySet().iterator(); iter.hasNext(); ) {
-//            String s = (String) iter.next();
-//            if (s.equals(lastDemoOpened)) {
-//                break;
-//            }
-//            priorPage = s;
-//        }
-//        if (priorPage == null) {
-//            // go to last page
-//            Iterator iter = allDemos.keySet().iterator();
-//            while (iter.hasNext()) {
-//                priorPage = (String) iter.next();
-//            }
-//        }
-//
-//        try {
-//            root.getPanel().loadPage((String) allDemos.get(priorPage));
-//            lastDemoOpened = priorPage;
-//        } catch (Exception ex) {
-//            log.info("navigateToPriorDemo", ex);
-//        }
-//    }
 
     class LoadAction extends AbstractAction {
 

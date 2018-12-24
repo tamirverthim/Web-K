@@ -448,11 +448,9 @@ public class NaiveUserAgent implements UserAgentCallback, DocumentListener {
     }
 
     public void documentLoaded() { /* ignore*/
-//        scriptContext.onload();
     }
     
     public void documentRendered() { /* ignore*/
-//        scriptContext.onload();
     }
 
     public void onLayoutException(Throwable t) { /* ignore*/ }

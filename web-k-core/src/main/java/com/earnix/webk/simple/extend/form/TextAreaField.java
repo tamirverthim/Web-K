@@ -100,9 +100,7 @@ public class TextAreaField extends AbstractTextField {
     }
 
     protected void applyOriginalState() {
-//        textArea().getDocument().removeDocumentListener(listener);
         textArea().setText(getOriginalState().getValue());
-//        textArea().getDocument().addDocumentListener(listener);
     }
 
     protected String[] getFieldValues() {

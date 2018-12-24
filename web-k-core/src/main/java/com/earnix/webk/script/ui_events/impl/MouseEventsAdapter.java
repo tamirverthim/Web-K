@@ -258,7 +258,7 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
 
         if (!Objects.equals(boxElementModel, hoverElementModel)) {
 
-            log.error("Box updated, next {}", box);
+            log.trace("Box updated, next {}", box);
 
             if (hoverElementModel != null) {
                 log.trace("leaving {}", hoveredBox.getElement());

@@ -34,7 +34,7 @@ public interface DocumentListener {
     void documentStarted();
 
     /**
-     * Indicates document that ned panel received new doument
+     * Indicates that panel received new document
      */
     void documentLoaded();
 

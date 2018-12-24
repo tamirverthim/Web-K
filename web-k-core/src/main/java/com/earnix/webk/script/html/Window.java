@@ -159,7 +159,7 @@ public interface Window extends
 
     void postMessage(Object message, @USVString String targetOrigin, @Optional @DefaultSequence Sequence<Object> transfer);
 
-    void postMessage(Object message, @Optional WindowPostMessageOptions options);
+//    void postMessage(Object message, @Optional WindowPostMessageOptions options);
 
     // is not in WebIDL, exposed as namespace. Spec connection.
     @ReadonlyAttribute Console console();

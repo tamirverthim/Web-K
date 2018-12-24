@@ -3,32 +3,39 @@
     <title>Alerts</title>
     <link rel="stylesheet" type="text/css" href="../rendering/general.css" title="Style" media="screen"/>
     <style>
-        .green {
-            background-color: #1e880b;
+        .large {
+            font-size: 25px;
         }
     </style>
     <script>
 
         window.onload = function ()
         {
-            let step = 0;
+            window.step = 0;
             const button = document.querySelector("#actor");
             button.onclick = function () {
-                if (step === 0) {
+                if (window.step === 0) {
                     let div = document.createElement("div");
                     div.textContent = "Element text content";
                     document.body.appendChild(div);
-                    button.innerText = "Step 2. Locate element and update styles.";
-                } else if (step === 1) {
+                    button.textContent = "Step 2. Locate element and update styles.";
+                    window.step = 1;
+                } else if (window.step === 1) {
                     let div = document.querySelector("div");
                     div.style.padding = "20px";
                     div.style.backgroundColor = "#9f9f9f";
                     div.style.color = "blue";
-                    button.innerText = "Step 3. Modify element class list"
-                } else if (step === 2) {
+                    button.textContent = "Step 3. Modify element class list";
+                    window.step = 2;
+                } else if (window.step === 2) {
                     let div = document.querySelector("div");
-                    div.classList.toggle("green");
-                    button.innerText("Step 4. Remove element.")
+                    div.classList.add("large");
+                    button.textContent = "Step 4. Remove element.";
+                    window.step = 3;
+                } else if (window.step === 3) {
+                    let div = document.querySelector("div");
+                    div.remove();
+                    button.remove();
                 }
 
             }
@@ -38,7 +45,7 @@
 </head>
 
 <body>
-<h1>Interval, timeout</h1>
+<h1>DOM Manipulations</h1>
 <p>
     Executing following JS:
 </p>
@@ -60,9 +67,13 @@
     <li>Step 3
         <pre style="padding: 10px">
             let div = document.querySelector("div");
-            div.style.padding = "20px";
-            div.style.backgroundColor = "#9f9f9f";
-            div.style.color = "blue";
+            div.classList.add("large");
+        </pre>
+    </li>
+    <li>Step 4
+        <pre style="padding: 10px">
+            let div = document.querySelector("div");
+            div.remove();
         </pre>
     </li>
 </ul>
@@ -70,11 +81,7 @@
 
 <p class="link left-link"><a href="demo:demos/scripting/interval-timeout.html">Previous Page</a></p>
 <p class="link right-link"><a href="demo:demos/scripting/mouse-events.html">Next Page</a></p>
-<!--<button>Show alerts</button>-->
-<!--<div id="lorem"/>-->
-
 
 <button id="actor">Step 1. Create and append element.</button>
-
 </body>
 </html>

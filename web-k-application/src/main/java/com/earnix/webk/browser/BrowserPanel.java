@@ -159,7 +159,7 @@ public class BrowserPanel extends JPanel implements DocumentListener {
         SharedContext rc = view.getSharedContext();
         try {
             rc.setFontMapping("Fuzz", Font.createFont(Font.TRUETYPE_FONT,
-                    DemoMarker.class.getClass().getResourceAsStream("/demos/fonts/fuzz.ttf")));
+                    DemoMarker.class.getClass().getResourceAsStream("/demos/rendering/fonts/fuzz.ttf")));
         } catch (Exception ex) {
             log.error("loadCustomFonts", ex);
         }

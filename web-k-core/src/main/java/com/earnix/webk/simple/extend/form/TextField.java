@@ -106,12 +106,10 @@ public class TextField extends AbstractTextField {
     protected void applyOriginalState() {
 
         JTextField textfield = (JTextField) getComponent();
-//        textfield.getDocument().removeDocumentListener(listener);
 
         textfield.setText(getOriginalState().getValue());
         // Make sure we are showing the front of 'value' instead of the end.
         textfield.setCaretPosition(0);
-//        textfield.getDocument().addDocumentListener(listener);
     }
 
     protected String[] getFieldValues() {
