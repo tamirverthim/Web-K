@@ -1,0 +1,91 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="../rendering/general.css" title="Style" media="screen"/>
+
+    <style>
+
+    </style>
+    <script>
+
+        function reportEvent(message) {
+            let p = document.createElement("p");
+            p.textContent = message;
+            let report = document.querySelector("#report");
+            if (report.childElementCount > 5) {
+                report.children[report.children.length - 1].remove();
+            }
+            report.prepend(p);
+        }
+
+        window.onload = function () {
+            const radio1 = document.querySelector("#radio1");
+            radio1.onchange = function () {
+                reportEvent("Option 1 selected: " + !!radio1.checked)
+            };
+
+            const radio2 = document.querySelector("#radio2");
+            radio2.onchange = function () {
+                reportEvent("Option 2 selected: " + !!radio2.checked)
+            };
+
+            const checkbox = document.querySelector("input[type=checkbox]");
+            checkbox.onchange = function () {
+                reportEvent("Checkbox selected: " + !!checkbox.checked)
+            };
+
+            const field = document.querySelector("input[type=text]");
+            field.onchange = function () {
+                reportEvent("Input field value changed: " + field.value)
+            };
+            //
+            const area = document.querySelector("textarea");
+            area.onchange = function () {
+                reportEvent("Input field value changed: " + area.value)
+            }
+        }
+
+    </script>
+
+</head>
+
+<body>
+<p class="link left-link"><a href="demo:demos/index.html">Home</a></p>
+<p class="link right-link"><a href="demo:demos/scripting/xmlhttprequest.html">Next Page</a></p>
+<h1>Input change events</h1>
+<p>Web-K supports change listening on input elements.</p>
+<form action="">
+    <label for="radio1">Option 1
+        <input id="radio1" name="option" type="radio"/>
+    </label>
+
+    <br/>
+    <br/>
+
+    <label for="radio2">Option 2
+        <input id="radio2" name="option" type="radio"/>
+    </label>
+
+    <br/>
+    <br/>
+
+    <label>
+        <input type="checkbox"/>
+    </label>Checkbox
+
+    <br/>
+    <br/>
+
+    <label>Text field
+        <input type="text" value="Content"/>
+    </label>
+
+    <br/>
+    <br/>
+
+    <label>Text area
+        <textarea style="width: 200px; height: 200px;">Content</textarea>
+    </label><br/>
+</form>
+<div id="report"></div>
+</body>
+</html>

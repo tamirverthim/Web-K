@@ -32,6 +32,9 @@ import javax.swing.Popup;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.Color;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.regex.Pattern;
@@ -41,31 +44,17 @@ public class TextField extends AbstractTextField {
 
     private Popup validationErrorPopup;
     private final Color BACKGROUND_INVALID = new Color(0xff9999);
+    private boolean resetting = false;
 
+    private FormFieldState preFocusState;
 
     public TextField(ElementModel e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }
 
     public JComponent create() {
+        preFocusState = getOriginalState();
         JTextField textfield = SwingComponentFactory.getInstance().createTextField(this);
-        textfield.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                getElement().attr("value", textfield.getText());
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                getElement().attr("value", textfield.getText());
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                getElement().attr("value", textfield.getText());
-
-            }
-        });
         textfield.setColumns(XHTMLUtils.getIntValue(getElement(), "size", 15));
 
         XHTMLUtils.getOptionalIntValue(getElement(), "maxlength").ifPresent(m ->
@@ -76,14 +65,53 @@ public class TextField extends AbstractTextField {
         }
         applyComponentStyle(textfield);
 
+        textfield.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                valueChanged();
+
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                valueChanged();
+
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                valueChanged();
+
+            }
+        });
+        textfield.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                preFocusState = FormFieldState.fromString(getFieldValues()[0]);
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (!Objects.equals(preFocusState.getValue(), getFieldValues()[0])) {
+                    val scriptContext = getContext().getSharedContext().getCanvas().getScriptContext();
+                    scriptContext.getEventManager().onchange(getElement());
+                }
+            }
+        });
+
         return textfield;
     }
 
+
     protected void applyOriginalState() {
+
         JTextField textfield = (JTextField) getComponent();
+//        textfield.getDocument().removeDocumentListener(listener);
+
         textfield.setText(getOriginalState().getValue());
         // Make sure we are showing the front of 'value' instead of the end.
         textfield.setCaretPosition(0);
+//        textfield.getDocument().addDocumentListener(listener);
     }
 
     protected String[] getFieldValues() {
@@ -128,7 +156,7 @@ public class TextField extends AbstractTextField {
     public Optional<String> validateInternal() {
 
         String textContent = getFieldValues()[0];
-        
+
         if (textContent.length() == 0) {
             if (isRequired()) {
                 return Optional.of("Value must be specified.");

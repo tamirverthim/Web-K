@@ -25,6 +25,9 @@ import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
 import com.earnix.webk.simple.extend.XhtmlForm;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Optional;
 
 public class FileField extends InputField {
 
@@ -49,5 +52,14 @@ public class FileField extends InputField {
     protected String[] getFieldValues() {
         FileInputComponent com = (FileInputComponent) getComponent();
         return new String[]{com.getFilePath()};
+    }
+
+    @Override
+    protected Optional<String> validateInternal() {
+        if (StringUtils.isBlank(getFieldValues()[0])) {
+            return Optional.of("File should be selected.");
+        } else {
+            return  super.validateInternal();
+        }
     }
 }

@@ -24,23 +24,65 @@ import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
 import com.earnix.webk.simple.extend.XhtmlForm;
 import com.earnix.webk.util.XHTMLUtils;
+import lombok.val;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.util.Objects;
 
 public class TextAreaField extends AbstractTextField {
+
+    private DocumentListener listener;
+    private FormFieldState preFocusState;
 
     public TextAreaField(ElementModel e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }
 
     public JComponent create() {
+        preFocusState = getOriginalState();
         int rows = XHTMLUtils.getIntValue(getElement(), "rows", 4);
         int cols = XHTMLUtils.getIntValue(getElement(), "cols", 10);
 
         JTextArea textArea = SwingComponentFactory.getInstance().createTextArea(this, rows, cols);
+        listener = new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                valueChanged();
+            }
 
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                valueChanged();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                valueChanged();
+            }
+        };
+        textArea.getDocument().addDocumentListener(listener);
+        textArea.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                preFocusState = FormFieldState.fromString(getFieldValues()[0]);
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (!Objects.equals(preFocusState.getValue(), getFieldValues()[0])) {
+                    val scriptContext = getContext().getSharedContext().getCanvas().getScriptContext();
+                    scriptContext.getEventManager().onchange(getElement());
+                }
+            }
+        });
+        
         JScrollPane scrollPane = SwingComponentFactory.getInstance().createScrollPane(this);
         scrollPane.setViewportView(textArea);
         applyComponentStyle(scrollPane);
@@ -49,11 +91,18 @@ public class TextAreaField extends AbstractTextField {
     }
 
     protected FormFieldState loadOriginalState() {
-        return FormFieldState.fromString(XhtmlForm.collectText(getElement()));
+        val value = getElement().attr("value");
+        if (StringUtils.isNotBlank(value)) {
+            return FormFieldState.fromString(value);
+        } else {
+            return FormFieldState.fromString(XhtmlForm.collectText(getElement()));
+        }
     }
 
     protected void applyOriginalState() {
+//        textArea().getDocument().removeDocumentListener(listener);
         textArea().setText(getOriginalState().getValue());
+//        textArea().getDocument().addDocumentListener(listener);
     }
 
     protected String[] getFieldValues() {

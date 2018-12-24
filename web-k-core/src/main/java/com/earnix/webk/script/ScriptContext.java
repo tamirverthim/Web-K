@@ -54,13 +54,9 @@ public class ScriptContext implements DocumentListener {
     private WebIDLAdapter<WindowImpl> windowAdapter;
 
     int documentHash;
-
-    @Getter
-    static ScriptContext current;
     
     public ScriptContext(BasicPanel panel) {
         this.panel = panel;
-        current = this;
         // initializing mouse events translation
         eventManager = new EventManager(this);
         mouseEventsAdapter = new MouseEventsAdapter(this);

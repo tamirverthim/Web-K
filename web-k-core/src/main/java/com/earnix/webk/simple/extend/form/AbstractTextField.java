@@ -68,4 +68,8 @@ abstract class AbstractTextField extends InputField {
         }
     }
 
+    protected void valueChanged() {
+        String nextText = getFieldValues()[0];
+        getElement().attr("value", nextText);
+    }
 }

@@ -143,6 +143,8 @@ public class XHTMLPanel extends BasicPanel {
                 }
             }
         });
+
+        setFocusable(true);
     }
 
     private void resetListeners() {

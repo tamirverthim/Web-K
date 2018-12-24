@@ -23,16 +23,24 @@ import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
 import com.earnix.webk.simple.extend.XhtmlForm;
+import lombok.val;
 
 import javax.swing.JComponent;
 import javax.swing.JToggleButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 public class RadioButtonField extends InputField {
+    private ItemListener listener;
+
     public RadioButtonField(ElementModel e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }
 
     public JComponent create() {
+        originalState = FormFieldState.fromBoolean(getAttribute("checked").equalsIgnoreCase("checked"));
+
         JToggleButton radio = SwingComponentFactory.getInstance().createRadioButton(this);
 
         String groupName = null;
@@ -44,18 +52,36 @@ public class RadioButtonField extends InputField {
         // Add to the group for mutual exclusivity
         getParentForm().addButtonToGroup(groupName, radio);
 
+        radio.addItemListener(listener = e -> {
+
+            val wasChecked = getAttribute("checked").equalsIgnoreCase("checked");
+            val checked = e.getStateChange() == ItemEvent.SELECTED;
+
+            if (checked) {
+                getElement().attr("checked", "checked");
+            } else {
+                getElement().removeAttr("checked");
+            }
+
+            if (checked && !wasChecked) {
+                val panel = getContext().getSharedContext().getCanvas();
+                panel.getScriptContext().getEventManager().onchange(getElement());
+            }
+        });
+        
         return radio;
     }
 
     protected FormFieldState loadOriginalState() {
-        return FormFieldState.fromBoolean(
-                getAttribute("checked").equalsIgnoreCase("checked"));
+        return originalState;
     }
 
     protected void applyOriginalState() {
-        JToggleButton button = (JToggleButton) getComponent();
 
+        JToggleButton button = (JToggleButton) getComponent();
+        button.removeItemListener(listener);
         button.setSelected(getOriginalState().isChecked());
+        button.addItemListener(listener);
     }
 
     protected String[] getFieldValues() {

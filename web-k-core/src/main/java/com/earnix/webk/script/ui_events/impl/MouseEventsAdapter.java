@@ -106,7 +106,7 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        Point point = SwingUtilities.convertPoint((JComponent) e.getSource(), e.getX(), e.getY(), panel);
+        Point point =convertCoordinates(e);
         val box = context.getPanel().find(point.x, point.y);
 
         if (box != null) {
@@ -149,7 +149,8 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
     @Override
     public void mousePressed(MouseEvent e) {
         pressedMouseButtons.add(e.getButton());
-        Box box = panel.find(e.getX(), e.getY());
+        val point = convertCoordinates(e);
+        Box box = panel.find(point.x, point.y);
         if (box != null) {
             Element element = ScriptDOMFactory.getElement(context, box.getElement());
             mousedown(element, e);
@@ -159,9 +160,12 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
     @Override
     public void mouseReleased(MouseEvent e) {
         pressedMouseButtons.remove(e.getButton());
-
-        mouseup(getElement(hoveredBox), e);
-
+        val point = convertCoordinates(e);
+        val box = context.getPanel().find(point.x, point.y);
+        if (box != null) {
+            mouseup(getElement(hoveredBox), e);
+        }
+        
         lastAwtMouseEvent = e;
     }
 
@@ -195,6 +199,10 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         lastAwtMouseEvent = e;
+    }
+    
+    private Point convertCoordinates(MouseEvent e) {
+        return SwingUtilities.convertPoint((JComponent) e.getSource(), e.getX(), e.getY(), panel);
     }
 
     private void handleMouseMove(MouseEvent e) {

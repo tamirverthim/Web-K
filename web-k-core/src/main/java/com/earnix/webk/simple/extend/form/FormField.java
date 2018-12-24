@@ -50,7 +50,7 @@ public abstract class FormField {
 
     XhtmlForm parentForm;
     ElementModel element;
-    FormFieldState originalState;
+    protected FormFieldState originalState;
     JComponent component;
     LayoutContext context;
     BlockBox box;

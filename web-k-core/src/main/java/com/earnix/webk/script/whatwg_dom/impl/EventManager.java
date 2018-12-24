@@ -5,6 +5,7 @@ import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.web_idl.impl.SequenceImpl;
 import com.earnix.webk.script.whatwg_dom.Element;
 import com.earnix.webk.script.whatwg_dom.Event;
+import com.earnix.webk.script.whatwg_dom.EventInit;
 import com.earnix.webk.script.whatwg_dom.EventTarget;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -51,7 +52,6 @@ public class EventManager {
         val iterator = propagationPath.listIterator(propagationPath.size());
         while (iterator.hasPrevious()) {
             val element = iterator.previous();
-//            val jsElement = Binder.getElement(element, scriptContext.getPanel());
             if (element == target) {
                 event.setPhase(Event.AT_TARGET);
             }
@@ -82,5 +82,15 @@ public class EventManager {
     public void publishEvent(EventTarget target, EventImpl event) {
         event.setTarget(target);
         target.dispatchEvent(event);
+    }
+
+    /**
+     * https://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-eventgroupings-htmlevents-h3
+     */
+    public void onchange(ElementModel target) {
+        EventInit init = new EventInit();
+        init.bubbles = true;
+        EventImpl event = new EventImpl("change", init);
+        publishEvent(target, event);
     }
 }

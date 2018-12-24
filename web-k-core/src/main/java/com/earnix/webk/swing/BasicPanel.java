@@ -112,6 +112,8 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
             return;
         }
 
+        System.err.println("painting");
+
         // if this is the first time painting this document, then calc layout
         Layer root = getRootLayer();
         if (root == null || isNeedRelayout()) {

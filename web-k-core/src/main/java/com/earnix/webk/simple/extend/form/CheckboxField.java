@@ -23,13 +23,19 @@ import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
 import com.earnix.webk.simple.extend.XhtmlForm;
+import lombok.val;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JToggleButton;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class CheckboxField extends InputField {
+
+    private ActionListener listener;
+
     public CheckboxField(ElementModel e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }
@@ -41,6 +47,18 @@ public class CheckboxField extends InputField {
         intrinsicWidth = new Integer(ps.width + 1);
         intrinsicHeight = new Integer(ps.height);
 
+        checkbox.addActionListener(listener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (checkbox.isSelected()) {
+                    CheckboxField.this.getElement().attr("checked", "checked");
+                } else {
+                    CheckboxField.this.getElement().removeAttr("checked");
+                }
+                val panel = CheckboxField.this.getContext().getSharedContext().getCanvas();
+                panel.getScriptContext().getEventManager().onchange(CheckboxField.this.getElement());
+            }
+        });
         return checkbox;
     }
 
@@ -50,9 +68,14 @@ public class CheckboxField extends InputField {
     }
 
     protected void applyOriginalState() {
+
         JToggleButton button = (JToggleButton) getComponent();
 
+        button.removeActionListener(listener);
+        
         button.setSelected(getOriginalState().isChecked());
+
+        button.addActionListener(listener);
     }
 
     protected String[] getFieldValues() {
