@@ -44,7 +44,7 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     final ElementModel model;
     final ChildNodeImpl childNodeMixin;
-    final ScriptContext scriptContext;
+    protected final ScriptContext scriptContext;
 
     public ElementImpl(ScriptContext scriptContext, ElementModel model) {
         super(scriptContext, model);

@@ -31,6 +31,10 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
         context = new CanvasRenderingContext2DImpl(this);
     }
 
+    public ScriptContext getScriptContext() {
+        return scriptContext;
+    }
+
     @Override
     public Attribute<Integer> width() {
         return new Attribute<Integer>() {
@@ -43,6 +47,7 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
             public void set(Integer integer) {
                 getModel().attr("width", String.valueOf(integer));
                 context.resize();
+                scriptContext.getPanel().relayout();
             }
         };
     }
@@ -59,6 +64,7 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
             public void set(Integer integer) {
                 getModel().attr("height", String.valueOf(integer));
                 context.resize();
+                scriptContext.getPanel().relayout();
             }
         };
     }
@@ -68,6 +74,7 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
         super.setAttribute(qualifiedName, value);
         if (qualifiedName.equalsIgnoreCase("width") || qualifiedName.equalsIgnoreCase("height")) {
             context.resize();
+            scriptContext.getPanel().relayout();
         }
     }
 

@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.commons.lang3.ArrayUtils;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -90,10 +91,12 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
         List<JComponent> children = new ArrayList<>();
         getAllChildren(panel, children);
         children.forEach(child -> {
-            child.addMouseListener(this);
-            child.addMouseMotionListener(this);
-            child.addMouseWheelListener(this);
-            child.addKeyListener(this);
+            if (!ArrayUtils.contains(child.getMouseListeners(), this)) {
+                child.addMouseListener(this);
+                child.addMouseMotionListener(this);
+                child.addMouseWheelListener(this);
+                child.addKeyListener(this);
+            }
         });
     }
 

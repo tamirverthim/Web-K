@@ -51,6 +51,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Taras Maslov
@@ -153,6 +154,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     public void beginPath() {
         log.trace("beginPath");
         path2D = new java.awt.geom.Path2D.Double();
+        triggerDocumentUpdate();
     }
 
     @Override
@@ -160,6 +162,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
         log.trace("fill");
         ensureState(true);
         g2d.fill(path2D);
+        triggerDocumentUpdate();
     }
 
     @Override
@@ -167,6 +170,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
         log.trace("stroke");
         ensureState(false);
         g2d.draw(path2D);
+        triggerDocumentUpdate();
     }
 
     @Override
@@ -355,41 +359,48 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     public void closePath() {
         log.trace("closePath");
         path2D.closePath();
+        triggerDocumentUpdate();
     }
 
     @Override
     public void moveTo(double x, double y) {
         log.trace("moveTo");
         path2D.moveTo(x, y);
+        triggerDocumentUpdate();
     }
 
     @Override
     public void lineTo(double x, double y) {
         log.trace("lineTo");
         path2D.lineTo(x, y);
+        triggerDocumentUpdate();
     }
 
     @Override
     public void quadraticCurveTo(double cpx, double cpy, double x, double y) {
         log.trace("quadraticCurveTo");
         path2D.quadTo(cpx, cpy, x, y);
+        triggerDocumentUpdate();
     }
 
     @Override
     public void bezierCurveTo(double cp1x, double cp1y, double cp2x, double cp2y, double x, double y) {
         log.trace("bezierCurveTo");
         path2D.curveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+        triggerDocumentUpdate();
     }
 
     @Override
     public void arcTo(double x1, double y1, double x2, double y2, double radius) {
         log.trace("arcTo");
+        triggerDocumentUpdate();
     }
 
     @Override
     public void rect(double x, double y, double w, double h) {
         log.trace("rect");
         path2D.append(new Rectangle2D.Double(x, y, w, h), false);
+        triggerDocumentUpdate();
     }
 
     @Override
@@ -406,6 +417,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
                 new Arc2D.Double(top, left, diam, diam,
                         Math.toDegrees(anticlockwise ? -startAngle : endAngle),
                         Math.toDegrees(anticlockwise ? -endAngle : endAngle), Arc2D.OPEN), false);
+        triggerDocumentUpdate();
     }
 
     @Override
@@ -523,6 +535,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     public void clearRect(double x, double y, double w, double h) {
         log.trace("clearRect {} {} {} {}", x, y, w, h);
         g2d.clearRect((int) x, (int) y, (int) w, (int) h);
+        triggerDocumentUpdate();
     }
 
     @Override
@@ -530,6 +543,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
         log.trace("fillRect");
         ensureState(true);
         g2d.fillRect((int) x, (int) y, (int) w, (int) h);
+        triggerDocumentUpdate();
     }
 
     @Override
@@ -537,6 +551,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
         log.trace("strokeRect {} {} {} {}", x, y, w, h);
         ensureState(false);
         g2d.drawRect((int) x, (int) y, (int) w, (int) h);
+        triggerDocumentUpdate();
     }
 
     @Override
@@ -634,12 +649,14 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
         g2d.drawString(text, floatX, (float) (y + metrix.getHeight() / 4));
         // todo handle max width
+        triggerDocumentUpdate();
     }
 
     @Override
     public void strokeText(@DOMString String text, double x, double y, Double maxWidth) {
         log.trace("strokeText");
         fillText(text, x, y, maxWidth);
+        triggerDocumentUpdate();
     }
 
     @Override
@@ -844,6 +861,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
         g2d.setBackground(Color.WHITE);
         g2d.clearRect(0, 0, width, height);
+        triggerDocumentUpdate();
     }
 
 
@@ -890,6 +908,11 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
         }
     }
 
+    private void triggerDocumentUpdate() {
+        // the way to notify script context about rendering requirement 
+        canvas.getModel().attr("__update", UUID.randomUUID().toString());
+        canvas.getScriptContext().getPanel().repaint();
+    }
 
     // endregion
 }
