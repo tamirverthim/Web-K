@@ -1,6 +1,7 @@
 package com.earnix.webk.script.whatwg_dom;
 
 import com.earnix.webk.script.web_idl.Callback;
+import com.earnix.webk.script.web_idl.impl.WebIDLAdapter;
 
 /**
  * @author Taras Maslov
@@ -8,5 +9,5 @@ import com.earnix.webk.script.web_idl.Callback;
  */
 @Callback
 public interface EventListener {
-    void handleEvent(Event event);
+    void handleEvent(WebIDLAdapter<Event> event);
 }

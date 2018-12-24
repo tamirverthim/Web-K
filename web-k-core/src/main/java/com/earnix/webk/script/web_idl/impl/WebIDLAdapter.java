@@ -347,7 +347,14 @@ public class WebIDLAdapter<T> implements JSObject {
         } else if (target instanceof LegacyUnenumerableNamedProperties) {
             members.put(s, o);
         } else if (propertySetter != null) {
-            ReflectionHelper.relaxedInvoke(target, propertySetter, s, o);
+            try {
+
+                ReflectionHelper.relaxedInvoke(target, propertySetter, s, o);
+            } catch (IllegalArgumentException e) {
+                members.put(s, o);
+            }
+        } else {
+            members.put(s, o);
         }
         
     }

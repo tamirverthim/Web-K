@@ -35,13 +35,15 @@ public abstract class NodeImpl implements Node {
     protected ScriptContext scriptContext;
     
     @Delegate(types = {EventTarget.class})
-    EventTargetImpl eventTargetImpl = new EventTargetImpl();
+    EventTargetImpl eventTargetImpl;
 
-    protected Level1EventTarget level1EventTarget = new Level1EventTarget(scriptContext, eventTargetImpl);
+    protected Level1EventTarget level1EventTarget;
 
     public NodeImpl(ScriptContext scriptContext, NodeModel model) {
         this.model = model;
         this.scriptContext = scriptContext;
+        eventTargetImpl = new EventTargetImpl(scriptContext);
+        level1EventTarget = new Level1EventTarget(scriptContext, eventTargetImpl);
     }
 
     @Override

@@ -64,12 +64,13 @@ public class WindowImpl implements Window {
     ConsoleImpl console = new ConsoleImpl();
     @Delegate(types = EventTarget.class)
 
-    EventTargetImpl eventTargetImpl = new EventTargetImpl();
+    EventTargetImpl eventTargetImpl;
     Level1EventTarget level1EventTarget;
 
     public WindowImpl(ScriptContext scriptContext) {
         this.scriptContext = scriptContext;
         location = new LocationImpl(scriptContext.getPanel());
+        eventTargetImpl = new EventTargetImpl(scriptContext);
         level1EventTarget = new Level1EventTarget(scriptContext, eventTargetImpl);
     }
 

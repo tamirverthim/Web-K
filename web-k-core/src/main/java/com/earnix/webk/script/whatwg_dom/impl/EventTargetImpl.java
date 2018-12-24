@@ -1,10 +1,15 @@
 package com.earnix.webk.script.whatwg_dom.impl;
 
+import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.web_idl.DOMString;
+import com.earnix.webk.script.web_idl.impl.WebIDLAdapter;
 import com.earnix.webk.script.whatwg_dom.Event;
 import com.earnix.webk.script.whatwg_dom.EventInit;
 import com.earnix.webk.script.whatwg_dom.EventListener;
 import com.earnix.webk.script.whatwg_dom.EventTarget;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.experimental.var;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -18,9 +23,12 @@ import java.util.List;
  * 11/12/2018
  */
 @Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 public class EventTargetImpl implements EventTarget {
 
-    private LinkedHashMap<String, List<EventListener>> listeners = new LinkedHashMap<>();
+    LinkedHashMap<String, List<EventListener>> listeners = new LinkedHashMap<>();
+    final ScriptContext context;
     
     @Override
     public void addEventListener(@DOMString String type, EventListener callback, Object options) {
@@ -49,7 +57,8 @@ public class EventTargetImpl implements EventTarget {
 //        log.trace("Dispatched event {} on target {}", event.type(), toString());
         val typeListeners = listeners.get(event.type());
         if (typeListeners != null) {
-            typeListeners.forEach(l -> l.handleEvent(event));
+            log.error("delivering {}" + event);
+            typeListeners.forEach(l -> l.handleEvent(WebIDLAdapter.obtain(context, event)));
             return true;
         }
         return false;

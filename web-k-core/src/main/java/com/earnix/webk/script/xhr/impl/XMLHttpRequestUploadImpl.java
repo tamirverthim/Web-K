@@ -19,13 +19,14 @@ import lombok.experimental.FieldDefaults;
 public class XMLHttpRequestUploadImpl implements XMLHttpRequestUpload {
 
     @Delegate(types = {EventTarget.class})
-    EventTargetImpl eventTargetImpl = new EventTargetImpl();
+    EventTargetImpl eventTargetImpl;
     Level1EventTarget level1EventTarget;
 
     ScriptContext context;
 
     public XMLHttpRequestUploadImpl(ScriptContext context) {
         this.context = context;
+        eventTargetImpl = new EventTargetImpl(context);
         level1EventTarget = new Level1EventTarget(context, this);
     }
 

@@ -269,7 +269,7 @@ public class BrowserActions {
         final JDialog aboutDlg = new JDialog(root.getFrame());
         aboutDlg.setSize(new Dimension(500, 450));
 
-        BrowserUserAgent uac = new BrowserUserAgent();
+        BrowserUserAgent uac = new BrowserUserAgent(getRoot());
         XHTMLPanel panel = new XHTMLPanel(uac);
         uac.setRepaintListener(panel);
         panel.setOpaque(false);

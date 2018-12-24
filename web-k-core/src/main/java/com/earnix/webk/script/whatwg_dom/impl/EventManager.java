@@ -43,7 +43,8 @@ public class EventManager {
             current = current.parentElement();
         } while (current != null);
 
-
+        event.setTarget(target);
+        
 //        event.setTrusted(true);
         event.setPhase(Event.CAPTURING_PHASE);
         event.setComposedPath(new SequenceImpl<>(propagationPath));

@@ -66,7 +66,7 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
     private final ScriptContext context;
     
     @Delegate(types = EventTarget.class)
-    EventTargetImpl eventTarget = new EventTargetImpl();
+    EventTargetImpl eventTarget;
 
     XMLHttpRequestUploadImpl upload;
     
@@ -104,6 +104,7 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
     
     public XMLHttpRequestImpl(ScriptContext scriptContext) {
         this.context = scriptContext;
+        eventTarget = new EventTargetImpl(scriptContext);
         level1EventTarget = new Level1EventTarget(context, this);
     }
 

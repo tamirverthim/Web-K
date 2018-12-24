@@ -51,9 +51,9 @@ public class Level1EventTarget {
         }
 
         @Override
-        public void handleEvent(Event event) {
+        public void handleEvent(WebIDLAdapter<Event> event) {
             if (eventHandler != null) {
-                eventHandler.call(WebIDLAdapter.obtain(Level1EventTarget.this.scriptContext, event));
+                eventHandler.call(event);
             }
         }
     }

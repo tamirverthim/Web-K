@@ -2,6 +2,11 @@
 <head>
     <title>Alerts</title>
     <link rel="stylesheet" type="text/css" href="../rendering/general.css" title="Style" media="screen"/>
+    <style>
+        .green {
+            background-color: #1e880b;
+        }
+    </style>
     <script>
 
         window.onload = function ()
@@ -12,14 +17,20 @@
                 if (step === 0) {
                     let div = document.createElement("div");
                     div.textContent = "Element text content";
-                    document.body.appendChild(div)
+                    document.body.appendChild(div);
+                    button.innerText = "Step 2. Locate element and update styles.";
                 } else if (step === 1) {
                     let div = document.querySelector("div");
                     div.style.padding = "20px";
                     div.style.backgroundColor = "#9f9f9f";
                     div.style.color = "blue";
+                    button.innerText = "Step 3. Modify element class list"
+                } else if (step === 2) {
+                    let div = document.querySelector("div");
+                    div.classList.toggle("green");
+                    button.innerText("Step 4. Remove element.")
                 }
-                button.innerText = "Next step";
+
             }
         }
 
@@ -46,16 +57,24 @@
             div.style.color = "blue";
         </pre>
     </li>
+    <li>Step 3
+        <pre style="padding: 10px">
+            let div = document.querySelector("div");
+            div.style.padding = "20px";
+            div.style.backgroundColor = "#9f9f9f";
+            div.style.color = "blue";
+        </pre>
+    </li>
 </ul>
 
 
-<p class="link left-link"><a href="demo:demos/scripting/interval-timeout.html">Home</a></p>
+<p class="link left-link"><a href="demo:demos/scripting/interval-timeout.html">Previous Page</a></p>
 <p class="link right-link"><a href="demo:demos/scripting/mouse-events.html">Next Page</a></p>
 <!--<button>Show alerts</button>-->
 <!--<div id="lorem"/>-->
 
 
-<button id="actor">Create and append Element</button>
+<button id="actor">Step 1. Create and append element.</button>
 
 </body>
 </html>

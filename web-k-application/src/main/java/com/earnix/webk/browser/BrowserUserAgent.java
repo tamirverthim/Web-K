@@ -53,7 +53,11 @@ public class BrowserUserAgent extends DelegatingUserAgent {
     
     private int index = -1;
     private ArrayList history = new ArrayList();
+    private final WebKApplication context;
 
+    public BrowserUserAgent(WebKApplication context) {
+        this.context = context;
+    }
 
     /**
      * {@inheritDoc}.
@@ -220,6 +224,8 @@ public class BrowserUserAgent extends DelegatingUserAgent {
         index++;
         for (int i = index; i < history.size(); history.remove(i)) ;
         history.add(index, burl);
+
+        context.getPanel().updateButtons();
     }
 
 

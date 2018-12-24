@@ -7,6 +7,7 @@ import com.earnix.webk.script.cssom.impl.CSSStyleDeclarationImpl;
 import com.earnix.webk.script.cssom_view.ScrollToOptions;
 import com.earnix.webk.script.geom.DOMRect;
 import com.earnix.webk.script.geom.DOMRectList;
+import com.earnix.webk.script.geom.impl.DOMRectImpl;
 import com.earnix.webk.script.html.HTMLElement;
 import com.earnix.webk.script.html.canvas.HTMLSlotElement;
 import com.earnix.webk.script.web_idl.Attribute;
@@ -485,7 +486,13 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public DOMRect getBoundingClientRect() {
-        return null;
+        val view = model.getView();
+        val x = view.getX();
+        val y = view.getY();
+        val paddingStyle = view.getPadding(this.scriptContext.getPanel().getLayoutContext());
+        val width = view.getContentWidth() + paddingStyle.left() + paddingStyle.right();
+        val height = view.getHeight() + paddingStyle.top() + paddingStyle.bottom();
+        return new DOMRectImpl(x, y, width, height);
     }
 
     @Override

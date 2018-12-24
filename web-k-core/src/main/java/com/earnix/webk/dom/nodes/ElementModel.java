@@ -13,7 +13,6 @@ import com.earnix.webk.dom.select.NodeVisitor;
 import com.earnix.webk.dom.select.QueryParser;
 import com.earnix.webk.dom.select.Selector;
 import com.earnix.webk.render.Box;
-import lombok.val;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -48,8 +47,7 @@ public class ElementModel extends NodeModel {
     private AttributesModel attributes;
     private String baseUri;
 
-
-    private WeakReference<Box> view;
+    private WeakReference<Box> view = new WeakReference<>(null);
 
     public Box getView() {
         return view.get();

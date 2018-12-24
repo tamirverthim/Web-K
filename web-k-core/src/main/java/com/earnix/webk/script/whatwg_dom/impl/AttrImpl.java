@@ -7,8 +7,6 @@ import com.earnix.webk.script.web_idl.DOMString;
 import com.earnix.webk.script.web_idl.USVString;
 import com.earnix.webk.script.whatwg_dom.Attr;
 import com.earnix.webk.script.whatwg_dom.Document;
-import com.earnix.webk.script.whatwg_dom.Event;
-import com.earnix.webk.script.whatwg_dom.EventListener;
 import com.earnix.webk.script.whatwg_dom.EventTarget;
 import com.earnix.webk.script.whatwg_dom.GetRootNodeOptions;
 import com.earnix.webk.script.whatwg_dom.Node;
@@ -35,7 +33,7 @@ public class AttrImpl implements Attr {
         this.modelNode = modelNode;
         this.model = attribute;
         this.scriptContext = scriptContext;
-        eventTargetImpl = new EventTargetImpl();
+        eventTargetImpl = new EventTargetImpl(scriptContext);
     }
 
     @Override

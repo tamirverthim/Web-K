@@ -110,7 +110,7 @@ public class BrowserPanel extends JPanel implements DocumentListener {
         });
 
 
-        manager = new BrowserUserAgent();
+        manager = new BrowserUserAgent(getBrowserApplication());
         view = new ScalableXHTMLPanel(manager);
         view.setFocusCycleRoot(true);
         manager.setRepaintListener(view);

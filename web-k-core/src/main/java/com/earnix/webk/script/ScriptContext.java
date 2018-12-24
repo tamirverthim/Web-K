@@ -18,7 +18,6 @@ import jdk.nashorn.api.scripting.AbstractJSObject;
 import jdk.nashorn.api.scripting.NashornException;
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
-import jdk.nashorn.api.scripting.URLReader;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
@@ -28,6 +27,7 @@ import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.script.ScriptException;
+import javax.swing.SwingUtilities;
 import java.lang.reflect.InvocationTargetException;
 
 import static javax.script.ScriptContext.ENGINE_SCOPE;
@@ -54,7 +54,8 @@ public class ScriptContext implements DocumentListener {
     private WebIDLAdapter<WindowImpl> windowAdapter;
 
     int documentHash;
-    
+    boolean rendered;
+
     public ScriptContext(BasicPanel panel) {
         this.panel = panel;
         // initializing mouse events translation
@@ -64,42 +65,32 @@ public class ScriptContext implements DocumentListener {
 
     public void dispatchLoadEvents() {
 
-        //Type	load
-        //Interface	UIEvent if generated from a user interface, Event otherwise.
-        //Sync / Async	Async
-        //Bubbles	No
-        //Trusted Targets	Window, Document, Element
-        //Cancelable	No
-        //Default action	None
-        //Context
-        //(trusted events)	
-        //Event.target : common object whose contained resources have loaded
-        //UIEvent.view : Window
-        //UIEvent.detail : 0
+        if (rendered) {
+            //Type	load
+            //Interface	UIEvent if generated from a user interface, Event otherwise.
+            //Sync / Async	Async
+            //Bubbles	No
+            //Trusted Targets	Window, Document, Element
+            //Cancelable	No
+            //Default action	None
+            //Context
+            //(trusted events)	
+            //Event.target : common object whose contained resources have loaded
+            //UIEvent.view : Window
+            //UIEvent.detail : 0
 
-//        document.walkElementsTree(e -> {
-//
-//            Element element = ScriptDOMFactory.getElement(e);
-//            
-//            
-//            val eventInit = new UIEventInit();
-//            eventInit.bubbles = false;
-//            eventInit.cancelable = false;
-//            eventInit.view = window;
-//
-//            val event = new UIEventImpl("load", eventInit);
-//            eventManager.publishEvent(e, event);
-//        });
-        
-        val eventInit = new UIEventInit();
-        eventInit.bubbles = false;
-        eventInit.cancelable = false;
-        eventInit.view = window;
-        eventManager.publishEvent(window, new UIEventImpl("load", eventInit));
-//        eventManager.publishEvent(document, event);
+            val eventInit = new UIEventInit();
+            eventInit.bubbles = false;
+            eventInit.cancelable = false;
+            eventInit.view = window;
+            eventManager.publishEvent(window, new UIEventImpl("load", eventInit));
+        } else {
+            SwingUtilities.invokeLater(this::dispatchLoadEvents);
+        }
     }
     
     private void dispatchUnloadEvents() {
+
         val eventInit = new UIEventInit();
         eventInit.bubbles = false;
         eventInit.cancelable = false;
@@ -134,6 +125,7 @@ public class ScriptContext implements DocumentListener {
     public void documentRendered() {
         // on render all replaced elements are re-created, need to update their listeners
         mouseEventsAdapter.addChildrenListeners();
+        rendered = true;
     }
 
     @Override
@@ -155,56 +147,6 @@ public class ScriptContext implements DocumentListener {
         engine = (NashornScriptEngine) jsFactory.getScriptEngine(options);
         context = engine.getContext();
 
-        try {
-            context.setAttribute("window", engine.eval("this"), ENGINE_SCOPE);
-            context.setAttribute("self", engine.eval("this"), ENGINE_SCOPE);
-        } catch (ScriptException e) {
-            throw new RuntimeException(e);
-        }
-        
-        try {
-            engine.eval(new URLReader(ScriptContext.class.getResource("/symbol-polyfill.js")), context);
-            engine.eval(new URLReader(ScriptContext.class.getResource("/es6-shim.min.js")), context);
-        } catch (ScriptException e) {
-            throw new RuntimeException(e);
-        }
-//        context.setAttribute("document", WebIDLAdapter.obtain(this, new com.earnix.webk.script.html.impl.DocumentImpl(panel)), ENGINE_SCOPE);
-//        context.setAttribute("console", console, ENGINE_SCOPE);
-//        context.setAttribute("setInterval", new Function<>(this, (ctx, args) -> {
-//            val fn = (JSObject) args[0];
-//            double interval = (double) ScriptUtils.convert(args[1], Double.class);
-//
-//            Timer timer = new Timer();
-//            timer.schedule(new TimerTask() {
-//                @Override
-//                public void run() {
-//                    fn.call(ctx);
-//                    panel.relayout();
-//                }
-//            }, 0, (long) interval);
-//            return null;
-//        }, "setInterval"), ENGINE_SCOPE);
-//
-//
-//        context.setAttribute("location", new Location(), ENGINE_SCOPE);
-//
-////        context.setAttribute("HTMLCanvasElement", new Location(), ENGINE_SCOPE);
-//
-//        context.setAttribute("addEventListener", new Function<>(this, (ctx, arg) -> {
-//            log.trace("addEventListener");
-//            return null;
-//        }, "addEventListener"), ENGINE_SCOPE);
-//
-//        context.setAttribute("alert", new Function<>(this, (ctx, arg) -> {
-//            if (arg.length == 0) {
-//                return null;
-//            }
-//            JOptionPane.showMessageDialog(panel, String.valueOf(arg[0]));
-//            return null;
-//        }, "alert"), ENGINE_SCOPE);
-//
-//
-
         expose(CanvasGradientImpl.class);
         expose(CanvasPatternImpl.class);
         expose(XMLHttpRequestImpl.class);
@@ -212,15 +154,37 @@ public class ScriptContext implements DocumentListener {
         window = new WindowImpl(this);
         windowAdapter = WebIDLAdapter.obtain(this, window);
 
+        try {
+            context.setAttribute("window", engine.eval("this"), ENGINE_SCOPE);
+            context.setAttribute("self", engine.eval("this"), ENGINE_SCOPE);
+            context.setAttribute("__win", windowAdapter, ENGINE_SCOPE);
+
+        } catch (ScriptException e) {
+            throw new RuntimeException(e);
+        }
+//        try {
+//            engine.eval("this.window = this;", context);
+//            engine.eval("this.self = this;", context);
+//        } catch (ScriptException e) {
+//            throw new RuntimeException(e);
+//        }
+
         // no way to track attributes write operation on global scope...
         // limitation - to use "window" property
         windowAdapter.keySet().forEach(key -> {
-            context.setAttribute(key, windowAdapter.getMember(key), ENGINE_SCOPE);
+            if (!key.equals("window") && !key.equals("self")) {
+                try {
+                    engine.eval("this." + key + " = " + " __win." + key + ";");
+                    engine.eval("self." + key + " = " + " __win." + key + ";");
+                } catch (ScriptException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         });
 
 //        try {
-        context.setAttribute("window", windowAdapter, ENGINE_SCOPE);
-        context.setAttribute("self", eval("window"), ENGINE_SCOPE);
+//            engine.eval(new URLReader(ScriptContext.class.getResource("/symbol-polyfill.js")), context);
+//            engine.eval(new URLReader(ScriptContext.class.getResource("/es6-shim.min.js")), context);
 //        } catch (ScriptException e) {
 //            throw new RuntimeException(e);
 //        }
@@ -268,6 +232,7 @@ public class ScriptContext implements DocumentListener {
     private void handleNewDocument() {
         val nextDocument = panel.getDocument();
         if (nextDocument != document) {
+            rendered = false;
             if (window != null) {
                 window.clearTasks();
             }
@@ -287,7 +252,6 @@ public class ScriptContext implements DocumentListener {
                 val script = scripts.get(i);
                 if (StringUtils.isNotBlank(script.data())) {
                     try {
-//                                log.trace("Evaluating script {} {}", System.lineSeparator(), script.data());
                         eval(script.data());
                     } catch (Exception e) {
                         log.warn("script.eval", e);
@@ -297,7 +261,6 @@ public class ScriptContext implements DocumentListener {
                     if (StringUtils.isNotBlank(scriptUri)) {
                         try {
                             val scriptText = panel.getSharedContext().getUac().getScriptResource(scriptUri);
-//                                    log.trace("Evaluating script {} {}", System.lineSeparator(), scriptText);
                             eval(scriptText);
                         } catch (RuntimeException e) {
                             log.debug("script.src", e);
@@ -314,30 +277,53 @@ public class ScriptContext implements DocumentListener {
 
     public Object eval(String scr) {
         Object res;
+        storeDocumentHash();
         try {
             res = engine.eval(scr, context);
+//             adding window members to global scope
+            windowAdapter.keySet().forEach(key -> {
+                if (!key.equals("window") && !key.equals("self")) {
+                    try {
+                        if ((Boolean) engine.eval("!!__win." + key)) {
+                            engine.eval("this." + key + " = " + " __win." + key);
+                            engine.eval("self." + key + " = " + " __win." + key);
+                        }
+                    } catch (ScriptException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+            synchronize();
         } catch (ScriptException e) {
             if (e.getCause() instanceof NashornException) {
                 log.error(NashornException.getScriptStackString(e.getCause()));
             }
             throw new RuntimeException(e);
         }
-        panel.reset();
+        handleDocumentHashUpdate();
         return res;
     }
 
-
+    private void synchronize() {
+        try {
+            engine.eval("this.__keys = Object.keys(this); for (let i = 0; i < __keys.length; i++) { if (this[__keys[i]]) this.__win[__keys[i]] = this[__keys[i]]; }");
+        } catch (ScriptException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
     public WindowImpl getWindow() {
         return window;
     }
 
 
     public void storeDocumentHash() {
-        documentHash = document.outerHtml().hashCode();
+        documentHash = document != null ? document.outerHtml().hashCode() : 0;
     }
 
     public void handleDocumentHashUpdate() {
-        if (documentHash != document.outerHtml().hashCode()) {
+        int currentHash = document != null ? document.outerHtml().hashCode() : 0;
+        if (documentHash != currentHash) {
             panel.reset();
         }
     }

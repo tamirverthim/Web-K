@@ -106,7 +106,15 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        Point point =convertCoordinates(e);
+
+        if (context.getPanel().getRootBox() == null) {
+            SwingUtilities.invokeLater(() -> {
+                this.mouseClicked(e);
+            });
+            return;
+        }
+
+        Point point = convertCoordinates(e);
         val box = context.getPanel().find(point.x, point.y);
 
         if (box != null) {
@@ -148,6 +156,14 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
 
     @Override
     public void mousePressed(MouseEvent e) {
+
+        if (context.getPanel().getRootBox() == null) {
+            SwingUtilities.invokeLater(() -> {
+                this.mousePressed(e);
+            });
+            return;
+        }
+        
         pressedMouseButtons.add(e.getButton());
         val point = convertCoordinates(e);
         Box box = panel.find(point.x, point.y);
@@ -159,6 +175,14 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        if (context.getPanel().getRootBox() == null) {
+            SwingUtilities.invokeLater(() -> {
+                this.mouseReleased(e);
+            });
+            return;
+        }
+        
+        
         pressedMouseButtons.remove(e.getButton());
         val point = convertCoordinates(e);
         val box = context.getPanel().find(point.x, point.y);
@@ -176,6 +200,13 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
 
     @Override
     public void mouseExited(MouseEvent e) {
+        if (context.getPanel().getRootBox() == null) {
+            SwingUtilities.invokeLater(() -> {
+                this.mouseExited(e);
+            });
+            return;
+        }
+        
         if (hoveredBox != null) {
             val el = getElement(hoveredBox);
             mouseleave(el, e);
@@ -186,12 +217,26 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        if (context.getPanel().getRootBox() == null) {
+            SwingUtilities.invokeLater(() -> {
+                this.mouseDragged(e);
+            });
+            return;
+        }
+        
         handleMouseMove(e);
         lastAwtMouseEvent = e;
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
+        if (context.getPanel().getRootBox() == null) {
+            SwingUtilities.invokeLater(() -> {
+                this.mouseMoved(e);
+            });
+            return;
+        }
+        
         handleMouseMove(e);
         lastAwtMouseEvent = e;
     }
@@ -299,6 +344,7 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
         init.cancelable = true;
         init.composed = true;
         init.detail = awtEvent.getClickCount();
+
         MouseEventImpl mouseEvent = createMouseEventImpl("click", init, awtEvent);
         eventManager.publishEvent(target, mouseEvent);
     }
