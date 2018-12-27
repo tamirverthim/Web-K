@@ -38,7 +38,7 @@ public class DocumentImpl extends com.earnix.webk.script.whatwg_dom.impl.Documen
     ElementImpl activeElement;
     
     public DocumentImpl(ScriptContext ctx) {
-        super(ctx, ctx.getPanel().getDocument(), ctx.getPanel().getURL().toString());
+        super(ctx, ctx.getPanel().getDocument(), ctx.getPanel().getSharedContext().getUac().getBaseURL());
         location = new LocationImpl(ctx.getPanel());
         document = ctx.getPanel().getDocument();
         this.ctx = ctx;
