@@ -24,11 +24,9 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
         super(scriptContext, target);
         if (!target.hasAttr("width")) {
             target.attr("width", String.valueOf(300));
-            scriptContext.getPanel().relayout();
         }
         if (!target.hasAttr("height")) {
             target.attr("height", String.valueOf(150));
-            scriptContext.getPanel().relayout();
         }
         context = new CanvasRenderingContext2DImpl(this);
     }
@@ -49,7 +47,6 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
             public void set(Integer integer) {
                 getModel().attr("width", String.valueOf(integer));
                 context.resize();
-                scriptContext.getPanel().relayout();
             }
         };
     }
@@ -66,7 +63,6 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
             public void set(Integer integer) {
                 getModel().attr("height", String.valueOf(integer));
                 context.resize();
-                scriptContext.getPanel().relayout();
             }
         };
     }
@@ -76,7 +72,6 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
         super.setAttribute(qualifiedName, value);
         if (qualifiedName.equalsIgnoreCase("width") || qualifiedName.equalsIgnoreCase("height")) {
             context.resize();
-            scriptContext.getPanel().relayout();
         }
     }
 

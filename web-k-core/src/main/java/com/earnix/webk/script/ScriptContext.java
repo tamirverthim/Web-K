@@ -46,8 +46,11 @@ public class ScriptContext implements DocumentListener {
 
     BasicPanel panel;
     DocumentModel document;
+
     @Getter
     EventManager eventManager;
+
+    @Getter
     MouseEventsAdapter mouseEventsAdapter;
 
 
@@ -80,11 +83,13 @@ public class ScriptContext implements DocumentListener {
             //UIEvent.view : Window
             //UIEvent.detail : 0
 
+            storeDocumentHash();
             val eventInit = new UIEventInit();
             eventInit.bubbles = false;
             eventInit.cancelable = false;
             eventInit.view = window;
             eventManager.publishEvent(window, new UIEventImpl("load", eventInit));
+            handleDocumentHashUpdate();
         } else {
             SwingUtilities.invokeLater(this::dispatchLoadEvents);
         }
@@ -99,13 +104,9 @@ public class ScriptContext implements DocumentListener {
         eventManager.publishEvent(window, new UIEventImpl("unload", eventInit));
         
         document.walkElementsTree(e -> {
-            val init = new UIEventInit();
             eventInit.bubbles = false;
             eventInit.cancelable = false;
             eventInit.view = window;
-
-//            eventInit.composed = false;
-//        eventInit.view = getWindow() // todo
 
             val event = new UIEventImpl("unload", eventInit);
             eventManager.publishEvent(e, event);
@@ -273,10 +274,8 @@ public class ScriptContext implements DocumentListener {
 
     public Object eval(String scr) {
         Object res;
-//        storeDocumentHash();
         try {
             res = engine.eval(scr, context);
-//             adding window members to global scope
             windowAdapter.keySet().forEach(key -> {
                 if (!key.equals("window") && !key.equals("self")) {
                     try {
@@ -297,7 +296,6 @@ public class ScriptContext implements DocumentListener {
             }
             throw new RuntimeException(e);
         }
-//        handleDocumentHashUpdate();
         return res;
     }
 
@@ -323,5 +321,9 @@ public class ScriptContext implements DocumentListener {
         if (documentHash != currentHash) {
             panel.reset();
         }
+    }
+
+    public void setRendered(boolean rendered) {
+        this.rendered = rendered;
     }
 }

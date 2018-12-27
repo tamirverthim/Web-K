@@ -1,12 +1,10 @@
 package com.earnix.webk.script.cssom.impl;
 
-import com.earnix.webk.css.constants.CSSName;
 import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.cssom.CSSRule;
 import com.earnix.webk.script.cssom.CSSStyleDeclaration;
 import com.earnix.webk.script.web_idl.Attribute;
-import com.earnix.webk.swing.BasicPanel;
 import com.earnix.webk.util.XRLog;
 import com.helger.css.ECSSVersion;
 import com.helger.css.reader.CSSReaderDeclarationList;
@@ -23,16 +21,18 @@ import java.util.LinkedHashMap;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CSSStyleDeclarationImpl implements CSSStyleDeclaration {
 
+    private final ScriptContext context;
     LinkedHashMap<String, String> map = new LinkedHashMap<>();
     ElementModel model;
 
-    public CSSStyleDeclarationImpl(ElementModel model, ScriptContext panel) {
-        this(model.attr("style"), panel);
+    public CSSStyleDeclarationImpl(ElementModel model, ScriptContext context) {
+        this(model.attr("style"), context);
         this.model = model;
     }
 
     public CSSStyleDeclarationImpl(String css, ScriptContext ctx) {
         setCSSText(css);
+        this.context = ctx;
     }
 
     @Override
@@ -70,11 +70,7 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration {
     public String getPropertyValue(String property) {
         val res = map.get(property);
         if (res == null) {
-            try {
-                return CSSName.initialValue(CSSName.getByPropertyName(property));
-            } catch (NullPointerException e) {
-                return "";
-            }
+            return "";
         } else {
             return res;
         }

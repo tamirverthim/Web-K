@@ -140,6 +140,8 @@ public class RootPanel extends JPanel implements Scrollable, UserInterface, FSCa
     }
 
     public void reset() {
+        scriptContext.setRendered(false);
+        scriptContext.getMouseEventsAdapter().reset();
         setRootBox(null);
 
         //have to do this first

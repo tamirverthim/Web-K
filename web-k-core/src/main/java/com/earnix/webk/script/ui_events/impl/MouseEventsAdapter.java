@@ -86,6 +86,12 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
         });
 
     }
+    
+    public void reset() {
+        hoveredBox = null;
+        lastAwtMouseEvent = null;
+        focusHolderBox = null;
+    }
 
     public void addChildrenListeners() {
         List<JComponent> children = new ArrayList<>();
