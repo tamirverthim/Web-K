@@ -196,7 +196,7 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
         val point = convertCoordinates(e);
         val box = context.getPanel().find(point.x, point.y);
         if (box != null) {
-            mouseup(getElement(hoveredBox), e);
+            mouseup(getElement(box), e);
         }
         
         lastAwtMouseEvent = e;

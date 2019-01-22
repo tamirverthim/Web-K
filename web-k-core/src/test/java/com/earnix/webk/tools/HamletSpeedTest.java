@@ -29,7 +29,7 @@ public class HamletSpeedTest {
         }
         long avg = total / 10;
         log.info("Average : " + avg);
-        assert avg < 3000;
+        assert avg < 5000;
     }
 
 }

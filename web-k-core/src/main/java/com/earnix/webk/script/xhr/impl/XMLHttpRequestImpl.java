@@ -49,6 +49,7 @@ import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutorService;
@@ -401,20 +402,12 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
 
     @Override
     public String responseText() {
-        try {
-            return new String(response, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException(e);
-        }
+        return new String(response, StandardCharsets.UTF_8);
     }
 
     @Override
     public Document responseXML() {
-        try {
-            return new DocumentImpl(context, Jsoup.parse(new String(response, "UTF-8")), requestUrl.toString());
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+        return new DocumentImpl(context, Jsoup.parse(new String(response, StandardCharsets.UTF_8)), requestUrl.toString());
     }
 
 
