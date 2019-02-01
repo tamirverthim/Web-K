@@ -9,6 +9,7 @@ import com.earnix.webk.script.web_idl.DefaultDouble;
 import com.earnix.webk.script.web_idl.DefaultLong;
 import com.earnix.webk.script.web_idl.DefaultNull;
 import com.earnix.webk.script.web_idl.DefaultString;
+import com.earnix.webk.script.web_idl.Dictionary;
 import com.earnix.webk.script.web_idl.Function;
 import com.earnix.webk.script.web_idl.Indexed;
 import com.earnix.webk.script.web_idl.Iterable;
@@ -45,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -130,7 +132,6 @@ public class WebIDLAdapter<T> implements JSObject {
             var callback = callbacks.get(argsCount);
             if (callback == null) {
                 // finding firs with larger args count
-                @SuppressWarnings("ConstantConditions")
                 int approximateCount = callbacks.keySet().stream().filter(i -> i > argsCount).mapToInt(i -> i).min().getAsInt();
                 callback = callbacks.get(approximateCount);
             }
@@ -443,6 +444,12 @@ public class WebIDLAdapter<T> implements JSObject {
         }
     }
 
+    /**
+     * Adapts JavaScript arguments tobe passed to Java implementation methods
+     * @param method java method to be called
+     * @param rawArgs Nashorn JavaScript objects
+     * @return Java objects (convenient method parameters)
+     */
     private Object[] prepareArguments(Method method, Object[] rawArgs) {
         Object[] result = new Object[method.getParameterTypes().length];
         if (log.isDebugEnabled()) {
@@ -637,6 +644,19 @@ public class WebIDLAdapter<T> implements JSObject {
                     }
                 }
 
+            } else if (target.getAnnotation(Dictionary.class) != null && object instanceof ScriptObjectMirror) {
+                try {
+                    val targetImpl = target.newInstance();
+                    val scriptObjectMirror = (ScriptObjectMirror)object;
+                    for (Map.Entry<String, Object> e : scriptObjectMirror.entrySet()) {
+                        val fieldName = e.getKey();
+                        val field = target.getField(fieldName);
+                        field.set(targetImpl, toJavaPresentation(e.getValue(), field.getType()));
+                    }
+                    return targetImpl;
+                } catch (InstantiationException | IllegalAccessException | NoSuchFieldException e) {
+                    throw new RuntimeException(e);
+                }
             } else {
                 try {
                     return ScriptUtils.convert(object, target);

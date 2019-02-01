@@ -43,6 +43,9 @@ public class EventImpl implements Event {
             EventImpl.this.propagationStopped = aBoolean;
         }
     };
+
+    public EventImpl() {
+    }
     
     public EventImpl(String type, EventInit eventInit) {
         constructor(type, eventInit);

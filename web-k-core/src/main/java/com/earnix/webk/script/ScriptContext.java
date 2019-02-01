@@ -9,8 +9,10 @@ import com.earnix.webk.script.html.impl.WindowImpl;
 import com.earnix.webk.script.ui_events.UIEventInit;
 import com.earnix.webk.script.ui_events.impl.MouseEventsAdapter;
 import com.earnix.webk.script.ui_events.impl.UIEventImpl;
+import com.earnix.webk.script.web_idl.Constructor;
 import com.earnix.webk.script.web_idl.Exposed;
 import com.earnix.webk.script.web_idl.impl.WebIDLAdapter;
+import com.earnix.webk.script.whatwg_dom.impl.EventImpl;
 import com.earnix.webk.script.whatwg_dom.impl.EventManager;
 import com.earnix.webk.script.xhr.impl.XMLHttpRequestImpl;
 import com.earnix.webk.swing.BasicPanel;
@@ -41,7 +43,7 @@ import static javax.script.ScriptContext.ENGINE_SCOPE;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ScriptContext implements DocumentListener {
     //    static ScriptContext instance;
-    NashornScriptEngine engine;
+    @Getter NashornScriptEngine engine;
     javax.script.ScriptContext context;
 
     BasicPanel panel;
@@ -152,6 +154,7 @@ public class ScriptContext implements DocumentListener {
         expose(CanvasGradientImpl.class);
         expose(CanvasPatternImpl.class);
         expose(XMLHttpRequestImpl.class);
+        expose(EventImpl.class);
 
         window = new WindowImpl(this);
         windowAdapter = WebIDLAdapter.obtain(this, window);
@@ -207,12 +210,12 @@ public class ScriptContext implements DocumentListener {
                             val adapter = WebIDLAdapter.obtain(ScriptContext.this, target);
                             // todo check here @Constructor annotation
                             FunctionAdapter constructor = (FunctionAdapter) adapter.getMember("constructor");
-                            if (constructor != null) {
+                            if (constructor != null && i.getAnnotation(Constructor.class) != null) {
                                 constructor.call(this, args);
                             }
                             return adapter;
                         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                            throw new RuntimeException();
+                            throw new RuntimeException(e);
                         }
                     }
 
