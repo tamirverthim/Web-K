@@ -197,6 +197,7 @@ Web-K provides current Nashorn ES6 features as `let` and `const` support, and al
 
 The core of analyze and adaptation of WebIDL implementations is done by `com.earnix.webk.script.web_idl.impl.WebIDLAdapter`, so if you need to support new WebILD feature (like annotation), you need to handle it there. It adapts Nashorn JavaScript object API to concrete WebIDL Java implementation classes.
 
+Scripting features logging level can be changed within `web-k-core/src/main/resources/logback.xml`
 
 ## license
 GNU Lesser General Public License v3.0

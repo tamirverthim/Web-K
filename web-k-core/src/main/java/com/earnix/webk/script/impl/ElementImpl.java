@@ -79,12 +79,12 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public Attribute<String> id() {
-        return Attribute.forNode(model, "id");
+        return bindAttribute("id");
     }
 
     @Override
     public Attribute<String> className() {
-        return Attribute.forNode(model, "className");
+        return bindAttribute("className");
     }
 
     @Override
@@ -436,7 +436,17 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
     }
 
     private Attribute<String> bindAttribute(String name) {
-        return Attribute.<String>receive((s) -> model.attr(name, s)).give(() -> model.attr(name));
+        return new Attribute<String>() {
+            @Override
+            public String get() {
+                return model.attr(name);
+            }
+
+            @Override
+            public void set(String s) {
+                model.attr(name, s);
+            }
+        };
     }
 
     @Override

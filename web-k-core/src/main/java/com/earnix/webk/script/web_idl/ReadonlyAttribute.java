@@ -6,6 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Used to mark read-only properties in WebIDL interfaces.
+ * 
  * @author Taras Maslov
  * 6/21/2018
  */

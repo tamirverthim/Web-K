@@ -71,16 +71,22 @@ public class WebIDLAdapter<T> implements JSObject {
     private static final Object UNDEFINED = new Object();
 
     T target;
-    ScriptContext js;
+    ScriptContext scriptContext;
     HashMap<String, Object> members = new HashMap<>();
 
+    /**
+     * Reference on the method annotated with {@link PropertyGetter}
+     */
     Method propertyGetter;
+
+    /**
+     * Reference on the method annotated with {@link PropertySetter}
+     */
     Method propertySetter;
-
-
+    
     private WebIDLAdapter(ScriptContext js, T target) {
         this.target = target;
-        this.js = js;
+        this.scriptContext = js;
         processTarget();
     }
 
@@ -88,16 +94,16 @@ public class WebIDLAdapter<T> implements JSObject {
         return target;
     }
 
-    public static <T> WebIDLAdapter<T> obtain(ScriptContext js, T target) {
+    public static <T> WebIDLAdapter<T> obtain(ScriptContext scriptContext, T target) {
         WebIDLAdapter result = all.get(target);
         if (result == null) {
-            result = new WebIDLAdapter(js, target);
+            result = new WebIDLAdapter(scriptContext, target);
             all.put(target, result);
         }
         return result;
     }
 
-    Object readonlyAttributeMark = new Object();
+    private static final Object READONLY_ATTRIBUTE_MARK = new Object();
 
     @Getter
     @AllArgsConstructor
@@ -131,7 +137,7 @@ public class WebIDLAdapter<T> implements JSObject {
         Function get(Integer argsCount) {
             var callback = callbacks.get(argsCount);
             if (callback == null) {
-                // finding firs with larger args count
+                // finding first with larger args count
                 int approximateCount = callbacks.keySet().stream().filter(i -> i > argsCount).mapToInt(i -> i).min().getAsInt();
                 callback = callbacks.get(approximateCount);
             }
@@ -168,7 +174,7 @@ public class WebIDLAdapter<T> implements JSObject {
 
 
                         if (m.isAnnotationPresent(ReadonlyAttribute.class)) {
-                            members.put(m.getName(), readonlyAttributeMark);
+                            members.put(m.getName(), READONLY_ATTRIBUTE_MARK);
                             return;
                         }
 
@@ -219,13 +225,13 @@ public class WebIDLAdapter<T> implements JSObject {
                                 log.error("Overriding member {} of {}", m.getName(), m.getDeclaringClass().getName());
                             }
                         }
-                        members.put(m.getName(), new FunctionAdapter<>(js, callback, m.getParameterCount(), m.getName()));
+                        members.put(m.getName(), new FunctionAdapter<>(scriptContext, callback, m.getParameterCount(), m.getName()));
                     });
 
 
-            members.put("toString", new FunctionAdapter<>(js, (ctx, arg) -> WebIDLAdapter.this.toString() + " " + target.toString(), 0, "toString"));
+            members.put("toString", new FunctionAdapter<>(scriptContext, (ctx, arg) -> WebIDLAdapter.this.toString() + " " + target.toString(), 0, "toString"));
 
-            members.put("equals", new FunctionAdapter<>(js, (ctx, arg) ->
+            members.put("equals", new FunctionAdapter<>(scriptContext, (ctx, arg) ->
                     WebIDLAdapter.this.equals(arg[0]), 1, "equals"));
 
         } catch (RuntimeException e) {
@@ -243,34 +249,34 @@ public class WebIDLAdapter<T> implements JSObject {
 
     @Override
     public Object newObject(Object... objects) {
-        return WebIDLAdapter.obtain(js, ReflectionHelper.create(target.getClass()));
+        return WebIDLAdapter.obtain(scriptContext, ReflectionHelper.create(target.getClass()));
     }
 
     @Override
     public Object eval(String s) {
-        return js.eval(s);
+        return scriptContext.eval(s);
     }
 
     @Override
-    public Object getMember(String s) {
-        log.trace("Getting member {} of {}", s, target);
+    public Object getMember(String key) {
+        log.trace("Getting member {} of {}", key, target);
         try {
-            val member = members.get(s);
+            val member = members.get(key);
             Object namedItem = null;
 
 
             if (member instanceof WebIDLAdapter.AttributeLink) {
                 return convertToScript((((AttributeLink) member).attribute).get());
-            } else if (readonlyAttributeMark.equals(member)) {
+            } else if (READONLY_ATTRIBUTE_MARK.equals(member)) {
                 
                 try {
-                    return convertToScript(MethodUtils.invokeMethod(target, s));
+                    return convertToScript(MethodUtils.invokeMethod(target, key));
                 } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(e);
                 }
                 
             } else if (target instanceof LegacyUnenumerableNamedProperties) {
-                namedItem = ((LegacyUnenumerableNamedProperties) target).namedItem(s);
+                namedItem = ((LegacyUnenumerableNamedProperties) target).namedItem(key);
             }
 
             // it is NULL if was overriden with null during runtime,
@@ -280,14 +286,14 @@ public class WebIDLAdapter<T> implements JSObject {
             }
 //
             if (member == null && propertyGetter != null) {
-                return convertToScript(ReflectionHelper.relaxedInvoke(target, propertyGetter, s));
+                return convertToScript(ReflectionHelper.relaxedInvoke(target, propertyGetter, key));
             }
 
             // function or custom value set by js runtime
             return member;
 
         } catch (RuntimeException e) {
-            log.error("Error getting member {} of {}", s, target, e);
+            log.error("Error getting member {} of {}", key, target, e);
             return null;
         }
     }
@@ -330,32 +336,37 @@ public class WebIDLAdapter<T> implements JSObject {
     }
 
     @Override
-    public void setMember(String s, Object o) {
-        val member = members.get(s);
+    public void setMember(String key, Object value) {
+        val member = members.get(key);
         if (member instanceof WebIDLAdapter.AttributeLink) {
             try {
                 val att = ((AttributeLink) member).attribute;
-                val unwrapped = toJavaPresentation(o);
+                val unwrapped = toJavaPresentation(value);
                 val adapted = toJavaPresentation(unwrapped, ((AttributeLink) member).attributeClass);
 
                 att.set(adapted);
             } catch (Exception e) {
-                log.error("setMember Attribute {}", s, e);
-//                members.remove(s);
-//                setMember(s, o);
+                log.error("setMember Attribute {}", key, e);
             }
 
         } else if (target instanceof LegacyUnenumerableNamedProperties) {
-            members.put(s, o);
+            members.put(key, value);
         } else if (propertySetter != null) {
             try {
-
-                ReflectionHelper.relaxedInvoke(target, propertySetter, s, o);
+                ReflectionHelper.relaxedInvoke(
+                        target, 
+                        propertySetter, 
+                        key, 
+                        toJavaPresentation(value, propertySetter.getParameterTypes()[1])
+                );
             } catch (IllegalArgumentException e) {
-                members.put(s, o);
+                log.warn("setMember", e);
+                members.put(key, value);
             }
+        } else if (READONLY_ATTRIBUTE_MARK.equals(members.get(key))){
+           log.error("An attempt to change readonly attribute {} of {}", key, target);
         } else {
-            members.put(s, o);
+            members.put(key, value);
         }
         
     }
@@ -422,24 +433,21 @@ public class WebIDLAdapter<T> implements JSObject {
     }
 
 
-    public Object convertToScript(Object source) {
+    private Object convertToScript(Object source) {
 
         if (source instanceof JSObject) {
             return source;
         }
-
-
+        
         if (source == null || ClassUtils.isPrimitiveOrWrapper(source.getClass())) {
             return source;
         }
 
-//        if (res instanceof DOMString || res instanceof USVString) {
-//            return res.toString();
-//        }
-
         if (source.getClass().getPackage().getName().startsWith("com.earnix.webk.script")) {
-            return WebIDLAdapter.obtain(js, source);
+            return WebIDLAdapter.obtain(scriptContext, source);
         } else {
+            // consider throwing IllegalArgExc, because normally we 
+            // should not return custom java classes to script runtime
             return source;
         }
     }
@@ -532,50 +540,6 @@ public class WebIDLAdapter<T> implements JSObject {
 
         return result;
     }
-
-//    Object convertToJava(Class parameterType, Object rawArg) {
-//
-//        Object arg;
-//
-//        // auto DOMString support
-//
-////        if (parameterType.equals(DOMString.class)) {
-////            if (rawArg instanceof String) {
-////                arg = DOMStringImpl.of((String) rawArg);
-////            } else {
-////                arg = rawArg.toString();
-////            }
-////        } else if (parameterType.equals(USVString.class)) {
-////            if (rawArg instanceof String) {
-////                arg = USVStringImpl.of((String) rawArg);
-////            } else {
-////                arg = rawArg.toString();
-////            }
-////        } else 
-//            
-//        if (parameterType.equals(Sequence.class) && rawArg instanceof NativeArray) {
-//            val sequenceComponentType = getTypeOfInterfaceGeneric(parameterType);
-//            val array = (NativeArray) rawArg;
-//            val objectsArray = array.asObjectArray();
-//            arg = new SequenceImpl<>(Stream.of(objectsArray).map(obj -> toJavaPresentation(obj, (Class)sequenceComponentType)).collect(Collectors.toList()));
-//        } else if (parameterType.equals(Sequence.class) && rawArg instanceof ScriptObjectMirror) {
-//            val sequenceComponentType = getTypeOfInterfaceGeneric(parameterType);
-//            val mirror = (ScriptObjectMirror) rawArg;
-//            
-//            val objects = new ArrayList<>();
-//            for (int i = 0; i < mirror.size(); i++) {
-//                objects.add(toJavaPresentation(mirror.getSlot(i), sequenceComponentType));
-//            }
-//            
-//            arg = new SequenceImpl<>(Stream.of(objects).map(obj -> toJavaPresentation(obj, sequenceComponentType), sequenceComponentType)).collect(Collectors.toList()));
-//        } else {
-//            arg = rawArg;
-//        }
-//
-//        // other special conversion should be here
-//        return arg;
-//    }
-
 
     private Object toJavaPresentation(Object object) {
         return toJavaPresentation(object, null, null);

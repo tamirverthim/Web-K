@@ -31,7 +31,11 @@ public class ReflectionHelper {
         return result;
     }
 
-
+    /**
+     * Invokes given method replacing its last missing arguments with null's.
+     *
+     * @see Method#invoke(Object, Object...)
+     */
     public static Object relaxedInvoke(Object target, Method method, Object... args) {
         args = addNullsToMatchLength(method.getParameterCount(), args);
         try {

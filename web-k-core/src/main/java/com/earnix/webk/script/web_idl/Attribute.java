@@ -1,11 +1,12 @@
 package com.earnix.webk.script.web_idl;
 
-import com.earnix.webk.dom.nodes.NodeModel;
-
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
+ * Responsible for defining writable and readable properties in WebIDL interface.
+ * Should be used as return value of Java interface method with name matching WebIDL property name.
+ *
  * @author Taras Maslov
  * 6/1/2018
  */
@@ -14,29 +15,11 @@ public interface Attribute<T> {
 
     void set(T t);
 
+    /**
+     * Todo remove and refactor to simple instantiation of {@link Attribute}
+     */
     static <T> AtBuilder<T> receive(Consumer<T> consumer) {
         return new AtBuilder<T>(consumer);
-    }
-
-    static <T> AtBuilder<T> readOnly() {
-        return new AtBuilder<T>(null);
-    }
-
-    static <T> Attribute<T> readOnly(T value) {
-        return new Attribute<T>() {
-            @Override
-            public T get() {
-                return value;
-            }
-
-            @Override
-            public void set(T t) {
-            }
-        };
-    }
-
-    static Attribute<String> forNode(NodeModel node, String attributeName) {
-        return Attribute.<String>receive((domString) -> node.attr(attributeName)).give(() -> node.attr(attributeName));
     }
 
     class AtBuilder<T> {

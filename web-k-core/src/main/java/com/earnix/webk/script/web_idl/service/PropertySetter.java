@@ -6,6 +6,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Marker for WebIDL interface method to make it default handler of JavaScript object property setting operation.
+ * Target method will be called with property name and passed argument when JS object's property is set to that argument.
+ *
  * @author Taras Maslov
  * 12/17/2018
  */
