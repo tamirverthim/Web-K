@@ -1,6 +1,7 @@
 package com.earnix.webk.dom.parser;
 
-import com.earnix.webk.dom.nodes.DocumentTypeModel;
+
+import com.earnix.webk.script.whatwg_dom.impl.DocumentTypeImpl;
 
 /**
  * States and transition activations for the Tokeniser.
@@ -1204,11 +1205,11 @@ enum TokeniserState {
             else if (r.matches('>')) {
                 t.emitDoctypePending();
                 t.advanceTransition(Data);
-            } else if (r.matchConsumeIgnoreCase(DocumentTypeModel.PUBLIC_KEY)) {
-                t.doctypePending.pubSysKey = DocumentTypeModel.PUBLIC_KEY;
+            } else if (r.matchConsumeIgnoreCase(DocumentTypeImpl.PUBLIC_KEY)) {
+                t.doctypePending.pubSysKey = DocumentTypeImpl.PUBLIC_KEY;
                 t.transition(AfterDoctypePublicKeyword);
-            } else if (r.matchConsumeIgnoreCase(DocumentTypeModel.SYSTEM_KEY)) {
-                t.doctypePending.pubSysKey = DocumentTypeModel.SYSTEM_KEY;
+            } else if (r.matchConsumeIgnoreCase(DocumentTypeImpl.SYSTEM_KEY)) {
+                t.doctypePending.pubSysKey = DocumentTypeImpl.SYSTEM_KEY;
                 t.transition(AfterDoctypeSystemKeyword);
             } else {
                 t.error(this);

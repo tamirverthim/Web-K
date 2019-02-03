@@ -3,14 +3,14 @@ package com.earnix.webk.dom.helper;
 import com.earnix.webk.dom.internal.StringUtil;
 import com.earnix.webk.dom.nodes.AttributeModel;
 import com.earnix.webk.dom.nodes.AttributesModel;
-import com.earnix.webk.dom.nodes.CommentModel;
-import com.earnix.webk.dom.nodes.DataNodeModel;
-import com.earnix.webk.dom.nodes.DocumentModel;
-import com.earnix.webk.dom.nodes.ElementModel;
-import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.dom.nodes.TextNodeModel;
+import com.earnix.webk.dom.nodes.DataImpl;
 import com.earnix.webk.dom.select.NodeTraversor;
 import com.earnix.webk.dom.select.NodeVisitor;
+import com.earnix.webk.script.impl.CommentImpl;
+import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.script.impl.NodeImpl;
+import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.whatwg_dom.impl.TextImpl;
 import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Stack;
 
 /**
- * Helper class to transform a {@link DocumentModel} to a {@link org.w3c.dom.Document org.w3c.dom.Document},
+ * Helper class to transform a {@link DocumentImpl} to a {@link org.w3c.dom.Document org.w3c.dom.Document},
  * for integration with toolsets that use the W3C DOM.
  */
 public class W3CDom {
@@ -41,7 +41,7 @@ public class W3CDom {
      * @param in jsoup doc
      * @return w3c doc
      */
-    public Document fromJsoup(DocumentModel in) {
+    public Document fromJsoup(DocumentImpl in) {
         Validate.notNull(in);
         DocumentBuilder builder;
         try {
@@ -62,13 +62,13 @@ public class W3CDom {
      *
      * @param in  jsoup doc
      * @param out w3c doc
-     * @see com.earnix.webk.dom.helper.W3CDom#fromJsoup(DocumentModel)
+     * @see com.earnix.webk.dom.helper.W3CDom#fromJsoup(DocumentImpl)
      */
-    public void convert(DocumentModel in, Document out) {
-        if (!StringUtil.isBlank(in.location()))
-            out.setDocumentURI(in.location());
+    public void convert(DocumentImpl in, Document out) {
+        if (!StringUtil.isBlank(in.getLocation()))
+            out.setDocumentURI(in.getLocation());
 
-        ElementModel rootEl = in.child(0); // skip the #root node
+        ElementImpl rootEl = in.child(0); // skip the #root node
         NodeTraversor.traverse(new W3CBuilder(out), rootEl);
     }
 
@@ -88,10 +88,10 @@ public class W3CDom {
             this.namespacesStack.push(new HashMap<String, String>());
         }
 
-        public void head(NodeModel source, int depth) {
+        public void head(NodeImpl source, int depth) {
             namespacesStack.push(new HashMap<>(namespacesStack.peek())); // inherit from above on the stack
-            if (source instanceof ElementModel) {
-                ElementModel sourceEl = (ElementModel) source;
+            if (source instanceof ElementImpl) {
+                ElementImpl sourceEl = (ElementImpl) source;
 
                 String prefix = updateNamespaces(sourceEl);
                 String namespace = namespacesStack.peek().get(prefix);
@@ -107,16 +107,16 @@ public class W3CDom {
                     dest.appendChild(el);
                 }
                 dest = el; // descend
-            } else if (source instanceof TextNodeModel) {
-                TextNodeModel sourceText = (TextNodeModel) source;
+            } else if (source instanceof TextImpl) {
+                TextImpl sourceText = (TextImpl) source;
                 Text text = doc.createTextNode(sourceText.getWholeText());
                 dest.appendChild(text);
-            } else if (source instanceof CommentModel) {
-                CommentModel sourceComment = (CommentModel) source;
+            } else if (source instanceof CommentImpl) {
+                CommentImpl sourceComment = (CommentImpl) source;
                 Comment comment = doc.createComment(sourceComment.getData());
                 dest.appendChild(comment);
-            } else if (source instanceof DataNodeModel) {
-                DataNodeModel sourceData = (DataNodeModel) source;
+            } else if (source instanceof DataImpl) {
+                DataImpl sourceData = (DataImpl) source;
                 Text node = doc.createTextNode(sourceData.getWholeData());
                 dest.appendChild(node);
             } else {
@@ -124,15 +124,15 @@ public class W3CDom {
             }
         }
 
-        public void tail(NodeModel source, int depth) {
-            if (source instanceof ElementModel && dest.getParentNode() instanceof Element) {
+        public void tail(NodeImpl source, int depth) {
+            if (source instanceof ElementImpl && dest.getParentNode() instanceof Element) {
                 dest = (Element) dest.getParentNode(); // undescend. cromulent.
             }
             namespacesStack.pop();
         }
 
-        private void copyAttributes(NodeModel source, Element el) {
-            for (AttributeModel attribute : source.attributes()) {
+        private void copyAttributes(NodeImpl source, Element el) {
+            for (AttributeModel attribute : source.getAttributes()) {
                 // valid xml attribute names are: ^[a-zA-Z_:][-a-zA-Z0-9_:.]
                 String key = attribute.getKey().replaceAll("[^-a-zA-Z0-9_:.]", "");
                 if (key.matches("[a-zA-Z_:][-a-zA-Z0-9_:.]*"))
@@ -143,10 +143,10 @@ public class W3CDom {
         /**
          * Finds any namespaces defined in this element. Returns any tag prefix.
          */
-        private String updateNamespaces(ElementModel el) {
+        private String updateNamespaces(ElementImpl el) {
             // scan the element for namespace declarations
             // like: xmlns="blah" or xmlns:prefix="blah"
-            AttributesModel attributes = el.attributes();
+            AttributesModel attributes = el.getAttributes();
             for (AttributeModel attr : attributes) {
                 String key = attr.getKey();
                 String prefix;

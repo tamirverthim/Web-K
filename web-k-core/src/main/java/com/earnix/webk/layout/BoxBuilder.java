@@ -34,10 +34,6 @@ import com.earnix.webk.css.sheet.StylesheetInfo;
 import com.earnix.webk.css.style.CalculatedStyle;
 import com.earnix.webk.css.style.EmptyStyle;
 import com.earnix.webk.css.style.FSDerivedValue;
-import com.earnix.webk.dom.nodes.DocumentModel;
-import com.earnix.webk.dom.nodes.ElementModel;
-import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.newtable.TableBox;
 import com.earnix.webk.newtable.TableCellBox;
 import com.earnix.webk.newtable.TableColumn;
@@ -48,6 +44,10 @@ import com.earnix.webk.render.BlockBox;
 import com.earnix.webk.render.Box;
 import com.earnix.webk.render.FloatedBoxData;
 import com.earnix.webk.render.InlineBox;
+import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.script.impl.NodeImpl;
+import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.whatwg_dom.impl.TextImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;
 import org.w3c.dom.css.CSSPrimitiveValue;
@@ -81,8 +81,8 @@ public class BoxBuilder {
     private static final int CONTENT_LIST_DOCUMENT = 1;
     private static final int CONTENT_LIST_MARGIN_BOX = 2;
 
-    public static BlockBox createRootBox(LayoutContext c, DocumentModel document) {
-        ElementModel root = document.child(0); // "html" element
+    public static BlockBox createRootBox(LayoutContext c, DocumentImpl document) {
+        ElementImpl root = document.child(0); // "html" element
 
         CalculatedStyle style = c.getSharedContext().getStyle(root);
 
@@ -141,7 +141,7 @@ public class BoxBuilder {
             return null;
         }
 
-        ElementModel source = c.getRootLayer().getMaster().getElement(); // HACK
+        ElementImpl source = c.getRootLayer().getMaster().getElement(); // HACK
 
         ChildBoxInfo info = new ChildBoxInfo();
         CalculatedStyle pageStyle = new EmptyStyle().deriveStyle(pageInfo.getPageStyle());
@@ -385,7 +385,7 @@ public class BoxBuilder {
             Styleable styleable = (Styleable) i.next();
             if (styleable instanceof InlineBox) {
                 InlineBox iB = (InlineBox) styleable;
-                ElementModel elem = iB.getElement();
+                ElementImpl elem = iB.getElement();
 
                 if (!boxesByElement.containsKey(elem)) {
                     iB.setStartsHere(true);
@@ -783,13 +783,13 @@ public class BoxBuilder {
         }
     }
 
-    private static String getAttributeValue(FSFunction attrFunc, ElementModel e) {
+    private static String getAttributeValue(FSFunction attrFunc, ElementImpl e) {
         PropertyValue value = (PropertyValue) attrFunc.getParameters().get(0);
         return e.attr(value.getStringValue());
     }
 
     private static List createGeneratedContentList(
-            LayoutContext c, ElementModel element, PropertyValue propValue,
+            LayoutContext c, ElementImpl element, PropertyValue propValue,
             String peName, CalculatedStyle style, int mode, ChildBoxInfo info) {
         List values = propValue.getValues();
 
@@ -896,7 +896,7 @@ public class BoxBuilder {
     }
 
     private static void insertGeneratedContent(
-            LayoutContext c, ElementModel element, CalculatedStyle parentStyle,
+            LayoutContext c, ElementImpl element, CalculatedStyle parentStyle,
             String peName, List children, ChildBoxInfo info) {
         CascadedStyle peStyle = c.getCss().getPseudoElementStyle(element, peName);
         if (peStyle != null) {
@@ -933,7 +933,7 @@ public class BoxBuilder {
     }
 
     private static List createGeneratedContent(
-            LayoutContext c, ElementModel element, String peName,
+            LayoutContext c, ElementImpl element, String peName,
             CalculatedStyle style, PropertyValue property, ChildBoxInfo info) {
         if (style.isDisplayNone() || style.isIdent(CSSName.DISPLAY, IdentValue.TABLE_COLUMN)
                 || style.isIdent(CSSName.DISPLAY, IdentValue.TABLE_COLUMN_GROUP)) {
@@ -975,7 +975,7 @@ public class BoxBuilder {
     }
 
     private static List createGeneratedMarginBoxContent(
-            LayoutContext c, ElementModel element, PropertyValue property,
+            LayoutContext c, ElementImpl element, PropertyValue property,
             CalculatedStyle style, ChildBoxInfo info) {
         List result = createGeneratedContentList(
                 c, element, property, null, style, CONTENT_LIST_MARGIN_BOX, info);
@@ -1029,11 +1029,11 @@ public class BoxBuilder {
     private static void addColumns(LayoutContext c, TableBox table, TableColumn parent) {
         SharedContext sharedContext = c.getSharedContext();
 
-        NodeModel working = parent.getElement().childNodeSize() > 0 ? parent.getElement().childNode(0) : null;
+        NodeImpl working = parent.getElement().childNodeSize() > 0 ? parent.getElement().childNode(0) : null;
         boolean found = false;
         while (working != null) {
-            if (working instanceof ElementModel) {
-                ElementModel element = (ElementModel) working;
+            if (working instanceof ElementImpl) {
+                ElementImpl element = (ElementImpl) working;
                 CalculatedStyle style = sharedContext.getStyle(element);
 
                 if (style.isIdent(CSSName.DISPLAY, IdentValue.TABLE_COLUMN)) {
@@ -1051,7 +1051,7 @@ public class BoxBuilder {
     }
 
     private static void addColumnOrColumnGroup(
-            LayoutContext c, TableBox table, ElementModel e, CalculatedStyle style) {
+            LayoutContext c, TableBox table, ElementImpl e, CalculatedStyle style) {
         if (style.isIdent(CSSName.DISPLAY, IdentValue.TABLE_COLUMN)) {
             table.addStyleColumn(new TableColumn(e, style));
         } else { /* style.isIdent(CSSName.DISPLAY, IdentValue.TABLE_COLUMN_GROUP) */
@@ -1060,7 +1060,7 @@ public class BoxBuilder {
     }
 
     private static InlineBox createInlineBox(
-            String text, ElementModel parent, CalculatedStyle parentStyle, TextNodeModel node) {
+            String text, ElementImpl parent, CalculatedStyle parentStyle, TextImpl node) {
         InlineBox result = new InlineBox(text, node);
 
         if (parentStyle.isInline() && !(parent.parentNode() instanceof Document)) {
@@ -1076,7 +1076,7 @@ public class BoxBuilder {
     }
 
     private static void createChildren(
-            LayoutContext c, BlockBox blockParent, ElementModel parent,
+            LayoutContext c, BlockBox blockParent, ElementImpl parent,
             List children, ChildBoxInfo info, boolean inline) {
         SharedContext sharedContext = c.getSharedContext();
 
@@ -1084,7 +1084,7 @@ public class BoxBuilder {
 
         insertGeneratedContent(c, parent, parentStyle, "before", children, info);
 
-        NodeModel working = parent.childNodeSize() > 0 ? parent.childNode(0) : null;
+        NodeImpl working = parent.childNodeSize() > 0 ? parent.childNode(0) : null;
         boolean needStartText = inline;
         boolean needEndText = inline;
         if (working != null) {
@@ -1092,8 +1092,8 @@ public class BoxBuilder {
             do {
                 Styleable child = null;
 //                short nodeType = working.getNodeType();
-                if (working instanceof ElementModel) {
-                    ElementModel element = (ElementModel) working;
+                if (working instanceof ElementImpl) {
+                    ElementImpl element = (ElementImpl) working;
                     CalculatedStyle style = sharedContext.getStyle(element);
 
                     if (style.isDisplayNone()) {
@@ -1183,11 +1183,11 @@ public class BoxBuilder {
                         //I think we need to do this to evaluate counters correctly
                         block.ensureChildren(c);
                     }
-                } else if (working instanceof TextNodeModel) {
+                } else if (working instanceof TextImpl) {
                     needStartText = false;
                     needEndText = false;
 
-                    TextNodeModel textNode = (TextNodeModel) working;
+                    TextImpl textNode = (TextImpl) working;
 
                     /*
                     StringBuffer text = new StringBuffer(textNode.getData());

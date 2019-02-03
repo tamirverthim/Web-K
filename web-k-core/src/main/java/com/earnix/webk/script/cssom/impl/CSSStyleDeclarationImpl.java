@@ -1,9 +1,9 @@
 package com.earnix.webk.script.cssom.impl;
 
-import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.cssom.CSSRule;
 import com.earnix.webk.script.cssom.CSSStyleDeclaration;
+import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.web_idl.Attribute;
 import com.earnix.webk.util.XRLog;
 import com.helger.css.ECSSVersion;
@@ -23,9 +23,9 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration {
 
     private final ScriptContext context;
     LinkedHashMap<String, String> map = new LinkedHashMap<>();
-    ElementModel model;
+    ElementImpl model;
 
-    public CSSStyleDeclarationImpl(ElementModel model, ScriptContext context) {
+    public CSSStyleDeclarationImpl(ElementImpl model, ScriptContext context) {
         this(model.attr("style"), context);
         this.model = model;
     }

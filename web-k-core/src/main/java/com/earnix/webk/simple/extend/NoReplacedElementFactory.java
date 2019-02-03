@@ -1,11 +1,11 @@
 package com.earnix.webk.simple.extend;
 
-import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.extend.ReplacedElement;
 import com.earnix.webk.extend.ReplacedElementFactory;
 import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
+import com.earnix.webk.script.impl.ElementImpl;
 
 public class NoReplacedElementFactory implements ReplacedElementFactory {
 
@@ -14,7 +14,7 @@ public class NoReplacedElementFactory implements ReplacedElementFactory {
         return null;
     }
 
-    public void remove(ElementModel e) {
+    public void remove(ElementImpl e) {
 
     }
 

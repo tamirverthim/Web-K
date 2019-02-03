@@ -20,10 +20,10 @@ import java.util.stream.Collectors;
 public class DOMTokenListImpl implements DOMTokenList {
 
     private final Consumer<Collection<String>> onChange;
-    private List<String> data = new ArrayList<>();
+    private final List<String> data;
 
     public DOMTokenListImpl(Collection<String> strings, Consumer<Collection<String>> onChange) {
-        this.data = strings.stream().collect(Collectors.toList());
+        this.data = new ArrayList<>(strings);
         this.onChange = onChange;
     }
 

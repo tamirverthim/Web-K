@@ -24,9 +24,6 @@ import com.earnix.webk.context.StyleReference;
 import com.earnix.webk.css.style.CalculatedStyle;
 import com.earnix.webk.css.style.EmptyStyle;
 import com.earnix.webk.css.value.FontSpecification;
-import com.earnix.webk.dom.nodes.DocumentModel;
-import com.earnix.webk.dom.nodes.ElementModel;
-import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.extend.FontContext;
 import com.earnix.webk.extend.FontResolver;
 import com.earnix.webk.extend.NamespaceHandler;
@@ -39,6 +36,9 @@ import com.earnix.webk.render.Box;
 import com.earnix.webk.render.FSFont;
 import com.earnix.webk.render.FSFontMetrics;
 import com.earnix.webk.render.RenderingContext;
+import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.script.impl.NodeImpl;
+import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
 import com.earnix.webk.simple.extend.FormSubmissionListener;
 import com.earnix.webk.simple.extend.form.DefaultFormFieldFactory;
 import com.earnix.webk.simple.extend.form.FormFieldFactory;
@@ -92,7 +92,7 @@ public class SharedContext {
 
     int dotsPerPixel = 1;
 
-    Map<ElementModel, CalculatedStyle> styleMap;
+    Map<ElementImpl, CalculatedStyle> styleMap;
 
     ReplacedElementFactory replacedElementFactory;
 
@@ -498,11 +498,11 @@ public class SharedContext {
         this.dotsPerPixel = pixelsPerDot;
     }
 
-    public CalculatedStyle getStyle(ElementModel e) {
+    public CalculatedStyle getStyle(ElementImpl e) {
         return getStyle(e, false);
     }
 
-    public CalculatedStyle getStyle(ElementModel e, boolean restyle) {
+    public CalculatedStyle getStyle(ElementImpl e, boolean restyle) {
         if (styleMap == null) {
             styleMap = new HashMap<>(1024, 0.75f);
         }
@@ -512,12 +512,12 @@ public class SharedContext {
             result = (CalculatedStyle) styleMap.get(e);
         }
         if (result == null) {
-            NodeModel parent = e.parentNode();
+            NodeImpl parent = e.parentNode();
             CalculatedStyle parentCalculatedStyle;
-            if (parent instanceof DocumentModel) {
+            if (parent instanceof DocumentImpl) {
                 parentCalculatedStyle = new EmptyStyle();
             } else {
-                parentCalculatedStyle = getStyle((ElementModel) parent, false);
+                parentCalculatedStyle = getStyle((ElementImpl) parent, false);
             }
 
             result = parentCalculatedStyle.deriveStyle(getCss().getCascadedStyle(e, restyle));
@@ -549,7 +549,7 @@ public class SharedContext {
         this.replacedElementFactory = ref;
     }
 
-    public void removeElementReferences(ElementModel e) {
+    public void removeElementReferences(ElementImpl e) {
         String id = namespaceHandler.getID(e);
         if (id != null && id.length() > 0) {
             removeBoxId(id);
@@ -563,11 +563,11 @@ public class SharedContext {
         getReplacedElementFactory().remove(e);
 
         if (e.childNodeSize() > 0) {
-            List<NodeModel> children = e.childNodes();
+            List<NodeImpl> children = e.getChildNodes();
             for (int i = 0; i < children.size(); i++) {
-                NodeModel child = children.get(i);
-                if (child instanceof ElementModel) {
-                    removeElementReferences((ElementModel) child);
+                NodeImpl child = children.get(i);
+                if (child instanceof ElementImpl) {
+                    removeElementReferences((ElementImpl) child);
                 }
             }
         }

@@ -8,7 +8,6 @@ import com.earnix.webk.script.ui_events.FocusEventInit;
 import com.earnix.webk.script.ui_events.MouseEventInit;
 import com.earnix.webk.script.whatwg_dom.Element;
 import com.earnix.webk.script.whatwg_dom.impl.EventManager;
-import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
 import com.earnix.webk.swing.BasicPanel;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -127,7 +126,7 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
         val box = context.getPanel().find(point.x, point.y);
 
         if (box != null) {
-            Element element = ScriptDOMFactory.getElement(context, box.getElement());
+            Element element =  box.getElement();
 
             if (SwingUtilities.isLeftMouseButton(e)) {
                 click(element, e);
@@ -143,7 +142,7 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
             if (box != focusHolderBox) {
                 Element loser = null;
                 if (focusHolderBox != null) {
-                    loser = ScriptDOMFactory.getElement(context, box.getElement());
+                    loser =  box.getElement();
                 }
 
                 focusIn(element, loser);
@@ -177,7 +176,7 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
         val point = convertCoordinates(e);
         Box box = panel.find(point.x, point.y);
         if (box != null) {
-            Element element = ScriptDOMFactory.getElement(context, box.getElement());
+            Element element = box.getElement();
             mousedown(element, e);
         }
     }
@@ -525,6 +524,6 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
         if (box == null) {
             return null;
         }
-        return ScriptDOMFactory.getElement(context, box.getElement());
+        return  box.getElement();
     }
 }

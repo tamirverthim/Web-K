@@ -1,8 +1,8 @@
 package com.earnix.webk.dom.select;
 
 import com.earnix.webk.dom.helper.Validate;
-import com.earnix.webk.dom.nodes.ElementModel;
-import com.earnix.webk.dom.nodes.NodeModel;
+import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.script.impl.NodeImpl;
 
 /**
  * Depth-first node traversor. Use to iterate through all nodes under and including the specified root node.
@@ -29,7 +29,7 @@ public class NodeTraversor {
      * @param root the root node point to traverse.
      * @deprecated Just use the static {@link NodeTraversor#filter(NodeFilter, NodeModel)} method.
      */
-    public void traverse(NodeModel root) {
+    public void traverse(NodeImpl root) {
         traverse(visitor, root);
     }
 
@@ -39,8 +39,8 @@ public class NodeTraversor {
      * @param visitor Node visitor.
      * @param root    the root node point to traverse.
      */
-    public static void traverse(NodeVisitor visitor, NodeModel root) {
-        NodeModel node = root;
+    public static void traverse(NodeVisitor visitor, NodeImpl root) {
+        NodeImpl node = root;
         int depth = 0;
 
         while (node != null) {
@@ -71,7 +71,7 @@ public class NodeTraversor {
     public static void traverse(NodeVisitor visitor, Elements elements) {
         Validate.notNull(visitor);
         Validate.notNull(elements);
-        for (ElementModel el : elements)
+        for (ElementImpl el : elements)
             traverse(visitor, el);
     }
 
@@ -82,8 +82,8 @@ public class NodeTraversor {
      * @param root   the root node point to traverse.
      * @return The filter result of the root node, or {@link NodeFilter.FilterResult#STOP}.
      */
-    public static NodeFilter.FilterResult filter(NodeFilter filter, NodeModel root) {
-        NodeModel node = root;
+    public static NodeFilter.FilterResult filter(NodeFilter filter, NodeImpl root) {
+        NodeImpl node = root;
         int depth = 0;
 
         while (node != null) {
@@ -104,7 +104,7 @@ public class NodeTraversor {
                     if (result == NodeFilter.FilterResult.STOP)
                         return result;
                 }
-                NodeModel prev = node; // In case we need to remove it below.
+                NodeImpl prev = node; // In case we need to remove it below.
                 node = node.parentNode();
                 depth--;
                 if (result == NodeFilter.FilterResult.REMOVE)
@@ -119,7 +119,7 @@ public class NodeTraversor {
             }
             if (node == root)
                 return result;
-            NodeModel prev = node; // In case we need to remove it below.
+            NodeImpl prev = node; // In case we need to remove it below.
             node = node.nextSibling();
             if (result == NodeFilter.FilterResult.REMOVE)
                 prev.remove(); // Remove AFTER finding sibling.
@@ -137,7 +137,7 @@ public class NodeTraversor {
     public static void filter(NodeFilter filter, Elements elements) {
         Validate.notNull(filter);
         Validate.notNull(elements);
-        for (ElementModel el : elements)
+        for (ElementImpl el : elements)
             if (filter(filter, el) == NodeFilter.FilterResult.STOP)
                 break;
     }

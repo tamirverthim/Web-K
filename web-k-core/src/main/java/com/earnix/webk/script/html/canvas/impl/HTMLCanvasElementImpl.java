@@ -1,6 +1,5 @@
 package com.earnix.webk.script.html.canvas.impl;
 
-import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.html.canvas.BlobCallback;
 import com.earnix.webk.script.html.canvas.HTMLCanvasElement;
@@ -19,14 +18,17 @@ import com.earnix.webk.util.GeneralUtil;
 public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElement {
     
     private final CanvasRenderingContext2DImpl context;
+    private final ScriptContext scriptContext;
 
-    public HTMLCanvasElementImpl(ScriptContext scriptContext, ElementModel target) {
-        super(scriptContext, target);
-        if (!target.hasAttr("width")) {
-            target.attr("width", String.valueOf(300));
+    public HTMLCanvasElementImpl(ScriptContext scriptContext) {
+        super();
+        this.scriptContext = scriptContext;
+        
+        if (!hasAttr("width")) {
+            attr("width", String.valueOf(300));
         }
-        if (!target.hasAttr("height")) {
-            target.attr("height", String.valueOf(150));
+        if (!hasAttr("height")) {
+            attr("height", String.valueOf(150));
         }
         context = new CanvasRenderingContext2DImpl(this);
     }
@@ -40,12 +42,12 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
         return new Attribute<Integer>() {
             @Override
             public Integer get() {
-                return GeneralUtil.parseIntRelaxed(getModel().attr("width"));
+                return GeneralUtil.parseIntRelaxed(attr("width"));
             }
 
             @Override
             public void set(Integer integer) {
-                getModel().attr("width", String.valueOf(integer));
+                attr("width", String.valueOf(integer));
                 context.resize();
             }
         };
@@ -56,12 +58,12 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
         return new Attribute<Integer>() {
             @Override
             public Integer get() {
-                return GeneralUtil.parseIntRelaxed(getModel().attr("height"));
+                return GeneralUtil.parseIntRelaxed(attr("height"));
             }
 
             @Override
             public void set(Integer integer) {
-                getModel().attr("height", String.valueOf(integer));
+                attr("height", String.valueOf(integer));
                 context.resize();
             }
         };

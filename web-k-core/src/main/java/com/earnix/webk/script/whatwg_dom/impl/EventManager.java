@@ -1,7 +1,7 @@
 package com.earnix.webk.script.whatwg_dom.impl;
 
-import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.script.ScriptContext;
+import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.web_idl.impl.SequenceImpl;
 import com.earnix.webk.script.whatwg_dom.Element;
 import com.earnix.webk.script.whatwg_dom.Event;
@@ -27,7 +27,7 @@ public class EventManager {
 
     ScriptContext scriptContext;
 
-    public void publishEvent(ElementModel elementModel, EventImpl event) {
+    public void publishEvent(ElementImpl elementModel, EventImpl event) {
         publishEvent(ScriptDOMFactory.getElement(scriptContext, elementModel), event);
     }
 
@@ -90,7 +90,7 @@ public class EventManager {
     /**
      * https://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-eventgroupings-htmlevents-h3
      */
-    public void onchange(ElementModel target) {
+    public void onchange(ElementImpl target) {
         EventInit init = new EventInit();
         init.bubbles = true;
         EventImpl event = new EventImpl("change", init);

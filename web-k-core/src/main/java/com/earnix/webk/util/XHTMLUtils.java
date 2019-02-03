@@ -1,6 +1,6 @@
 package com.earnix.webk.util;
 
-import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.script.impl.ElementImpl;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -32,7 +32,7 @@ public class XHTMLUtils {
      * <p>
      * https://www.stevefenton.co.uk/2011/04/html-and-xhtml-boolean-attributes/
      */
-    public static boolean isTrue(ElementModel el, String attr) {
+    public static boolean isTrue(ElementImpl el, String attr) {
         Objects.requireNonNull(el);
         Objects.requireNonNull(attr);
 
@@ -40,7 +40,7 @@ public class XHTMLUtils {
         return el.hasAttr(attr) && !attValue.equalsIgnoreCase("false");
     }
 
-    public static int getIntValue(ElementModel el, String attr, int defaultValue) {
+    public static int getIntValue(ElementImpl el, String attr, int defaultValue) {
         Objects.requireNonNull(el);
         Objects.requireNonNull(attr);
 
@@ -51,7 +51,7 @@ public class XHTMLUtils {
         return val > 0 ? val : defaultValue;
     }
 
-    public static OptionalInt getOptionalIntValue(ElementModel el, String attr) {
+    public static OptionalInt getOptionalIntValue(ElementImpl el, String attr) {
         Objects.requireNonNull(el);
         Objects.requireNonNull(attr);
 
@@ -62,7 +62,7 @@ public class XHTMLUtils {
         return val > 0 ? OptionalInt.of(val) : OptionalInt.empty();
     }
 
-    public static Optional<String> getOptionalStringValue(ElementModel el, String attr) {
+    public static Optional<String> getOptionalStringValue(ElementImpl el, String attr) {
         Objects.requireNonNull(el);
         Objects.requireNonNull(attr);
 

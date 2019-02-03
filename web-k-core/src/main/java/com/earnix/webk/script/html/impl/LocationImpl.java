@@ -15,13 +15,13 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LocationImpl implements Location {
 
-    BasicPanel panel;
+    DocumentImpl doc;
 
     Attribute<String> href = new Attribute<String>() {
 
         @Override
         public String get() {
-            return panel.getSharedContext().getBaseURL();
+            return doc.scriptContext().getPanel().getSharedContext().getBaseURL();
         }
 
         @Override
@@ -31,8 +31,8 @@ public class LocationImpl implements Location {
 
     };
 
-    LocationImpl(BasicPanel panel) {
-        this.panel = panel;
+    LocationImpl(DocumentImpl doc) {
+        this.doc = doc;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class LocationImpl implements Location {
     @Override
     public Attribute<String> protocol() {
         return Attribute.<String>receive(System.err::println)
-                .give(() -> panel.getURL().getProtocol());
+                .give(() -> doc.scriptContext().getPanel().getURL().getProtocol());
     }
 
     @Override
@@ -61,7 +61,7 @@ public class LocationImpl implements Location {
     public Attribute<String> hostname() {
         return Attribute
                 .<String>receive(System.err::println)
-                .give(() -> panel.getURL().getHost());
+                .give(() -> doc.scriptContext().getPanel().getURL().getHost());
     }
 
     @Override
@@ -86,17 +86,17 @@ public class LocationImpl implements Location {
 
     @Override
     public void assign(@USVString String url) {
-        panel.setDocument(url);
+        doc.scriptContext().getPanel().setDocument(url);
     }
 
     @Override
     public void replace(@USVString String url) {
-        panel.setDocument(url);
+        doc.scriptContext().getPanel().setDocument(url);
     }
 
     @Override
     public void reload() {
-        panel.reloadDocument(panel.getSharedContext().getBaseURL());
+        doc.scriptContext().getPanel().reloadDocument(doc.scriptContext().getPanel().getSharedContext().getBaseURL());
     }
 
     @Override

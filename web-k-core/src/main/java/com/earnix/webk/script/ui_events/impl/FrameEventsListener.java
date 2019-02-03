@@ -2,7 +2,6 @@ package com.earnix.webk.script.ui_events.impl;
 
 import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.whatwg_dom.Element;
-import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.awt.event.MouseEvent;
@@ -40,7 +39,7 @@ public class FrameEventsListener implements WindowListener, MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
         if (mouseEventsAdapter.getHoveredBox() != null) {
-            Element element = ScriptDOMFactory.getElement(scriptContext, mouseEventsAdapter.getHoveredBox().getElement());
+            Element element = mouseEventsAdapter.getHoveredBox().getElement();
             mouseEventsAdapter.mouseleave(element, mouseEventsAdapter.getLastAwtMouseEvent());
             mouseEventsAdapter.mouseout(element, mouseEventsAdapter.getLastAwtMouseEvent());
         }
@@ -79,7 +78,7 @@ public class FrameEventsListener implements WindowListener, MouseListener {
     @Override
     public void windowDeactivated(WindowEvent e) {
         if (mouseEventsAdapter.getHoveredBox() != null) {
-            Element element = ScriptDOMFactory.getElement(scriptContext, mouseEventsAdapter.getHoveredBox().getElement());
+            Element element =  mouseEventsAdapter.getHoveredBox().getElement();
             mouseEventsAdapter.mouseleave(element, mouseEventsAdapter.getLastAwtMouseEvent());
             mouseEventsAdapter.mouseout(element, mouseEventsAdapter.getLastAwtMouseEvent());
         }

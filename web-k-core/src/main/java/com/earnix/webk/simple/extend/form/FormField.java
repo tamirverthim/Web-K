@@ -25,10 +25,10 @@ import com.earnix.webk.css.parser.FSRGBColor;
 import com.earnix.webk.css.style.CalculatedStyle;
 import com.earnix.webk.css.style.FSDerivedValue;
 import com.earnix.webk.css.style.derived.LengthValue;
-import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
 import com.earnix.webk.render.FSFont;
+import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.simple.extend.URLUTF8Encoder;
 import com.earnix.webk.simple.extend.XhtmlForm;
 import com.earnix.webk.swing.AWTFSFont;
@@ -49,7 +49,7 @@ import java.util.function.Supplier;
 public abstract class FormField {
 
     XhtmlForm parentForm;
-    ElementModel element;
+    ElementImpl element;
     protected FormFieldState originalState;
     JComponent component;
     LayoutContext context;
@@ -62,7 +62,7 @@ public abstract class FormField {
     protected Integer intrinsicHeight;
 
 
-    public FormField(ElementModel e, XhtmlForm form, LayoutContext context, BlockBox box) {
+    public FormField(ElementImpl e, XhtmlForm form, LayoutContext context, BlockBox box) {
         element = e;
         parentForm = form;
         this.context = context;
@@ -71,7 +71,7 @@ public abstract class FormField {
         initialize();
     }
 
-    protected ElementModel getElement() {
+    protected ElementImpl getElement() {
         return element;
     }
 

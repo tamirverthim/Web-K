@@ -1,6 +1,5 @@
 package com.earnix.webk.script.html;
 
-import com.earnix.webk.script.web_idl.DOMString;
 import com.earnix.webk.script.web_idl.Function;
 import com.earnix.webk.script.web_idl.Typedef;
 import com.earnix.webk.script.web_idl.impl.MultiTypedef;

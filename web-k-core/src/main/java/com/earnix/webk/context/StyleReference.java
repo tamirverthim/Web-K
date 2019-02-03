@@ -28,13 +28,13 @@ import com.earnix.webk.css.newmatch.PageInfo;
 import com.earnix.webk.css.sheet.PropertyDeclaration;
 import com.earnix.webk.css.sheet.Stylesheet;
 import com.earnix.webk.css.sheet.StylesheetInfo;
-import com.earnix.webk.dom.nodes.DocumentModel;
-import com.earnix.webk.dom.nodes.ElementModel;
-import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.extend.NamespaceHandler;
 import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.extend.UserInterface;
 import com.earnix.webk.layout.SharedContext;
+import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.script.impl.NodeImpl;
+import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
 import com.earnix.webk.swing.BasicPanel;
 import com.earnix.webk.util.XRLog;
 
@@ -58,7 +58,7 @@ public class StyleReference {
 
     private NamespaceHandler _nsh;
 
-    private DocumentModel _doc;
+    private DocumentImpl _doc;
 
     private StylesheetFactoryImpl _stylesheetFactory;
 
@@ -78,7 +78,7 @@ public class StyleReference {
         _stylesheetFactory = new StylesheetFactoryImpl(userAgent);
     }
 
-    public void setDocumentContext(SharedContext context, NamespaceHandler nsh, DocumentModel doc, UserInterface ui) {
+    public void setDocumentContext(SharedContext context, NamespaceHandler nsh, DocumentImpl doc, UserInterface ui) {
         _context = context;
         _nsh = nsh;
         _doc = doc;
@@ -120,7 +120,7 @@ public class StyleReference {
         return result;
     }
 
-    public boolean isHoverStyled(ElementModel e) {
+    public boolean isHoverStyled(ElementImpl e) {
         return _matcher.isHoverStyled(e);
     }
 
@@ -129,14 +129,14 @@ public class StyleReference {
      * assigned value as a SAC CSSValue instance. The properties should have
      * been matched to the element when the Context was established for this
      * StyleReference on the Document to which the Element belongs. See {@link
-     * BasicPanel#setDocument(DocumentModel, java.net.URL)}
+     * BasicPanel#setDocument(DocumentImpl, java.net.URL)}
      * for an example of how to establish a StyleReference and associate to a
      * Document.
      *
      * @param e The DOM Element for which to find properties
      * @return Map of CSS property names to CSSValue instance assigned to it.
      */
-    public java.util.Map getCascadedPropertiesMap(ElementModel e) {
+    public java.util.Map getCascadedPropertiesMap(ElementImpl e) {
         CascadedStyle cs = _matcher.getCascadedStyle(e, false);//this is only for debug, I think
         java.util.LinkedHashMap props = new java.util.LinkedHashMap();
         for (java.util.Iterator i = cs.getCascadedPropertyDeclarations(); i.hasNext(); ) {
@@ -156,12 +156,12 @@ public class StyleReference {
      * @param pseudoElement PARAM
      * @return The pseudoElementStyle value
      */
-    public CascadedStyle getPseudoElementStyle(NodeModel node, String pseudoElement) {
-        ElementModel e = null;
-        if (node instanceof ElementModel) {
-            e = (ElementModel) node;
+    public CascadedStyle getPseudoElementStyle(NodeImpl node, String pseudoElement) {
+        ElementImpl e = null;
+        if (node instanceof ElementImpl) {
+            e = (ElementImpl) node;
         } else {
-            e = (ElementModel) node.parent();
+            e = (ElementImpl) node.parent();
         }
         return _matcher.getPECascadedStyle(e, pseudoElement);
     }
@@ -174,7 +174,7 @@ public class StyleReference {
      * @param restyle
      * @return The style value
      */
-    public CascadedStyle getCascadedStyle(ElementModel e, boolean restyle) {
+    public CascadedStyle getCascadedStyle(ElementImpl e, boolean restyle) {
         if (e == null) return CascadedStyle.emptyCascadedStyle;
         return _matcher.getCascadedStyle(e, restyle);
     }
@@ -249,7 +249,7 @@ public class StyleReference {
         return infos;
     }
 
-    public void removeStyle(ElementModel e) {
+    public void removeStyle(ElementImpl e) {
         if (_matcher != null) {
             _matcher.removeStyle(e);
         }

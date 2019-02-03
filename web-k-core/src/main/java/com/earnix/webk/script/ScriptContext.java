@@ -1,6 +1,5 @@
 package com.earnix.webk.script;
 
-import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.event.DocumentListener;
 import com.earnix.webk.script.html.canvas.impl.CanvasGradientImpl;
 import com.earnix.webk.script.html.canvas.impl.CanvasPatternImpl;
@@ -47,7 +46,7 @@ public class ScriptContext implements DocumentListener {
     javax.script.ScriptContext context;
 
     BasicPanel panel;
-    DocumentModel document;
+    DocumentImpl document;
 
     @Getter
     EventManager eventManager;
@@ -163,7 +162,6 @@ public class ScriptContext implements DocumentListener {
             context.setAttribute("window", engine.eval("this"), ENGINE_SCOPE);
             context.setAttribute("self", engine.eval("this"), ENGINE_SCOPE);
             context.setAttribute("__win", windowAdapter, ENGINE_SCOPE);
-
         } catch (ScriptException e) {
             throw new RuntimeException(e);
         }
@@ -243,7 +241,9 @@ public class ScriptContext implements DocumentListener {
             
             initEngine();
 
-            window.setDocument(new DocumentImpl(this));
+//            val doc = new DocumentImpl(getPanel().getSharedContext().getBaseURL())
+            document.setScriptContext(this);
+            window.setDocument(document);
             context.setAttribute("document", windowAdapter.getMember("document"), ENGINE_SCOPE);
 
             val scripts = panel.getDocument().getElementsByTag("script");
@@ -257,7 +257,7 @@ public class ScriptContext implements DocumentListener {
                         log.warn("script.eval", e);
                     }
                 } else {
-                    val scriptUri = script.attributes().get("src");
+                    val scriptUri = script.getAttributes().get("src");
                     if (StringUtils.isNotBlank(scriptUri)) {
                         try {
                             val scriptText = panel.getSharedContext().getUac().getScriptResource(scriptUri);
@@ -302,6 +302,9 @@ public class ScriptContext implements DocumentListener {
         return res;
     }
 
+    /**
+     * Updates fields of window WebIDL implementation from current fields of global Nashorn context
+     */
     private void synchronize() {
         try {
             engine.eval("this.__keys = Object.keys(this); for (let i = 0; i < __keys.length; i++) { if (this[__keys[i]]) this.__win[__keys[i]] = this[__keys[i]]; }");

@@ -6,6 +6,8 @@ import com.earnix.webk.dom.helper.HttpConnection;
 import com.earnix.webk.dom.helper.Validate;
 import com.earnix.webk.dom.parser.Tag;
 import com.earnix.webk.dom.select.Elements;
+import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.script.impl.NodeImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +16,7 @@ import java.util.List;
  * A HTML Form Element provides ready access to the form fields/controls that are associated with it. It also allows a
  * form to easily be submitted.
  */
-public class FormElement extends ElementModel {
+public class FormElement extends ElementImpl {
     private final Elements elements = new Elements();
 
     /**
@@ -43,13 +45,13 @@ public class FormElement extends ElementModel {
      * @param element form control to add
      * @return this form element, for chaining
      */
-    public FormElement addElement(ElementModel element) {
+    public FormElement addElement(ElementImpl element) {
         elements.add(element);
         return this;
     }
 
     @Override
-    protected void removeChild(NodeModel out) {
+    protected void removeChild(NodeImpl out) {
         super.removeChild(out);
         elements.remove(out);
     }
@@ -83,7 +85,7 @@ public class FormElement extends ElementModel {
         ArrayList<Connection.KeyVal> data = new ArrayList<>();
 
         // iterate the form control elements and accumulate their values
-        for (ElementModel el : elements) {
+        for (ElementImpl el : elements) {
             if (!el.tag().isFormSubmittable()) continue; // contents are form listable, superset of submitable
             if (el.hasAttr("disabled")) continue; // skip disabled form inputs
             String name = el.attr("name");
@@ -93,12 +95,12 @@ public class FormElement extends ElementModel {
             if ("select".equals(el.tagName())) {
                 Elements options = el.select("option[selected]");
                 boolean set = false;
-                for (ElementModel option : options) {
+                for (ElementImpl option : options) {
                     data.add(HttpConnection.KeyVal.create(name, option.val()));
                     set = true;
                 }
                 if (!set) {
-                    ElementModel option = el.select("option").first();
+                    ElementImpl option = el.select("option").first();
                     if (option != null)
                         data.add(HttpConnection.KeyVal.create(name, option.val()));
                 }

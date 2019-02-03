@@ -19,22 +19,21 @@
  */
 package com.earnix.webk.simple.extend.form;
 
-import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
+import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.simple.extend.XhtmlForm;
 import lombok.val;
 
 import javax.swing.JComponent;
 import javax.swing.JToggleButton;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 public class RadioButtonField extends InputField {
     private ItemListener listener;
 
-    public RadioButtonField(ElementModel e, XhtmlForm form, LayoutContext context, BlockBox box) {
+    public RadioButtonField(ElementImpl e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }
 

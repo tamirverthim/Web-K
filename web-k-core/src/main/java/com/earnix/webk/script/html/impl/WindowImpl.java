@@ -68,7 +68,7 @@ public class WindowImpl implements Window {
 
     public WindowImpl(ScriptContext scriptContext) {
         this.scriptContext = scriptContext;
-        location = new LocationImpl(scriptContext.getPanel());
+        location = new LocationImpl(document);
         eventTargetImpl = new EventTargetImpl(scriptContext);
         level1EventTarget = new Level1EventTarget(scriptContext, eventTargetImpl);
     }
@@ -771,7 +771,7 @@ public class WindowImpl implements Window {
 
     @Override
     public CSSStyleDeclaration getComputedStyle(Element elt, String pseudoElt) {
-        val element = ((ElementImpl) elt).getModel();
+        val element = ((ElementImpl) elt);
         return new CSSStyleDeclarationImpl(
                 scriptContext.getPanel().getSharedContext().getStyle(element).toString(),
                 scriptContext);

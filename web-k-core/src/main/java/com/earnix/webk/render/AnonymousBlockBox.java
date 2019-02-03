@@ -22,9 +22,9 @@ package com.earnix.webk.render;
 
 import com.earnix.webk.css.style.CalculatedStyle;
 import com.earnix.webk.css.style.CssContext;
-import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.layout.Styleable;
+import com.earnix.webk.script.impl.ElementImpl;
 
 import java.util.Iterator;
 import java.util.List;
@@ -39,7 +39,7 @@ import java.util.List;
 public class AnonymousBlockBox extends BlockBox {
     private List _openInlineBoxes;
 
-    public AnonymousBlockBox(ElementModel element) {
+    public AnonymousBlockBox(ElementImpl element) {
         setElement(element);
     }
 

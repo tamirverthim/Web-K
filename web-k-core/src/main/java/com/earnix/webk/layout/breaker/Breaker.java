@@ -22,14 +22,14 @@ package com.earnix.webk.layout.breaker;
 
 import com.earnix.webk.css.constants.IdentValue;
 import com.earnix.webk.css.style.CalculatedStyle;
-import com.earnix.webk.dom.nodes.ElementModel;
-import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.layout.LineBreakContext;
 import com.earnix.webk.layout.TextUtil;
 import com.earnix.webk.layout.WhitespaceStripper;
 import com.earnix.webk.render.FSFont;
+import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.script.impl.NodeImpl;
+import com.earnix.webk.script.whatwg_dom.impl.TextImpl;
 
 import java.text.BreakIterator;
 
@@ -118,15 +118,15 @@ public class Breaker {
         return c.getTextRenderer().getWidth(c.getFontContext(), f, text);
     }
 
-    public static BreakPointsProvider getBreakPointsProvider(String text, LayoutContext c, ElementModel element, CalculatedStyle style) {
+    public static BreakPointsProvider getBreakPointsProvider(String text, LayoutContext c, ElementImpl element, CalculatedStyle style) {
         return c.getSharedContext().getLineBreakingStrategy().getBreakPointsProvider(text, getLanguage(c, element), style);
     }
 
-    public static BreakPointsProvider getBreakPointsProvider(String text, LayoutContext c, TextNodeModel textNode, CalculatedStyle style) {
+    public static BreakPointsProvider getBreakPointsProvider(String text, LayoutContext c, TextImpl textNode, CalculatedStyle style) {
         return c.getSharedContext().getLineBreakingStrategy().getBreakPointsProvider(text, getLanguage(c, textNode), style);
     }
 
-    private static String getLanguage(LayoutContext c, ElementModel element) {
+    private static String getLanguage(LayoutContext c, ElementImpl element) {
         String language = c.getNamespaceHandler().getLang(element);
         if (language == null || language.isEmpty()) {
             language = DEFAULT_LANGUAGE;
@@ -134,11 +134,11 @@ public class Breaker {
         return language;
     }
 
-    private static String getLanguage(LayoutContext c, TextNodeModel textNode) {
+    private static String getLanguage(LayoutContext c, TextImpl textNode) {
         if (textNode != null) {
-            NodeModel parentNode = textNode.parentNode();
-            if (parentNode instanceof ElementModel) {
-                return getLanguage(c, (ElementModel) parentNode);
+            NodeImpl parentNode = textNode.parentNode();
+            if (parentNode instanceof ElementImpl) {
+                return getLanguage(c, (ElementImpl) parentNode);
             }
         }
         return DEFAULT_LANGUAGE;

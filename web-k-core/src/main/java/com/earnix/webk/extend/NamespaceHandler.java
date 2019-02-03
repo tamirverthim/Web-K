@@ -22,8 +22,8 @@ package com.earnix.webk.extend;
 
 import com.earnix.webk.css.extend.StylesheetFactory;
 import com.earnix.webk.css.sheet.StylesheetInfo;
-import com.earnix.webk.dom.nodes.DocumentModel;
-import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
 
 /**
  * Provides knowledge specific to a certain document type, like resolving
@@ -47,14 +47,14 @@ public interface NamespaceHandler {
      * @param doc
      * @return the title for this document, if any exists
      */
-    String getDocumentTitle(DocumentModel doc);
+    String getDocumentTitle(DocumentImpl doc);
 
     /**
      * @param doc
      * @return all links to CSS stylesheets (type="text/css") in this
      * document
      */
-    StylesheetInfo[] getStylesheets(DocumentModel doc);
+    StylesheetInfo[] getStylesheets(DocumentImpl doc);
 
     /**
      * may return null. Required to return null if attribute does not exist and
@@ -64,9 +64,9 @@ public interface NamespaceHandler {
      * @param attrName PARAM
      * @return The attributeValue value
      */
-    String getAttributeValue(ElementModel e, String attrName);
+    String getAttributeValue(ElementImpl e, String attrName);
 
-    String getAttributeValue(ElementModel e, String namespaceURI, String attrName);
+    String getAttributeValue(ElementImpl e, String namespaceURI, String attrName);
 
     /**
      * may return null
@@ -74,7 +74,7 @@ public interface NamespaceHandler {
      * @param e PARAM
      * @return The class value
      */
-    String getClass(ElementModel e);
+    String getClass(ElementImpl e);
 
     /**
      * may return null
@@ -82,7 +82,7 @@ public interface NamespaceHandler {
      * @param e PARAM
      * @return The iD value
      */
-    String getID(ElementModel e);
+    String getID(ElementImpl e);
 
     /**
      * may return null
@@ -90,7 +90,7 @@ public interface NamespaceHandler {
      * @param e PARAM
      * @return The elementStyling value (style attribute)
      */
-    String getElementStyling(ElementModel e);
+    String getElementStyling(ElementImpl e);
 
     /**
      * may return null
@@ -98,7 +98,7 @@ public interface NamespaceHandler {
      * @param e
      * @return The corresponding css properties for styling that is obtained in other ways.
      */
-    String getNonCssStyling(ElementModel e);
+    String getNonCssStyling(ElementImpl e);
 
     /**
      * may return null
@@ -106,7 +106,7 @@ public interface NamespaceHandler {
      * @param e PARAM
      * @return The lang value
      */
-    String getLang(ElementModel e);
+    String getLang(ElementImpl e);
 
     /**
      * should return null if element is not a link
@@ -114,17 +114,17 @@ public interface NamespaceHandler {
      * @param e PARAM
      * @return The linkUri value
      */
-    String getLinkUri(ElementModel e);
+    String getLinkUri(ElementImpl e);
 
     /**
      * @param e
      */
-    String getAnchorName(ElementModel e);
+    String getAnchorName(ElementImpl e);
 
     /**
      * @return Returns true if the Element represents an image.
      */
-    boolean isImageElement(ElementModel e);
+    boolean isImageElement(ElementImpl e);
 
     /**
      * Determines whether or not the specified Element represents a
@@ -133,7 +133,7 @@ public interface NamespaceHandler {
      * @param e The Element to evaluate.
      * @return true if the Element is a &lt;form&gt; element, false otherwise.
      */
-    boolean isFormElement(ElementModel e);
+    boolean isFormElement(ElementImpl e);
 
     /**
      * For an element where isImageElement returns true, retrieves the URI associated with that Image, as
@@ -145,10 +145,10 @@ public interface NamespaceHandler {
      * @param e The element to extract image info from.
      * @return String containing the URI for the image.
      */
-    String getImageSourceURI(ElementModel e);
+    String getImageSourceURI(ElementImpl e);
 
-    boolean isCanvasElement(ElementModel element);
+    boolean isCanvasElement(ElementImpl element);
 
-    boolean isSvgElement(ElementModel element);
+    boolean isSvgElement(ElementImpl element);
 }
 

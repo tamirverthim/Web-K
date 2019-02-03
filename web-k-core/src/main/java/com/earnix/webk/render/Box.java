@@ -28,12 +28,12 @@ import com.earnix.webk.css.style.CalculatedStyle;
 import com.earnix.webk.css.style.CssContext;
 import com.earnix.webk.css.style.derived.BorderPropertySet;
 import com.earnix.webk.css.style.derived.RectPropertySet;
-import com.earnix.webk.dom.nodes.DocumentModel;
-import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.layout.Layer;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.layout.PaintingInfo;
 import com.earnix.webk.layout.Styleable;
+import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
 import com.earnix.webk.util.XRLog;
 
 import java.awt.Dimension;
@@ -50,7 +50,7 @@ import java.util.logging.Level;
 public abstract class Box implements Styleable {
     protected static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
-    private ElementModel _element;
+    private ElementImpl _element;
 
     private int _x;
     private int _y;
@@ -495,7 +495,7 @@ public abstract class Box implements Styleable {
         }
     }
 
-    public List getElementBoxes(ElementModel elem) {
+    public List getElementBoxes(ElementImpl elem) {
         List result = new ArrayList();
         for (int i = 0; i < getChildCount(); i++) {
             Box child = getChild(i);
@@ -526,7 +526,7 @@ public abstract class Box implements Styleable {
             c.removeBoxId(anchorName);
         }
 
-        ElementModel e = getElement();
+        ElementImpl e = getElement();
         if (e != null) {
             String id = c.getNamespaceHandler().getID(e);
             if (id != null) {
@@ -692,18 +692,18 @@ public abstract class Box implements Styleable {
     }
 
     public boolean isRoot() {
-        return getElement() != null && !isAnonymous() && getElement().parentNode() instanceof DocumentModel;
+        return getElement() != null && !isAnonymous() && getElement().parentNode() instanceof DocumentImpl;
     }
 
     public boolean isBody() {
         return getParent() != null && getParent().isRoot();
     }
 
-    public ElementModel getElement() {
+    public ElementImpl getElement() {
         return _element;
     }
 
-    public void setElement(ElementModel element) {
+    public void setElement(ElementImpl element) {
         if (_element != null) {
             _element.setView(null);
         }
@@ -847,7 +847,7 @@ public abstract class Box implements Styleable {
     }
 
     public void restyle(LayoutContext c) {
-        ElementModel e = getElement();
+        ElementImpl e = getElement();
         CalculatedStyle style = null;
 
         String pe = getPseudoElementOrClass();

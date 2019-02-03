@@ -1,11 +1,7 @@
 package com.earnix.webk.script.impl;
 
-import com.earnix.webk.dom.nodes.ElementModel;
-import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.whatwg_dom.Element;
 import com.earnix.webk.script.whatwg_dom.NonDocumentTypeChildNode;
-import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -18,13 +14,12 @@ import lombok.experimental.FieldDefaults;
 @RequiredArgsConstructor
 public class NonDocumentTypeChildNodeImpl implements NonDocumentTypeChildNode {
 
-    final ScriptContext scriptContext;
-    final NodeModel target;
+    final NodeImpl target;
 
     @Override
     public Element previousElementSibling() {
-        if (target instanceof ElementModel) {
-            return (Element) ScriptDOMFactory.get(scriptContext, ((ElementModel) target).previousElementSibling());
+        if (target instanceof ElementImpl) {
+            return  ((ElementImpl) target).previousElementSibling();
         }
 
         return null;
@@ -32,8 +27,8 @@ public class NonDocumentTypeChildNodeImpl implements NonDocumentTypeChildNode {
 
     @Override
     public Element nextElementSibling() {
-        if (target instanceof ElementModel) {
-            return (Element) ScriptDOMFactory.get(scriptContext, ((ElementModel) target).nextElementSibling());
+        if (target instanceof ElementImpl) {
+            return ((ElementImpl) target).nextElementSibling();
         }
         return null;
     }

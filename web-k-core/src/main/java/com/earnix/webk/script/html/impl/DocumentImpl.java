@@ -1,8 +1,5 @@
 package com.earnix.webk.script.html.impl;
 
-import com.earnix.webk.dom.nodes.DocumentModel;
-import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.html.DocumentReadyState;
 import com.earnix.webk.script.html.HTMLElement;
 import com.earnix.webk.script.html.HTMLHeadElement;
@@ -10,6 +7,7 @@ import com.earnix.webk.script.html.HTMLOrSVGScriptElement;
 import com.earnix.webk.script.html.Location;
 import com.earnix.webk.script.html.WindowProxy;
 import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.script.impl.NodeImpl;
 import com.earnix.webk.script.web_idl.Attribute;
 import com.earnix.webk.script.web_idl.DOMString;
 import com.earnix.webk.script.web_idl.USVString;
@@ -17,7 +15,6 @@ import com.earnix.webk.script.whatwg_dom.Element;
 import com.earnix.webk.script.whatwg_dom.EventHandler;
 import com.earnix.webk.script.whatwg_dom.HTMLCollection;
 import com.earnix.webk.script.whatwg_dom.NodeList;
-import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
@@ -30,18 +27,11 @@ import lombok.val;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DocumentImpl extends com.earnix.webk.script.whatwg_dom.impl.DocumentImpl implements com.earnix.webk.script.html.Document {
 
-    private final ScriptContext ctx;
-    Location location;
-    DocumentModel document;
+    Location location = new LocationImpl(this);
+    @Setter ElementImpl activeElement;
 
-    @Setter
-    ElementImpl activeElement;
-    
-    public DocumentImpl(ScriptContext ctx) {
-        super(ctx, ctx.getPanel().getDocument(), ctx.getPanel().getSharedContext().getUac().getBaseURL());
-        location = new LocationImpl(ctx.getPanel());
-        document = ctx.getPanel().getDocument();
-        this.ctx = ctx;
+    public DocumentImpl(String url) {
+        super(url);
     }
 
     @Override
@@ -95,20 +85,20 @@ public class DocumentImpl extends com.earnix.webk.script.whatwg_dom.impl.Documen
         return new Attribute<HTMLElement>() {
             @Override
             public HTMLElement get() {
-                val bodyModel = document.getElementsByTag("body");
+                val bodyModel = getElementsByTag("body");
                 if (bodyModel.isEmpty()) {
                     return null;
                 }
-                return (HTMLElement) ScriptDOMFactory.getElement(ctx, bodyModel.get(0));
+                return   bodyModel.get(0);
             }
 
             @Override
             public void set(HTMLElement htmlElement) {
-                val bodyModel = document.getElementsByTag("body");
+                val bodyModel = getElementsByTag("body");
                 if (!bodyModel.isEmpty()) {
-                    bodyModel.forEach(NodeModel::remove);
+                    bodyModel.forEach(NodeImpl::remove);
                 }
-                document.appendChild(((ElementImpl) htmlElement).getModel());
+                appendChild((htmlElement));
             }
         };
     }
@@ -185,7 +175,7 @@ public class DocumentImpl extends com.earnix.webk.script.whatwg_dom.impl.Documen
 
     @Override
     public WindowProxy defaultView() {
-        return new WindowProxyImpl(ctx.getWindow());
+        return new WindowProxyImpl(scriptContext().getWindow());
     }
 
     @Override

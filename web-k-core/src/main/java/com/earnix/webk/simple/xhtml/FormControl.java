@@ -20,7 +20,7 @@
 package com.earnix.webk.simple.xhtml;
 
 
-import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.script.impl.ElementImpl;
 
 /**
  * Interface describing a form control.
@@ -31,7 +31,7 @@ public interface FormControl {
     /**
      * @return the associated element
      */
-    ElementModel getElement();
+    ElementImpl getElement();
 
     /**
      * @return the associated form

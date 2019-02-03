@@ -22,14 +22,14 @@ import com.earnix.webk.css.constants.IdentValue;
 import com.earnix.webk.css.extend.ContentFunction;
 import com.earnix.webk.css.parser.FSFunction;
 import com.earnix.webk.css.style.CalculatedStyle;
-import com.earnix.webk.dom.nodes.ElementModel;
-import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.layout.Styleable;
 import com.earnix.webk.layout.TextUtil;
 import com.earnix.webk.layout.WhitespaceStripper;
 import com.earnix.webk.layout.breaker.BreakPointsProvider;
 import com.earnix.webk.layout.breaker.Breaker;
+import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.script.whatwg_dom.impl.TextImpl;
 
 import java.text.BreakIterator;
 
@@ -49,7 +49,7 @@ import java.text.BreakIterator;
  * @see InlineLayoutBox
  */
 public class InlineBox implements Styleable {
-    private ElementModel _element;
+    private ElementImpl _element;
 
     private String _originalText;
     private String _text;
@@ -70,9 +70,9 @@ public class InlineBox implements Styleable {
 
     private String _pseudoElementOrClass;
 
-    private final TextNodeModel _textNode;
+    private final TextImpl _textNode;
 
-    public InlineBox(String text, TextNodeModel textNode) {
+    public InlineBox(String text, TextImpl textNode) {
         _text = text;
         _originalText = text;
         _textNode = textNode;
@@ -124,11 +124,11 @@ public class InlineBox implements Styleable {
         _style = style;
     }
 
-    public ElementModel getElement() {
+    public ElementImpl getElement() {
         return _element;
     }
 
-    public void setElement(ElementModel element) {
+    public void setElement(ElementImpl element) {
         _element = element;
     }
 
@@ -467,7 +467,7 @@ public class InlineBox implements Styleable {
         _originalText = "";
     }
 
-    public TextNodeModel getTextNode() {
+    public TextImpl getTextNode() {
         return this._textNode;
     }
 }

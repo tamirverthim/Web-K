@@ -3,6 +3,7 @@ package com.earnix.webk.dom.nodes;
 import com.earnix.webk.dom.SerializationException;
 import com.earnix.webk.dom.helper.Validate;
 import com.earnix.webk.dom.internal.StringUtil;
+import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -110,14 +111,14 @@ public class AttributeModel implements Map.Entry<String, String>, Cloneable {
         StringBuilder sb = StringUtil.borrowBuilder();
 
         try {
-            html(sb, (new DocumentModel("")).outputSettings());
+            html(sb, (new DocumentImpl("")).outputSettings());
         } catch (IOException exception) {
             throw new SerializationException(exception);
         }
         return StringUtil.releaseBuilder(sb);
     }
 
-    protected static void html(String key, String val, Appendable accum, DocumentModel.OutputSettings out) throws IOException {
+    protected static void html(String key, String val, Appendable accum, DocumentImpl.OutputSettings out) throws IOException {
         accum.append(key);
         if (!shouldCollapseAttribute(key, val, out)) {
             accum.append("=\"");
@@ -126,7 +127,7 @@ public class AttributeModel implements Map.Entry<String, String>, Cloneable {
         }
     }
 
-    protected void html(Appendable accum, DocumentModel.OutputSettings out) throws IOException {
+    protected void html(Appendable accum, DocumentImpl.OutputSettings out) throws IOException {
         html(key, val, accum, out);
     }
 
@@ -166,13 +167,13 @@ public class AttributeModel implements Map.Entry<String, String>, Cloneable {
      * @param out output settings
      * @return Returns whether collapsible or not
      */
-    protected final boolean shouldCollapseAttribute(DocumentModel.OutputSettings out) {
+    protected final boolean shouldCollapseAttribute(DocumentImpl.OutputSettings out) {
         return shouldCollapseAttribute(key, val, out);
     }
 
-    protected static boolean shouldCollapseAttribute(final String key, final String val, final DocumentModel.OutputSettings out) {
+    protected static boolean shouldCollapseAttribute(final String key, final String val, final DocumentImpl.OutputSettings out) {
         return (
-                out.syntax() == DocumentModel.OutputSettings.Syntax.html &&
+                out.syntax() == DocumentImpl.OutputSettings.Syntax.html &&
                         (val == null || ("".equals(val) || val.equalsIgnoreCase(key)) && AttributeModel.isBooleanAttribute(key)));
     }
 

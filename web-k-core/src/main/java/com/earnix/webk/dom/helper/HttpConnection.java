@@ -7,9 +7,9 @@ import com.earnix.webk.dom.UncheckedIOException;
 import com.earnix.webk.dom.UnsupportedMimeTypeException;
 import com.earnix.webk.dom.internal.ConstrainableInputStream;
 import com.earnix.webk.dom.internal.StringUtil;
-import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.parser.Parser;
 import com.earnix.webk.dom.parser.TokenQueue;
+import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
@@ -281,13 +281,13 @@ public class HttpConnection implements Connection {
         return this;
     }
 
-    public DocumentModel get() throws IOException {
+    public DocumentImpl get() throws IOException {
         req.method(Method.GET);
         execute();
         return res.parse();
     }
 
-    public DocumentModel post() throws IOException {
+    public DocumentImpl post() throws IOException {
         req.method(Method.POST);
         execute();
         return res.parse();
@@ -824,14 +824,14 @@ public class HttpConnection implements Connection {
             return contentType;
         }
 
-        public DocumentModel parse() throws IOException {
+        public DocumentImpl parse() throws IOException {
             Validate.isTrue(executed, "Request must be executed (with .execute(), .get(), or .post() before parsing response");
             if (byteData != null) { // bytes have been read in to the buffer, parse that
                 bodyStream = new ByteArrayInputStream(byteData.array());
                 inputStreamRead = false; // ok to reparse if in bytes
             }
             Validate.isFalse(inputStreamRead, "Input stream already read and parsed, cannot re-read.");
-            DocumentModel doc = DataUtil.parseInputStream(bodyStream, charset, url.toExternalForm(), req.parser());
+            DocumentImpl doc = DataUtil.parseInputStream(bodyStream, charset, url.toExternalForm(), req.parser());
             charset = doc.outputSettings().charset().name(); // update charset from meta-equiv, possibly
             inputStreamRead = true;
             safeClose();

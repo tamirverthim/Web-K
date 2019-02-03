@@ -1,7 +1,7 @@
 package com.earnix.webk.dom.select;
 
-import com.earnix.webk.dom.nodes.ElementModel;
-import com.earnix.webk.dom.nodes.NodeModel;
+import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.script.impl.NodeImpl;
 
 /**
  * Collects a list of elements that match the supplied criteria.
@@ -20,56 +20,56 @@ public class Collector {
      * @param root root of tree to descend
      * @return list of matches; empty if none
      */
-    public static Elements collect(Evaluator eval, ElementModel root) {
+    public static Elements collect(Evaluator eval, ElementImpl root) {
         Elements elements = new Elements();
         NodeTraversor.traverse(new Accumulator(root, elements, eval), root);
         return elements;
     }
 
     private static class Accumulator implements NodeVisitor {
-        private final ElementModel root;
+        private final ElementImpl root;
         private final Elements elements;
         private final Evaluator eval;
 
-        Accumulator(ElementModel root, Elements elements, Evaluator eval) {
+        Accumulator(ElementImpl root, Elements elements, Evaluator eval) {
             this.root = root;
             this.elements = elements;
             this.eval = eval;
         }
 
-        public void head(NodeModel node, int depth) {
-            if (node instanceof ElementModel) {
-                ElementModel el = (ElementModel) node;
+        public void head(NodeImpl node, int depth) {
+            if (node instanceof ElementImpl) {
+                ElementImpl el = (ElementImpl) node;
                 if (eval.matches(root, el))
                     elements.add(el);
             }
         }
 
-        public void tail(NodeModel node, int depth) {
+        public void tail(NodeImpl node, int depth) {
             // void
         }
     }
 
-    public static ElementModel findFirst(Evaluator eval, ElementModel root) {
+    public static ElementImpl findFirst(Evaluator eval, ElementImpl root) {
         FirstFinder finder = new FirstFinder(root, eval);
         NodeTraversor.filter(finder, root);
         return finder.match;
     }
 
     private static class FirstFinder implements NodeFilter {
-        private final ElementModel root;
-        private ElementModel match = null;
+        private final ElementImpl root;
+        private ElementImpl match = null;
         private final Evaluator eval;
 
-        FirstFinder(ElementModel root, Evaluator eval) {
+        FirstFinder(ElementImpl root, Evaluator eval) {
             this.root = root;
             this.eval = eval;
         }
 
         @Override
-        public FilterResult head(NodeModel node, int depth) {
-            if (node instanceof ElementModel) {
-                ElementModel el = (ElementModel) node;
+        public FilterResult head(NodeImpl node, int depth) {
+            if (node instanceof ElementImpl) {
+                ElementImpl el = (ElementImpl) node;
                 if (eval.matches(root, el)) {
                     match = el;
                     return FilterResult.STOP;
@@ -79,7 +79,7 @@ public class Collector {
         }
 
         @Override
-        public FilterResult tail(NodeModel node, int depth) {
+        public FilterResult tail(NodeImpl node, int depth) {
             return FilterResult.CONTINUE;
         }
     }

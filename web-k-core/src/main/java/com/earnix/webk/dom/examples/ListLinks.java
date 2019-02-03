@@ -2,9 +2,9 @@ package com.earnix.webk.dom.examples;
 
 import com.earnix.webk.dom.Jsoup;
 import com.earnix.webk.dom.helper.Validate;
-import com.earnix.webk.dom.nodes.DocumentModel;
-import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.select.Elements;
+import com.earnix.webk.script.impl.ElementImpl;
+import lombok.val;
 
 import java.io.IOException;
 
@@ -17,13 +17,13 @@ public class ListLinks {
         String url = args[0];
         print("Fetching %s...", url);
 
-        DocumentModel doc = Jsoup.connect(url).get();
+        val doc = Jsoup.connect(url).get();
         Elements links = doc.select("a[href]");
         Elements media = doc.select("[src]");
         Elements imports = doc.select("link[href]");
 
         print("\nMedia: (%d)", media.size());
-        for (ElementModel src : media) {
+        for (ElementImpl src : media) {
             if (src.tagName().equals("img"))
                 print(" * %s: <%s> %sx%s (%s)",
                         src.tagName(), src.attr("abs:src"), src.attr("width"), src.attr("height"),
@@ -33,12 +33,12 @@ public class ListLinks {
         }
 
         print("\nImports: (%d)", imports.size());
-        for (ElementModel link : imports) {
+        for (ElementImpl link : imports) {
             print(" * %s <%s> (%s)", link.tagName(), link.attr("abs:href"), link.attr("rel"));
         }
 
         print("\nLinks: (%d)", links.size());
-        for (ElementModel link : links) {
+        for (ElementImpl link : links) {
             print(" * a: <%s>  (%s)", link.attr("abs:href"), trim(link.text(), 35));
         }
     }

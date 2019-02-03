@@ -27,8 +27,6 @@ import com.earnix.webk.css.style.CalculatedStyle;
 import com.earnix.webk.css.style.derived.ColorValue;
 import com.earnix.webk.css.style.derived.LengthValue;
 import com.earnix.webk.css.style.derived.StringValue;
-import com.earnix.webk.dom.nodes.DocumentModel;
-import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.event.DocumentListener;
 import com.earnix.webk.extend.FSCanvas;
 import com.earnix.webk.extend.NamespaceHandler;
@@ -43,6 +41,8 @@ import com.earnix.webk.render.PageBox;
 import com.earnix.webk.render.RenderingContext;
 import com.earnix.webk.render.ViewportBox;
 import com.earnix.webk.script.ScriptContext;
+import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
 import com.earnix.webk.util.Configuration;
 import com.earnix.webk.util.XRLog;
 import org.w3c.dom.css.CSSPrimitiveValue;
@@ -86,14 +86,14 @@ public class RootPanel extends JPanel implements Scrollable, UserInterface, FSCa
     // initialize to JViewport default mode
     private int default_scroll_mode = JViewport.BLIT_SCROLL_MODE;
 
-    protected DocumentModel doc = null;
+    protected DocumentImpl doc = null;
 
     /*
      * ========= UserInterface implementation ===============
      */
-    public ElementModel hovered_element = null;
-    public ElementModel active_element = null;
-    public ElementModel focus_element = null;
+    public ElementImpl hovered_element = null;
+    public ElementImpl active_element = null;
+    public ElementImpl focus_element = null;
 
     // On-demand repaint requests for async image loading
     private long lastRepaintRunAt = System.currentTimeMillis();
@@ -116,7 +116,7 @@ public class RootPanel extends JPanel implements Scrollable, UserInterface, FSCa
         return scriptContext;
     }
 
-    public void setDocument(DocumentModel doc, String url, NamespaceHandler nsh) {
+    public void setDocument(DocumentImpl doc, String url, NamespaceHandler nsh) {
         documentListeners.forEach(DocumentListener::documentStarted);
 
         resetScrollPosition();
@@ -520,15 +520,15 @@ public class RootPanel extends JPanel implements Scrollable, UserInterface, FSCa
     }
 
 
-    public boolean isHover(ElementModel e) {
+    public boolean isHover(ElementImpl e) {
         return e == hovered_element;
     }
 
-    public boolean isActive(ElementModel e) {
+    public boolean isActive(ElementImpl e) {
         return e == active_element;
     }
 
-    public boolean isFocus(ElementModel e) {
+    public boolean isFocus(ElementImpl e) {
         return e == focus_element;
     }
 

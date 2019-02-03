@@ -26,6 +26,7 @@ import com.earnix.webk.script.whatwg_dom.Window;
 @Constructor
 @Exposed({Window.class, DedicatedWorker.class, SharedWorker.class})
 public interface XMLHttpRequest extends XMLHttpRequestEventTarget {
+    
     // event handler
     Attribute<EventHandler> onreadystatechange();
 

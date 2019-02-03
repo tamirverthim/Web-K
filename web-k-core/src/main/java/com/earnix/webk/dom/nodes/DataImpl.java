@@ -1,5 +1,8 @@
 package com.earnix.webk.dom.nodes;
 
+import com.earnix.webk.script.impl.NodeImpl;
+import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+
 import java.io.IOException;
 
 /**
@@ -7,14 +10,14 @@ import java.io.IOException;
  *
  * @author Jonathan Hedley, jonathan@hedley.net
  */
-public class DataNodeModel extends LeafNodeModel {
+public class DataImpl extends NodeImpl {
 
     /**
      * Create a new DataNode.
      *
      * @param data data contents
      */
-    public DataNodeModel(String data) {
+    public DataImpl(String data) {
         value = data;
     }
 
@@ -25,7 +28,7 @@ public class DataNodeModel extends LeafNodeModel {
      * @param baseUri Unused, Leaf Nodes do not hold base URis
      * @deprecated use {@link #DataNodeModel(String)} instead
      */
-    public DataNodeModel(String data, String baseUri) {
+    public DataImpl(String data, String baseUri) {
         this(data);
     }
 
@@ -48,16 +51,16 @@ public class DataNodeModel extends LeafNodeModel {
      * @param data unencoded data
      * @return this node, for chaining
      */
-    public DataNodeModel setWholeData(String data) {
+    public DataImpl setWholeData(String data) {
         coreValue(data);
         return this;
     }
 
-    void outerHtmlHead(Appendable accum, int depth, DocumentModel.OutputSettings out) throws IOException {
+    protected void outerHtmlHead(Appendable accum, int depth, DocumentImpl.OutputSettings out) throws IOException {
         accum.append(getWholeData()); // data is not escaped in return from data nodes, so " in script, style is plain
     }
 
-    void outerHtmlTail(Appendable accum, int depth, DocumentModel.OutputSettings out) {
+    protected void outerHtmlTail(Appendable accum, int depth, DocumentImpl.OutputSettings out) {
     }
 
     @Override
@@ -72,8 +75,8 @@ public class DataNodeModel extends LeafNodeModel {
      * @param baseUri     bass URI
      * @return new DataNode
      */
-    public static DataNodeModel createFromEncoded(String encodedData, String baseUri) {
+    public static DataImpl createFromEncoded(String encodedData, String baseUri) {
         String data = Entities.unescape(encodedData);
-        return new DataNodeModel(data);
+        return new DataImpl(data);
     }
 }

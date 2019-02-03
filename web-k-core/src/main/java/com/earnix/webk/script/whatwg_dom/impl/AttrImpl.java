@@ -1,8 +1,8 @@
 package com.earnix.webk.script.whatwg_dom.impl;
 
 import com.earnix.webk.dom.nodes.AttributeModel;
-import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.script.ScriptContext;
+import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.web_idl.DOMString;
 import com.earnix.webk.script.web_idl.USVString;
 import com.earnix.webk.script.whatwg_dom.Attr;
@@ -23,12 +23,12 @@ import lombok.experimental.FieldDefaults;
 public class AttrImpl implements Attr {
 
     AttributeModel model;
-    ElementModel modelNode;
+    ElementImpl modelNode;
     ScriptContext scriptContext;
     @Delegate(types = {EventTarget.class})
     EventTargetImpl eventTargetImpl;
 
-    public AttrImpl(ElementModel modelNode, AttributeModel attribute, ScriptContext scriptContext) {
+    public AttrImpl(ElementImpl modelNode, AttributeModel attribute, ScriptContext scriptContext) {
         super();
         this.modelNode = modelNode;
         this.model = attribute;
@@ -74,7 +74,7 @@ public class AttrImpl implements Attr {
 
     @Override
     public com.earnix.webk.script.whatwg_dom.Element ownerElement() {
-        return ScriptDOMFactory.getElement(scriptContext, modelNode);
+        return modelNode;
     }
 
     @Override
@@ -120,7 +120,7 @@ public class AttrImpl implements Attr {
 
     @Override
     public com.earnix.webk.script.whatwg_dom.Element parentElement() {
-        return ScriptDOMFactory.getElement(scriptContext, modelNode.parent());
+        return modelNode.parent();
     }
 
     @Override

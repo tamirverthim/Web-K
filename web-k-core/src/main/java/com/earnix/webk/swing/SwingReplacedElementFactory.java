@@ -20,9 +20,6 @@
 package com.earnix.webk.swing;
 
 
-import com.earnix.webk.dom.nodes.DocumentModel;
-import com.earnix.webk.dom.nodes.ElementModel;
-import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.extend.ReplacedElement;
 import com.earnix.webk.extend.ReplacedElementFactory;
 import com.earnix.webk.extend.UserAgentCallback;
@@ -30,7 +27,9 @@ import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
 import com.earnix.webk.resource.ImageResource;
 import com.earnix.webk.script.html.canvas.impl.HTMLCanvasElementImpl;
-import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
+import com.earnix.webk.script.html.impl.DocumentImpl;
+import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.script.impl.NodeImpl;
 import com.earnix.webk.simple.extend.DefaultFormSubmissionListener;
 import com.earnix.webk.simple.extend.FormSubmissionListener;
 import com.earnix.webk.simple.extend.XhtmlForm;
@@ -92,7 +91,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
             int cssWidth,
             int cssHeight
     ) {
-        ElementModel el = box.getElement();
+        ElementImpl el = box.getElement();
         ReplacedElement replacedEl = createReplacedElementImpl(context, box, uac, cssWidth, cssHeight);
 
         if (replacedEl instanceof SwingReplacedElement) {
@@ -130,7 +129,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
             int cssWidth,
             int cssHeight
     ) {
-        ElementModel e = box.getElement();
+        ElementImpl e = box.getElement();
 
         if (e == null) {
             return null;
@@ -140,7 +139,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
             return replaceImage(uac, context, e, cssWidth, cssHeight);
         } else if (context.getNamespaceHandler().isCanvasElement(e)) {
 
-            HTMLCanvasElementImpl canvasElement = (HTMLCanvasElementImpl) ScriptDOMFactory.get(context.getSharedContext().getCanvas().getScriptContext(), e);
+            HTMLCanvasElementImpl canvasElement = (HTMLCanvasElementImpl) e;
             
             return new CanvasReplacedElement(canvasElement);
 
@@ -148,7 +147,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
             return new SVGReplacedElement(e, cssWidth, cssHeight);
         } else {
             //form components
-            ElementModel parentForm = getParentForm(e, context);
+            ElementImpl parentForm = getParentForm(e, context);
             //parentForm may be null! No problem! Assume action is this document and method is get.
             XhtmlForm form = getForm(parentForm);
             if (form == null) {
@@ -189,7 +188,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
      * @param cssHeight Target height of the image @return A ReplacedElement for the image; will not be null.
      * @return
      */
-    protected ReplacedElement replaceImage(UserAgentCallback uac, LayoutContext context, ElementModel elem, int cssWidth, int cssHeight) {
+    protected ReplacedElement replaceImage(UserAgentCallback uac, LayoutContext context, ElementImpl elem, int cssWidth, int cssHeight) {
         ReplacedElement re = null;
         String imageSrc = context.getNamespaceHandler().getImageSourceURI(elem);
 
@@ -219,7 +218,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
         return re;
     }
 
-    private ReplacedElement lookupImageReplacedElement(final ElementModel elem, final String ruri, final int cssWidth, final int cssHeight) {
+    private ReplacedElement lookupImageReplacedElement(final ElementImpl elem, final String ruri, final int cssWidth, final int cssHeight) {
         if (imageComponents == null) {
             return null;
         }
@@ -266,7 +265,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
      * @param cssWidth
      * @param cssHeight
      */
-    protected void storeImageReplacedElement(ElementModel e, ReplacedElement cc, String uri, final int cssWidth, final int cssHeight) {
+    protected void storeImageReplacedElement(ElementImpl e, ReplacedElement cc, String uri, final int cssWidth, final int cssHeight) {
         if (imageComponents == null) {
             imageComponents = new HashMap();
         }
@@ -281,7 +280,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
      * @param uri
      * @return The ReplacedElement for the image, or null if there is none.
      */
-    protected ReplacedElement lookupImageReplacedElement(ElementModel e, String uri) {
+    protected ReplacedElement lookupImageReplacedElement(ElementImpl e, String uri) {
         return lookupImageReplacedElement(e, uri, -1, -1);
     }
 
@@ -291,7 +290,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
      * @param e The element under which the form is keyed (e.g. "<form>" in HTML)
      * @param f The form element being stored.
      */
-    protected void addForm(ElementModel e, XhtmlForm f) {
+    protected void addForm(ElementImpl e, XhtmlForm f) {
         if (forms == null) {
             forms = new LinkedHashMap();
         }
@@ -304,7 +303,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
      * @param e The Element to which the form is keyed
      * @return The form, or null if not found.
      */
-    protected XhtmlForm getForm(ElementModel e) {
+    protected XhtmlForm getForm(ElementImpl e) {
         if (forms == null) {
             return null;
         }
@@ -314,19 +313,19 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
     /**
      * @param e
      */
-    protected ElementModel getParentForm(ElementModel e, LayoutContext context) {
-        NodeModel node = e;
+    protected ElementImpl getParentForm(ElementImpl e, LayoutContext context) {
+        NodeImpl node = e;
 
         do {
             node = node.parentNode();
-        } while (node instanceof ElementModel &&
-                !context.getNamespaceHandler().isFormElement((ElementModel) node));
+        } while (node instanceof ElementImpl &&
+                !context.getNamespaceHandler().isFormElement((ElementImpl) node));
 
-        if (!(node instanceof ElementModel) || node instanceof DocumentModel) {
+        if (!(node instanceof ElementImpl) || node instanceof DocumentImpl) {
             return null;
         }
 
-        return (ElementModel) node;
+        return (ElementImpl) node;
     }
 
     /**
@@ -337,7 +336,7 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
         //imageComponents = null;
     }
 
-    public void remove(ElementModel e) {
+    public void remove(ElementImpl e) {
         if (forms != null) {
             forms.remove(e);
         }
@@ -352,12 +351,12 @@ public class SwingReplacedElementFactory implements ReplacedElementFactory {
     }
 
     private static class CacheKey {
-        final ElementModel elem;
+        final ElementImpl elem;
         final String uri;
         final int width;
         final int height;
 
-        public CacheKey(final ElementModel elem, final String uri, final int width, final int height) {
+        public CacheKey(final ElementImpl elem, final String uri, final int width, final int height) {
             this.uri = uri;
             this.width = width;
             this.height = height;

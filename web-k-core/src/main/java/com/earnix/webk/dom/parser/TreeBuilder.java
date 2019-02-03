@@ -2,9 +2,9 @@ package com.earnix.webk.dom.parser;
 
 import com.earnix.webk.dom.helper.Validate;
 import com.earnix.webk.dom.nodes.AttributesModel;
-import com.earnix.webk.dom.nodes.DocumentModel;
-import com.earnix.webk.dom.nodes.ElementModel;
-import com.earnix.webk.dom.nodes.NodeModel;
+import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.script.impl.NodeImpl;
+import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
 
 import java.io.Reader;
 import java.util.ArrayList;
@@ -17,8 +17,8 @@ abstract class TreeBuilder {
     protected Parser parser;
     CharacterReader reader;
     Tokeniser tokeniser;
-    protected DocumentModel doc; // current doc we are building into
-    protected ArrayList<ElementModel> stack; // the stack of open elements
+    protected DocumentImpl doc; // current doc we are building into
+    protected ArrayList<ElementImpl> stack; // the stack of open elements
     protected String baseUri; // current base uri, for creating new elements
     protected Token currentToken; // currentToken is used only for error tracking.
     protected ParseSettings settings;
@@ -32,7 +32,7 @@ abstract class TreeBuilder {
         Validate.notNull(input, "String input must not be null");
         Validate.notNull(baseUri, "BaseURI must not be null");
 
-        doc = new DocumentModel(baseUri);
+        doc = new DocumentImpl(baseUri);
         doc.parser(parser);
         this.parser = parser;
         settings = parser.settings();
@@ -43,13 +43,13 @@ abstract class TreeBuilder {
         this.baseUri = baseUri;
     }
 
-    DocumentModel parse(Reader input, String baseUri, Parser parser) {
+    DocumentImpl parse(Reader input, String baseUri, Parser parser) {
         initialiseParse(input, baseUri, parser);
         runParser();
         return doc;
     }
 
-    abstract List<NodeModel> parseFragment(String inputFragment, ElementModel context, String baseUri, Parser parser);
+    abstract List<NodeImpl> parseFragment(String inputFragment, ElementImpl context, String baseUri, Parser parser);
 
     protected void runParser() {
         while (true) {
@@ -88,7 +88,7 @@ abstract class TreeBuilder {
     }
 
 
-    protected ElementModel currentElement() {
+    protected ElementImpl currentElement() {
         int size = stack.size();
         return size > 0 ? stack.get(size - 1) : null;
     }

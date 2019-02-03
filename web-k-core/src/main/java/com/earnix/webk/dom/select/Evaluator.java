@@ -2,14 +2,14 @@ package com.earnix.webk.dom.select;
 
 import com.earnix.webk.dom.helper.Validate;
 import com.earnix.webk.dom.nodes.AttributeModel;
-import com.earnix.webk.dom.nodes.CommentModel;
-import com.earnix.webk.dom.nodes.DocumentModel;
-import com.earnix.webk.dom.nodes.DocumentTypeModel;
-import com.earnix.webk.dom.nodes.ElementModel;
-import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.dom.nodes.PseudoTextElement;
-import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.dom.nodes.XmlDeclarationModel;
+import com.earnix.webk.script.impl.CommentImpl;
+import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.script.impl.NodeImpl;
+import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.whatwg_dom.impl.DocumentTypeImpl;
+import com.earnix.webk.script.whatwg_dom.impl.TextImpl;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -34,7 +34,7 @@ public abstract class Evaluator {
      * @return Returns <tt>true</tt> if the requirements are met or
      * <tt>false</tt> otherwise
      */
-    public abstract boolean matches(ElementModel root, ElementModel element);
+    public abstract boolean matches(ElementImpl root, ElementImpl element);
 
     /**
      * Evaluator for tag name
@@ -47,7 +47,7 @@ public abstract class Evaluator {
         }
 
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
+        public boolean matches(ElementImpl root, ElementImpl element) {
             return (element.tagName().equalsIgnoreCase(tagName));
         }
 
@@ -69,7 +69,7 @@ public abstract class Evaluator {
         }
 
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
+        public boolean matches(ElementImpl root, ElementImpl element) {
             return (element.tagName().endsWith(tagName));
         }
 
@@ -90,7 +90,7 @@ public abstract class Evaluator {
         }
 
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
+        public boolean matches(ElementImpl root, ElementImpl element) {
             return (id.equals(element.id()));
         }
 
@@ -112,7 +112,7 @@ public abstract class Evaluator {
         }
 
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
+        public boolean matches(ElementImpl root, ElementImpl element) {
             return (element.hasClass(className));
         }
 
@@ -134,7 +134,7 @@ public abstract class Evaluator {
         }
 
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
+        public boolean matches(ElementImpl root, ElementImpl element) {
             return element.hasAttr(key);
         }
 
@@ -157,8 +157,8 @@ public abstract class Evaluator {
         }
 
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
-            List<AttributeModel> values = element.attributes().asList();
+        public boolean matches(ElementImpl root, ElementImpl element) {
+            List<AttributeModel> values = element.getAttributes().asList();
             for (AttributeModel attribute : values) {
                 if (lowerCase(attribute.getKey()).startsWith(keyPrefix))
                     return true;
@@ -182,7 +182,7 @@ public abstract class Evaluator {
         }
 
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
+        public boolean matches(ElementImpl root, ElementImpl element) {
             return element.hasAttr(key) && value.equalsIgnoreCase(element.attr(key).trim());
         }
 
@@ -202,7 +202,7 @@ public abstract class Evaluator {
         }
 
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
+        public boolean matches(ElementImpl root, ElementImpl element) {
             return !value.equalsIgnoreCase(element.attr(key));
         }
 
@@ -222,7 +222,7 @@ public abstract class Evaluator {
         }
 
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
+        public boolean matches(ElementImpl root, ElementImpl element) {
             return element.hasAttr(key) && lowerCase(element.attr(key)).startsWith(value); // value is lower case already
         }
 
@@ -242,7 +242,7 @@ public abstract class Evaluator {
         }
 
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
+        public boolean matches(ElementImpl root, ElementImpl element) {
             return element.hasAttr(key) && lowerCase(element.attr(key)).endsWith(value); // value is lower case
         }
 
@@ -262,7 +262,7 @@ public abstract class Evaluator {
         }
 
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
+        public boolean matches(ElementImpl root, ElementImpl element) {
             return element.hasAttr(key) && lowerCase(element.attr(key)).contains(value); // value is lower case
         }
 
@@ -286,7 +286,7 @@ public abstract class Evaluator {
         }
 
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
+        public boolean matches(ElementImpl root, ElementImpl element) {
             return element.hasAttr(key) && pattern.matcher(element.attr(key)).find();
         }
 
@@ -323,7 +323,7 @@ public abstract class Evaluator {
     public static final class AllElements extends Evaluator {
 
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
+        public boolean matches(ElementImpl root, ElementImpl element) {
             return true;
         }
 
@@ -342,7 +342,7 @@ public abstract class Evaluator {
         }
 
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
+        public boolean matches(ElementImpl root, ElementImpl element) {
             return root != element && element.elementSiblingIndex() < index;
         }
 
@@ -362,7 +362,7 @@ public abstract class Evaluator {
         }
 
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
+        public boolean matches(ElementImpl root, ElementImpl element) {
             return element.elementSiblingIndex() > index;
         }
 
@@ -382,7 +382,7 @@ public abstract class Evaluator {
         }
 
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
+        public boolean matches(ElementImpl root, ElementImpl element) {
             return element.elementSiblingIndex() == index;
         }
 
@@ -398,9 +398,9 @@ public abstract class Evaluator {
      */
     public static final class IsLastChild extends Evaluator {
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
-            final ElementModel p = element.parent();
-            return p != null && !(p instanceof DocumentModel) && element.elementSiblingIndex() == p.children().size() - 1;
+        public boolean matches(ElementImpl root, ElementImpl element) {
+            final ElementImpl p = element.parent();
+            return p != null && !(p instanceof DocumentImpl) && element.elementSiblingIndex() == p.getChildren().size() - 1;
         }
 
         @Override
@@ -445,9 +445,9 @@ public abstract class Evaluator {
         }
 
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
-            final ElementModel p = element.parent();
-            if (p == null || (p instanceof DocumentModel)) return false;
+        public boolean matches(ElementImpl root, ElementImpl element) {
+            final ElementImpl p = element.parent();
+            if (p == null || (p instanceof DocumentImpl)) return false;
 
             final int pos = calculatePosition(root, element);
             if (a == 0) return pos == b;
@@ -466,7 +466,7 @@ public abstract class Evaluator {
 
         protected abstract String getPseudoClass();
 
-        protected abstract int calculatePosition(ElementModel root, ElementModel element);
+        protected abstract int calculatePosition(ElementImpl root, ElementImpl element);
     }
 
 
@@ -481,7 +481,7 @@ public abstract class Evaluator {
             super(a, b);
         }
 
-        protected int calculatePosition(ElementModel root, ElementModel element) {
+        protected int calculatePosition(ElementImpl root, ElementImpl element) {
             return element.elementSiblingIndex() + 1;
         }
 
@@ -502,8 +502,8 @@ public abstract class Evaluator {
         }
 
         @Override
-        protected int calculatePosition(ElementModel root, ElementModel element) {
-            return element.parent().children().size() - element.elementSiblingIndex();
+        protected int calculatePosition(ElementImpl root, ElementImpl element) {
+            return element.parent().getChildren().size() - element.elementSiblingIndex();
         }
 
         @Override
@@ -520,10 +520,10 @@ public abstract class Evaluator {
             super(a, b);
         }
 
-        protected int calculatePosition(ElementModel root, ElementModel element) {
+        protected int calculatePosition(ElementImpl root, ElementImpl element) {
             int pos = 0;
-            Elements family = element.parent().children();
-            for (ElementModel el : family) {
+            Elements family = element.parent().getChildren();
+            for (ElementImpl el : family) {
                 if (el.tag().equals(element.tag())) pos++;
                 if (el == element) break;
             }
@@ -543,9 +543,9 @@ public abstract class Evaluator {
         }
 
         @Override
-        protected int calculatePosition(ElementModel root, ElementModel element) {
+        protected int calculatePosition(ElementImpl root, ElementImpl element) {
             int pos = 0;
-            Elements family = element.parent().children();
+            Elements family = element.parent().getChildren();
             for (int i = element.elementSiblingIndex(); i < family.size(); i++) {
                 if (family.get(i).tag().equals(element.tag())) pos++;
             }
@@ -563,9 +563,9 @@ public abstract class Evaluator {
      */
     public static final class IsFirstChild extends Evaluator {
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
-            final ElementModel p = element.parent();
-            return p != null && !(p instanceof DocumentModel) && element.elementSiblingIndex() == 0;
+        public boolean matches(ElementImpl root, ElementImpl element) {
+            final ElementImpl p = element.parent();
+            return p != null && !(p instanceof DocumentImpl) && element.elementSiblingIndex() == 0;
         }
 
         @Override
@@ -581,8 +581,8 @@ public abstract class Evaluator {
      */
     public static final class IsRoot extends Evaluator {
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
-            final ElementModel r = root instanceof DocumentModel ? root.child(0) : root;
+        public boolean matches(ElementImpl root, ElementImpl element) {
+            final ElementImpl r = root instanceof DocumentImpl ? root.child(0) : root;
             return element == r;
         }
 
@@ -594,9 +594,9 @@ public abstract class Evaluator {
 
     public static final class IsOnlyChild extends Evaluator {
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
-            final ElementModel p = element.parent();
-            return p != null && !(p instanceof DocumentModel) && element.siblingElements().size() == 0;
+        public boolean matches(ElementImpl root, ElementImpl element) {
+            final ElementImpl p = element.parent();
+            return p != null && !(p instanceof DocumentImpl) && element.siblingElements().size() == 0;
         }
 
         @Override
@@ -607,13 +607,13 @@ public abstract class Evaluator {
 
     public static final class IsOnlyOfType extends Evaluator {
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
-            final ElementModel p = element.parent();
-            if (p == null || p instanceof DocumentModel) return false;
+        public boolean matches(ElementImpl root, ElementImpl element) {
+            final ElementImpl p = element.parent();
+            if (p == null || p instanceof DocumentImpl) return false;
 
             int pos = 0;
-            Elements family = p.children();
-            for (ElementModel el : family) {
+            Elements family = p.getChildren();
+            for (ElementImpl el : family) {
                 if (el.tag().equals(element.tag())) pos++;
             }
             return pos == 1;
@@ -627,10 +627,10 @@ public abstract class Evaluator {
 
     public static final class IsEmpty extends Evaluator {
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
-            List<NodeModel> family = element.childNodes();
-            for (NodeModel n : family) {
-                if (!(n instanceof CommentModel || n instanceof XmlDeclarationModel || n instanceof DocumentTypeModel)) return false;
+        public boolean matches(ElementImpl root, ElementImpl element) {
+            List<NodeImpl> family = element.getChildNodes();
+            for (NodeImpl n : family) {
+                if (!(n instanceof CommentImpl || n instanceof XmlDeclarationModel || n instanceof DocumentTypeImpl)) return false;
             }
             return true;
         }
@@ -665,7 +665,7 @@ public abstract class Evaluator {
         }
 
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
+        public boolean matches(ElementImpl root, ElementImpl element) {
             return lowerCase(element.text()).contains(searchText);
         }
 
@@ -686,7 +686,7 @@ public abstract class Evaluator {
         }
 
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
+        public boolean matches(ElementImpl root, ElementImpl element) {
             return lowerCase(element.data()).contains(searchText);
         }
 
@@ -707,7 +707,7 @@ public abstract class Evaluator {
         }
 
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
+        public boolean matches(ElementImpl root, ElementImpl element) {
             return lowerCase(element.ownText()).contains(searchText);
         }
 
@@ -728,7 +728,7 @@ public abstract class Evaluator {
         }
 
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
+        public boolean matches(ElementImpl root, ElementImpl element) {
             Matcher m = pattern.matcher(element.text());
             return m.find();
         }
@@ -750,7 +750,7 @@ public abstract class Evaluator {
         }
 
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
+        public boolean matches(ElementImpl root, ElementImpl element) {
             Matcher m = pattern.matcher(element.ownText());
             return m.find();
         }
@@ -764,14 +764,13 @@ public abstract class Evaluator {
     public static final class MatchText extends Evaluator {
 
         @Override
-        public boolean matches(ElementModel root, ElementModel element) {
+        public boolean matches(ElementImpl root, ElementImpl element) {
             if (element instanceof PseudoTextElement)
                 return true;
 
-            List<TextNodeModel> textNodes = element.textNodes();
-            for (TextNodeModel textNode : textNodes) {
-                PseudoTextElement pel = new PseudoTextElement(
-                        com.earnix.webk.dom.parser.Tag.valueOf(element.tagName()), element.baseUri(), element.attributes());
+            List<TextImpl> textNodes = element.textNodes();
+            for (TextImpl textNode : textNodes) {
+                PseudoTextElement pel = new PseudoTextElement(com.earnix.webk.dom.parser.Tag.valueOf(element.tagName()), element.baseUri(), element.getAttributes());
                 textNode.replaceWith(pel);
                 pel.appendChild(textNode);
             }

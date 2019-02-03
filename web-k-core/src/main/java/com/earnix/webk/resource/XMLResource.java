@@ -20,7 +20,7 @@
 package com.earnix.webk.resource;
 
 import com.earnix.webk.dom.Jsoup;
-import com.earnix.webk.dom.nodes.DocumentModel;
+import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
 import com.earnix.webk.util.Configuration;
 import com.earnix.webk.util.XRLog;
 import com.earnix.webk.util.XRRuntimeException;
@@ -79,7 +79,7 @@ public class XMLResource extends AbstractResource {
 
     // region draft
 
-    private static DocumentModel getJsoup(InputStream stream) {
+    private static com.earnix.webk.script.whatwg_dom.impl.DocumentImpl getJsoup(InputStream stream) {
         try {
             String source = IOUtils.toString(stream, "UTF-8");
             return Jsoup.parse(source);
@@ -88,26 +88,26 @@ public class XMLResource extends AbstractResource {
         }
     }
 
-    private static DocumentModel getJsoup(InputSource source) {
+    private static com.earnix.webk.script.whatwg_dom.impl.DocumentImpl getJsoup(InputSource source) {
         return getJsoup(source.getByteStream());
     }
 
 
-    private static DocumentModel getJsoup(Reader reader) {
+    private static DocumentImpl getJsoup(Reader reader) {
         return getJsoup(new ReaderInputStream(reader, Charset.forName("UTF-8")));
     }
 
     // endregion
 
-    public static DocumentModel load(InputStream stream) {
+    public static DocumentImpl load(InputStream stream) {
         return getJsoup(stream);
     }
 
-    public static DocumentModel load(InputSource source) {
+    public static com.earnix.webk.script.whatwg_dom.impl.DocumentImpl load(InputSource source) {
         return getJsoup(source);
     }
 
-    public static DocumentModel load(Reader reader) {
+    public static DocumentImpl load(Reader reader) {
         return getJsoup(reader);
     }
 
@@ -236,7 +236,7 @@ public class XMLResource extends AbstractResource {
 //            return target;
 //        }
 
-        private DocumentModel transform(DocumentModel source) {
+        private DocumentImpl transform(DocumentImpl source) {
             return source;
         }
 

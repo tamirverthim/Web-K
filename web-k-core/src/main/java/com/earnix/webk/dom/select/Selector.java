@@ -1,8 +1,8 @@
 package com.earnix.webk.dom.select;
 
 import com.earnix.webk.dom.helper.Validate;
-import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.nodes.PseudoTextElement;
+import com.earnix.webk.script.impl.ElementImpl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -73,7 +73,7 @@ import java.util.IdentityHashMap;
  * </table>
  *
  * @author Jonathan Hedley, jonathan@hedley.net
- * @see ElementModel#select(String)
+ * @see ElementImpl#select(String)
  */
 public class Selector {
     // not instantiable
@@ -88,7 +88,7 @@ public class Selector {
      * @return matching elements, empty if none
      * @throws Selector.SelectorParseException (unchecked) on an invalid CSS query.
      */
-    public static Elements select(String query, ElementModel root) {
+    public static Elements select(String query, ElementImpl root) {
         Validate.notEmpty(query);
         return select(QueryParser.parse(query), root);
     }
@@ -100,7 +100,7 @@ public class Selector {
      * @param root      root element to descend into
      * @return matching elements, empty if none
      */
-    public static Elements select(Evaluator evaluator, ElementModel root) {
+    public static Elements select(Evaluator evaluator, ElementImpl root) {
         Validate.notNull(evaluator);
         Validate.notNull(root);
         return Collector.collect(evaluator, root);
@@ -113,17 +113,17 @@ public class Selector {
      * @param roots root elements to descend into
      * @return matching elements, empty if none
      */
-    public static Elements select(String query, Iterable<ElementModel> roots) {
+    public static Elements select(String query, Iterable<ElementImpl> roots) {
         Validate.notEmpty(query);
         Validate.notNull(roots);
         Evaluator evaluator = QueryParser.parse(query);
-        ArrayList<ElementModel> elements = new ArrayList<>();
-        IdentityHashMap<ElementModel, Boolean> seenElements = new IdentityHashMap<>();
+        ArrayList<ElementImpl> elements = new ArrayList<>();
+        IdentityHashMap<ElementImpl, Boolean> seenElements = new IdentityHashMap<>();
         // dedupe elements by identity, not equality
 
-        for (ElementModel root : roots) {
+        for (ElementImpl root : roots) {
             final Elements found = select(evaluator, root);
-            for (ElementModel el : found) {
+            for (ElementImpl el : found) {
                 if (!seenElements.containsKey(el)) {
                     elements.add(el);
                     seenElements.put(el, Boolean.TRUE);
@@ -134,11 +134,11 @@ public class Selector {
     }
 
     // exclude set. package open so that Elements can implement .not() selector.
-    static Elements filterOut(Collection<ElementModel> elements, Collection<ElementModel> outs) {
+    static Elements filterOut(Collection<ElementImpl> elements, Collection<ElementImpl> outs) {
         Elements output = new Elements();
-        for (ElementModel el : elements) {
+        for (ElementImpl el : elements) {
             boolean found = false;
-            for (ElementModel out : outs) {
+            for (ElementImpl out : outs) {
                 if (el.equals(out)) {
                     found = true;
                     break;
@@ -157,7 +157,7 @@ public class Selector {
      * @param root     root element to descend into
      * @return the matching element, or <b>null</b> if none.
      */
-    public static ElementModel selectFirst(String cssQuery, ElementModel root) {
+    public static ElementImpl selectFirst(String cssQuery, ElementImpl root) {
         Validate.notEmpty(cssQuery);
         return Collector.findFirst(QueryParser.parse(cssQuery), root);
     }

@@ -21,25 +21,20 @@
 package com.earnix.webk.util;
 
 import com.earnix.webk.dom.Jsoup;
-import com.earnix.webk.dom.nodes.DocumentModel;
+import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
 
 import java.io.File;
-
-//import javax.xml.parsers.DocumentBuilder;
-//import javax.xml.parsers.DocumentBuilderFactory;
-//import javax.xml.parsers.ParserConfigurationException;
-
 
 /**
  * Booch utility class for XML processing using DOM
  */
 public class XMLUtil {
 
-    public static DocumentModel documentFromString(final String documentContents) {
+    public static DocumentImpl documentFromString(final String documentContents) {
         return Jsoup.parse(documentContents);
     }
 
-    public static DocumentModel documentFromFile(final String filename)
+    public static DocumentImpl documentFromFile(final String filename)
             throws Exception {
 
         return Jsoup.parse(new File(filename), "UTF-8");

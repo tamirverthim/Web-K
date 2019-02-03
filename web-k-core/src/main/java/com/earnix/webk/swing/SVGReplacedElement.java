@@ -1,6 +1,6 @@
 package com.earnix.webk.swing;
 
-import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.script.impl.ElementImpl;
 import com.kitfox.svg.SVGCache;
 import com.kitfox.svg.app.beans.SVGPanel;
 import lombok.AccessLevel;
@@ -18,11 +18,11 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SVGReplacedElement extends SwingReplacedElement {
 
-    ElementModel model;
+    ElementImpl model;
     int cssWidth;
     int cssHeight;
 
-    public SVGReplacedElement(ElementModel svgElement, int cssWidth, int cssHeight) {
+    public SVGReplacedElement(ElementImpl svgElement, int cssWidth, int cssHeight) {
         super(new SVGPanel());
         this.model = svgElement;
         this.cssWidth = cssWidth;

@@ -5,6 +5,7 @@ import com.earnix.webk.dom.helper.Validate;
 import com.earnix.webk.dom.internal.StringUtil;
 import com.earnix.webk.dom.parser.CharacterReader;
 import com.earnix.webk.dom.parser.Parser;
+import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
 
 import java.io.IOException;
 import java.nio.charset.CharsetEncoder;
@@ -24,7 +25,7 @@ public class Entities {
     static final int codepointRadix = 36;
     private static final char[] codeDelims = {',', ';'};
     private static final HashMap<String, String> multipoints = new HashMap<>(); // name -> multiple character references
-    private static final DocumentModel.OutputSettings DefaultOutput = new DocumentModel.OutputSettings();
+    private static final DocumentImpl.OutputSettings DefaultOutput = new DocumentImpl.OutputSettings();
 
     public enum EscapeMode {
         /**
@@ -146,7 +147,7 @@ public class Entities {
      * @param out    the output settings to use
      * @return the escaped string
      */
-    public static String escape(String string, DocumentModel.OutputSettings out) {
+    public static String escape(String string, DocumentImpl.OutputSettings out) {
         if (string == null)
             return "";
         StringBuilder accum = StringUtil.borrowBuilder();
@@ -170,7 +171,7 @@ public class Entities {
     }
 
     // this method is ugly, and does a lot. but other breakups cause rescanning and stringbuilder generations
-    static void escape(Appendable accum, String string, DocumentModel.OutputSettings out,
+    public static void escape(Appendable accum, String string, DocumentImpl.OutputSettings out,
                        boolean inAttribute, boolean normaliseWhite, boolean stripLeadingWhite) throws IOException {
 
         boolean lastWasWhite = false;
@@ -299,10 +300,10 @@ public class Entities {
         }
     }
 
-    enum CoreCharset {
+    public enum CoreCharset {
         ascii, utf, fallback;
 
-        static CoreCharset byName(final String name) {
+        public static CoreCharset byName(final String name) {
             if (name.equals("US-ASCII"))
                 return ascii;
             if (name.startsWith("UTF-")) // covers UTF-8, UTF-16, et al

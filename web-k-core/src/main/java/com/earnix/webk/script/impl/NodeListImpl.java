@@ -1,13 +1,10 @@
 package com.earnix.webk.script.impl;
 
-import com.earnix.webk.dom.nodes.NodeModel;
 import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.web_idl.DOMException;
 import com.earnix.webk.script.whatwg_dom.NodeList;
-import com.earnix.webk.script.whatwg_dom.impl.ScriptDOMFactory;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import lombok.val;
 
 import java.util.List;
 
@@ -18,19 +15,18 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NodeListImpl implements NodeList {
 
-    List<NodeModel> parserNodes;
+    List<NodeImpl> model;
     ScriptContext ctx;
 
-    public NodeListImpl(List<NodeModel> parserNodes) {
-        this.parserNodes = parserNodes;
+    public NodeListImpl(List<NodeImpl> model) {
+        this.model = model;
         this.ctx = ctx;
     }
 
     @Override
     public com.earnix.webk.script.whatwg_dom.Node item(int index) {
-        if (parserNodes.size() > index) {
-            val parsed = parserNodes.get((int) index);
-            return ScriptDOMFactory.get(ctx, parsed);
+        if (model.size() > index) {
+            return model.get(index);
         } else {
             throw new DOMException("RangeError");
         }
@@ -38,6 +34,6 @@ public class NodeListImpl implements NodeList {
 
     @Override
     public int length() {
-        return parserNodes.size();
+        return model.size();
     }
 }

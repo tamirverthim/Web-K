@@ -19,7 +19,7 @@
  * - select
  * <p>
  * Script evaluation entry points:
- * - {@link com.earnix.webk.script.ScriptContext#handleNewDocument())
+ * - {@link com.earnix.webk.script.ScriptContext#documentLoaded() }
  * - {@link com.earnix.webk.script.whatwg_dom.impl.EventTargetImpl#dispatchEvent(com.earnix.webk.script.whatwg_dom.Event)};
  * - {@link java.util.TimerTask#run()} at {@link com.earnix.webk.script.html.impl.WindowImpl#setTimeout(com.earnix.webk.script.html.TimerHandler, int, java.lang.Object...)}
  * - {@link java.util.TimerTask#run()} at {@link com.earnix.webk.script.html.impl.WindowImpl#setInterval(com.earnix.webk.script.html.TimerHandler, int, java.lang.Object...)}

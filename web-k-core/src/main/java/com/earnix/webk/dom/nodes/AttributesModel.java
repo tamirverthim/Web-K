@@ -3,6 +3,7 @@ package com.earnix.webk.dom.nodes;
 import com.earnix.webk.dom.SerializationException;
 import com.earnix.webk.dom.helper.Validate;
 import com.earnix.webk.dom.internal.StringUtil;
+import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
 
 import java.io.IOException;
 import java.util.AbstractMap;
@@ -137,7 +138,7 @@ public class AttributesModel implements Iterable<AttributeModel>, Cloneable {
         return this;
     }
 
-    void putIgnoreCase(String key, String value) {
+    public void putIgnoreCase(String key, String value) {
         int i = indexOfKeyIgnoreCase(key);
         if (i != NotFound) {
             vals[i] = value;
@@ -314,14 +315,14 @@ public class AttributesModel implements Iterable<AttributeModel>, Cloneable {
     public String html() {
         StringBuilder sb = StringUtil.borrowBuilder();
         try {
-            html(sb, (new DocumentModel("")).outputSettings()); // output settings a bit funky, but this html() seldom used
+            html(sb, (new DocumentImpl("")).outputSettings()); // output settings a bit funky, but this html() seldom used
         } catch (IOException e) { // ought never happen
             throw new SerializationException(e);
         }
         return StringUtil.releaseBuilder(sb);
     }
 
-    final void html(final Appendable accum, final DocumentModel.OutputSettings out) throws IOException {
+    public final void html(final Appendable accum, final DocumentImpl.OutputSettings out) throws IOException {
         final int sz = size;
         for (int i = 0; i < sz; i++) {
             // inlined from Attribute.html()

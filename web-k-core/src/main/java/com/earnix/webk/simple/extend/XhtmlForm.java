@@ -20,13 +20,13 @@
  */
 package com.earnix.webk.simple.extend;
 
-import com.earnix.webk.dom.nodes.ElementModel;
-import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.layout.SharedContext;
 import com.earnix.webk.render.BlockBox;
+import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.script.impl.NodeImpl;
+import com.earnix.webk.script.whatwg_dom.impl.TextImpl;
 import com.earnix.webk.simple.extend.form.FormField;
 import com.earnix.webk.simple.extend.form.SwingComponentFactory;
 import com.earnix.webk.util.XRLog;
@@ -57,14 +57,14 @@ public class XhtmlForm {
 
 
     UserAgentCallback userAgentCallback;
-    LinkedHashMap<ElementModel, FormField> componentCache;
+    LinkedHashMap<ElementImpl, FormField> componentCache;
     HashMap<String, ButtonGroupWrapper> buttonGroups;
-    ElementModel parentFormElement;
+    ElementImpl parentFormElement;
     FormSubmissionListener formSubmissionListener;
     @Getter
     SharedContext sharedContext;
 
-    public XhtmlForm(SharedContext sharedContext, ElementModel e, FormSubmissionListener fsListener) {
+    public XhtmlForm(SharedContext sharedContext, ElementImpl e, FormSubmissionListener fsListener) {
         this.sharedContext = sharedContext;
         buttonGroups = new HashMap<>();
         componentCache = new LinkedHashMap<>();
@@ -72,7 +72,7 @@ public class XhtmlForm {
         formSubmissionListener = fsListener;
     }
 
-    public XhtmlForm(SharedContext sharedContext, ElementModel e) {
+    public XhtmlForm(SharedContext sharedContext, ElementImpl e) {
         this(sharedContext, e, new DefaultFormSubmissionListener());
     }
 
@@ -96,7 +96,7 @@ public class XhtmlForm {
         return FS_DEFAULT_GROUP + ++defaultGroupCount;
     }
 
-    private static boolean isFormField(ElementModel e) {
+    private static boolean isFormField(ElementImpl e) {
         String nodeName = e.nodeName();
 
         if (nodeName.equals("input") || nodeName.equals("select") || nodeName.equals("textarea") || nodeName.equals("button")) {
@@ -106,7 +106,7 @@ public class XhtmlForm {
         return false;
     }
 
-    public FormField addComponent(ElementModel e, LayoutContext context, BlockBox box) {
+    public FormField addComponent(ElementImpl e, LayoutContext context, BlockBox box) {
         FormField field;
 
         if (componentCache.containsKey(e)) {
@@ -183,15 +183,15 @@ public class XhtmlForm {
         if (formSubmissionListener != null) formSubmissionListener.submit(data.toString());
     }
 
-    public static String collectText(ElementModel e) {
+    public static String collectText(ElementImpl e) {
         StringBuilder result = new StringBuilder();
         if (e.childNodeSize() > 0) {
-            NodeModel node = e.childNodeSize() > 0 ? e.childNode(0) : null;
+            NodeImpl node = e.childNodeSize() > 0 ? e.childNode(0) : null;
 
             do {
 //                short nodeType = node.getNodeType();
-                if (node instanceof TextNodeModel) {
-                    TextNodeModel text = (TextNodeModel) node;
+                if (node instanceof TextImpl) {
+                    TextImpl text = (TextImpl) node;
                     result.append(text.getWholeText());
                 }
             } while ((node = node.nextSibling()) != null);

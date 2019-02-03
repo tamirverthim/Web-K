@@ -1,6 +1,6 @@
 package com.earnix.webk.dom.select;
 
-import com.earnix.webk.dom.nodes.NodeModel;
+import com.earnix.webk.script.impl.NodeImpl;
 
 /**
  * Node filter interface. Provide an implementing class to {@link NodeTraversor} to iterate through nodes.
@@ -19,8 +19,8 @@ import com.earnix.webk.dom.nodes.NodeModel;
  * <li>interrupt the iteration and return ({@link FilterResult#STOP}).</li>
  * </ul>
  * The difference between {@link FilterResult#SKIP_CHILDREN} and {@link FilterResult#SKIP_ENTIRELY} is that the first
- * will invoke {@link NodeFilter#tail(NodeModel, int)} on the node, while the latter will not.
- * Within {@link NodeFilter#tail(NodeModel, int)}, both are equivalent to {@link FilterResult#CONTINUE}.
+ * will invoke {@link NodeFilter#tail(NodeImpl, int)} on the node, while the latter will not.
+ * Within {@link NodeFilter#tail(NodeImpl, int)}, both are equivalent to {@link FilterResult#CONTINUE}.
  * </p>
  */
 public interface NodeFilter {
@@ -33,11 +33,11 @@ public interface NodeFilter {
          */
         CONTINUE,
         /**
-         * Skip the child nodes, but do call {@link NodeFilter#tail(NodeModel, int)} next.
+         * Skip the child nodes, but do call {@link NodeFilter#tail(NodeImpl, int)} next.
          */
         SKIP_CHILDREN,
         /**
-         * Skip the subtree, and do not call {@link NodeFilter#tail(NodeModel, int)}.
+         * Skip the subtree, and do not call {@link NodeFilter#tail(NodeImpl, int)}.
          */
         SKIP_ENTIRELY,
         /**
@@ -57,7 +57,7 @@ public interface NodeFilter {
      * @param depth the depth of the node, relative to the root node. E.g., the root node has depth 0, and a child node of that will have depth 1.
      * @return Filter decision
      */
-    FilterResult head(NodeModel node, int depth);
+    FilterResult head(NodeImpl node, int depth);
 
     /**
      * Callback for when a node is last visited, after all of its descendants have been visited.
@@ -66,5 +66,5 @@ public interface NodeFilter {
      * @param depth the depth of the node, relative to the root node. E.g., the root node has depth 0, and a child node of that will have depth 1.
      * @return Filter decision
      */
-    FilterResult tail(NodeModel node, int depth);
+    FilterResult tail(NodeImpl node, int depth);
 }

@@ -19,8 +19,6 @@
  */
 package com.earnix.webk.swing;
 
-import com.earnix.webk.dom.nodes.DocumentModel;
-import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.extend.NamespaceHandler;
 import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.extend.UserInterface;
@@ -31,6 +29,8 @@ import com.earnix.webk.render.BlockBox;
 import com.earnix.webk.render.Box;
 import com.earnix.webk.render.RenderingContext;
 import com.earnix.webk.render.ViewportBox;
+import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
 import com.earnix.webk.simple.extend.XhtmlNamespaceHandler;
 import com.earnix.webk.util.Configuration;
 import com.earnix.webk.util.ImageUtil;
@@ -79,7 +79,7 @@ public class Java2DRenderer {
     private SharedContext sharedContext;
     private Java2DOutputDevice outputDevice;
 
-    private DocumentModel doc;
+    private DocumentImpl doc;
     private Box root;
 
     private float dotsPerPoint;
@@ -158,14 +158,14 @@ public class Java2DRenderer {
      * @param width  Target width, in pixels, for the image; required to provide horizontal bounds for the layout.
      * @param height Target height, in pixels, for the image.
      */
-    public Java2DRenderer(DocumentModel doc, int width, int height) {
+    public Java2DRenderer(DocumentImpl doc, int width, int height) {
         this(DEFAULT_DOTS_PER_POINT, DEFAULT_DOTS_PER_PIXEL);
         this.doc = doc;
         this.width = width;
         this.height = height;
     }
 
-    public Java2DRenderer(DocumentModel doc, int width) {
+    public Java2DRenderer(DocumentImpl doc, int width) {
         this(doc, width, NO_HEIGHT);
     }
 
@@ -178,7 +178,7 @@ public class Java2DRenderer {
      * @param width   Target width, in pixels, for the image; required to provide horizontal bounds for the layout.
      * @param height  Target height, in pixels, for the image.
      */
-    public Java2DRenderer(DocumentModel doc, String baseUrl, int width, int height) {
+    public Java2DRenderer(DocumentImpl doc, String baseUrl, int width, int height) {
         this(doc, width, height);
         this.sourceDocumentBase = baseUrl;
     }
@@ -321,7 +321,7 @@ public class Java2DRenderer {
         return image;
     }
 
-    private void setDocument(DocumentModel doc, String url, NamespaceHandler nsh) {
+    private void setDocument(DocumentImpl doc, String url, NamespaceHandler nsh) {
         this.doc = doc;
 
         sharedContext.reset();
@@ -350,7 +350,7 @@ public class Java2DRenderer {
         this.root = root;
     }
 
-    private DocumentModel loadDocument(final String uri) {
+    private DocumentImpl loadDocument(final String uri) {
         return sharedContext.getUac().getXMLResource(uri);
     }
 
@@ -387,15 +387,15 @@ public class Java2DRenderer {
 
     private static final class NullUserInterface implements UserInterface {
 
-        public boolean isHover(ElementModel e) {
+        public boolean isHover(ElementImpl e) {
             return false;
         }
 
-        public boolean isActive(ElementModel e) {
+        public boolean isActive(ElementImpl e) {
             return false;
         }
 
-        public boolean isFocus(ElementModel e) {
+        public boolean isFocus(ElementImpl e) {
             return false;
         }
     }

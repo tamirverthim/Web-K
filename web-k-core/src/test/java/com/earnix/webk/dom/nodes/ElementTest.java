@@ -793,15 +793,15 @@ public class ElementTest {
         ElementModel style = doc.select("style").first();
         ElementModel p = doc.select("p").first();
 
-        List<DataNodeModel> scriptData = script.dataNodes();
+        List<DataImpl> scriptData = script.dataNodes();
         assertEquals(1, scriptData.size());
         assertEquals("One Two", scriptData.get(0).getWholeData());
 
-        List<DataNodeModel> styleData = style.dataNodes();
+        List<DataImpl> styleData = style.dataNodes();
         assertEquals(1, styleData.size());
         assertEquals("Three Four", styleData.get(0).getWholeData());
 
-        List<DataNodeModel> pData = p.dataNodes();
+        List<DataImpl> pData = p.dataNodes();
         assertEquals(0, pData.size());
     }
 

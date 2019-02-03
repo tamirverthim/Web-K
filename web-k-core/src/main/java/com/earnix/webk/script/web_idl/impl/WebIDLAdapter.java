@@ -54,8 +54,7 @@ import java.util.stream.Stream;
 
 
 /**
- * @author Taras Maslov
- * 5/31/2018
+ * Adapts WebIDL implementation classes to Nashorn JavaScript runtime
  */
 @SuppressWarnings("unchecked")
 @Slf4j
