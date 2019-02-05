@@ -28,15 +28,25 @@ public class EventManager {
     ScriptContext scriptContext;
 
     public void publishEvent(ElementModel elementModel, EventImpl event) {
-        publishEvent(ScriptDOMFactory.getElement(scriptContext, elementModel), event);
+        publishEvent(ScriptDOMFactory.getElement(scriptContext, elementModel), event, true);
+    }
+    
+    public void publishEvent(ElementModel elementModel, EventImpl event, boolean reRender) {
+        publishEvent(ScriptDOMFactory.getElement(scriptContext, elementModel), event, reRender);
     }
 
     public void publishEvent(Element target, EventImpl event) {
+        publishEvent(target, event, true);
+    }
+    
+    public void publishEvent(Element target, EventImpl event, boolean reRender) {
         
         log.debug("Dispatching event {} to {}", event, target);
 
-        scriptContext.storeDocumentHash();
-
+        if(reRender) {
+            scriptContext.storeDocumentHash();
+        }
+        
         // preparing propagation path 
         val propagationPath = new ArrayList<EventTarget>();
         Element current = target;
@@ -79,7 +89,9 @@ public class EventManager {
             }
         }
         
-        scriptContext.handleDocumentHashUpdate();
+        if(reRender) {
+            scriptContext.handleDocumentHashUpdate();
+        }
     }
 
     public void publishEvent(EventTarget target, EventImpl event) {
@@ -95,5 +107,16 @@ public class EventManager {
         init.bubbles = true;
         EventImpl event = new EventImpl("change", init);
         publishEvent(target, event);
+    }
+
+
+    /**
+     * https://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-eventgroupings-htmlevents-h3
+     */
+    public void oninput(ElementModel target) {
+        EventInit init = new EventInit();
+        init.bubbles = true;
+        EventImpl event = new EventImpl("input", init);
+        publishEvent(target, event, true);
     }
 }

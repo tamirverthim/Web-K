@@ -114,7 +114,10 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration {
     }
 
     public String toCSSString() {
-        return map.entrySet().stream().map(e -> e.getKey() + ": " + e.getValue() + ";").reduce("", (a, b) -> a + " \n " + b);
+        return map.entrySet()
+                .stream()
+                .map(e -> e.getKey() + ": " + e.getValue() + ";")
+                .reduce("", (a, b) -> a + " \n " + b);
     }
     
     public void setCSSText(String css){

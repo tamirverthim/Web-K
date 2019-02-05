@@ -139,6 +139,9 @@ public class RootPanel extends JPanel implements Scrollable, UserInterface, FSCa
         documentListeners.forEach(DocumentListener::documentLoaded);
     }
 
+    /**
+     * Resets panel rendered state and causes it's re-rendering on next paint cycle.
+     */
     public void reset() {
         scriptContext.setRendered(false);
         scriptContext.getMouseEventsAdapter().reset();
