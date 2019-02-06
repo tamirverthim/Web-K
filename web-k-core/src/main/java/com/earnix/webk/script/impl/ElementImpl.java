@@ -41,7 +41,7 @@ import com.earnix.webk.script.whatwg_dom.NodeList;
 import com.earnix.webk.script.whatwg_dom.ShadowRoot;
 import com.earnix.webk.script.whatwg_dom.ShadowRootInit;
 import com.earnix.webk.script.whatwg_dom.impl.CDATASectionImpl;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 import com.earnix.webk.script.whatwg_dom.impl.HTMLCollectionImpl;
 import com.earnix.webk.script.whatwg_dom.impl.NamedNodeMapImpl;
 import com.earnix.webk.script.whatwg_dom.impl.TextImpl;

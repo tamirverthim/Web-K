@@ -2,8 +2,8 @@ package com.earnix.webk.dom.select;
 
 import com.earnix.webk.dom.Jsoup;
 import com.earnix.webk.dom.MultiLocaleRule;
-import com.earnix.webk.dom.nodes.DocumentModel;
-import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -24,9 +24,9 @@ public class SelectorTest {
         // should be case insensitive
         Elements els = Jsoup.parse("<div id=1><div id=2><p>Hello</p></div></div><DIV id=3>").select("DIV");
         assertEquals(3, els.size());
-        assertEquals("1", els.get(0).id());
-        assertEquals("2", els.get(1).id());
-        assertEquals("3", els.get(2).id());
+        assertEquals("1", els.get(0).id().get());
+        assertEquals("2", els.get(1).id().get());
+        assertEquals("3", els.get(2).id().get());
 
         Elements none = Jsoup.parse("<div id=1><div id=2><p>Hello</p></div></div><div id=3>").select("span");
         assertEquals(0, none.size());
@@ -47,8 +47,8 @@ public class SelectorTest {
     public void testByClass() {
         Elements els = Jsoup.parse("<p id=0 class='ONE two'><p id=1 class='one'><p id=2 class='two'>").select("P.One");
         assertEquals(2, els.size());
-        assertEquals("0", els.get(0).id());
-        assertEquals("1", els.get(1).id());
+        assertEquals("0", els.get(0).id().get());
+        assertEquals("1", els.get(1).id().get());
 
         Elements none = Jsoup.parse("<div class='one'></div>").select(".foo");
         assertEquals(0, none.size());
@@ -73,7 +73,7 @@ public class SelectorTest {
     public void testByAttribute() {
         String h = "<div Title=Foo /><div Title=Bar /><div Style=Qux /><div title=Balim /><div title=SLIM />" +
                 "<div data-name='with spaces'/>";
-        DocumentModel doc = Jsoup.parse(h);
+        DocumentImpl doc = Jsoup.parse(h);
 
         Elements withTitle = doc.select("[title]");
         assertEquals(4, withTitle.size());
@@ -113,86 +113,86 @@ public class SelectorTest {
 
     @Test
     public void testNamespacedTag() {
-        DocumentModel doc = Jsoup.parse("<div><abc:def id=1>Hello</abc:def></div> <abc:def class=bold id=2>There</abc:def>");
+        DocumentImpl doc = Jsoup.parse("<div><abc:def id=1>Hello</abc:def></div> <abc:def class=bold id=2>There</abc:def>");
         Elements byTag = doc.select("abc|def");
         assertEquals(2, byTag.size());
-        assertEquals("1", byTag.first().id());
-        assertEquals("2", byTag.last().id());
+        assertEquals("1", byTag.first().id().get());
+        assertEquals("2", byTag.last().id().get());
 
         Elements byAttr = doc.select(".bold");
         assertEquals(1, byAttr.size());
-        assertEquals("2", byAttr.last().id());
+        assertEquals("2", byAttr.last().id().get());
 
         Elements byTagAttr = doc.select("abc|def.bold");
         assertEquals(1, byTagAttr.size());
-        assertEquals("2", byTagAttr.last().id());
+        assertEquals("2", byTagAttr.last().id().get());
 
         Elements byContains = doc.select("abc|def:contains(e)");
         assertEquals(2, byContains.size());
-        assertEquals("1", byContains.first().id());
-        assertEquals("2", byContains.last().id());
+        assertEquals("1", byContains.first().id().get());
+        assertEquals("2", byContains.last().id().get());
     }
 
     @Test
     public void testWildcardNamespacedTag() {
-        DocumentModel doc = Jsoup.parse("<div><abc:def id=1>Hello</abc:def></div> <abc:def class=bold id=2>There</abc:def>");
+        DocumentImpl doc = Jsoup.parse("<div><abc:def id=1>Hello</abc:def></div> <abc:def class=bold id=2>There</abc:def>");
         Elements byTag = doc.select("*|def");
         assertEquals(2, byTag.size());
-        assertEquals("1", byTag.first().id());
-        assertEquals("2", byTag.last().id());
+        assertEquals("1", byTag.first().id().get());
+        assertEquals("2", byTag.last().id().get());
 
         Elements byAttr = doc.select(".bold");
         assertEquals(1, byAttr.size());
-        assertEquals("2", byAttr.last().id());
+        assertEquals("2", byAttr.last().id().get());
 
         Elements byTagAttr = doc.select("*|def.bold");
         assertEquals(1, byTagAttr.size());
-        assertEquals("2", byTagAttr.last().id());
+        assertEquals("2", byTagAttr.last().id().get());
 
         Elements byContains = doc.select("*|def:contains(e)");
         assertEquals(2, byContains.size());
-        assertEquals("1", byContains.first().id());
-        assertEquals("2", byContains.last().id());
+        assertEquals("1", byContains.first().id().get());
+        assertEquals("2", byContains.last().id().get());
     }
 
     @Test
     @MultiLocaleRule.MultiLocaleTest
     public void testByAttributeStarting() {
-        DocumentModel doc = Jsoup.parse("<div id=1 ATTRIBUTE data-name=jsoup>Hello</div><p data-val=5 id=2>There</p><p id=3>No</p>");
+        DocumentImpl doc = Jsoup.parse("<div id=1 ATTRIBUTE data-name=jsoup>Hello</div><p data-val=5 id=2>There</p><p id=3>No</p>");
         Elements withData = doc.select("[^data-]");
         assertEquals(2, withData.size());
-        assertEquals("1", withData.first().id());
-        assertEquals("2", withData.last().id());
+        assertEquals("1", withData.first().id().get());
+        assertEquals("2", withData.last().id().get());
 
         withData = doc.select("p[^data-]");
         assertEquals(1, withData.size());
-        assertEquals("2", withData.first().id());
+        assertEquals("2", withData.first().id().get());
 
         assertEquals(1, doc.select("[^attrib]").size());
     }
 
     @Test
     public void testByAttributeRegex() {
-        DocumentModel doc = Jsoup.parse("<p><img src=foo.png id=1><img src=bar.jpg id=2><img src=qux.JPEG id=3><img src=old.gif><img></p>");
+        DocumentImpl doc = Jsoup.parse("<p><img src=foo.png id=1><img src=bar.jpg id=2><img src=qux.JPEG id=3><img src=old.gif><img></p>");
         Elements imgs = doc.select("img[src~=(?i)\\.(png|jpe?g)]");
         assertEquals(3, imgs.size());
-        assertEquals("1", imgs.get(0).id());
-        assertEquals("2", imgs.get(1).id());
-        assertEquals("3", imgs.get(2).id());
+        assertEquals("1", imgs.get(0).id().get());
+        assertEquals("2", imgs.get(1).id().get());
+        assertEquals("3", imgs.get(2).id().get());
     }
 
     @Test
     public void testByAttributeRegexCharacterClass() {
-        DocumentModel doc = Jsoup.parse("<p><img src=foo.png id=1><img src=bar.jpg id=2><img src=qux.JPEG id=3><img src=old.gif id=4></p>");
+        DocumentImpl doc = Jsoup.parse("<p><img src=foo.png id=1><img src=bar.jpg id=2><img src=qux.JPEG id=3><img src=old.gif id=4></p>");
         Elements imgs = doc.select("img[src~=[o]]");
         assertEquals(2, imgs.size());
-        assertEquals("1", imgs.get(0).id());
-        assertEquals("4", imgs.get(1).id());
+        assertEquals("1", imgs.get(0).id().get());
+        assertEquals("4", imgs.get(1).id().get());
     }
 
     @Test
     public void testByAttributeRegexCombined() {
-        DocumentModel doc = Jsoup.parse("<div><table class=x><td>Hello</td></table></div>");
+        DocumentImpl doc = Jsoup.parse("<div><table class=x><td>Hello</td></table></div>");
         Elements els = doc.select("div table[class~=x|y]");
         assertEquals(1, els.size());
         assertEquals("Hello", els.text());
@@ -200,7 +200,7 @@ public class SelectorTest {
 
     @Test
     public void testCombinedWithContains() {
-        DocumentModel doc = Jsoup.parse("<p id=1>One</p><p>Two +</p><p>Three +</p>");
+        DocumentImpl doc = Jsoup.parse("<p id=1>One</p><p>Two +</p><p>Three +</p>");
         Elements els = doc.select("p#1 + :contains(+)");
         assertEquals(1, els.size());
         assertEquals("Two +", els.text());
@@ -210,7 +210,7 @@ public class SelectorTest {
     @Test
     public void testAllElements() {
         String h = "<div><p>Hello</p><p><b>there</b></p></div>";
-        DocumentModel doc = Jsoup.parse(h);
+        DocumentImpl doc = Jsoup.parse(h);
         Elements allDoc = doc.select("*");
         Elements allUnderDiv = doc.select("div *");
         assertEquals(8, allDoc.size());
@@ -221,7 +221,7 @@ public class SelectorTest {
     @Test
     public void testAllWithClass() {
         String h = "<p class=first>One<p class=first>Two<p>Three";
-        DocumentModel doc = Jsoup.parse(h);
+        DocumentImpl doc = Jsoup.parse(h);
         Elements ps = doc.select("*.first");
         assertEquals(2, ps.size());
     }
@@ -229,7 +229,7 @@ public class SelectorTest {
     @Test
     public void testGroupOr() {
         String h = "<div title=foo /><div title=bar /><div /><p></p><img /><span title=qux>";
-        DocumentModel doc = Jsoup.parse(h);
+        DocumentImpl doc = Jsoup.parse(h);
         Elements els = doc.select("p,div,[title]");
 
         assertEquals(5, els.size());
@@ -250,16 +250,16 @@ public class SelectorTest {
         Elements els = Jsoup.parse(h).select("[id],[title=foo]");
 
         assertEquals(3, els.size());
-        assertEquals("1", els.get(0).id());
-        assertEquals("2", els.get(1).id());
+        assertEquals("1", els.get(0).id().get());
+        assertEquals("2", els.get(1).id().get());
         assertEquals("foo", els.get(2).attr("title"));
     }
 
     @Test
     public void descendant() {
         String h = "<div class=head><p class=first>Hello</p><p>There</p></div><p>None</p>";
-        DocumentModel doc = Jsoup.parse(h);
-        ElementModel root = doc.getElementsByClass("HEAD").first();
+        DocumentImpl doc = Jsoup.parse(h);
+        ElementImpl root = doc.getElementsByClass("HEAD").first();
 
         Elements els = root.select(".head p");
         assertEquals(2, els.size());
@@ -280,7 +280,7 @@ public class SelectorTest {
     @Test
     public void and() {
         String h = "<div id=1 class='foo bar' title=bar name=qux><p class=foo title=bar>Hello</p></div";
-        DocumentModel doc = Jsoup.parse(h);
+        DocumentImpl doc = Jsoup.parse(h);
 
         Elements div = doc.select("div.foo");
         assertEquals(1, div.size());
@@ -302,8 +302,8 @@ public class SelectorTest {
     @Test
     public void deeperDescendant() {
         String h = "<div class=head><p><span class=first>Hello</div><div class=head><p class=first><span>Another</span><p>Again</div>";
-        DocumentModel doc = Jsoup.parse(h);
-        ElementModel root = doc.getElementsByClass("head").first();
+        DocumentImpl doc = Jsoup.parse(h);
+        ElementImpl root = doc.getElementsByClass("head").first();
 
         Elements els = root.select("div p .first");
         assertEquals(1, els.size());
@@ -317,22 +317,22 @@ public class SelectorTest {
     @Test
     public void parentChildElement() {
         String h = "<div id=1><div id=2><div id = 3></div></div></div><div id=4></div>";
-        DocumentModel doc = Jsoup.parse(h);
+        DocumentImpl doc = Jsoup.parse(h);
 
         Elements divs = doc.select("div > div");
         assertEquals(2, divs.size());
-        assertEquals("2", divs.get(0).id()); // 2 is child of 1
-        assertEquals("3", divs.get(1).id()); // 3 is child of 2
+        assertEquals("2", divs.get(0).id().get()); // 2 is child of 1
+        assertEquals("3", divs.get(1).id().get()); // 3 is child of 2
 
         Elements div2 = doc.select("div#1 > div");
         assertEquals(1, div2.size());
-        assertEquals("2", div2.get(0).id());
+        assertEquals("2", div2.get(0).id().get());
     }
 
     @Test
     public void parentWithClassChild() {
         String h = "<h1 class=foo><a href=1 /></h1><h1 class=foo><a href=2 class=bar /></h1><h1><a href=3 /></h1>";
-        DocumentModel doc = Jsoup.parse(h);
+        DocumentImpl doc = Jsoup.parse(h);
 
         Elements allAs = doc.select("h1 > a");
         assertEquals(3, allAs.size());
@@ -349,7 +349,7 @@ public class SelectorTest {
     @Test
     public void parentChildStar() {
         String h = "<div id=1><p>Hello<p><b>there</b></p></div><div id=2><span>Hi</span></div>";
-        DocumentModel doc = Jsoup.parse(h);
+        DocumentImpl doc = Jsoup.parse(h);
         Elements divChilds = doc.select("div > *");
         assertEquals(3, divChilds.size());
         assertEquals("p", divChilds.get(0).tagName());
@@ -360,7 +360,7 @@ public class SelectorTest {
     @Test
     public void multiChildDescent() {
         String h = "<div id=foo><h1 class=bar><a href=http://example.com/>One</a></h1></div>";
-        DocumentModel doc = Jsoup.parse(h);
+        DocumentImpl doc = Jsoup.parse(h);
         Elements els = doc.select("div#foo > h1.bar > a[href*=example]");
         assertEquals(1, els.size());
         assertEquals("a", els.first().tagName());
@@ -369,7 +369,7 @@ public class SelectorTest {
     @Test
     public void caseInsensitive() {
         String h = "<dIv tItle=bAr><div>"; // mixed case so a simple toLowerCase() on value doesn't catch
-        DocumentModel doc = Jsoup.parse(h);
+        DocumentImpl doc = Jsoup.parse(h);
 
         assertEquals(2, doc.select("DiV").size());
         assertEquals(1, doc.select("DiV[TiTLE]").size());
@@ -380,7 +380,7 @@ public class SelectorTest {
     @Test
     public void adjacentSiblings() {
         String h = "<ol><li>One<li>Two<li>Three</ol>";
-        DocumentModel doc = Jsoup.parse(h);
+        DocumentImpl doc = Jsoup.parse(h);
         Elements sibs = doc.select("li + li");
         assertEquals(2, sibs.size());
         assertEquals("Two", sibs.get(0).text());
@@ -390,7 +390,7 @@ public class SelectorTest {
     @Test
     public void adjacentSiblingsWithId() {
         String h = "<ol><li id=1>One<li id=2>Two<li id=3>Three</ol>";
-        DocumentModel doc = Jsoup.parse(h);
+        DocumentImpl doc = Jsoup.parse(h);
         Elements sibs = doc.select("li#1 + li#2");
         assertEquals(1, sibs.size());
         assertEquals("Two", sibs.get(0).text());
@@ -399,7 +399,7 @@ public class SelectorTest {
     @Test
     public void notAdjacent() {
         String h = "<ol><li id=1>One<li id=2>Two<li id=3>Three</ol>";
-        DocumentModel doc = Jsoup.parse(h);
+        DocumentImpl doc = Jsoup.parse(h);
         Elements sibs = doc.select("li#1 + li#3");
         assertEquals(0, sibs.size());
     }
@@ -407,7 +407,7 @@ public class SelectorTest {
     @Test
     public void mixCombinator() {
         String h = "<div class=foo><ol><li>One<li>Two<li>Three</ol></div>";
-        DocumentModel doc = Jsoup.parse(h);
+        DocumentImpl doc = Jsoup.parse(h);
         Elements sibs = doc.select("body > div.foo li + li");
 
         assertEquals(2, sibs.size());
@@ -418,7 +418,7 @@ public class SelectorTest {
     @Test
     public void mixCombinatorGroup() {
         String h = "<div class=foo><ol><li>One<li>Two<li>Three</ol></div>";
-        DocumentModel doc = Jsoup.parse(h);
+        DocumentImpl doc = Jsoup.parse(h);
         Elements els = doc.select(".foo > ol, ol > li + li");
 
         assertEquals(3, els.size());
@@ -430,7 +430,7 @@ public class SelectorTest {
     @Test
     public void generalSiblings() {
         String h = "<ol><li id=1>One<li id=2>Two<li id=3>Three</ol>";
-        DocumentModel doc = Jsoup.parse(h);
+        DocumentImpl doc = Jsoup.parse(h);
         Elements els = doc.select("#1 ~ #3");
         assertEquals(1, els.size());
         assertEquals("Three", els.first().text());
@@ -441,16 +441,16 @@ public class SelectorTest {
     public void testCharactersInIdAndClass() {
         // using CSS spec for identifiers (id and class): a-z0-9, -, _. NOT . (which is OK in html spec, but not css)
         String h = "<div><p id='a1-foo_bar'>One</p><p class='b2-qux_bif'>Two</p></div>";
-        DocumentModel doc = Jsoup.parse(h);
+        DocumentImpl doc = Jsoup.parse(h);
 
-        ElementModel el1 = doc.getElementById("a1-foo_bar");
+        ElementImpl el1 = doc.getElementById("a1-foo_bar");
         assertEquals("One", el1.text());
-        ElementModel el2 = doc.getElementsByClass("b2-qux_bif").first();
+        ElementImpl el2 = doc.getElementsByClass("b2-qux_bif").first();
         assertEquals("Two", el2.text());
 
-        ElementModel el3 = doc.select("#a1-foo_bar").first();
+        ElementImpl el3 = doc.select("#a1-foo_bar").first();
         assertEquals("One", el3.text());
-        ElementModel el4 = doc.select(".b2-qux_bif").first();
+        ElementImpl el4 = doc.select(".b2-qux_bif").first();
         assertEquals("Two", el4.text());
     }
 
@@ -458,9 +458,9 @@ public class SelectorTest {
     @Test
     public void testSupportsLeadingCombinator() {
         String h = "<div><p><span>One</span><span>Two</span></p></div>";
-        DocumentModel doc = Jsoup.parse(h);
+        DocumentImpl doc = Jsoup.parse(h);
 
-        ElementModel p = doc.select("div > p").first();
+        ElementImpl p = doc.select("div > p").first();
         Elements spans = p.select("> span");
         assertEquals(2, spans.size());
         assertEquals("One", spans.first().text());
@@ -468,13 +468,13 @@ public class SelectorTest {
         // make sure doesn't get nested
         h = "<div id=1><div id=2><div id=3></div></div></div>";
         doc = Jsoup.parse(h);
-        ElementModel div = doc.select("div").select(" > div").first();
-        assertEquals("2", div.id());
+        ElementImpl div = doc.select("div").select(" > div").first();
+        assertEquals("2", div.id().get());
     }
 
     @Test
     public void testPseudoLessThan() {
-        DocumentModel doc = Jsoup.parse("<div><p>One</p><p>Two</p><p>Three</>p></div><div><p>Four</p>");
+        DocumentImpl doc = Jsoup.parse("<div><p>One</p><p>Two</p><p>Three</>p></div><div><p>Four</p>");
         Elements ps = doc.select("div p:lt(2)");
         assertEquals(3, ps.size());
         assertEquals("One", ps.get(0).text());
@@ -484,7 +484,7 @@ public class SelectorTest {
 
     @Test
     public void testPseudoGreaterThan() {
-        DocumentModel doc = Jsoup.parse("<div><p>One</p><p>Two</p><p>Three</p></div><div><p>Four</p>");
+        DocumentImpl doc = Jsoup.parse("<div><p>One</p><p>Two</p><p>Three</p></div><div><p>Four</p>");
         Elements ps = doc.select("div p:gt(0)");
         assertEquals(2, ps.size());
         assertEquals("Two", ps.get(0).text());
@@ -493,7 +493,7 @@ public class SelectorTest {
 
     @Test
     public void testPseudoEquals() {
-        DocumentModel doc = Jsoup.parse("<div><p>One</p><p>Two</p><p>Three</>p></div><div><p>Four</p>");
+        DocumentImpl doc = Jsoup.parse("<div><p>One</p><p>Two</p><p>Three</>p></div><div><p>Four</p>");
         Elements ps = doc.select("div p:eq(0)");
         assertEquals(2, ps.size());
         assertEquals("One", ps.get(0).text());
@@ -507,7 +507,7 @@ public class SelectorTest {
 
     @Test
     public void testPseudoBetween() {
-        DocumentModel doc = Jsoup.parse("<div><p>One</p><p>Two</p><p>Three</>p></div><div><p>Four</p>");
+        DocumentImpl doc = Jsoup.parse("<div><p>One</p><p>Two</p><p>Three</>p></div><div><p>Four</p>");
         Elements ps = doc.select("div p:gt(0):lt(2)");
         assertEquals(1, ps.size());
         assertEquals("Two", ps.get(0).text());
@@ -515,7 +515,7 @@ public class SelectorTest {
 
     @Test
     public void testPseudoCombined() {
-        DocumentModel doc = Jsoup.parse("<div class='foo'><p>One</p><p>Two</p></div><div><p>Three</p><p>Four</p></div>");
+        DocumentImpl doc = Jsoup.parse("<div class='foo'><p>One</p><p>Two</p></div><div><p>Three</p><p>Four</p></div>");
         Elements ps = doc.select("div.foo p:gt(0)");
         assertEquals(1, ps.size());
         assertEquals("Two", ps.get(0).text());
@@ -523,33 +523,33 @@ public class SelectorTest {
 
     @Test
     public void testPseudoHas() {
-        DocumentModel doc = Jsoup.parse("<div id=0><p><span>Hello</span></p></div> <div id=1><span class=foo>There</span></div> <div id=2><p>Not</p></div>");
+        DocumentImpl doc = Jsoup.parse("<div id=0><p><span>Hello</span></p></div> <div id=1><span class=foo>There</span></div> <div id=2><p>Not</p></div>");
 
         Elements divs1 = doc.select("div:has(span)");
         assertEquals(2, divs1.size());
-        assertEquals("0", divs1.get(0).id());
-        assertEquals("1", divs1.get(1).id());
+        assertEquals("0", divs1.get(0).id().get());
+        assertEquals("1", divs1.get(1).id().get());
 
         Elements divs2 = doc.select("div:has([class])");
         assertEquals(1, divs2.size());
-        assertEquals("1", divs2.get(0).id());
+        assertEquals("1", divs2.get(0).id().get());
 
         Elements divs3 = doc.select("div:has(span, p)");
         assertEquals(3, divs3.size());
-        assertEquals("0", divs3.get(0).id());
-        assertEquals("1", divs3.get(1).id());
-        assertEquals("2", divs3.get(2).id());
+        assertEquals("0", divs3.get(0).id().get());
+        assertEquals("1", divs3.get(1).id().get());
+        assertEquals("2", divs3.get(2).id().get());
 
-        Elements els1 = doc.body().select(":has(p)");
+        Elements els1 = doc.getBody().select(":has(p)");
         assertEquals(3, els1.size()); // body, div, dib
         assertEquals("body", els1.first().tagName());
-        assertEquals("0", els1.get(1).id());
-        assertEquals("2", els1.get(2).id());
+        assertEquals("0", els1.get(1).id().get());
+        assertEquals("2", els1.get(2).id().get());
     }
 
     @Test
     public void testNestedHas() {
-        DocumentModel doc = Jsoup.parse("<div><p><span>One</span></p></div> <div><p>Two</p></div>");
+        DocumentImpl doc = Jsoup.parse("<div><p><span>One</span></p></div> <div><p>Two</p></div>");
         Elements divs = doc.select("div:has(p:has(span))");
         assertEquals(1, divs.size());
         assertEquals("One", divs.first().text());
@@ -570,7 +570,7 @@ public class SelectorTest {
     @Test
     @MultiLocaleRule.MultiLocaleTest
     public void testPseudoContains() {
-        DocumentModel doc = Jsoup.parse("<div><p>The Rain.</p> <p class=light>The <i>RAIN</i>.</p> <p>Rain, the.</p></div>");
+        DocumentImpl doc = Jsoup.parse("<div><p>The Rain.</p> <p class=light>The <i>RAIN</i>.</p> <p>Rain, the.</p></div>");
 
         Elements ps1 = doc.select("p:contains(Rain)");
         assertEquals(3, ps1.size());
@@ -582,11 +582,11 @@ public class SelectorTest {
 
         Elements ps3 = doc.select("p:contains(the Rain):has(i)");
         assertEquals(1, ps3.size());
-        assertEquals("light", ps3.first().className());
+        assertEquals("light", ps3.first().className().get());
 
         Elements ps4 = doc.select(".light:contains(rain)");
         assertEquals(1, ps4.size());
-        assertEquals("light", ps3.first().className());
+        assertEquals("light", ps3.first().className().get());
 
         Elements ps5 = doc.select(":contains(rain)");
         assertEquals(8, ps5.size()); // html, body, div,...
@@ -597,87 +597,87 @@ public class SelectorTest {
 
     @Test
     public void testPsuedoContainsWithParentheses() {
-        DocumentModel doc = Jsoup.parse("<div><p id=1>This (is good)</p><p id=2>This is bad)</p>");
+        DocumentImpl doc = Jsoup.parse("<div><p id=1>This (is good)</p><p id=2>This is bad)</p>");
 
         Elements ps1 = doc.select("p:contains(this (is good))");
         assertEquals(1, ps1.size());
-        assertEquals("1", ps1.first().id());
+        assertEquals("1", ps1.first().id().get());
 
         Elements ps2 = doc.select("p:contains(this is bad\\))");
         assertEquals(1, ps2.size());
-        assertEquals("2", ps2.first().id());
+        assertEquals("2", ps2.first().id().get());
     }
 
     @Test
     @MultiLocaleRule.MultiLocaleTest
     public void containsOwn() {
-        DocumentModel doc = Jsoup.parse("<p id=1>Hello <b>there</b> igor</p>");
+        DocumentImpl doc = Jsoup.parse("<p id=1>Hello <b>there</b> igor</p>");
         Elements ps = doc.select("p:containsOwn(Hello IGOR)");
         assertEquals(1, ps.size());
-        assertEquals("1", ps.first().id());
+        assertEquals("1", ps.first().id().get());
 
         assertEquals(0, doc.select("p:containsOwn(there)").size());
 
-        DocumentModel doc2 = Jsoup.parse("<p>Hello <b>there</b> IGOR</p>");
+        DocumentImpl doc2 = Jsoup.parse("<p>Hello <b>there</b> IGOR</p>");
         assertEquals(1, doc2.select("p:containsOwn(igor)").size());
 
     }
 
     @Test
     public void testMatches() {
-        DocumentModel doc = Jsoup.parse("<p id=1>The <i>Rain</i></p> <p id=2>There are 99 bottles.</p> <p id=3>Harder (this)</p> <p id=4>Rain</p>");
+        DocumentImpl doc = Jsoup.parse("<p id=1>The <i>Rain</i></p> <p id=2>There are 99 bottles.</p> <p id=3>Harder (this)</p> <p id=4>Rain</p>");
 
         Elements p1 = doc.select("p:matches(The rain)"); // no match, case sensitive
         assertEquals(0, p1.size());
 
         Elements p2 = doc.select("p:matches((?i)the rain)"); // case insense. should include root, html, body
         assertEquals(1, p2.size());
-        assertEquals("1", p2.first().id());
+        assertEquals("1", p2.first().id().get());
 
         Elements p4 = doc.select("p:matches((?i)^rain$)"); // bounding
         assertEquals(1, p4.size());
-        assertEquals("4", p4.first().id());
+        assertEquals("4", p4.first().id().get());
 
         Elements p5 = doc.select("p:matches(\\d+)");
         assertEquals(1, p5.size());
-        assertEquals("2", p5.first().id());
+        assertEquals("2", p5.first().id().get());
 
         Elements p6 = doc.select("p:matches(\\w+\\s+\\(\\w+\\))"); // test bracket matching
         assertEquals(1, p6.size());
-        assertEquals("3", p6.first().id());
+        assertEquals("3", p6.first().id().get());
 
         Elements p7 = doc.select("p:matches((?i)the):has(i)"); // multi
         assertEquals(1, p7.size());
-        assertEquals("1", p7.first().id());
+        assertEquals("1", p7.first().id().get());
     }
 
     @Test
     public void matchesOwn() {
-        DocumentModel doc = Jsoup.parse("<p id=1>Hello <b>there</b> now</p>");
+        DocumentImpl doc = Jsoup.parse("<p id=1>Hello <b>there</b> now</p>");
 
         Elements p1 = doc.select("p:matchesOwn((?i)hello now)");
         assertEquals(1, p1.size());
-        assertEquals("1", p1.first().id());
+        assertEquals("1", p1.first().id().get());
 
         assertEquals(0, doc.select("p:matchesOwn(there)").size());
     }
 
     @Test
     public void testRelaxedTags() {
-        DocumentModel doc = Jsoup.parse("<abc_def id=1>Hello</abc_def> <abc-def id=2>There</abc-def>");
+        DocumentImpl doc = Jsoup.parse("<abc_def id=1>Hello</abc_def> <abc-def id=2>There</abc-def>");
 
         Elements el1 = doc.select("abc_def");
         assertEquals(1, el1.size());
-        assertEquals("1", el1.first().id());
+        assertEquals("1", el1.first().id().get());
 
         Elements el2 = doc.select("abc-def");
         assertEquals(1, el2.size());
-        assertEquals("2", el2.first().id());
+        assertEquals("2", el2.first().id().get());
     }
 
     @Test
     public void notParas() {
-        DocumentModel doc = Jsoup.parse("<p id=1>One</p> <p>Two</p> <p><span>Three</span></p>");
+        DocumentImpl doc = Jsoup.parse("<p id=1>One</p> <p>Two</p> <p><span>Three</span></p>");
 
         Elements el1 = doc.select("p:not([id=1])");
         assertEquals(2, el1.size());
@@ -692,9 +692,9 @@ public class SelectorTest {
 
     @Test
     public void notAll() {
-        DocumentModel doc = Jsoup.parse("<p>Two</p> <p><span>Three</span></p>");
+        DocumentImpl doc = Jsoup.parse("<p>Two</p> <p><span>Three</span></p>");
 
-        Elements el1 = doc.body().select(":not(p)"); // should just be the span
+        Elements el1 = doc.getBody().select(":not(p)"); // should just be the span
         assertEquals(2, el1.size());
         assertEquals("body", el1.first().tagName());
         assertEquals("span", el1.last().tagName());
@@ -702,16 +702,16 @@ public class SelectorTest {
 
     @Test
     public void notClass() {
-        DocumentModel doc = Jsoup.parse("<div class=left>One</div><div class=right id=1><p>Two</p></div>");
+        DocumentImpl doc = Jsoup.parse("<div class=left>One</div><div class=right id=1><p>Two</p></div>");
 
         Elements el1 = doc.select("div:not(.left)");
         assertEquals(1, el1.size());
-        assertEquals("1", el1.first().id());
+        assertEquals("1", el1.first().id().get());
     }
 
     @Test
     public void handlesCommasInSelector() {
-        DocumentModel doc = Jsoup.parse("<p name='1,2'>One</p><div>Two</div><ol><li>123</li><li>Text</li></ol>");
+        DocumentImpl doc = Jsoup.parse("<p name='1,2'>One</p><div>Two</div><ol><li>123</li><li>Text</li></ol>");
 
         Elements ps = doc.select("[name=1,2]");
         assertEquals(1, ps.size());
@@ -726,7 +726,7 @@ public class SelectorTest {
     @Test
     public void selectSupplementaryCharacter() {
         String s = new String(Character.toChars(135361));
-        DocumentModel doc = Jsoup.parse("<div k" + s + "='" + s + "'>^" + s + "$/div>");
+        DocumentImpl doc = Jsoup.parse("<div k" + s + "='" + s + "'>^" + s + "$/div>");
         assertEquals("div", doc.select("div[k" + s + "]").first().tagName());
         assertEquals("div", doc.select("div:containsOwn(" + s + ")").first().tagName());
     }
@@ -736,7 +736,7 @@ public class SelectorTest {
         final String html = "<div class=\"value\">class without space</div>\n"
                 + "<div class=\"value \">class with space</div>";
 
-        DocumentModel doc = Jsoup.parse(html);
+        DocumentImpl doc = Jsoup.parse(html);
 
         Elements found = doc.select("div[class=value ]");
         assertEquals(2, found.size());
@@ -756,7 +756,7 @@ public class SelectorTest {
     public void selectSameElements() {
         final String html = "<div>one</div><div>one</div>";
 
-        DocumentModel doc = Jsoup.parse(html);
+        DocumentImpl doc = Jsoup.parse(html);
         Elements els = doc.select("div");
         assertEquals(2, els.size());
 
@@ -767,7 +767,7 @@ public class SelectorTest {
     @Test
     public void attributeWithBrackets() {
         String html = "<div data='End]'>One</div> <div data='[Another)]]'>Two</div>";
-        DocumentModel doc = Jsoup.parse(html);
+        DocumentImpl doc = Jsoup.parse(html);
         assertEquals("One", doc.select("div[data='End]']").first().text());
         assertEquals("Two", doc.select("div[data='[Another)]]']").first().text());
         assertEquals("One", doc.select("div[data=\"End]\"]").first().text());
@@ -778,8 +778,8 @@ public class SelectorTest {
     @MultiLocaleRule.MultiLocaleTest
     public void containsData() {
         String html = "<p>function</p><script>FUNCTION</script><style>item</style><span><!-- comments --></span>";
-        DocumentModel doc = Jsoup.parse(html);
-        ElementModel body = doc.body();
+        DocumentImpl doc = Jsoup.parse(html);
+        ElementImpl body = doc.getBody();
 
         Elements dataEls1 = body.select(":containsData(function)");
         Elements dataEls2 = body.select("script:containsData(function)");
@@ -803,7 +803,7 @@ public class SelectorTest {
     @Test
     public void containsWithQuote() {
         String html = "<p>One'One</p><p>One'Two</p>";
-        DocumentModel doc = Jsoup.parse(html);
+        DocumentImpl doc = Jsoup.parse(html);
         Elements els = doc.select("p:contains(One\\'One)");
         assertEquals(1, els.size());
         assertEquals("One'One", els.text());
@@ -812,28 +812,28 @@ public class SelectorTest {
     @Test
     public void selectFirst() {
         String html = "<p>One<p>Two<p>Three";
-        DocumentModel doc = Jsoup.parse(html);
+        DocumentImpl doc = Jsoup.parse(html);
         assertEquals("One", doc.selectFirst("p").text());
     }
 
     @Test
     public void selectFirstWithAnd() {
         String html = "<p>One<p class=foo>Two<p>Three";
-        DocumentModel doc = Jsoup.parse(html);
+        DocumentImpl doc = Jsoup.parse(html);
         assertEquals("Two", doc.selectFirst("p.foo").text());
     }
 
     @Test
     public void selectFirstWithOr() {
         String html = "<p>One<p>Two<p>Three<div>Four";
-        DocumentModel doc = Jsoup.parse(html);
+        DocumentImpl doc = Jsoup.parse(html);
         assertEquals("One", doc.selectFirst("p, div").text());
     }
 
     @Test
     public void matchText() {
         String html = "<p>One<br>Two</p>";
-        DocumentModel doc = Jsoup.parse(html);
+        DocumentImpl doc = Jsoup.parse(html);
         String origHtml = doc.html();
 
         Elements one = doc.select("p:matchText:first-child");
@@ -850,7 +850,7 @@ public class SelectorTest {
     @Test
     public void splitOnBr() {
         String html = "<div><p>One<br>Two<br>Three</p></div>";
-        DocumentModel doc = Jsoup.parse(html);
+        DocumentImpl doc = Jsoup.parse(html);
 
         Elements els = doc.select("p:matchText");
         assertEquals(3, els.size());
@@ -861,7 +861,7 @@ public class SelectorTest {
 
     @Test
     public void matchTextAttributes() {
-        DocumentModel doc = Jsoup.parse("<div><p class=one>One<br>Two<p class=two>Three<br>Four");
+        DocumentImpl doc = Jsoup.parse("<div><p class=one>One<br>Two<p class=two>Three<br>Four");
         Elements els = doc.select("p.two:matchText:last-child");
 
         assertEquals(1, els.size());
@@ -870,7 +870,7 @@ public class SelectorTest {
 
     @Test
     public void findBetweenSpan() {
-        DocumentModel doc = Jsoup.parse("<p><span>One</span> Two <span>Three</span>");
+        DocumentImpl doc = Jsoup.parse("<p><span>One</span> Two <span>Three</span>");
         Elements els = doc.select("span ~ p:matchText"); // the Two becomes its own p, sibling of the span
 
         assertEquals(1, els.size());

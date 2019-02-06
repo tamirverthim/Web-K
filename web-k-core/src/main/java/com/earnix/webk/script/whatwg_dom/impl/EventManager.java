@@ -13,7 +13,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
-import javax.swing.SwingUtilities;
 import java.util.ArrayList;
 
 /**
@@ -26,10 +25,6 @@ import java.util.ArrayList;
 public class EventManager {
 
     ScriptContext scriptContext;
-
-    public void publishEvent(ElementImpl elementModel, EventImpl event) {
-        publishEvent(ScriptDOMFactory.getElement(scriptContext, elementModel), event);
-    }
 
     public void publishEvent(Element target, EventImpl event) {
         

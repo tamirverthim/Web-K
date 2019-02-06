@@ -25,7 +25,7 @@ import com.earnix.webk.resource.CSSResource;
 import com.earnix.webk.resource.ImageResource;
 import com.earnix.webk.resource.XMLResource;
 import com.earnix.webk.script.ScriptContext;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 import com.earnix.webk.util.FontUtil;
 import com.earnix.webk.util.ImageUtil;
 import com.earnix.webk.util.XRLog;

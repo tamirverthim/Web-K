@@ -1,9 +1,10 @@
 package com.earnix.webk.dom.nodes;
 
 import com.earnix.webk.dom.Jsoup;
+import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
 import org.junit.Test;
 
-import static com.earnix.webk.dom.nodes.DocumentModel.OutputSettings;
 import static com.earnix.webk.dom.nodes.Entities.EscapeMode.base;
 import static com.earnix.webk.dom.nodes.Entities.EscapeMode.extended;
 import static com.earnix.webk.dom.nodes.Entities.EscapeMode.xhtml;
@@ -13,11 +14,11 @@ public class EntitiesTest {
     @Test
     public void escape() {
         String text = "Hello &<> Å å π 新 there ¾ © »";
-        String escapedAscii = Entities.escape(text, new OutputSettings().charset("ascii").escapeMode(base));
-        String escapedAsciiFull = Entities.escape(text, new OutputSettings().charset("ascii").escapeMode(extended));
-        String escapedAsciiXhtml = Entities.escape(text, new OutputSettings().charset("ascii").escapeMode(xhtml));
-        String escapedUtfFull = Entities.escape(text, new OutputSettings().charset("UTF-8").escapeMode(extended));
-        String escapedUtfMin = Entities.escape(text, new OutputSettings().charset("UTF-8").escapeMode(xhtml));
+        String escapedAscii = Entities.escape(text, new DocumentImpl.OutputSettings().charset("ascii").escapeMode(base));
+        String escapedAsciiFull = Entities.escape(text, new DocumentImpl.OutputSettings().charset("ascii").escapeMode(extended));
+        String escapedAsciiXhtml = Entities.escape(text, new DocumentImpl.OutputSettings().charset("ascii").escapeMode(xhtml));
+        String escapedUtfFull = Entities.escape(text, new DocumentImpl.OutputSettings().charset("UTF-8").escapeMode(extended));
+        String escapedUtfMin = Entities.escape(text, new DocumentImpl.OutputSettings().charset("UTF-8").escapeMode(xhtml));
 
         assertEquals("Hello &amp;&lt;&gt; &Aring; &aring; &#x3c0; &#x65b0; there &frac34; &copy; &raquo;", escapedAscii);
         assertEquals("Hello &amp;&lt;&gt; &angst; &aring; &pi; &#x65b0; there &frac34; &copy; &raquo;", escapedAsciiFull);
@@ -37,11 +38,11 @@ public class EntitiesTest {
     @Test
     public void escapedSupplemtary() {
         String text = "\uD835\uDD59";
-        String escapedAscii = Entities.escape(text, new OutputSettings().charset("ascii").escapeMode(base));
+        String escapedAscii = Entities.escape(text, new DocumentImpl.OutputSettings().charset("ascii").escapeMode(base));
         assertEquals("&#x1d559;", escapedAscii);
-        String escapedAsciiFull = Entities.escape(text, new OutputSettings().charset("ascii").escapeMode(extended));
+        String escapedAsciiFull = Entities.escape(text, new DocumentImpl.OutputSettings().charset("ascii").escapeMode(extended));
         assertEquals("&hopf;", escapedAsciiFull);
-        String escapedUtf = Entities.escape(text, new OutputSettings().charset("UTF-8").escapeMode(extended));
+        String escapedUtf = Entities.escape(text, new DocumentImpl.OutputSettings().charset("UTF-8").escapeMode(extended));
         assertEquals(text, escapedUtf);
     }
 
@@ -50,7 +51,7 @@ public class EntitiesTest {
         String text = "&NestedGreaterGreater; &nGg; &nGt; &nGtv; &Gt; &gg;"; // gg is not combo, but 8811 could conflict with NestedGreaterGreater or others
         String un = "≫ ⋙̸ ≫⃒ ≫̸ ≫ ≫";
         assertEquals(un, Entities.unescape(text));
-        String escaped = Entities.escape(un, new OutputSettings().charset("ascii").escapeMode(extended));
+        String escaped = Entities.escape(un, new DocumentImpl.OutputSettings().charset("ascii").escapeMode(extended));
         assertEquals("&Gt; &Gg;&#x338; &Gt;&#x20d2; &Gt;&#x338; &Gt; &Gt;", escaped);
         assertEquals(un, Entities.unescape(escaped));
     }
@@ -80,9 +81,10 @@ public class EntitiesTest {
     @Test
     public void escapeSupplementaryCharacter() {
         String text = new String(Character.toChars(135361));
-        String escapedAscii = Entities.escape(text, new OutputSettings().charset("ascii").escapeMode(base));
+        String escapedAscii = Entities.escape(text, new 
+                DocumentImpl.OutputSettings().charset("ascii").escapeMode(base));
         assertEquals("&#x210c1;", escapedAscii);
-        String escapedUtf = Entities.escape(text, new OutputSettings().charset("UTF-8").escapeMode(base));
+        String escapedUtf = Entities.escape(text, new DocumentImpl.OutputSettings().charset("UTF-8").escapeMode(base));
         assertEquals(text, escapedUtf);
     }
 
@@ -121,7 +123,7 @@ public class EntitiesTest {
     public void caseSensitive() {
         String unescaped = "Ü ü & &";
         assertEquals("&Uuml; &uuml; &amp; &amp;",
-                Entities.escape(unescaped, new OutputSettings().charset("ascii").escapeMode(extended)));
+                Entities.escape(unescaped, new DocumentImpl.OutputSettings().charset("ascii").escapeMode(extended)));
 
         String escaped = "&Uuml; &uuml; &amp; &AMP";
         assertEquals("Ü ü & &", Entities.unescape(escaped));
@@ -138,9 +140,9 @@ public class EntitiesTest {
     @Test
     public void letterDigitEntities() {
         String html = "<p>&sup1;&sup2;&sup3;&frac14;&frac12;&frac34;</p>";
-        DocumentModel doc = Jsoup.parse(html);
+        DocumentImpl doc = Jsoup.parse(html);
         doc.outputSettings().charset("ascii");
-        ElementModel p = doc.select("p").first();
+        ElementImpl p = doc.select("p").first();
         assertEquals("&sup1;&sup2;&sup3;&frac14;&frac12;&frac34;", p.html());
         assertEquals("¹²³¼½¾", p.text());
         doc.outputSettings().charset("UTF-8");
@@ -159,8 +161,8 @@ public class EntitiesTest {
 
 
         String docHtml = "<a title='<p>One</p>'>One</a>";
-        DocumentModel doc = Jsoup.parse(docHtml);
-        ElementModel element = doc.select("a").first();
+        DocumentImpl doc = Jsoup.parse(docHtml);
+        ElementImpl element = doc.select("a").first();
 
         doc.outputSettings().escapeMode(base);
         assertEquals("<a title=\"<p>One</p>\">One</a>", element.outerHtml());

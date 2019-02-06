@@ -3,7 +3,7 @@ package com.earnix.webk.dom.examples;
 import com.earnix.webk.dom.Jsoup;
 import com.earnix.webk.dom.select.Elements;
 import com.earnix.webk.script.impl.ElementImpl;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 
 import java.io.IOException;
 
@@ -13,7 +13,7 @@ import java.io.IOException;
 public class Wikipedia {
     public static void main(String[] args) throws IOException {
         DocumentImpl doc = Jsoup.connect("http://en.wikipedia.org/").get();
-        log(doc.title());
+        log(doc.getTitle());
 
         Elements newsHeadlines = doc.select("#mp-itn b a");
         for (ElementImpl headline : newsHeadlines) {

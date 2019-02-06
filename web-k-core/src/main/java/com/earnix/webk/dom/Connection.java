@@ -1,7 +1,7 @@
 package com.earnix.webk.dom;
 
 import com.earnix.webk.dom.parser.Parser;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 
 import javax.net.ssl.SSLSocketFactory;
 import java.io.BufferedInputStream;

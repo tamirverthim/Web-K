@@ -1,8 +1,8 @@
 package com.earnix.webk.dom.select;
 
 import com.earnix.webk.dom.Jsoup;
-import com.earnix.webk.dom.nodes.DocumentModel;
-import com.earnix.webk.dom.nodes.NodeModel;
+import com.earnix.webk.script.impl.NodeImpl;
+import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -13,15 +13,15 @@ public class TraversorTest {
 
     @Test
     public void filterVisit() {
-        DocumentModel doc = Jsoup.parse("<div><p>Hello</p></div><div>There</div>");
+        DocumentImpl doc = Jsoup.parse("<div><p>Hello</p></div><div>There</div>");
         final StringBuilder accum = new StringBuilder();
         NodeTraversor.filter(new NodeFilter() {
-            public FilterResult head(NodeModel node, int depth) {
+            public FilterResult head(NodeImpl node, int depth) {
                 accum.append("<" + node.nodeName() + ">");
                 return FilterResult.CONTINUE;
             }
 
-            public FilterResult tail(NodeModel node, int depth) {
+            public FilterResult tail(NodeImpl node, int depth) {
                 accum.append("</" + node.nodeName() + ">");
                 return FilterResult.CONTINUE;
             }
@@ -31,16 +31,16 @@ public class TraversorTest {
 
     @Test
     public void filterSkipChildren() {
-        DocumentModel doc = Jsoup.parse("<div><p>Hello</p></div><div>There</div>");
+        DocumentImpl doc = Jsoup.parse("<div><p>Hello</p></div><div>There</div>");
         final StringBuilder accum = new StringBuilder();
         NodeTraversor.filter(new NodeFilter() {
-            public FilterResult head(NodeModel node, int depth) {
+            public FilterResult head(NodeImpl node, int depth) {
                 accum.append("<" + node.nodeName() + ">");
                 // OMIT contents of p:
                 return ("p".equals(node.nodeName())) ? FilterResult.SKIP_CHILDREN : FilterResult.CONTINUE;
             }
 
-            public FilterResult tail(NodeModel node, int depth) {
+            public FilterResult tail(NodeImpl node, int depth) {
                 accum.append("</" + node.nodeName() + ">");
                 return FilterResult.CONTINUE;
             }
@@ -50,10 +50,10 @@ public class TraversorTest {
 
     @Test
     public void filterSkipEntirely() {
-        DocumentModel doc = Jsoup.parse("<div><p>Hello</p></div><div>There</div>");
+        DocumentImpl doc = Jsoup.parse("<div><p>Hello</p></div><div>There</div>");
         final StringBuilder accum = new StringBuilder();
         NodeTraversor.filter(new NodeFilter() {
-            public FilterResult head(NodeModel node, int depth) {
+            public FilterResult head(NodeImpl node, int depth) {
                 // OMIT p:
                 if ("p".equals(node.nodeName()))
                     return FilterResult.SKIP_ENTIRELY;
@@ -61,7 +61,7 @@ public class TraversorTest {
                 return FilterResult.CONTINUE;
             }
 
-            public FilterResult tail(NodeModel node, int depth) {
+            public FilterResult tail(NodeImpl node, int depth) {
                 accum.append("</" + node.nodeName() + ">");
                 return FilterResult.CONTINUE;
             }
@@ -71,14 +71,14 @@ public class TraversorTest {
 
     @Test
     public void filterRemove() {
-        DocumentModel doc = Jsoup.parse("<div><p>Hello</p></div><div>There be <b>bold</b></div>");
+        DocumentImpl doc = Jsoup.parse("<div><p>Hello</p></div><div>There be <b>bold</b></div>");
         NodeTraversor.filter(new NodeFilter() {
-            public FilterResult head(NodeModel node, int depth) {
+            public FilterResult head(NodeImpl node, int depth) {
                 // Delete "p" in head:
                 return ("p".equals(node.nodeName())) ? FilterResult.REMOVE : FilterResult.CONTINUE;
             }
 
-            public FilterResult tail(NodeModel node, int depth) {
+            public FilterResult tail(NodeImpl node, int depth) {
                 // Delete "b" in tail:
                 return ("b".equals(node.nodeName())) ? FilterResult.REMOVE : FilterResult.CONTINUE;
             }
@@ -88,15 +88,15 @@ public class TraversorTest {
 
     @Test
     public void filterStop() {
-        DocumentModel doc = Jsoup.parse("<div><p>Hello</p></div><div>There</div>");
+        DocumentImpl doc = Jsoup.parse("<div><p>Hello</p></div><div>There</div>");
         final StringBuilder accum = new StringBuilder();
         NodeTraversor.filter(new NodeFilter() {
-            public FilterResult head(NodeModel node, int depth) {
+            public FilterResult head(NodeImpl node, int depth) {
                 accum.append("<" + node.nodeName() + ">");
                 return FilterResult.CONTINUE;
             }
 
-            public FilterResult tail(NodeModel node, int depth) {
+            public FilterResult tail(NodeImpl node, int depth) {
                 accum.append("</" + node.nodeName() + ">");
                 // Stop after p.
                 return ("p".equals(node.nodeName())) ? FilterResult.STOP : FilterResult.CONTINUE;

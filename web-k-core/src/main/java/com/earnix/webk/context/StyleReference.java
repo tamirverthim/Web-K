@@ -34,7 +34,7 @@ import com.earnix.webk.extend.UserInterface;
 import com.earnix.webk.layout.SharedContext;
 import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.impl.NodeImpl;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 import com.earnix.webk.swing.BasicPanel;
 import com.earnix.webk.util.XRLog;
 

@@ -3,7 +3,7 @@ package com.earnix.webk.dom.nodes;
 import com.earnix.webk.dom.parser.HtmlTreeBuilder;
 import com.earnix.webk.dom.parser.Parser;
 import com.earnix.webk.script.impl.NodeImpl;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 
 /**
  * Internal helpers for Nodes, to keep the actual node APIs relatively clean. A jsoup internal class, so don't use it as

@@ -26,7 +26,7 @@ import com.earnix.webk.render.InlineLayoutBox;
 import com.earnix.webk.render.InlineText;
 import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.impl.NodeImpl;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 import com.earnix.webk.script.whatwg_dom.impl.TextImpl;
 import com.earnix.webk.simple.XHTMLPanel;
 import com.earnix.webk.util.XRLog;

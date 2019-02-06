@@ -2,6 +2,10 @@ package com.earnix.webk.dom.nodes;
 
 import com.earnix.webk.dom.Jsoup;
 import com.earnix.webk.dom.TextUtil;
+import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.script.impl.NodeImpl;
+import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.whatwg_dom.impl.TextImpl;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -19,11 +23,11 @@ import static org.junit.Assert.assertTrue;
 public class TextNodeTest {
     @Test
     public void testBlank() {
-        TextNodeModel one = new TextNodeModel("");
-        TextNodeModel two = new TextNodeModel("     ");
-        TextNodeModel three = new TextNodeModel("  \n\n   ");
-        TextNodeModel four = new TextNodeModel("Hello");
-        TextNodeModel five = new TextNodeModel("  \nHello ");
+        TextImpl one = new TextImpl("");
+        TextImpl two = new TextImpl("     ");
+        TextImpl three = new TextImpl("  \n\n   ");
+        TextImpl four = new TextImpl("Hello");
+        TextImpl five = new TextImpl("  \nHello ");
 
         assertTrue(one.isBlank());
         assertTrue(two.isBlank());
@@ -34,15 +38,15 @@ public class TextNodeTest {
 
     @Test
     public void testTextBean() {
-        DocumentModel doc = Jsoup.parse("<p>One <span>two &amp;</span> three &amp;</p>");
-        ElementModel p = doc.select("p").first();
+        DocumentImpl doc = Jsoup.parse("<p>One <span>two &amp;</span> three &amp;</p>");
+        ElementImpl p = doc.select("p").first();
 
-        ElementModel span = doc.select("span").first();
+        ElementImpl span = doc.select("span").first();
         assertEquals("two &", span.text());
-        TextNodeModel spanText = (TextNodeModel) span.childNode(0);
+        TextImpl spanText = (TextImpl) span.childNode(0);
         assertEquals("two &", spanText.text());
 
-        TextNodeModel tn = (TextNodeModel) p.childNode(2);
+        TextImpl tn = (TextImpl) p.childNode(2);
         assertEquals(" three &", tn.text());
 
         tn.text(" POW!");
@@ -55,10 +59,10 @@ public class TextNodeTest {
 
     @Test
     public void testSplitText() {
-        DocumentModel doc = Jsoup.parse("<div>Hello there</div>");
-        ElementModel div = doc.select("div").first();
-        TextNodeModel tn = (TextNodeModel) div.childNode(0);
-        TextNodeModel tail = tn.splitText(6);
+        DocumentImpl doc = Jsoup.parse("<div>Hello there</div>");
+        ElementImpl div = doc.select("div").first();
+        TextImpl tn = (TextImpl) div.childNode(0);
+        TextImpl tail = tn.splitText(6);
         assertEquals("Hello ", tn.getWholeText());
         assertEquals("there", tail.getWholeText());
         tail.text("there!");
@@ -68,10 +72,10 @@ public class TextNodeTest {
 
     @Test
     public void testSplitAnEmbolden() {
-        DocumentModel doc = Jsoup.parse("<div>Hello there</div>");
-        ElementModel div = doc.select("div").first();
-        TextNodeModel tn = (TextNodeModel) div.childNode(0);
-        TextNodeModel tail = tn.splitText(6);
+        DocumentImpl doc = Jsoup.parse("<div>Hello there</div>");
+        ElementImpl div = doc.select("div").first();
+        TextImpl tn = (TextImpl) div.childNode(0);
+        TextImpl tail = tn.splitText(6);
         tail.wrap("<b></b>");
 
         assertEquals("Hello <b>there</b>", TextUtil.stripNewlines(div.html())); // not great that we get \n<b>there there... must correct
@@ -79,17 +83,17 @@ public class TextNodeTest {
 
     @Test
     public void testWithSupplementaryCharacter() {
-        DocumentModel doc = Jsoup.parse(new String(Character.toChars(135361)));
-        TextNodeModel t = doc.body().textNodes().get(0);
+        DocumentImpl doc = Jsoup.parse(new String(Character.toChars(135361)));
+        TextImpl t = doc.getBody().textNodes().get(0);
         assertEquals(new String(Character.toChars(135361)), t.outerHtml().trim());
     }
 
     @Test
     public void testLeadNodesHaveNoChildren() {
-        DocumentModel doc = Jsoup.parse("<div>Hello there</div>");
-        ElementModel div = doc.select("div").first();
-        TextNodeModel tn = (TextNodeModel) div.childNode(0);
-        List<NodeModel> nodes = tn.childNodes();
+        DocumentImpl doc = Jsoup.parse("<div>Hello there</div>");
+        ElementImpl div = doc.select("div").first();
+        TextImpl tn = (TextImpl) div.childNode(0);
+        List<NodeImpl> nodes = tn.getChildNodes();
         assertEquals(0, nodes.size());
     }
 }

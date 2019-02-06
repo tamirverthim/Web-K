@@ -283,11 +283,11 @@ public class DocumentImpl extends ElementImpl implements Document {
      * @param baseUri baseUri of document
      * @return document with html, head, and body elements.
      */
-    public static DocumentImpl createShell(String baseUri) {
+    public static com.earnix.webk.script.html.impl.DocumentImpl createShell(String baseUri) {
         Validate.notNull(baseUri);
 
-        DocumentImpl doc = new DocumentImpl(baseUri);
-        doc.parser = doc.parser();
+        com.earnix.webk.script.html.impl.DocumentImpl doc = new com.earnix.webk.script.html.impl.DocumentImpl(baseUri);
+        ((DocumentImpl)doc).parser = doc.parser();
         ElementImpl html = doc.appendElement("html");
         html.appendElement("head");
         html.appendElement("body");

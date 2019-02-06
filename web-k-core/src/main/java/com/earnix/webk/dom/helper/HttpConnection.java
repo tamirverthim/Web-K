@@ -9,7 +9,7 @@ import com.earnix.webk.dom.internal.ConstrainableInputStream;
 import com.earnix.webk.dom.internal.StringUtil;
 import com.earnix.webk.dom.parser.Parser;
 import com.earnix.webk.dom.parser.TokenQueue;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;

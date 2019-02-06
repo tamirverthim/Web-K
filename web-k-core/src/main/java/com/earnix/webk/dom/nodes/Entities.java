@@ -5,7 +5,7 @@ import com.earnix.webk.dom.helper.Validate;
 import com.earnix.webk.dom.internal.StringUtil;
 import com.earnix.webk.dom.parser.CharacterReader;
 import com.earnix.webk.dom.parser.Parser;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 
 import java.io.IOException;
 import java.nio.charset.CharsetEncoder;

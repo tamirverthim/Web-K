@@ -1,8 +1,8 @@
 package com.earnix.webk.dom.helper;
 
 import com.earnix.webk.dom.Jsoup;
-import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.parser.Parser;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -54,15 +54,15 @@ public class DataUtilTest {
     @Test
     public void discardsSpuriousByteOrderMark() throws IOException {
         String html = "\uFEFF<html><head><title>One</title></head><body>Two</body></html>";
-        DocumentModel doc = DataUtil.parseInputStream(stream(html), "UTF-8", "http://foo.com/", Parser.htmlParser());
-        assertEquals("One", doc.head().text());
+        DocumentImpl doc = DataUtil.parseInputStream(stream(html), "UTF-8", "http://foo.com/", Parser.htmlParser());
+        assertEquals("One", doc.getHead().text());
     }
 
     @Test
     public void discardsSpuriousByteOrderMarkWhenNoCharsetSet() throws IOException {
         String html = "\uFEFF<html><head><title>One</title></head><body>Two</body></html>";
-        DocumentModel doc = DataUtil.parseInputStream(stream(html), null, "http://foo.com/", Parser.htmlParser());
-        assertEquals("One", doc.head().text());
+        DocumentImpl doc = DataUtil.parseInputStream(stream(html), null, "http://foo.com/", Parser.htmlParser());
+        assertEquals("One", doc.getHead().text());
         assertEquals("UTF-8", doc.outputSettings().charset().displayName());
     }
 
@@ -101,7 +101,7 @@ public class DataUtilTest {
     public void wrongMetaCharsetFallback() throws IOException {
         String html = "<html><head><meta charset=iso-8></head><body></body></html>";
 
-        DocumentModel doc = DataUtil.parseInputStream(stream(html), null, "http://example.com", Parser.htmlParser());
+        DocumentImpl doc = DataUtil.parseInputStream(stream(html), null, "http://example.com", Parser.htmlParser());
 
         final String expected = "<html>\n" +
                 " <head>\n" +
@@ -120,9 +120,9 @@ public class DataUtilTest {
                 "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=euc-kr\">" +
                 "</head><body>한국어</body></html>";
 
-        DocumentModel doc = DataUtil.parseInputStream(stream(html, "euc-kr"), null, "http://example.com", Parser.htmlParser());
+        DocumentImpl doc = DataUtil.parseInputStream(stream(html, "euc-kr"), null, "http://example.com", Parser.htmlParser());
 
-        assertEquals("한국어", doc.body().text());
+        assertEquals("한국어", doc.getBody().text());
     }
 
     @Test
@@ -132,40 +132,40 @@ public class DataUtilTest {
                 "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=koi8-u\">" +
                 "</head><body>Übergrößenträger</body></html>";
 
-        DocumentModel doc = DataUtil.parseInputStream(stream(html, "iso-8859-1"), null, "http://example.com", Parser.htmlParser());
+        DocumentImpl doc = DataUtil.parseInputStream(stream(html, "iso-8859-1"), null, "http://example.com", Parser.htmlParser());
 
-        assertEquals("Übergrößenträger", doc.body().text());
+        assertEquals("Übergrößenträger", doc.getBody().text());
     }
 
     @Test
     public void supportsBOMinFiles() throws IOException {
         // test files from http://www.i18nl10n.com/korean/utftest/
         File in = getFile("/bomtests/bom_utf16be.html");
-        DocumentModel doc = Jsoup.parse(in, null, "http://example.com");
-        assertTrue(doc.title().contains("UTF-16BE"));
+        DocumentImpl doc = Jsoup.parse(in, null, "http://example.com");
+        assertTrue(doc.getTitle().contains("UTF-16BE"));
         assertTrue(doc.text().contains("가각갂갃간갅"));
 
         in = getFile("/bomtests/bom_utf16le.html");
         doc = Jsoup.parse(in, null, "http://example.com");
-        assertTrue(doc.title().contains("UTF-16LE"));
+        assertTrue(doc.getTitle().contains("UTF-16LE"));
         assertTrue(doc.text().contains("가각갂갃간갅"));
 
         in = getFile("/bomtests/bom_utf32be.html");
         doc = Jsoup.parse(in, null, "http://example.com");
-        assertTrue(doc.title().contains("UTF-32BE"));
+        assertTrue(doc.getTitle().contains("UTF-32BE"));
         assertTrue(doc.text().contains("가각갂갃간갅"));
 
         in = getFile("/bomtests/bom_utf32le.html");
         doc = Jsoup.parse(in, null, "http://example.com");
-        assertTrue(doc.title().contains("UTF-32LE"));
+        assertTrue(doc.getTitle().contains("UTF-32LE"));
         assertTrue(doc.text().contains("가각갂갃간갅"));
     }
 
     @Test
     public void supportsUTF8BOM() throws IOException {
         File in = getFile("/bomtests/bom_utf8.html");
-        DocumentModel doc = Jsoup.parse(in, null, "http://example.com");
-        assertEquals("OK", doc.head().select("title").text());
+        DocumentImpl doc = Jsoup.parse(in, null, "http://example.com");
+        assertEquals("OK", doc.getHead().select("title").text());
     }
 
     @Test
@@ -177,7 +177,7 @@ public class DataUtilTest {
                         "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\" xml:lang=\"en\">Hellö Wörld!</html>"
         ).getBytes(encoding));
 
-        DocumentModel doc = Jsoup.parse(soup, null, "");
-        assertEquals("Hellö Wörld!", doc.body().text());
+        DocumentImpl doc = Jsoup.parse(soup, null, "");
+        assertEquals("Hellö Wörld!", doc.getBody().text());
     }
 }

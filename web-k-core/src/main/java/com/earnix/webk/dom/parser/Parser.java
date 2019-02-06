@@ -3,7 +3,7 @@ package com.earnix.webk.dom.parser;
 import com.earnix.webk.dom.Jsoup;
 import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.impl.NodeImpl;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 
 import java.io.Reader;
 import java.io.StringReader;

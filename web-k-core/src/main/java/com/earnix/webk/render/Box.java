@@ -33,7 +33,7 @@ import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.layout.PaintingInfo;
 import com.earnix.webk.layout.Styleable;
 import com.earnix.webk.script.impl.ElementImpl;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 import com.earnix.webk.util.XRLog;
 
 import java.awt.Dimension;

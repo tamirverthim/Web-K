@@ -3,7 +3,7 @@ package com.earnix.webk.dom.nodes;
 import com.earnix.webk.dom.SerializationException;
 import com.earnix.webk.dom.helper.Validate;
 import com.earnix.webk.dom.internal.StringUtil;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 
 import java.io.IOException;
 import java.util.Arrays;

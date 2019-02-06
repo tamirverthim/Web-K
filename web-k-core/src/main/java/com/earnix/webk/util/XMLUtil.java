@@ -21,7 +21,7 @@
 package com.earnix.webk.util;
 
 import com.earnix.webk.dom.Jsoup;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 
 import java.io.File;
 

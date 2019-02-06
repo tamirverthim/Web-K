@@ -4,7 +4,11 @@ import com.earnix.webk.dom.SerializationException;
 import com.earnix.webk.dom.helper.Validate;
 import com.earnix.webk.dom.internal.StringUtil;
 import com.earnix.webk.script.impl.NodeImpl;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
+import com.earnix.webk.script.web_idl.Attribute;
+import com.earnix.webk.script.web_idl.DOMException;
+import com.earnix.webk.script.web_idl.DOMString;
+import com.earnix.webk.script.whatwg_dom.Node;
 
 import java.io.IOException;
 
@@ -44,6 +48,16 @@ public class XmlDeclarationModel extends NodeImpl {
         return "#declaration";
     }
 
+    @Override
+    public @DOMString Attribute<String> textContent() {
+        return null;
+    }
+
+    @Override
+    public Node appendChild(Node node) {
+        throw new DOMException("Unsupported");
+    }
+
     /**
      * Get the name of this declaration.
      *
@@ -69,7 +83,7 @@ public class XmlDeclarationModel extends NodeImpl {
     }
 
     private void getWholeDeclaration(Appendable accum, DocumentImpl.OutputSettings out) throws IOException {
-        for (AttributeModel attribute : attributes()) {
+        for (AttributeModel attribute : getAttributes()) {
             if (!attribute.getKey().equals(nodeName())) { // skips coreValue (name)
                 accum.append(' ');
                 attribute.html(accum, out);
@@ -77,7 +91,7 @@ public class XmlDeclarationModel extends NodeImpl {
         }
     }
 
-    void outerHtmlHead(Appendable accum, int depth, DocumentImpl.OutputSettings out) throws IOException {
+    protected void outerHtmlHead(Appendable accum, int depth, DocumentImpl.OutputSettings out) throws IOException {
         accum
                 .append("<")
                 .append(isProcessingInstruction ? "!" : "?")
@@ -88,7 +102,7 @@ public class XmlDeclarationModel extends NodeImpl {
                 .append(">");
     }
 
-    void outerHtmlTail(Appendable accum, int depth, DocumentImpl.OutputSettings out) {
+    protected void outerHtmlTail(Appendable accum, int depth, DocumentImpl.OutputSettings out) {
     }
 
     @Override

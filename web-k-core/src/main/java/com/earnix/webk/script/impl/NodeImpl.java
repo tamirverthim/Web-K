@@ -18,10 +18,11 @@ import com.earnix.webk.script.whatwg_dom.EventTarget;
 import com.earnix.webk.script.whatwg_dom.GetRootNodeOptions;
 import com.earnix.webk.script.whatwg_dom.Node;
 import com.earnix.webk.script.whatwg_dom.NodeList;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 import com.earnix.webk.script.whatwg_dom.impl.EventTargetImpl;
 import com.earnix.webk.script.whatwg_dom.impl.Level1EventTarget;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.experimental.Delegate;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +58,12 @@ public abstract class NodeImpl implements Node {
 
     static final String EmptyString = "";
     public NodeImpl parentNode; // todo make pack
+   
     int siblingIndex;
+    
+    public int getSiblingIndex() {
+        return siblingIndex;
+    }
     
     // endregion
     

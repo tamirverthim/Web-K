@@ -2,6 +2,7 @@ package com.earnix.webk.dom.nodes;
 
 import com.earnix.webk.dom.Jsoup;
 import com.earnix.webk.dom.parser.Parser;
+import com.earnix.webk.script.whatwg_dom.impl.DocumentTypeImpl;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -14,31 +15,31 @@ import static org.junit.Assert.assertEquals;
 public class DocumentTypeTest {
     @Test
     public void constructorValidationOkWithBlankName() {
-        DocumentTypeModel fail = new DocumentTypeModel("", "", "");
+        DocumentTypeImpl fail = new DocumentTypeImpl("", "", "");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void constructorValidationThrowsExceptionOnNulls() {
-        DocumentTypeModel fail = new DocumentTypeModel("html", null, null);
+        DocumentTypeImpl fail = new DocumentTypeImpl("html", null, null);
     }
 
     @Test
     public void constructorValidationOkWithBlankPublicAndSystemIds() {
-        DocumentTypeModel fail = new DocumentTypeModel("html", "", "");
+        DocumentTypeImpl fail = new DocumentTypeImpl("html", "", "");
     }
 
     @Test
     public void outerHtmlGeneration() {
-        DocumentTypeModel html5 = new DocumentTypeModel("html", "", "");
+        DocumentTypeImpl html5 = new DocumentTypeImpl("html", "", "");
         assertEquals("<!doctype html>", html5.outerHtml());
 
-        DocumentTypeModel publicDocType = new DocumentTypeModel("html", "-//IETF//DTD HTML//", "");
+        DocumentTypeImpl publicDocType = new DocumentTypeImpl("html", "-//IETF//DTD HTML//", "");
         assertEquals("<!DOCTYPE html PUBLIC \"-//IETF//DTD HTML//\">", publicDocType.outerHtml());
 
-        DocumentTypeModel systemDocType = new DocumentTypeModel("html", "", "http://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd");
+        DocumentTypeImpl systemDocType = new DocumentTypeImpl("html", "", "http://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd");
         assertEquals("<!DOCTYPE html \"http://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd\">", systemDocType.outerHtml());
 
-        DocumentTypeModel combo = new DocumentTypeModel("notHtml", "--public", "--system");
+        DocumentTypeImpl combo = new DocumentTypeImpl("notHtml", "--public", "--system");
         assertEquals("<!DOCTYPE notHtml PUBLIC \"--public\" \"--system\">", combo.outerHtml());
     }
 
@@ -62,7 +63,7 @@ public class DocumentTypeTest {
     }
 
     private String htmlOutput(String in) {
-        DocumentTypeModel type = (DocumentTypeModel) Jsoup.parse(in).childNode(0);
+        DocumentTypeImpl type = (DocumentTypeImpl) Jsoup.parse(in).childNode(0);
         return type.outerHtml();
     }
 

@@ -20,7 +20,7 @@
 package com.earnix.webk.resource;
 
 import com.earnix.webk.dom.Jsoup;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 import com.earnix.webk.util.Configuration;
 import com.earnix.webk.util.XRLog;
 import com.earnix.webk.util.XRRuntimeException;
@@ -79,7 +79,7 @@ public class XMLResource extends AbstractResource {
 
     // region draft
 
-    private static com.earnix.webk.script.whatwg_dom.impl.DocumentImpl getJsoup(InputStream stream) {
+    private static DocumentImpl getJsoup(InputStream stream) {
         try {
             String source = IOUtils.toString(stream, "UTF-8");
             return Jsoup.parse(source);
@@ -88,7 +88,7 @@ public class XMLResource extends AbstractResource {
         }
     }
 
-    private static com.earnix.webk.script.whatwg_dom.impl.DocumentImpl getJsoup(InputSource source) {
+    private static DocumentImpl getJsoup(InputSource source) {
         return getJsoup(source.getByteStream());
     }
 
@@ -103,7 +103,7 @@ public class XMLResource extends AbstractResource {
         return getJsoup(stream);
     }
 
-    public static com.earnix.webk.script.whatwg_dom.impl.DocumentImpl load(InputSource source) {
+    public static DocumentImpl load(InputSource source) {
         return getJsoup(source);
     }
 

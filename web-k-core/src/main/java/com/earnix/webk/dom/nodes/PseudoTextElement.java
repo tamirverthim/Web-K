@@ -2,7 +2,7 @@ package com.earnix.webk.dom.nodes;
 
 import com.earnix.webk.dom.parser.Tag;
 import com.earnix.webk.script.impl.ElementImpl;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 
 /**
  * Represents a {@link com.earnix.webk.script.whatwg_dom.impl.TextImpl} as an {@link ElementImpl}, to enable text nodes to be selected with

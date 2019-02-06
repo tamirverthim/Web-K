@@ -9,7 +9,7 @@ import com.earnix.webk.dom.select.NodeTraversor;
 import com.earnix.webk.dom.select.NodeVisitor;
 import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.impl.NodeImpl;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 import com.earnix.webk.script.whatwg_dom.impl.TextImpl;
 
 import java.io.IOException;

@@ -46,7 +46,7 @@ import com.earnix.webk.render.FloatedBoxData;
 import com.earnix.webk.render.InlineBox;
 import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.impl.NodeImpl;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 import com.earnix.webk.script.whatwg_dom.impl.TextImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;

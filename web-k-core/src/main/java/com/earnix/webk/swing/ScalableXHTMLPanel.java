@@ -25,7 +25,7 @@ import com.earnix.webk.layout.Layer;
 import com.earnix.webk.layout.PaintingInfo;
 import com.earnix.webk.render.Box;
 import com.earnix.webk.render.RenderingContext;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 import com.earnix.webk.simple.XHTMLPanel;
 
 import java.awt.Dimension;

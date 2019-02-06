@@ -5,7 +5,7 @@ import com.earnix.webk.dom.helper.HttpConnection;
 import com.earnix.webk.dom.parser.Parser;
 import com.earnix.webk.dom.safety.Cleaner;
 import com.earnix.webk.dom.safety.Whitelist;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 
 import java.io.File;
 import java.io.IOException;
@@ -191,7 +191,7 @@ public class Jsoup {
         DocumentImpl dirty = parseBodyFragment(bodyHtml, baseUri);
         Cleaner cleaner = new Cleaner(whitelist);
         DocumentImpl clean = cleaner.clean(dirty);
-        return clean.body().html();
+        return clean.getBody().html();
     }
 
     /**
@@ -226,7 +226,7 @@ public class Jsoup {
         Cleaner cleaner = new Cleaner(whitelist);
         DocumentImpl clean = cleaner.clean(dirty);
         clean.outputSettings(outputSettings);
-        return clean.body().html();
+        return clean.getBody().html();
     }
 
     /**

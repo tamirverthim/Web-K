@@ -19,12 +19,12 @@
  */
 package com.earnix.webk.tools;
 
-import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.extend.ReplacedElement;
 import com.earnix.webk.extend.ReplacedElementFactory;
 import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
+import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.simple.extend.FormSubmissionListener;
 
 import java.util.ArrayList;
@@ -84,7 +84,7 @@ public class DelegatingReplacedElementFactory implements ReplacedElementFactory 
         }
     }
 
-    public void remove(final ElementModel element) {
+    public void remove(final ElementImpl element) {
         final int idx = elementReplacements.indexOf(element);
         ERItem item = (ERItem) elementReplacements.get(idx);
         elementReplacements.remove(idx);
@@ -109,11 +109,11 @@ public class DelegatingReplacedElementFactory implements ReplacedElementFactory 
     }
 
     private static class ERItem {
-        private final ElementModel element;
+        private final ElementImpl element;
         private final ReplacedElement replacedElement;
         private final ElementReplacer elementReplacer;
 
-        private ERItem(final ElementModel e, final ReplacedElement re, final ElementReplacer er) {
+        private ERItem(final ElementImpl e, final ReplacedElement re, final ElementReplacer er) {
             element = e;
             replacedElement = re;
             elementReplacer = er;

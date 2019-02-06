@@ -866,8 +866,8 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
 
     public void resize() {
-        int w = GeneralUtil.parseIntRelaxed(canvas.getModel().attr("width"));
-        int h = GeneralUtil.parseIntRelaxed(canvas.getModel().attr("height"));
+        int w = GeneralUtil.parseIntRelaxed(canvas.attr("width"));
+        int h = GeneralUtil.parseIntRelaxed(canvas.attr("height"));
 
         if (w == this.width && h == this.height && image != null) {
             return;
@@ -910,7 +910,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
     private void triggerDocumentUpdate() {
         // the way to notify script context about rendering requirement 
-        canvas.getModel().attr("__update", UUID.randomUUID().toString());
+        canvas.attr("__update", UUID.randomUUID().toString());
         canvas.getScriptContext().getPanel().repaint();
     }
 

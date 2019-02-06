@@ -38,7 +38,7 @@ import com.earnix.webk.render.FSFontMetrics;
 import com.earnix.webk.render.RenderingContext;
 import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.impl.NodeImpl;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 import com.earnix.webk.simple.extend.FormSubmissionListener;
 import com.earnix.webk.simple.extend.form.DefaultFormFieldFactory;
 import com.earnix.webk.simple.extend.form.FormFieldFactory;

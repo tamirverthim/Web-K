@@ -9,7 +9,7 @@ import com.earnix.webk.dom.select.Elements;
 import com.earnix.webk.script.impl.CommentImpl;
 import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.impl.NodeImpl;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 
 import java.io.BufferedReader;
 import java.io.File;

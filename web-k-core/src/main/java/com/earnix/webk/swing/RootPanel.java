@@ -42,7 +42,7 @@ import com.earnix.webk.render.RenderingContext;
 import com.earnix.webk.render.ViewportBox;
 import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.impl.ElementImpl;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 import com.earnix.webk.util.Configuration;
 import com.earnix.webk.util.XRLog;
 import org.w3c.dom.css.CSSPrimitiveValue;

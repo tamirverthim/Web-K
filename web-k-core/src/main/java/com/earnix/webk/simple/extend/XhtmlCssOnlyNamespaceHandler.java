@@ -24,7 +24,7 @@ import com.earnix.webk.css.sheet.StylesheetInfo;
 import com.earnix.webk.dom.nodes.DataImpl;
 import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.impl.NodeImpl;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 import com.earnix.webk.script.whatwg_dom.impl.TextImpl;
 import com.earnix.webk.simple.NoNamespaceHandler;
 import com.earnix.webk.util.Configuration;

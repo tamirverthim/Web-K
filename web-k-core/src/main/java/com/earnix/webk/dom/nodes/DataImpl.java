@@ -1,7 +1,11 @@
 package com.earnix.webk.dom.nodes;
 
 import com.earnix.webk.script.impl.NodeImpl;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
+import com.earnix.webk.script.web_idl.Attribute;
+import com.earnix.webk.script.web_idl.DOMString;
+import com.earnix.webk.script.whatwg_dom.Node;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 
@@ -10,6 +14,7 @@ import java.io.IOException;
  *
  * @author Jonathan Hedley, jonathan@hedley.net
  */
+@Slf4j
 public class DataImpl extends NodeImpl {
 
     /**
@@ -78,5 +83,15 @@ public class DataImpl extends NodeImpl {
     public static DataImpl createFromEncoded(String encodedData, String baseUri) {
         String data = Entities.unescape(encodedData);
         return new DataImpl(data);
+    }
+
+    @Override
+    public @DOMString Attribute<String> textContent() {
+        return null;
+    }
+
+    @Override
+    public Node appendChild(Node node) {
+        return null;
     }
 }

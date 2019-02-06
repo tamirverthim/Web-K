@@ -12,7 +12,7 @@ import com.earnix.webk.dom.select.NodeTraversor;
 import com.earnix.webk.dom.select.NodeVisitor;
 import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.impl.NodeImpl;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 import com.earnix.webk.script.whatwg_dom.impl.TextImpl;
 
 import java.util.List;
@@ -58,7 +58,7 @@ public class Cleaner {
 
         DocumentImpl clean = DocumentImpl.createShell(dirtyDocument.baseUri());
         if (dirtyDocument.body() != null) // frameset documents won't have a body. the clean doc will have empty body.
-            copySafeNodes(dirtyDocument.body(), clean.body());
+            copySafeNodes(dirtyDocument.getBody(), clean.getBody());
 
         return clean;
     }
@@ -79,7 +79,7 @@ public class Cleaner {
         Validate.notNull(dirtyDocument);
 
         DocumentImpl clean = DocumentImpl.createShell(dirtyDocument.baseUri());
-        int numDiscarded = copySafeNodes(dirtyDocument.body(), clean.body());
+        int numDiscarded = copySafeNodes(dirtyDocument.getBody(), clean.getBody());
         return numDiscarded == 0
                 && dirtyDocument.getHead().getChildNodes().size() == 0; // because we only look at the body, but we start from a shell, make sure there's nothing in the head
     }
@@ -88,9 +88,9 @@ public class Cleaner {
         DocumentImpl clean = DocumentImpl.createShell("");
         DocumentImpl dirty = DocumentImpl.createShell("");
         ParseErrorList errorList = ParseErrorList.tracking(1);
-        List<NodeImpl> nodes = Parser.parseFragment(bodyHtml, dirty.body(), "", errorList);
-        dirty.body().insertChildren(0, nodes);
-        int numDiscarded = copySafeNodes(dirty.body(), clean.body());
+        List<NodeImpl> nodes = Parser.parseFragment(bodyHtml, dirty.getBody(), "", errorList);
+        dirty.getBody().insertChildren(0, nodes);
+        int numDiscarded = copySafeNodes(dirty.getBody(), clean.getBody());
         return numDiscarded == 0 && errorList.size() == 0;
     }
 

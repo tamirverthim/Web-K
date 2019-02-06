@@ -10,7 +10,7 @@ import com.earnix.webk.script.web_idl.USVString;
 import com.earnix.webk.script.whatwg_dom.Document;
 import com.earnix.webk.script.whatwg_dom.EventHandler;
 import com.earnix.webk.script.whatwg_dom.EventTarget;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 import com.earnix.webk.script.whatwg_dom.impl.EventImpl;
 import com.earnix.webk.script.whatwg_dom.impl.EventTargetImpl;
 import com.earnix.webk.script.whatwg_dom.impl.Level1EventTarget;
@@ -407,7 +407,10 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
 
     @Override
     public Document responseXML() {
-        return new DocumentImpl(context, Jsoup.parse(new String(response, StandardCharsets.UTF_8)), requestUrl.toString());
+        val doc = Jsoup.parse(new String(response, StandardCharsets.UTF_8));
+        doc.setScriptContext(context);
+        doc.setBaseUri(requestUrl.toString());
+        return doc;
     }
 
 

@@ -9,8 +9,8 @@ import com.earnix.webk.dom.integration.servlets.HelloServlet;
 import com.earnix.webk.dom.integration.servlets.InterruptedServlet;
 import com.earnix.webk.dom.integration.servlets.RedirectServlet;
 import com.earnix.webk.dom.integration.servlets.SlowRider;
-import com.earnix.webk.dom.nodes.DocumentModel;
-import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.script.html.impl.DocumentImpl;
+import com.earnix.webk.script.impl.ElementImpl;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -49,22 +49,22 @@ public class ConnectTest {
     @Test
     public void canConnectToLocalServer() throws IOException {
         String url = HelloServlet.Url;
-        DocumentModel doc = Jsoup.connect(url).get();
-        ElementModel p = doc.selectFirst("p");
+        DocumentImpl doc = Jsoup.connect(url).get();
+        ElementImpl p = doc.selectFirst("p");
         assertEquals("Hello, World!", p.text());
     }
 
     @Test
     public void fetchURl() throws IOException {
-        DocumentModel doc = Jsoup.parse(new URL(echoUrl), 10 * 1000);
-        assertTrue(doc.title().contains("Environment Variables"));
+        DocumentImpl doc = Jsoup.parse(new URL(echoUrl), 10 * 1000);
+        assertTrue(doc.getTitle().contains("Environment Variables"));
     }
 
     @Test
     public void fetchURIWithWihtespace() throws IOException {
         Connection con = Jsoup.connect(echoUrl + "#with whitespaces");
-        DocumentModel doc = con.get();
-        assertTrue(doc.title().contains("Environment Variables"));
+        DocumentImpl doc = con.get();
+        assertTrue(doc.getTitle().contains("Environment Variables"));
     }
 
     @Test
@@ -72,7 +72,7 @@ public class ConnectTest {
         String url = "file://etc/passwd";
         boolean threw = false;
         try {
-            DocumentModel doc = Jsoup.connect(url).get();
+            DocumentImpl doc = Jsoup.connect(url).get();
         } catch (MalformedURLException e) {
             threw = true;
             assertEquals("java.net.MalformedURLException: Only http & https protocols supported", e.toString());
@@ -81,14 +81,14 @@ public class ConnectTest {
         assertTrue(threw);
     }
 
-    private static String ihVal(String key, DocumentModel doc) {
-        final ElementModel first = doc.select("th:contains(" + key + ") + td").first();
+    private static String ihVal(String key, DocumentImpl doc) {
+        final ElementImpl first = doc.select("th:contains(" + key + ") + td").first();
         return first != null ? first.text() : null;
     }
 
     @Test
     public void doesPost() throws IOException {
-        DocumentModel doc = Jsoup.connect(echoUrl)
+        DocumentImpl doc = Jsoup.connect(echoUrl)
                 .data("uname", "Jsoup", "uname", "Jonathan", "百", "度一下")
                 .cookie("auth", "token")
                 .post();
@@ -104,7 +104,7 @@ public class ConnectTest {
     @Test
     public void sendsRequestBodyJsonWithData() throws IOException {
         final String body = "{key:value}";
-        DocumentModel doc = Jsoup.connect(echoUrl)
+        DocumentImpl doc = Jsoup.connect(echoUrl)
                 .requestBody(body)
                 .header("Content-Type", "application/json")
                 .userAgent(browserUa)
@@ -119,7 +119,7 @@ public class ConnectTest {
     @Test
     public void sendsRequestBodyJsonWithoutData() throws IOException {
         final String body = "{key:value}";
-        DocumentModel doc = Jsoup.connect(echoUrl)
+        DocumentImpl doc = Jsoup.connect(echoUrl)
                 .requestBody(body)
                 .header("Content-Type", "application/json")
                 .userAgent(browserUa)
@@ -132,7 +132,7 @@ public class ConnectTest {
     @Test
     public void sendsRequestBody() throws IOException {
         final String body = "{key:value}";
-        DocumentModel doc = Jsoup.connect(echoUrl)
+        DocumentImpl doc = Jsoup.connect(echoUrl)
                 .requestBody(body)
                 .header("Content-Type", "text/plain")
                 .userAgent(browserUa)
@@ -145,7 +145,7 @@ public class ConnectTest {
     @Test
     public void sendsRequestBodyWithUrlParams() throws IOException {
         final String body = "{key:value}";
-        DocumentModel doc = Jsoup.connect(echoUrl)
+        DocumentImpl doc = Jsoup.connect(echoUrl)
                 .requestBody(body)
                 .data("uname", "Jsoup", "uname", "Jonathan", "百", "度一下")
                 .header("Content-Type", "text/plain") // todo - if user sets content-type, we should append postcharset
@@ -163,7 +163,7 @@ public class ConnectTest {
                 .referrer("http://example.com")
                 .data("what", "about & me?");
 
-        DocumentModel doc = con.get();
+        DocumentImpl doc = con.get();
         assertEquals("what=the&what=about+%26+me%3F", ihVal("Query String", doc));
         assertEquals("the, about & me?", ihVal("what", doc));
         assertEquals("Mozilla", ihVal("User-Agent", doc));
@@ -178,7 +178,7 @@ public class ConnectTest {
                 .method(Connection.Method.PUT)
                 .execute();
 
-        DocumentModel doc = res.parse();
+        DocumentImpl doc = res.parse();
         assertEquals("PUT", ihVal("Method", doc));
         assertEquals("gzip", ihVal("Accept-Encoding", doc));
         assertEquals("auth=token", ihVal("Cookie", doc));
@@ -265,23 +265,23 @@ public class ConnectTest {
     @Test
     public void slowReadOk() throws IOException {
         // make sure that a slow read that is under the request timeout is still OK
-        DocumentModel doc = Jsoup.connect(SlowRider.Url)
+        DocumentImpl doc = Jsoup.connect(SlowRider.Url)
                 .data(SlowRider.MaxTimeParam, "2000") // the request completes in 2 seconds
                 .get();
 
-        ElementModel h1 = doc.selectFirst("h1");
+        ElementImpl h1 = doc.selectFirst("h1");
         assertEquals("outatime", h1.text());
     }
 
     @Ignore
     @Test
     public void infiniteReadSupported() throws IOException {
-        DocumentModel doc = Jsoup.connect(SlowRider.Url)
+        DocumentImpl doc = Jsoup.connect(SlowRider.Url)
                 .timeout(0)
                 .data(SlowRider.MaxTimeParam, "2000")
                 .get();
 
-        ElementModel h1 = doc.selectFirst("h1");
+        ElementImpl h1 = doc.selectFirst("h1");
         assertEquals("outatime", h1.text());
     }
 
@@ -293,7 +293,7 @@ public class ConnectTest {
         File thumb = ParseTest.getFile("/htmltests/thumb.jpg");
         File html = ParseTest.getFile("/htmltests/google-ipod.html");
 
-        DocumentModel res = Jsoup
+        DocumentImpl res = Jsoup
                 .connect(EchoServlet.Url)
                 .data("firstname", "Jay")
                 .data("firstPart", thumb.getName(), new FileInputStream(thumb), "image/jpeg")
@@ -332,17 +332,17 @@ public class ConnectTest {
     public void multipleParsesOkAfterBufferUp() throws IOException {
         Connection.Response res = Jsoup.connect(echoUrl).execute().bufferUp();
 
-        DocumentModel doc = res.parse();
-        assertTrue(doc.title().contains("Environment"));
+        DocumentImpl doc = res.parse();
+        assertTrue(doc.getTitle().contains("Environment"));
 
-        DocumentModel doc2 = res.parse();
-        assertTrue(doc2.title().contains("Environment"));
+        DocumentImpl doc2 = res.parse();
+        assertTrue(doc2.getTitle().contains("Environment"));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void bodyAfterParseThrowsValidationError() throws IOException {
         Connection.Response res = Jsoup.connect(echoUrl).execute();
-        DocumentModel doc = res.parse();
+        DocumentImpl doc = res.parse();
         String body = res.body();
     }
 
@@ -354,16 +354,16 @@ public class ConnectTest {
         byte[] bytes = res.bodyAsBytes();
         assertTrue(bytes.length > 100);
 
-        DocumentModel doc = res.parse();
-        assertTrue(doc.title().contains("Environment"));
+        DocumentImpl doc = res.parse();
+        assertTrue(doc.getTitle().contains("Environment"));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void parseParseThrowsValidates() throws IOException {
         Connection.Response res = Jsoup.connect(echoUrl).execute();
-        DocumentModel doc = res.parse();
-        assertTrue(doc.title().contains("Environment"));
-        DocumentModel doc2 = res.parse(); // should blow up because the response input stream has been drained
+        DocumentImpl doc = res.parse();
+        assertTrue(doc.getTitle().contains("Environment"));
+        DocumentImpl doc2 = res.parse(); // should blow up because the response input stream has been drained
     }
 
 
@@ -378,7 +378,7 @@ public class ConnectTest {
         assertEquals("jhy", cookies.get("uid"));
 
         // send those cookies into the echo URL by map:
-        DocumentModel doc = Jsoup.connect(echoUrl).cookies(cookies).get();
+        DocumentImpl doc = Jsoup.connect(echoUrl).cookies(cookies).get();
         assertEquals("token=asdfg123; uid=jhy", ihVal("Cookie", doc));
     }
 
@@ -387,7 +387,7 @@ public class ConnectTest {
         Connection.Response res = Jsoup.connect(Deflateservlet.Url).execute();
         assertEquals("deflate", res.header("Content-Encoding"));
 
-        DocumentModel doc = res.parse();
+        DocumentImpl doc = res.parse();
         assertEquals("Hello, World!", doc.selectFirst("p").text());
     }
 
@@ -401,7 +401,7 @@ public class ConnectTest {
 
         boolean threw = false;
         try {
-            DocumentModel document = res.parse();
+            DocumentImpl document = res.parse();
             assertEquals("Something", document.title());
         } catch (IOException e) {
             threw = true;
@@ -426,11 +426,11 @@ public class ConnectTest {
 
     @Test
     public void handlesRedirect() throws IOException {
-        DocumentModel doc = Jsoup.connect(RedirectServlet.Url)
+        DocumentImpl doc = Jsoup.connect(RedirectServlet.Url)
                 .data(RedirectServlet.LocationParam, HelloServlet.Url)
                 .get();
 
-        ElementModel p = doc.selectFirst("p");
+        ElementImpl p = doc.selectFirst("p");
         assertEquals("Hello, World!", p.text());
 
         assertEquals(HelloServlet.Url, doc.location());
@@ -451,7 +451,7 @@ public class ConnectTest {
 
     @Test
     public void doesNotPostFor302() throws IOException {
-        final DocumentModel doc = Jsoup.connect(RedirectServlet.Url)
+        final DocumentImpl doc = Jsoup.connect(RedirectServlet.Url)
                 .data("Hello", "there")
                 .data(RedirectServlet.LocationParam, EchoServlet.Url)
                 .post();
@@ -463,7 +463,7 @@ public class ConnectTest {
 
     @Test
     public void doesPostFor307() throws IOException {
-        final DocumentModel doc = Jsoup.connect(RedirectServlet.Url)
+        final DocumentImpl doc = Jsoup.connect(RedirectServlet.Url)
                 .data("Hello", "there")
                 .data(RedirectServlet.LocationParam, EchoServlet.Url)
                 .data(RedirectServlet.CodeParam, "307")

@@ -5,7 +5,7 @@ import com.earnix.webk.dom.nodes.AttributeModel;
 import com.earnix.webk.dom.nodes.AttributesModel;
 import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.impl.NodeImpl;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 import com.earnix.webk.script.whatwg_dom.impl.DocumentTypeImpl;
 
 import java.util.ArrayList;

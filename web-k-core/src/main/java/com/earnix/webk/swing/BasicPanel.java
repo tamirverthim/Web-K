@@ -30,7 +30,7 @@ import com.earnix.webk.render.PageBox;
 import com.earnix.webk.render.RenderingContext;
 import com.earnix.webk.resource.XMLResource;
 import com.earnix.webk.script.ScriptContext;
-import com.earnix.webk.script.whatwg_dom.impl.DocumentImpl;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 import com.earnix.webk.simple.NoNamespaceHandler;
 import com.earnix.webk.simple.extend.FormSubmissionListener;
 import com.earnix.webk.util.Configuration;
@@ -425,7 +425,7 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
      *
      * @param doc The document to reload.
      */
-    public void reloadDocument(com.earnix.webk.script.whatwg_dom.impl.DocumentImpl doc) {
+    public void reloadDocument(DocumentImpl doc) {
         if (this.doc == null) {
             XRLog.render("Reload called on BasicPanel, but there is no document set on the panel yet.");
             return;

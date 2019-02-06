@@ -3,8 +3,8 @@ package com.earnix.webk.dom.safety;
 import com.earnix.webk.dom.Jsoup;
 import com.earnix.webk.dom.MultiLocaleRule;
 import com.earnix.webk.dom.TextUtil;
-import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.dom.nodes.Entities;
+import com.earnix.webk.script.html.impl.DocumentImpl;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -210,7 +210,7 @@ public class CleanerTest {
 
         Whitelist relaxed = Whitelist.relaxed();
         Cleaner cleaner = new Cleaner(relaxed);
-        DocumentModel okDoc = Jsoup.parse(ok);
+        DocumentImpl okDoc = Jsoup.parse(ok);
         assertTrue(cleaner.isValid(okDoc));
         assertFalse(cleaner.isValid(Jsoup.parse(nok)));
         assertFalse(new Cleaner(Whitelist.none()).isValid(okDoc));
@@ -272,7 +272,7 @@ public class CleanerTest {
     @Test
     public void supplyOutputSettings() {
         // test that one can override the default document output settings
-        DocumentModel.OutputSettings os = new DocumentModel.OutputSettings();
+        DocumentImpl.OutputSettings os = new DocumentImpl.OutputSettings();
         os.prettyPrint(false);
         os.escapeMode(Entities.EscapeMode.extended);
         os.charset("ascii");
@@ -299,10 +299,10 @@ public class CleanerTest {
         String clean = Jsoup.clean(dirty, Whitelist.basic());
         assertEquals("", clean); // nothing good can come out of that
 
-        DocumentModel dirtyDoc = Jsoup.parse(dirty);
-        DocumentModel cleanDoc = new Cleaner(Whitelist.basic()).clean(dirtyDoc);
+        DocumentImpl dirtyDoc = Jsoup.parse(dirty);
+        DocumentImpl cleanDoc = new Cleaner(Whitelist.basic()).clean(dirtyDoc);
         assertFalse(cleanDoc == null);
-        assertEquals(0, cleanDoc.body().childNodeSize());
+        assertEquals(0, cleanDoc.getBody().childNodeSize());
     }
 
     @Test

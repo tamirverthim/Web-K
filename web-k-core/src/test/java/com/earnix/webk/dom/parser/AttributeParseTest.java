@@ -4,9 +4,9 @@ import com.earnix.webk.dom.Jsoup;
 import com.earnix.webk.dom.nodes.AttributeModel;
 import com.earnix.webk.dom.nodes.AttributesModel;
 import com.earnix.webk.dom.nodes.BooleanAttributeModel;
-import com.earnix.webk.dom.nodes.DocumentModel;
-import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.dom.select.Elements;
+import com.earnix.webk.script.html.impl.DocumentImpl;
+import com.earnix.webk.script.impl.ElementImpl;
 import org.junit.Test;
 
 import java.util.List;
@@ -27,8 +27,8 @@ public class AttributeParseTest {
         String html = "<a id=\"123\" class=\"baz = 'bar'\" style = 'border: 2px'qux zim foo = 12 mux=18 />";
         // should be: <id=123>, <class=baz = 'bar'>, <qux=>, <zim=>, <foo=12>, <mux.=18>
 
-        ElementModel el = Jsoup.parse(html).getElementsByTag("a").get(0);
-        AttributesModel attr = el.attributes();
+        ElementImpl el = Jsoup.parse(html).getElementsByTag("a").get(0);
+        AttributesModel attr = el.getAttributes();
         assertEquals(7, attr.size());
         assertEquals("123", attr.get("id"));
         assertEquals("baz = 'bar'", attr.get("class"));
@@ -42,8 +42,8 @@ public class AttributeParseTest {
     @Test
     public void handlesNewLinesAndReturns() {
         String html = "<a\r\nfoo='bar\r\nqux'\r\nbar\r\n=\r\ntwo>One</a>";
-        ElementModel el = Jsoup.parse(html).select("a").first();
-        assertEquals(2, el.attributes().size());
+        ElementImpl el = Jsoup.parse(html).select("a").first();
+        assertEquals(2, el.getAttributes().size());
         assertEquals("bar\r\nqux", el.attr("foo")); // currently preserves newlines in quoted attributes. todo confirm if should.
         assertEquals("two", el.attr("bar"));
     }
@@ -51,16 +51,16 @@ public class AttributeParseTest {
     @Test
     public void parsesEmptyString() {
         String html = "<a />";
-        ElementModel el = Jsoup.parse(html).getElementsByTag("a").get(0);
-        AttributesModel attr = el.attributes();
+        ElementImpl el = Jsoup.parse(html).getElementsByTag("a").get(0);
+        AttributesModel attr = el.getAttributes();
         assertEquals(0, attr.size());
     }
 
     @Test
     public void canStartWithEq() {
         String html = "<a =empty />";
-        ElementModel el = Jsoup.parse(html).getElementsByTag("a").get(0);
-        AttributesModel attr = el.attributes();
+        ElementImpl el = Jsoup.parse(html).getElementsByTag("a").get(0);
+        AttributesModel attr = el.getAttributes();
         assertEquals(1, attr.size());
         assertTrue(attr.hasKey("=empty"));
         assertEquals("", attr.get("=empty"));
@@ -82,15 +82,15 @@ public class AttributeParseTest {
     }
 
     @Test
-    public void parsesBooleanAttributes() {
+    public void parsesBooleangetAttributes() {
         String html = "<a normal=\"123\" boolean empty=\"\"></a>";
-        ElementModel el = Jsoup.parse(html).select("a").first();
+        ElementImpl el = Jsoup.parse(html).select("a").first();
 
         assertEquals("123", el.attr("normal"));
         assertEquals("", el.attr("boolean"));
         assertEquals("", el.attr("empty"));
 
-        List<AttributeModel> attributes = el.attributes().asList();
+        List<AttributeModel> attributes = el.getAttributes().asList();
         assertEquals("There should be 3 attribute present", 3, attributes.size());
 
         // Assuming the list order always follows the parsed html
@@ -104,9 +104,9 @@ public class AttributeParseTest {
     @Test
     public void dropsSlashFromAttributeName() {
         String html = "<img /onerror='doMyJob'/>";
-        DocumentModel doc = Jsoup.parse(html);
+        DocumentImpl doc = Jsoup.parse(html);
         assertTrue("SelfClosingStartTag ignores last character", doc.select("img[onerror]").size() != 0);
-        assertEquals("<img onerror=\"doMyJob\">", doc.body().html());
+        assertEquals("<img onerror=\"doMyJob\">", doc.getBody().html());
 
         doc = Jsoup.parse(html, "", Parser.xmlParser());
         assertEquals("<img onerror=\"doMyJob\" />", doc.html());

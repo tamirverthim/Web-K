@@ -2,11 +2,11 @@ package com.earnix.webk.dom.parser;
 
 import com.earnix.webk.dom.Jsoup;
 import com.earnix.webk.dom.nodes.AttributeModel;
-import com.earnix.webk.dom.nodes.CommentModel;
-import com.earnix.webk.dom.nodes.DocumentModel;
-import com.earnix.webk.dom.nodes.ElementModel;
-import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.dom.select.Elements;
+import com.earnix.webk.script.html.impl.DocumentImpl;
+import com.earnix.webk.script.impl.CommentImpl;
+import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.script.whatwg_dom.impl.TextImpl;
 import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
@@ -37,7 +37,7 @@ public class TokeniserTest {
             sb.append(tail + quote + ">\n");
 
             String html = sb.toString();
-            DocumentModel doc = Jsoup.parse(html);
+            DocumentImpl doc = Jsoup.parse(html);
             String src = doc.select("img").attr("src");
 
             assertTrue("Handles for quote " + quote, src.contains("X"));
@@ -56,10 +56,10 @@ public class TokeniserTest {
         String tag = sb.toString();
         String html = "<" + tag + ">One</" + tag + ">";
 
-        DocumentModel doc = Parser.htmlParser().settings(ParseSettings.preserveCase).parseInput(html, "");
+        DocumentImpl doc = Parser.htmlParser().settings(ParseSettings.preserveCase).parseInput(html, "");
         Elements els = doc.select(tag);
         assertEquals(1, els.size());
-        ElementModel el = els.first();
+        ElementImpl el = els.first();
         assertNotNull(el);
         assertEquals("One", el.text());
         assertEquals(tag, el.tagName());
@@ -74,13 +74,13 @@ public class TokeniserTest {
         String attrName = sb.toString();
         String html = "<p " + attrName + "=foo>One</p>";
 
-        DocumentModel doc = Jsoup.parse(html);
+        DocumentImpl doc = Jsoup.parse(html);
         Elements els = doc.getElementsByAttribute(attrName);
         assertEquals(1, els.size());
-        ElementModel el = els.first();
+        ElementImpl el = els.first();
         assertNotNull(el);
         assertEquals("One", el.text());
-        AttributeModel attribute = el.attributes().asList().get(0);
+        AttributeModel attribute = el.getAttributes().asList().get(0);
         assertEquals(attrName.toLowerCase(), attribute.getKey());
         assertEquals("foo", attribute.getValue());
     }
@@ -94,10 +94,10 @@ public class TokeniserTest {
         String text = sb.toString();
         String html = "<p>" + text + "</p>";
 
-        DocumentModel doc = Jsoup.parse(html);
+        DocumentImpl doc = Jsoup.parse(html);
         Elements els = doc.select("p");
         assertEquals(1, els.size());
-        ElementModel el = els.first();
+        ElementImpl el = els.first();
 
         assertNotNull(el);
         assertEquals(text, el.text());
@@ -112,13 +112,13 @@ public class TokeniserTest {
         String comment = sb.toString();
         String html = "<p><!-- " + comment + " --></p>";
 
-        DocumentModel doc = Jsoup.parse(html);
+        DocumentImpl doc = Jsoup.parse(html);
         Elements els = doc.select("p");
         assertEquals(1, els.size());
-        ElementModel el = els.first();
+        ElementImpl el = els.first();
 
         assertNotNull(el);
-        CommentModel child = (CommentModel) el.childNode(0);
+        CommentImpl child = (CommentImpl) el.childNode(0);
         assertEquals(" " + comment + " ", child.getData());
     }
 
@@ -131,13 +131,13 @@ public class TokeniserTest {
         String cdata = sb.toString();
         String html = "<p><![CDATA[" + cdata + "]]></p>";
 
-        DocumentModel doc = Jsoup.parse(html);
+        DocumentImpl doc = Jsoup.parse(html);
         Elements els = doc.select("p");
         assertEquals(1, els.size());
-        ElementModel el = els.first();
+        ElementImpl el = els.first();
 
         assertNotNull(el);
-        TextNodeModel child = (TextNodeModel) el.childNode(0);
+        TextImpl child = (TextImpl) el.childNode(0);
         assertEquals(cdata, el.text());
         assertEquals(cdata, child.getWholeText());
     }
@@ -151,13 +151,13 @@ public class TokeniserTest {
         String title = sb.toString();
         String html = "<title>" + title + "</title>";
 
-        DocumentModel doc = Jsoup.parse(html);
+        DocumentImpl doc = Jsoup.parse(html);
         Elements els = doc.select("title");
         assertEquals(1, els.size());
-        ElementModel el = els.first();
+        ElementImpl el = els.first();
 
         assertNotNull(el);
-        TextNodeModel child = (TextNodeModel) el.childNode(0);
+        TextImpl child = (TextImpl) el.childNode(0);
         assertEquals(title, el.text());
         assertEquals(title, child.getWholeText());
         assertEquals(title, doc.title());
