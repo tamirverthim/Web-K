@@ -5,7 +5,7 @@ import com.earnix.webk.dom.internal.StringUtil;
 import com.earnix.webk.dom.nodes.Entities;
 import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.html.canvas.HTMLSlotElement;
-import com.earnix.webk.script.impl.ChildNodeImpl;
+//import com.earnix.webk.script.impl.ChildNodeImpl;
 import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.impl.NodeImpl;
 import com.earnix.webk.script.impl.NonDocumentTypeChildNodeImpl;
@@ -28,13 +28,13 @@ import java.io.IOException;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TextImpl extends NodeImpl implements Text {
 
-    ChildNodeImpl childNodeMixin;
+//    ChildNodeImpl childNodeMixin;
     NonDocumentTypeChildNodeImpl nonDocumentTypeChildNodeMixin;
 
     // text
 
     public TextImpl() {
-        this.childNodeMixin = new ChildNodeImpl(this);
+//        this.childNodeMixin = new ChildNodeImpl(this);
         this.nonDocumentTypeChildNodeMixin = new NonDocumentTypeChildNodeImpl(this);
     }
 
@@ -136,22 +136,14 @@ public class TextImpl extends NodeImpl implements Text {
 
     @Override
     public void before(Object... nodes) {
-        childNodeMixin.before(nodes);
     }
 
     @Override
     public void after(Object... nodes) {
-        childNodeMixin.after(nodes);
     }
 
     @Override
     public void replaceWith(Object... nodes) {
-        childNodeMixin.replaceWith(nodes);
-    }
-
-    @Override
-    public void remove() {
-        childNodeMixin.remove();
     }
 
     // slotable

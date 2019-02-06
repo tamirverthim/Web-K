@@ -242,10 +242,12 @@ public class ScriptContext implements DocumentListener {
             initEngine();
 
 //            val doc = new DocumentImpl(getPanel().getSharedContext().getBaseURL())
-            document.setScriptContext(this);
-            window.setDocument(document);
+            nextDocument.setScriptContext(this);
+            window.setDocument(nextDocument);
             context.setAttribute("document", windowAdapter.getMember("document"), ENGINE_SCOPE);
-
+            
+            document = nextDocument;
+            
             val scripts = panel.getDocument().getElementsByTag("script");
             log.trace("Document has {} scripts", scripts.size());
             for (int i = 0; i < scripts.size(); i++) {
@@ -269,7 +271,7 @@ public class ScriptContext implements DocumentListener {
                 }
 
             }
-            document = nextDocument;
+            
             dispatchLoadEvents();
 
         }

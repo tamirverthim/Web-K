@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * @author Taras Maslov
@@ -42,7 +43,7 @@ import java.util.List;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Slf4j
-public abstract class NodeImpl implements Node {
+public abstract class NodeImpl implements Node{
     
     public ScriptContext scriptContext(){
         return ownerDocument().scriptContext();
@@ -76,8 +77,8 @@ public abstract class NodeImpl implements Node {
     //endregion
 
     public NodeImpl() {
-        eventTargetImpl = new EventTargetImpl(scriptContext());
-        level1EventTarget = new Level1EventTarget(scriptContext(), eventTargetImpl);
+        eventTargetImpl = new EventTargetImpl(this::scriptContext);
+        level1EventTarget = new Level1EventTarget(this::scriptContext, eventTargetImpl);
     }
 
     @Override

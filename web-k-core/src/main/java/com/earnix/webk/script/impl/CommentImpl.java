@@ -26,7 +26,6 @@ import java.io.IOException;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentImpl extends NodeImpl implements com.earnix.webk.script.whatwg_dom.Comment {
 
-    ChildNodeImpl childNodeMixin;
     NonDocumentTypeChildNode nonDocumentTypeChildNodeMixin;
 
     Attribute<String> dataAttribute = Attribute.<String>receive(val -> {
@@ -38,7 +37,6 @@ public class CommentImpl extends NodeImpl implements com.earnix.webk.script.what
     
     public CommentImpl() {
         super();
-        childNodeMixin = new ChildNodeImpl(this);
         nonDocumentTypeChildNodeMixin = new NonDocumentTypeChildNodeImpl(this);
     }
 
@@ -108,22 +106,14 @@ public class CommentImpl extends NodeImpl implements com.earnix.webk.script.what
 
     @Override
     public void before(Object... nodes) {
-        childNodeMixin.before(nodes);
     }
 
     @Override
     public void after(Object... nodes) {
-        childNodeMixin.after(nodes);
     }
 
     @Override
     public void replaceWith(Object... nodes) {
-        childNodeMixin.replaceWith(nodes);
-    }
-
-    @Override
-    public void remove() {
-        childNodeMixin.remove();
     }
 
     // endregion

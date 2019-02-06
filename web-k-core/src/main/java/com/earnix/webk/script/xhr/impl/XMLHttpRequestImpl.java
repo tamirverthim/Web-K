@@ -103,8 +103,8 @@ public class XMLHttpRequestImpl implements XMLHttpRequest {
     
     public XMLHttpRequestImpl(ScriptContext scriptContext) {
         this.context = scriptContext;
-        eventTarget = new EventTargetImpl(scriptContext);
-        level1EventTarget = new Level1EventTarget(context, eventTarget);
+        eventTarget = new EventTargetImpl(() -> scriptContext);
+        level1EventTarget = new Level1EventTarget(() -> scriptContext, eventTarget);
         upload = new XMLHttpRequestUploadImpl(scriptContext);
     }
 

@@ -26,8 +26,8 @@ public class XMLHttpRequestUploadImpl implements XMLHttpRequestUpload {
 
     public XMLHttpRequestUploadImpl(ScriptContext context) {
         this.context = context;
-        eventTargetImpl = new EventTargetImpl(context);
-        level1EventTarget = new Level1EventTarget(context, this);
+        eventTargetImpl = new EventTargetImpl(() -> context);
+        level1EventTarget = new Level1EventTarget(() -> context, this);
     }
 
     @Override

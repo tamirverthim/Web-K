@@ -13,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.var;
 
 import java.util.HashMap;
+import java.util.function.Supplier;
 
 /**
  * @author Taras Maslov
@@ -22,7 +23,7 @@ import java.util.HashMap;
 @RequiredArgsConstructor
 public class Level1EventTarget {
 
-    final ScriptContext scriptContext;
+    final Supplier<ScriptContext> scriptContext;
     final EventTarget eventTarget;
     
     HashMap<String, EventHandlerAttribute> handlers = new HashMap<>();

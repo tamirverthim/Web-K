@@ -91,7 +91,7 @@ public abstract class Evaluator {
 
         @Override
         public boolean matches(ElementImpl root, ElementImpl element) {
-            return (id.equals(element.id()));
+            return (id.equals(element.getId()));
         }
 
         @Override

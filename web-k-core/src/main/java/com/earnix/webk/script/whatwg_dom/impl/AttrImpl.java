@@ -33,7 +33,7 @@ public class AttrImpl implements Attr {
         this.modelNode = modelNode;
         this.model = attribute;
         this.scriptContext = scriptContext;
-        eventTargetImpl = new EventTargetImpl(scriptContext);
+        eventTargetImpl = new EventTargetImpl(() ->scriptContext);
     }
 
     @Override

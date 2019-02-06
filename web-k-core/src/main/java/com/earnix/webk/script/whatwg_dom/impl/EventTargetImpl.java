@@ -17,6 +17,7 @@ import lombok.val;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * @author Taras Maslov
@@ -28,7 +29,8 @@ import java.util.List;
 public class EventTargetImpl implements EventTarget {
 
     LinkedHashMap<String, List<EventListener>> listeners = new LinkedHashMap<>();
-    final ScriptContext context;
+    final Supplier<ScriptContext> context;
+    
     
     @Override
     public void addEventListener(@DOMString String type, EventListener callback, Object options) {
@@ -57,7 +59,7 @@ public class EventTargetImpl implements EventTarget {
 //        log.trace("Dispatched event {} on target {}", event.type(), toString());
         val typeListeners = listeners.get(event.type());
         if (typeListeners != null) {
-            typeListeners.forEach(l -> l.handleEvent(WebIDLAdapter.obtain(context, event)));
+            typeListeners.forEach(l -> l.handleEvent(WebIDLAdapter.obtain(context.get(), event)));
             return true;
         }
         return false;

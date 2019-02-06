@@ -73,8 +73,6 @@ import java.util.regex.PatternSyntaxException;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Slf4j
 public class ElementImpl extends NodeImpl implements HTMLElement {
-
-    final ChildNodeImpl childNodeMixin;
     
     // region model
 
@@ -91,7 +89,6 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
     // endregion
 
     public ElementImpl() {
-        childNodeMixin = new ChildNodeImpl(this);
     }
 
     /**
@@ -321,22 +318,14 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public void before(Object... nodes) {
-        childNodeMixin.before(nodes);
     }
 
     @Override
     public void after(Object... nodes) {
-        childNodeMixin.after(nodes);
     }
 
     @Override
     public void replaceWith(Object... nodes) {
-        childNodeMixin.replaceWith(nodes);
-    }
-
-    @Override
-    public void remove() {
-        childNodeMixin.remove();
     }
 
     // endregion

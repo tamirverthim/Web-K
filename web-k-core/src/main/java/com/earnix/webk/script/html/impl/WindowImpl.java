@@ -69,8 +69,8 @@ public class WindowImpl implements Window {
     public WindowImpl(ScriptContext scriptContext) {
         this.scriptContext = scriptContext;
         location = new LocationImpl(document);
-        eventTargetImpl = new EventTargetImpl(scriptContext);
-        level1EventTarget = new Level1EventTarget(scriptContext, eventTargetImpl);
+        eventTargetImpl = new EventTargetImpl(() -> scriptContext);
+        level1EventTarget = new Level1EventTarget(() -> scriptContext, eventTargetImpl);
     }
 
     @Override
