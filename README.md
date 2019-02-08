@@ -3,7 +3,7 @@
 <p align="center"><img src="/web-k-core/src/main/resources/demos/Web-K.png"></img></p>
 
 Web-K is [FlyingSaucer](https://github.com/flyingsaucerproject/flyingsaucer)-based pure Java browser and Swing browser component. In addition to FlyingSaucer features it supports:
-* a `<script>` tag with limited set of JS features (like Canvas). Nashosh JavaScript runtime is used. See features list below. 
+* a `<script>` tag with limited set of JS features (like Canvas). Nashorn JavaScript runtime is used. See features list below. 
 * Not strict HTML. Standard Java XML parser and DOM replaced with modified [JSoup](https://github.com/jhy/jsoup) library. It provides support of HTML5 at parsing level.
 * Embedded `<svg>` elements, implemented with [svgSalamander](https://github.com/blackears/svgSalamander).
 
