@@ -75,7 +75,7 @@ public class XmlTreeBuilder extends TreeBuilder {
     ElementImpl insert(Token.StartTag startTag) {
         Tag tag = Tag.valueOf(startTag.name(), settings);
         // todo: wonder if for xml parsing, should treat all tags as unknown? because it's not html.
-        ElementImpl el = new ElementImpl(tag, baseUri, settings.normalizeAttributes(startTag.attributes));
+        ElementImpl el = createElement(tag, baseUri, settings.normalizeAttributes(startTag.attributes));
         insertNode(el);
         if (startTag.isSelfClosing()) {
             if (!tag.isKnownTag()) // unknown tag, remember this is self closing for output. see above.

@@ -1,5 +1,7 @@
 package com.earnix.webk.script.html.canvas.impl;
 
+import com.earnix.webk.dom.nodes.AttributesModel;
+import com.earnix.webk.dom.parser.Tag;
 import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.html.canvas.BlobCallback;
 import com.earnix.webk.script.html.canvas.HTMLCanvasElement;
@@ -17,12 +19,10 @@ import com.earnix.webk.util.GeneralUtil;
  */
 public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElement {
     
-    private final CanvasRenderingContext2DImpl context;
-    private final ScriptContext scriptContext;
+    private CanvasRenderingContext2DImpl context;
 
-    public HTMLCanvasElementImpl(ScriptContext scriptContext) {
-        super();
-        this.scriptContext = scriptContext;
+    public HTMLCanvasElementImpl(Tag tag, String baseUri, AttributesModel attributes) {
+        super(tag, baseUri, attributes);
         
         if (!hasAttr("width")) {
             attr("width", String.valueOf(300));
@@ -30,13 +30,8 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
         if (!hasAttr("height")) {
             attr("height", String.valueOf(150));
         }
-        context = new CanvasRenderingContext2DImpl(this);
     }
-
-    public ScriptContext getScriptContext() {
-        return scriptContext;
-    }
-
+    
     @Override
     public Attribute<Integer> width() {
         return new Attribute<Integer>() {
@@ -79,7 +74,7 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
 
     @Override
     public RenderingContext getContext(@DOMString String contextId, Object options) {
-        return context;
+        return getContextImpl();
     }
 
     @Override
@@ -99,6 +94,9 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
     }
 
     public CanvasRenderingContext2DImpl getContextImpl() {
+        if (context == null) {
+            context = new CanvasRenderingContext2DImpl(this);
+        }
         return context;
     }
 }

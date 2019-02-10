@@ -22,6 +22,7 @@ import com.earnix.webk.script.html.impl.DocumentImpl;
 import com.earnix.webk.script.whatwg_dom.impl.EventTargetImpl;
 import com.earnix.webk.script.whatwg_dom.impl.Level1EventTarget;
 import lombok.AccessLevel;
+import lombok.Setter;
 import lombok.experimental.Delegate;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -43,9 +44,18 @@ import java.util.List;
 @Slf4j
 public abstract class NodeImpl implements Node, Cloneable {
     
+    @Setter
+    ScriptContext scriptContext;
+    
     public ScriptContext scriptContext(){
-        return ownerDocument().scriptContext();
-    };
+        val owner = ownerDocument();
+        if(owner == null) {
+            // getting script context of detached node
+            return scriptContext;
+        } else {
+            return owner.scriptContext();
+        }
+    }
     
     @Delegate(types = {EventTarget.class})
     EventTargetImpl eventTargetImpl;

@@ -2,6 +2,7 @@ package com.earnix.webk.dom.parser;
 
 import com.earnix.webk.dom.helper.Validate;
 import com.earnix.webk.dom.nodes.AttributesModel;
+import com.earnix.webk.script.html.canvas.impl.HTMLCanvasElementImpl;
 import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.impl.NodeImpl;
 import com.earnix.webk.script.html.impl.DocumentImpl;
@@ -91,5 +92,17 @@ abstract class TreeBuilder {
     protected ElementImpl currentElement() {
         int size = stack.size();
         return size > 0 ? stack.get(size - 1) : null;
+    }
+
+    ElementImpl createElement(Tag tag, String baseUri, AttributesModel attributes) {
+        switch (tag.getName().trim().toLowerCase()) {
+            case "canvas":
+                return new HTMLCanvasElementImpl(tag, baseUri, attributes);
+            default: return new ElementImpl(tag, baseUri, attributes);
+        }
+    }
+    
+    ElementImpl createElement(Tag tag, String baseUri) {
+        return createElement(tag, baseUri, null);
     }
 }

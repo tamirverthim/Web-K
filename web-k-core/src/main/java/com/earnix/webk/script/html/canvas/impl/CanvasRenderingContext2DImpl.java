@@ -103,7 +103,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
 
 
     // endregion
-
+    
     CanvasRenderingContext2DImpl(HTMLCanvasElementImpl canvas) {
         this.canvas = canvas;
         resize();
@@ -911,7 +911,7 @@ public class CanvasRenderingContext2DImpl implements CanvasRenderingContext2D {
     private void triggerDocumentUpdate() {
         // the way to notify script context about rendering requirement 
         canvas.attr("__update", UUID.randomUUID().toString());
-        canvas.getScriptContext().getPanel().repaint();
+        canvas.scriptContext().getPanel().repaint();
     }
 
     // endregion

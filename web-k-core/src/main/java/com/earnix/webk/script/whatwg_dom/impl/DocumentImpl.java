@@ -143,7 +143,10 @@ public class DocumentImpl extends ElementImpl implements Document {
 
     @Override
     public Element createElement(String localName, Object options) {
-        return createElement(localName);
+        ElementImpl element = createElement(localName);
+        // attaching script context 
+        element.setScriptContext(scriptContext);
+        return element;
     }
 
     @Override
@@ -158,8 +161,7 @@ public class DocumentImpl extends ElementImpl implements Document {
 
     @Override
     public Text createTextNode(String data) {
-        TextImpl textNode = new TextImpl(data);
-        return textNode;
+        return new TextImpl(data);
     }
 
     @Override

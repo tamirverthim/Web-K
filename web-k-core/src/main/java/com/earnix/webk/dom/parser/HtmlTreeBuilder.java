@@ -106,7 +106,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
             else
                 tokeniser.transition(TokeniserState.Data); // default
 
-            root = new ElementImpl(Tag.valueOf("html", settings), baseUri);
+            root = createElement(Tag.valueOf("html", settings), baseUri);
             doc.appendChild(root);
             stack.add(root);
             resetInsertionMode();
@@ -205,13 +205,13 @@ public class HtmlTreeBuilder extends TreeBuilder {
             return el;
         }
 
-        ElementImpl el = new ElementImpl(Tag.valueOf(startTag.name(), settings), baseUri, settings.normalizeAttributes(startTag.attributes));
+        ElementImpl el = createElement(Tag.valueOf(startTag.name(), settings), baseUri, settings.normalizeAttributes(startTag.attributes));
         insert(el);
         return el;
     }
 
     ElementImpl insertStartTag(String startTagName) {
-        ElementImpl el = new ElementImpl(Tag.valueOf(startTagName, settings), baseUri);
+        ElementImpl el = createElement(Tag.valueOf(startTagName, settings), baseUri);
         insert(el);
         return el;
     }
@@ -223,7 +223,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 
     ElementImpl insertEmpty(Token.StartTag startTag) {
         Tag tag = Tag.valueOf(startTag.name(), settings);
-        ElementImpl el = new ElementImpl(tag, baseUri, startTag.attributes);
+        ElementImpl el = createElement(tag, baseUri, startTag.attributes);
         insertNode(el);
         if (startTag.isSelfClosing()) {
             if (tag.isKnownTag()) {
