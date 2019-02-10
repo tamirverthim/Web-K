@@ -20,7 +20,7 @@ package com.earnix.webk.examples;/*
 import com.earnix.webk.event.DefaultDocumentListener;
 import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.resource.XMLResource;
-import com.earnix.webk.script.html.impl.DocumentImpl;
+import com.earnix.webk.runtime.html.impl.DocumentImpl;
 import com.earnix.webk.simple.FSScrollPane;
 import com.earnix.webk.simple.XHTMLPanel;
 import com.earnix.webk.swing.DelegatingUserAgent;

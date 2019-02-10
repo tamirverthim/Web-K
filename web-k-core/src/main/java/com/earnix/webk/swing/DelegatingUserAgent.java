@@ -24,7 +24,7 @@ import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.resource.CSSResource;
 import com.earnix.webk.resource.ImageResource;
 import com.earnix.webk.resource.XMLResource;
-import com.earnix.webk.script.html.impl.DocumentImpl;
+import com.earnix.webk.runtime.html.impl.DocumentImpl;
 import com.earnix.webk.util.IOUtil;
 import com.earnix.webk.util.StreamResource;
 import com.kitfox.svg.SVGCache;

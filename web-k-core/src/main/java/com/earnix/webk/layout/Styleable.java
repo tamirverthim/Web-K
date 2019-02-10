@@ -20,7 +20,7 @@
 package com.earnix.webk.layout;
 
 import com.earnix.webk.css.style.CalculatedStyle;
-import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.runtime.impl.ElementImpl;
 
 /**
  * All objects appearing the layout tree must implement this interface.  It

@@ -23,8 +23,8 @@ import com.earnix.webk.context.StyleReference;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.layout.PaintingInfo;
 import com.earnix.webk.render.Box;
-import com.earnix.webk.script.impl.ElementImpl;
-import com.earnix.webk.script.impl.NodeImpl;
+import com.earnix.webk.runtime.impl.ElementImpl;
+import com.earnix.webk.runtime.impl.NodeImpl;
 
 import java.awt.Rectangle;
 

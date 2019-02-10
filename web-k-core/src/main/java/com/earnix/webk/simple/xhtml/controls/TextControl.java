@@ -21,7 +21,7 @@ package com.earnix.webk.simple.xhtml.controls;
 
 //import org.w3c.dom.Element;
 
-import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.runtime.impl.ElementImpl;
 import com.earnix.webk.simple.xhtml.XhtmlForm;
 
 public class TextControl extends AbstractControl {

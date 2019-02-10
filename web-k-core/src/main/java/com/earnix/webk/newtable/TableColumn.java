@@ -21,7 +21,7 @@ package com.earnix.webk.newtable;
 
 import com.earnix.webk.css.style.CalculatedStyle;
 import com.earnix.webk.layout.Styleable;
-import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.runtime.impl.ElementImpl;
 
 /**
  * An object representing an element with <code>display: table-column</code> or

@@ -22,7 +22,7 @@ package com.earnix.webk.simple;
 import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.layout.SharedContext;
 import com.earnix.webk.render.RenderingContext;
-import com.earnix.webk.script.html.impl.DocumentImpl;
+import com.earnix.webk.runtime.html.impl.DocumentImpl;
 import com.earnix.webk.simple.extend.XhtmlNamespaceHandler;
 import com.earnix.webk.swing.BasicPanel;
 import com.earnix.webk.swing.ContextMenu;
@@ -64,14 +64,14 @@ import java.net.URL;
  * }
  * </pre>
  * <p/>
- * <p>XHTMLPanel renders XHTML and XML which can be loaded as valid {@link com.earnix.webk.script.html.impl.DocumentImpl}
+ * <p>XHTMLPanel renders XHTML and XML which can be loaded as valid {@link com.earnix.webk.runtime.html.impl.DocumentImpl}
  * instances. You should make sure the document you want to render is well-formed. For XHTML,
  * there is always a default stylesheet available, even if no CSS is attached to the
  * XHTML you are loading. For XML, there is no default stylesheet, so you should have
  * one attached to your XML before trying to render it using the xml-stylesheer processing
  * instruction. XHTMLPanel has methods to load
  * documents from a uri ({@link #setDocument(String uri)}),
- * from a Document instance ({@link #setDocument(com.earnix.webk.script.html.impl.DocumentImpl)}) or from an InputStream
+ * from a Document instance ({@link #setDocument(com.earnix.webk.runtime.html.impl.DocumentImpl)}) or from an InputStream
  * ({@link BasicPanel#setDocument(java.io.InputStream, String)}).</p>
  * <p/>
  * <p/>
@@ -109,7 +109,7 @@ public class XHTMLPanel extends BasicPanel {
     private float maxFontScale = 3.0F;
 
     /**
-     * Instantiates an XHTMLPanel with no {@link com.earnix.webk.script.html.impl.DocumentImpl} loaded by default.
+     * Instantiates an XHTMLPanel with no {@link com.earnix.webk.runtime.html.impl.DocumentImpl} loaded by default.
      */
     public XHTMLPanel() {
         setup();

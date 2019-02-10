@@ -21,7 +21,7 @@ package com.earnix.webk.extend;
 
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
-import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.runtime.impl.ElementImpl;
 import com.earnix.webk.simple.extend.FormSubmissionListener;
 
 public interface ReplacedElementFactory {

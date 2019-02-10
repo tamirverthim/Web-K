@@ -20,7 +20,7 @@
 package com.earnix.webk.tools;
 
 import com.earnix.webk.layout.LayoutContext;
-import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.runtime.impl.ElementImpl;
 
 import java.awt.Dimension;
 

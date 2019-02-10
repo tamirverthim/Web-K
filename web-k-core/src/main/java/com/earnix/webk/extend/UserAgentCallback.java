@@ -21,7 +21,7 @@ package com.earnix.webk.extend;
 
 import com.earnix.webk.resource.CSSResource;
 import com.earnix.webk.resource.ImageResource;
-import com.earnix.webk.script.html.impl.DocumentImpl;
+import com.earnix.webk.runtime.html.impl.DocumentImpl;
 import com.earnix.webk.swing.BasicPanel;
 import com.earnix.webk.swing.NaiveUserAgent;
 

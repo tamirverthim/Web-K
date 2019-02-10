@@ -19,7 +19,7 @@
  */
 package com.earnix.webk.simple.xhtml.controls;
 
-import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.runtime.impl.ElementImpl;
 import com.earnix.webk.simple.xhtml.XhtmlForm;
 
 public class HiddenControl extends AbstractControl {

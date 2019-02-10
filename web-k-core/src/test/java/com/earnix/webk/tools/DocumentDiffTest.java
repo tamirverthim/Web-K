@@ -20,7 +20,7 @@
 package com.earnix.webk.tools;
 
 import com.earnix.webk.render.Box;
-import com.earnix.webk.script.html.impl.DocumentImpl;
+import com.earnix.webk.runtime.html.impl.DocumentImpl;
 import com.earnix.webk.simple.Graphics2DRenderer;
 import com.earnix.webk.util.AssertHelper;
 import com.earnix.webk.util.Util;

@@ -23,7 +23,7 @@ package com.earnix.webk.css.extend.lib;
 
 
 import com.earnix.webk.css.extend.AttributeResolver;
-import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.runtime.impl.ElementImpl;
 import lombok.val;
 
 /**

@@ -21,8 +21,8 @@ package com.earnix.webk.swing;
 
 
 import com.earnix.webk.render.Box;
-import com.earnix.webk.script.impl.ElementImpl;
-import com.earnix.webk.script.impl.NodeImpl;
+import com.earnix.webk.runtime.impl.ElementImpl;
+import com.earnix.webk.runtime.impl.NodeImpl;
 
 
 /**

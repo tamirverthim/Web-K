@@ -1,6 +1,6 @@
 package com.earnix.webk.util;
 
-import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.runtime.impl.ElementImpl;
 
 import java.util.Objects;
 import java.util.Optional;

@@ -20,7 +20,7 @@
 package com.earnix.webk.browser;
 
 import com.earnix.webk.resource.XMLResource;
-import com.earnix.webk.script.html.impl.DocumentImpl;
+import com.earnix.webk.runtime.html.impl.DocumentImpl;
 import com.earnix.webk.swing.DelegatingUserAgent;
 import com.earnix.webk.util.GeneralUtil;
 import com.earnix.webk.util.XRLog;

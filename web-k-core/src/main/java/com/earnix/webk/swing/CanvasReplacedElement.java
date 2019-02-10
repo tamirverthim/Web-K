@@ -1,6 +1,6 @@
 package com.earnix.webk.swing;
 
-import com.earnix.webk.script.html.canvas.impl.HTMLCanvasElementImpl;
+import com.earnix.webk.runtime.html.canvas.impl.HTMLCanvasElementImpl;
 import lombok.AllArgsConstructor;
 
 import javax.swing.JPanel;

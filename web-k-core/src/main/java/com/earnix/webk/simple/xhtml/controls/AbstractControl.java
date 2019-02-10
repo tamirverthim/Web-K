@@ -19,9 +19,9 @@
  */
 package com.earnix.webk.simple.xhtml.controls;
 
-import com.earnix.webk.script.impl.ElementImpl;
-import com.earnix.webk.script.impl.NodeImpl;
-import com.earnix.webk.script.whatwg_dom.impl.TextImpl;
+import com.earnix.webk.runtime.impl.ElementImpl;
+import com.earnix.webk.runtime.impl.NodeImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.TextImpl;
 import com.earnix.webk.simple.xhtml.FormControl;
 import com.earnix.webk.simple.xhtml.FormControlListener;
 import com.earnix.webk.simple.xhtml.FormListener;

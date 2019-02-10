@@ -19,7 +19,7 @@
  */
 package com.earnix.webk.layout;
 
-import com.earnix.webk.script.whatwg_dom.impl.TextImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.TextImpl;
 
 /**
  * A bean which serves as a way for the layout code to pass information to the

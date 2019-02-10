@@ -19,8 +19,8 @@
  */
 package com.earnix.webk.resource;
 
-import com.earnix.webk.dom.Jsoup;
-import com.earnix.webk.script.html.impl.DocumentImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.Jsoup;
+import com.earnix.webk.runtime.html.impl.DocumentImpl;
 import com.earnix.webk.util.Configuration;
 import com.earnix.webk.util.XRLog;
 import com.earnix.webk.util.XRRuntimeException;

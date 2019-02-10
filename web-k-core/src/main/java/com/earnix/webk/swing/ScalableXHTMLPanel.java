@@ -25,7 +25,7 @@ import com.earnix.webk.layout.Layer;
 import com.earnix.webk.layout.PaintingInfo;
 import com.earnix.webk.render.Box;
 import com.earnix.webk.render.RenderingContext;
-import com.earnix.webk.script.html.impl.DocumentImpl;
+import com.earnix.webk.runtime.html.impl.DocumentImpl;
 import com.earnix.webk.simple.XHTMLPanel;
 
 import java.awt.Dimension;
@@ -60,7 +60,7 @@ public class ScalableXHTMLPanel extends XHTMLPanel {
     private Dimension lastLayoutSize = null;
 
     /**
-     * Instantiates an XHTMLPanel with no {@link com.earnix.webk.script.html.impl.DocumentImpl} loaded by default.
+     * Instantiates an XHTMLPanel with no {@link com.earnix.webk.runtime.html.impl.DocumentImpl} loaded by default.
      */
     public ScalableXHTMLPanel() {
         super();

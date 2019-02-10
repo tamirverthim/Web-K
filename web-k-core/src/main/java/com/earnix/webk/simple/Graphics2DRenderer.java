@@ -20,7 +20,7 @@
 package com.earnix.webk.simple;
 
 import com.earnix.webk.layout.SharedContext;
-import com.earnix.webk.script.html.impl.DocumentImpl;
+import com.earnix.webk.runtime.html.impl.DocumentImpl;
 import org.w3c.dom.Document;
 
 import java.awt.Dimension;
