@@ -3,6 +3,7 @@ package com.earnix.webk.script.whatwg_dom.impl;
 import com.earnix.webk.dom.helper.Validate;
 import com.earnix.webk.dom.internal.StringUtil;
 import com.earnix.webk.script.ScriptContext;
+import com.earnix.webk.script.impl.LeafNode;
 import com.earnix.webk.script.impl.NodeImpl;
 import com.earnix.webk.script.web_idl.Attribute;
 import com.earnix.webk.script.web_idl.DOMException;
@@ -17,7 +18,7 @@ import java.io.IOException;
  * 7/13/2018
  */
 @Slf4j
-public class DocumentTypeImpl extends NodeImpl implements com.earnix.webk.script.whatwg_dom.DocumentType {
+public class DocumentTypeImpl extends LeafNode implements com.earnix.webk.script.whatwg_dom.DocumentType {
 
     // todo needs a bit of a chunky cleanup. this level of detail isn't needed
     public static final String PUBLIC_KEY = "PUBLIC";

@@ -7,6 +7,7 @@ import com.earnix.webk.script.ScriptContext;
 import com.earnix.webk.script.html.canvas.HTMLSlotElement;
 //import com.earnix.webk.script.impl.ChildNodeImpl;
 import com.earnix.webk.script.impl.ElementImpl;
+import com.earnix.webk.script.impl.LeafNode;
 import com.earnix.webk.script.impl.NodeImpl;
 import com.earnix.webk.script.impl.NonDocumentTypeChildNodeImpl;
 import com.earnix.webk.script.web_idl.Attribute;
@@ -26,7 +27,7 @@ import java.io.IOException;
  * 7/24/2018
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TextImpl extends NodeImpl implements Text {
+public class TextImpl extends LeafNode implements Text {
 
 //    ChildNodeImpl childNodeMixin;
     NonDocumentTypeChildNodeImpl nonDocumentTypeChildNodeMixin;
@@ -276,6 +277,15 @@ public class TextImpl extends NodeImpl implements Text {
         return outerHtml();
     }
 
+    @Override
+    public String attr(String key) {
+        Validate.notNull(key);
+        if (!hasAttributes()) {
+            return key.equals(nodeName()) ? (String) value : EmptyString;
+        }
+        return super.attr(key);
+    }
+    
     /**
      * Create a new TextNode from HTML encoded (aka escaped) data.
      *
@@ -312,4 +322,6 @@ public class TextImpl extends NodeImpl implements Text {
     public static boolean lastCharIsWhitespace(StringBuilder sb) {
         return sb.length() != 0 && sb.charAt(sb.length() - 1) == ' ';
     }
+    
+    
 }

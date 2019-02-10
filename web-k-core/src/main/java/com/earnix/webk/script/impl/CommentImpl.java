@@ -24,7 +24,7 @@ import java.io.IOException;
  */
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CommentImpl extends NodeImpl implements com.earnix.webk.script.whatwg_dom.Comment {
+public class CommentImpl extends LeafNode implements com.earnix.webk.script.whatwg_dom.Comment {
 
     NonDocumentTypeChildNode nonDocumentTypeChildNodeMixin;
 

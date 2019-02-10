@@ -22,7 +22,6 @@ import com.earnix.webk.script.html.impl.DocumentImpl;
 import com.earnix.webk.script.whatwg_dom.impl.EventTargetImpl;
 import com.earnix.webk.script.whatwg_dom.impl.Level1EventTarget;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.experimental.Delegate;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +34,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * @author Taras Maslov
@@ -43,7 +41,7 @@ import java.util.function.Supplier;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Slf4j
-public abstract class NodeImpl implements Node{
+public abstract class NodeImpl implements Node {
     
     public ScriptContext scriptContext(){
         return ownerDocument().scriptContext();
@@ -57,7 +55,7 @@ public abstract class NodeImpl implements Node{
     
     // region model
 
-    static final String EmptyString = "";
+    protected static final String EmptyString = "";
     public NodeImpl parentNode; // todo make pack
    
     int siblingIndex;
@@ -200,7 +198,7 @@ public abstract class NodeImpl implements Node{
 //    public Node appendChild(Node node) {
 //        appe
 //        NodeImpl impl = (NodeImpl) node;
-//        ((ElementModel) model).appendChild(impl.model);
+//        ((ElementImpl) model).appendChild(impl.model);
 //        return node;
 //    }
 
@@ -224,19 +222,18 @@ public abstract class NodeImpl implements Node{
     
     // region model
 
-//    /**
-//     * Default constructor. Doesn't setup base uri, children, or attributes; use with caution.
-//     */
-//    protected NodeImpl() {
-//    }
-
     /**
      * Get the node name of this node. Use for debugging purposes and not logic switching (for that, use instanceof).
      *
      * @return node name
      */
     public abstract String nodeName();
-    
+
+    /**
+     * Check if this Node has an actual Attributes object.
+     */
+    protected abstract boolean hasAttributes();
+
     public boolean hasParent() {
         return parentNode != null;
     }
@@ -252,7 +249,7 @@ public abstract class NodeImpl implements Node{
      *
      * @param attributeKey The attribute key.
      * @return The attribute, or empty string if not present (to avoid nulls).
-     * @see #getAttributes() ()
+     * @see #getAttributes()
      * @see #hasAttr(String)
      * @see #absUrl(String)
      */
@@ -268,13 +265,13 @@ public abstract class NodeImpl implements Node{
             return absUrl(attributeKey.substring("abs:".length()));
         else return "";
     }
-//
-//    /**
-//     * Get all of the element's attributes.
-//     *
-//     * @return attributes (which implements iterable, in same order as presented in original HTML).
-//     */
-//    public abstract AttributesModel attributes();
+
+    /**
+     * Get all of the element's attributes.
+     *
+     * @return attributes (which implements iterable, in same order as presented in original HTML).
+     */
+    public abstract AttributesModel getAttributes();
 
     /**
      * Set an attribute (key=value). If the attribute already exists, it is replaced. The attribute key comparison is
@@ -298,8 +295,7 @@ public abstract class NodeImpl implements Node{
      */
     public boolean hasAttr(String attributeKey) {
         Validate.notNull(attributeKey);
-        ensureAttributes();
-        
+
         if (attributeKey.startsWith("abs:")) {
             String key = attributeKey.substring("abs:".length());
             if (getAttributes().hasKeyIgnoreCase(key) && !absUrl(key).equals(""))
@@ -316,7 +312,6 @@ public abstract class NodeImpl implements Node{
      */
     public NodeImpl removeAttr(String attributeKey) {
         Validate.notNull(attributeKey);
-        ensureAttributes();
         getAttributes().removeIgnoreCase(attributeKey);
         return this;
     }
@@ -334,8 +329,21 @@ public abstract class NodeImpl implements Node{
         }
         return this;
     }
-    
-    
+
+    /**
+     * Get the base URI of this node.
+     *
+     * @return base URI
+     */
+    public abstract String baseUri();
+
+    /**
+     * Set the baseUri for just this node (not its descendants), if this Node tracks base URIs.
+     *
+     * @param baseUri new URI
+     */
+    protected abstract void doSetBaseUri(String baseUri);
+
     /**
      * Update the base URI of this node and all of its descendants.
      *
@@ -379,7 +387,6 @@ public abstract class NodeImpl implements Node{
      */
     public String absUrl(String attributeKey) {
         Validate.notEmpty(attributeKey);
-        ensureAttributes();
 
         if (!hasAttr(attributeKey)) {
             return ""; // nothing to make absolute with
@@ -388,6 +395,7 @@ public abstract class NodeImpl implements Node{
         }
     }
 
+    public abstract List<NodeImpl> ensureChildNodes();
 
     /**
      * Get a child node by its 0-based index.
@@ -433,8 +441,12 @@ public abstract class NodeImpl implements Node{
         return result;
     }
 
-
-
+    /**
+     * Get the number of child nodes that this node holds.
+     *
+     * @return the number of child nodes that this node holds.
+     */
+    public abstract int childNodeSize();
 
     protected NodeImpl[] childNodesAsArray() {
         return ensureChildNodes().toArray(new NodeImpl[childNodeSize()]);
@@ -866,7 +878,7 @@ public abstract class NodeImpl implements Node{
      * parent node. As a stand-alone object, any changes made to the clone or any of its children will not impact the
      * original node.
      * <p>
-     * The cloned node may be adopted into another Document or node structure using {@link ElementImpl#appendChild(Node)}.
+     * The cloned node may be adopted into another Document or node structure using {@link ElementImpl#appendChild(Node)}}.
      *
      * @return a stand-alone cloned node, including clones of any children
      * @see #shallowClone()
@@ -952,105 +964,4 @@ public abstract class NodeImpl implements Node{
             }
         }
     }
-    
-    // endregion
-    
-    
-    // region leaf node
-
-    /**
-     * Check if this Node has an actual Attributes object.
-     */
-    protected boolean hasAttributes() {
-        return value instanceof AttributesModel;
-    }
-
-    public AttributesModel getAttributes() {
-        ensureAttributes();
-        return (AttributesModel) value;
-    }
-
-    private void ensureAttributes() {
-        if (!hasAttributes()) {
-            Object coreValue = value;
-            AttributesModel attributes = new AttributesModel();
-            value = attributes;
-            if (coreValue != null)
-                attributes.put(nodeName(), (String) coreValue);
-        }
-    }
-
-    public String coreValue() {
-        return attr(nodeName());
-    }
-
-    protected void coreValue(String value) {
-        attr(nodeName(), value);
-    }
-
-//    @Override
-//    public String attr(String key) {
-//        Validate.notNull(key);
-//        if (!hasAttributes()) {
-//            return key.equals(nodeName()) ? (String) value : EmptyString;
-//        }
-//        return super.attr(key);
-//    }
-
-//    @Override
-//    public NodeImpl attr(String key, String value) {
-//        if (!hasAttributes() && key.equals(nodeName())) {
-//            this.value = value;
-//        } else {
-//            ensureAttributes();
-//            super.attr(key, value);
-//        }
-//        return this;
-//    }
-
-//    @Override
-//    public boolean hasAttr(String key) {
-//        ensureAttributes();
-//        return super.hasAttr(key);
-//    }
-    
-
-//    @Override
-//    public String absUrl(String key) {
-//        ensureAttributes();
-//        return super.absUrl(key);
-//    }
-
-    /**
-     * Get the base URI of this node.
-     *
-     * @return base URI
-     */
-    public String baseUri() {
-        return hasParent() ? parent().baseUri() : "";
-    }
-
-    /**
-     * Set the baseUri for just this node (not its descendants), if this Node tracks base URIs.
-     *
-     * @param baseUri new URI
-     */
-    protected void doSetBaseUri(String baseUri) {
-        // noop
-    }
-
-    /**
-     * Get the number of child nodes that this node holds.
-     *
-     * @return the number of child nodes that this node holds.
-     */
-    public int childNodeSize() {
-        return 0;
-    }
-
-    public List<NodeImpl> ensureChildNodes() {
-        return EmptyNodes;
-    }
-    
-    //endregion
 }

@@ -3,7 +3,7 @@ package com.earnix.webk.dom.nodes;
 import com.earnix.webk.dom.SerializationException;
 import com.earnix.webk.dom.helper.Validate;
 import com.earnix.webk.dom.internal.StringUtil;
-import com.earnix.webk.script.impl.NodeImpl;
+import com.earnix.webk.script.impl.LeafNode;
 import com.earnix.webk.script.html.impl.DocumentImpl;
 import com.earnix.webk.script.web_idl.Attribute;
 import com.earnix.webk.script.web_idl.DOMException;
@@ -15,7 +15,7 @@ import java.io.IOException;
 /**
  * An XML Declaration.
  */
-public class XmlDeclarationModel extends NodeImpl {
+public class XmlDeclarationModel extends LeafNode {
     // todo this impl isn't really right, the data shouldn't be attributes, just a run of text after the name
     private final boolean isProcessingInstruction; // <! if true, <? if false, declaration (and last data char should be ?)
 
@@ -109,4 +109,14 @@ public class XmlDeclarationModel extends NodeImpl {
     public String toString() {
         return outerHtml();
     }
+
+    @Override
+    public String attr(String key) {
+        Validate.notNull(key);
+        if (!hasAttributes()) {
+            return key.equals(nodeName()) ? (String) value : EmptyString;
+        }
+        return super.attr(key);
+    }
+    
 }

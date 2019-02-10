@@ -1,6 +1,6 @@
 package com.earnix.webk.dom.nodes;
 
-import com.earnix.webk.script.impl.NodeImpl;
+import com.earnix.webk.script.impl.LeafNode;
 import com.earnix.webk.script.html.impl.DocumentImpl;
 import com.earnix.webk.script.web_idl.Attribute;
 import com.earnix.webk.script.web_idl.DOMString;
@@ -15,7 +15,7 @@ import java.io.IOException;
  * @author Jonathan Hedley, jonathan@hedley.net
  */
 @Slf4j
-public class DataImpl extends NodeImpl {
+public class DataImpl extends LeafNode {
 
     /**
      * Create a new DataNode.
@@ -31,7 +31,7 @@ public class DataImpl extends NodeImpl {
      *
      * @param data    data contents
      * @param baseUri Unused, Leaf Nodes do not hold base URis
-     * @deprecated use {@link #DataNodeModel(String)} instead
+     * @deprecated use {@link #DataImpl(String)} instead
      */
     public DataImpl(String data, String baseUri) {
         this(data);

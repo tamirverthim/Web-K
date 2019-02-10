@@ -47,6 +47,5 @@ public class CDATASectionImpl extends TextImpl implements CDATASection {
             throw new UncheckedIOException(e);
         }
     }
-    
     // endregion
 }
