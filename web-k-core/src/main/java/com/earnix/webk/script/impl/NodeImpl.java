@@ -41,7 +41,7 @@ import java.util.List;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Slf4j
-public abstract class NodeImpl implements Node {
+public abstract class NodeImpl implements Node, Cloneable {
     
     public ScriptContext scriptContext(){
         return ownerDocument().scriptContext();

@@ -59,7 +59,7 @@ public class W3CDomTest {
         Document wDoc = w3c.fromJsoup(doc);
 
         String out = w3c.asString(wDoc);
-        assertEquals(doc.location(), wDoc.getDocumentURI());
+        assertEquals(doc.getLocation(), wDoc.getDocumentURI());
     }
 
 

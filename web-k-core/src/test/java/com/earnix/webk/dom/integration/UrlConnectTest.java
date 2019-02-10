@@ -68,7 +68,7 @@ public class UrlConnectTest {
     @Test
     public void ignoresContentTypeIfSoConfigured() throws IOException {
         DocumentImpl doc = Jsoup.connect("https://jsoup.org/rez/osi_logo.png").ignoreContentType(true).get();
-        assertEquals("", doc.title()); // this will cause an ugly parse tree
+        assertEquals("", doc.title().get()); // this will cause an ugly parse tree
     }
 
     private static String ihVal(String key, DocumentImpl doc) {
@@ -121,7 +121,7 @@ public class UrlConnectTest {
         Connection con = Jsoup.connect("http://direct.infohound.net/tools/302-rel-dot.pl"); // to ./ok.html
         DocumentImpl doc = con.post();
         assertTrue(doc.getTitle().contains("OK"));
-        assertEquals(doc.location(), "http://direct.infohound.net/tools/ok.html");
+        assertEquals(doc.getLocation(), "http://direct.infohound.net/tools/ok.html");
     }
 
     @Test
@@ -130,7 +130,7 @@ public class UrlConnectTest {
         Connection con = Jsoup.connect("http://esportspenedes.cat")  // note lack of trailing / - server should redir to / first, then to ./ep/...; but doesn't'
                 .timeout(10000);
         DocumentImpl doc = con.post();
-        assertEquals(doc.location(), "http://esportspenedes.cat/ep/index.php");
+        assertEquals(doc.getLocation(), "http://esportspenedes.cat/ep/index.php");
     }
 
     @Test
@@ -385,7 +385,7 @@ public class UrlConnectTest {
     @Test
     public void handles201Created() throws IOException {
         DocumentImpl doc = Jsoup.connect("http://direct.infohound.net/tools/201.pl").get(); // 201, location=jsoup
-        assertEquals("https://jsoup.org/", doc.location());
+        assertEquals("https://jsoup.org/", doc.getLocation());
     }
 
     @Test
@@ -549,7 +549,7 @@ public class UrlConnectTest {
         Connection.Response res = Jsoup.connect(url).execute();
         DocumentImpl doc = res.parse();
         assertEquals(doc.getBody().text(), "\uD83D\uDCA9!");
-        assertEquals(doc.location(), urlEscaped);
+        assertEquals(doc.getLocation(), urlEscaped);
 
         Connection.Response res2 = Jsoup.connect(url).followRedirects(false).execute();
         assertEquals("/tools/test\uD83D\uDCA9.html", res2.header("Location"));
@@ -559,10 +559,10 @@ public class UrlConnectTest {
     @Test
     public void handlesEscapesInRedirecct() throws IOException {
         DocumentImpl doc = Jsoup.connect("http://infohound.net/tools/302-escaped.pl").get();
-        assertEquals("http://infohound.net/tools/q.pl?q=one%20two", doc.location());
+        assertEquals("http://infohound.net/tools/q.pl?q=one%20two", doc.getLocation());
 
         doc = Jsoup.connect("http://infohound.net/tools/302-white.pl").get();
-        assertEquals("http://infohound.net/tools/q.pl?q=one%20two", doc.location());
+        assertEquals("http://infohound.net/tools/q.pl?q=one%20two", doc.getLocation());
     }
 
     @Test
@@ -573,7 +573,7 @@ public class UrlConnectTest {
         Connection.Response res = Jsoup.connect(url).execute();
         DocumentImpl doc = res.parse();
         assertEquals("\uD83D\uDCA9!", doc.getBody().text());
-        assertEquals(urlEscaped, doc.location());
+        assertEquals(urlEscaped, doc.getLocation());
     }
 
     @Test
@@ -582,7 +582,7 @@ public class UrlConnectTest {
         DocumentImpl doc = res.parse();
         assertEquals(
                 "http://www.omroepbrabant.nl/?news/2474781303/Gestrande+ree+in+Oss+niet+verdoofd,+maar+doodgeschoten+%E2%80%98Dit+kan+gewoon+niet,+bizar%E2%80%99+[VIDEO].aspx",
-                doc.location()
+                doc.getLocation()
         );
     }
 
@@ -592,7 +592,7 @@ public class UrlConnectTest {
         DocumentImpl doc = res.parse();
         assertEquals(
                 "https://saudi.souq.com/sa-en/%D8%AE%D8%B2%D9%86%D8%A9-%D8%A2%D9%85%D9%86%D8%A9-3-%D8%B7%D8%A8%D9%82%D8%A7%D8%AA-%D8%A8%D9%86%D8%B8%D8%A7%D9%85-%D9%82%D9%81%D9%84-%D8%A5%D9%84%D9%83%D8%AA%D8%B1%D9%88%D9%86%D9%8A-bsd11523-6831477/i/?ctype=dsrch",
-                doc.location()
+                doc.getLocation()
         );
     }
 
@@ -617,10 +617,10 @@ public class UrlConnectTest {
     @Test
     public void handlesUnicodeInQuery() throws IOException {
         DocumentImpl doc = Jsoup.connect("https://www.google.pl/search?q=gąska").get();
-        assertEquals("gąska - Szukaj w Google", doc.title());
+        assertEquals("gąska - Szukaj w Google", doc.title().get());
 
         doc = Jsoup.connect("http://mov-world.net/archiv/TV/A/%23No.Title/").get();
-        assertEquals("Index of /archiv/TV/A/%23No.Title", doc.title());
+        assertEquals("Index of /archiv/TV/A/%23No.Title", doc.title().get());
     }
 
     @Test
@@ -630,7 +630,7 @@ public class UrlConnectTest {
         long start = System.currentTimeMillis();
         String url = "http://sv.stargate.wikia.com/wiki/M2J";
         DocumentImpl doc = Jsoup.connect(url).get();
-        assertEquals("M2J | Sv.stargate Wiki | FANDOM powered by Wikia", doc.title());
+        assertEquals("M2J | Sv.stargate Wiki | FANDOM powered by Wikia", doc.title().get());
         assertEquals(110160, doc.select("dd").size());
         // those are all <dl><dd> stacked in each other. wonder how that got generated?
         assertTrue(System.currentTimeMillis() - start < 1000);
@@ -643,7 +643,7 @@ public class UrlConnectTest {
 
         DocumentImpl doc = Jsoup.connect("http://szshb.nxszs.gov.cn/").get();
 
-        assertEquals("石嘴山市环境保护局", doc.title());
+        assertEquals("石嘴山市环境保护局", doc.title().get());
     }
 
 }

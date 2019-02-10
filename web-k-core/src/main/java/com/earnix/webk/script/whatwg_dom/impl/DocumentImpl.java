@@ -101,7 +101,7 @@ public class DocumentImpl extends ElementImpl implements Document {
 
     @Override
     public @DOMString String charset() {
-        return "UTF8";
+        return getCharset().displayName();
     }
 
     @Override

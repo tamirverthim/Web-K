@@ -30,7 +30,7 @@ public class ParseTest {
         DocumentImpl doc = Jsoup.parse(in, "UTF-8",
                 "http://www.smh.com.au/business/the-boards-next-fear-the-female-quota-20100106-lteq.html");
         assertEquals("The board’s next fear: the female quota",
-                doc.title()); // note that the apos in the source is a literal ’ (8217), not escaped or '
+                doc.title().get()); // note that the apos in the source is a literal ’ (8217), not escaped or '
         assertEquals("en", doc.select("html").attr("xml:lang"));
 
         Elements articleBody = doc.select(".articleBody > *");
@@ -61,7 +61,7 @@ public class ParseTest {
     public void testGoogleSearchIpod() throws IOException {
         File in = getFile("/htmltests/google-ipod.html");
         DocumentImpl doc = Jsoup.parse(in, "UTF-8", "http://www.google.com/search?hl=en&q=ipod&aq=f&oq=&aqi=g10");
-        assertEquals("ipod - Google Search", doc.title());
+        assertEquals("ipod - Google Search", doc.title().get());
         Elements results = doc.select("h3.r > a");
         assertEquals(12, results.size());
         assertEquals(
@@ -83,7 +83,7 @@ public class ParseTest {
     public void testYahooJp() throws IOException {
         File in = getFile("/htmltests/yahoo-jp.html");
         DocumentImpl doc = Jsoup.parse(in, "UTF-8", "http://www.yahoo.co.jp/index.html"); // http charset is utf-8.
-        assertEquals("Yahoo! JAPAN", doc.title());
+        assertEquals("Yahoo! JAPAN", doc.title().get());
         ElementImpl a = doc.select("a[href=t/2322m2]").first();
         assertEquals("http://www.yahoo.co.jp/_ylh=X3oDMTB0NWxnaGxsBF9TAzIwNzcyOTYyNjUEdGlkAzEyBHRtcGwDZ2Ex/t/2322m2",
                 a.attr("abs:href")); // session put into <base>
@@ -101,7 +101,7 @@ public class ParseTest {
 
         // test from attribute match
         submit = doc.select("input[value=百度一下]").first();
-        assertEquals("su", submit.id());
+        assertEquals("su", submit.id().get());
         ElementImpl newsLink = doc.select("a:contains(新)").first();
         assertEquals("http://news.baidu.com", newsLink.absUrl("href"));
 

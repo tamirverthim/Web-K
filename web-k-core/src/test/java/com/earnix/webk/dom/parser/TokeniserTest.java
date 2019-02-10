@@ -160,7 +160,7 @@ public class TokeniserTest {
         TextImpl child = (TextImpl) el.childNode(0);
         assertEquals(title, el.text());
         assertEquals(title, child.getWholeText());
-        assertEquals(title, doc.title());
+        assertEquals(title, doc.title().get());
     }
 
     @Test

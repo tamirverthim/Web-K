@@ -13,6 +13,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -100,8 +101,8 @@ public class ElementsTest {
         els.removeClass("yellow");
         els.toggleClass("mellow");
 
-        assertEquals("blue", els.get(0).className());
-        assertEquals("red green blue mellow", els.get(1).className());
+        assertEquals("blue", els.get(0).className().get());
+        assertEquals("red green blue mellow", els.get(1).className().get());
     }
 
     @Test
@@ -283,11 +284,11 @@ public class ElementsTest {
 
         Elements div1 = doc.select("div").not(":has(p > span)");
         assertEquals(1, div1.size());
-        assertEquals("1", div1.first().id());
+        assertEquals("1", div1.first().id().get());
 
         Elements div2 = doc.select("div").not("#1");
         assertEquals(1, div2.size());
-        assertEquals("2", div2.first().id());
+        assertEquals("2", div2.first().id().get());
     }
 
     @Test
@@ -322,10 +323,10 @@ public class ElementsTest {
 
         List<FormElement> forms = els.forms();
         assertEquals(2, forms.size());
-        assertTrue(forms.get(0) != null);
-        assertTrue(forms.get(1) != null);
-        assertEquals("1", forms.get(0).id());
-        assertEquals("2", forms.get(1).id());
+        assertNotNull(forms.get(0));
+        assertNotNull(forms.get(1));
+        assertEquals("1", forms.get(0).id().get());
+        assertEquals("2", forms.get(1).id().get());
     }
 
     @Test

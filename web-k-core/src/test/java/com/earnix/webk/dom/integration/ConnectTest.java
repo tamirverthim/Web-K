@@ -402,7 +402,7 @@ public class ConnectTest {
         boolean threw = false;
         try {
             DocumentImpl document = res.parse();
-            assertEquals("Something", document.title());
+            assertEquals("Something", document.title().get());
         } catch (IOException e) {
             threw = true;
         }
@@ -433,7 +433,7 @@ public class ConnectTest {
         ElementImpl p = doc.selectFirst("p");
         assertEquals("Hello, World!", p.text());
 
-        assertEquals(HelloServlet.Url, doc.location());
+        assertEquals(HelloServlet.Url, doc.getLocation());
     }
 
     @Test
@@ -456,7 +456,7 @@ public class ConnectTest {
                 .data(RedirectServlet.LocationParam, EchoServlet.Url)
                 .post();
 
-        assertEquals(EchoServlet.Url, doc.location());
+        assertEquals(EchoServlet.Url, doc.getLocation());
         assertEquals("GET", ihVal("Method", doc));
         assertNull(ihVal("Hello", doc)); // data not sent
     }
@@ -469,7 +469,7 @@ public class ConnectTest {
                 .data(RedirectServlet.CodeParam, "307")
                 .post();
 
-        assertEquals(EchoServlet.Url, doc.location());
+        assertEquals(EchoServlet.Url, doc.getLocation());
         assertEquals("POST", ihVal("Method", doc));
         assertEquals("there", ihVal("Hello", doc));
     }

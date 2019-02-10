@@ -162,7 +162,17 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
 
     @Override
     public Attribute<String> className() {
-        return bindAttribute("className");
+        return new Attribute<String>() {
+            @Override
+            public String get() {
+                return getClassName();
+            }
+
+            @Override
+            public void set(String s) {
+                attr("class", s);
+            }
+        };
     }
 
     @Override
@@ -1570,7 +1580,7 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
      */
     public String cssSelector() {
         if (getId().length() > 0)
-            return "#" + id();
+            return "#" + id().get();
 
         // Translate HTML namespace ns:tag to CSS namespace syntax ns|tag
         String tagName = tagName().replace(':', '|');

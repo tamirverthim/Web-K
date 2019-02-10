@@ -72,7 +72,17 @@ public class DocumentImpl extends com.earnix.webk.script.whatwg_dom.impl.Documen
 
     @Override
     public Attribute<String> title() {
-        return null;
+        return new Attribute<String>() {
+            @Override
+            public String get() {
+                return getTitle();
+            }
+
+            @Override
+            public void set(String s) {
+                setTitle(s);
+            }
+        };
     }
 
     @Override

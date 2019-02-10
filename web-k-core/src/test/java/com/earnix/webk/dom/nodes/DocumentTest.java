@@ -56,11 +56,11 @@ public class DocumentTest {
 
         assertEquals("First", withTitle.getTitle());
         withTitle.setTitle("Hello");
-        assertEquals("Hello", withTitle.title());
+        assertEquals("Hello", withTitle.title().get());
         assertEquals("Hello", withTitle.select("title").first().text());
 
         DocumentImpl normaliseTitle = Jsoup.parse("<title>   Hello\nthere   \n   now   \n");
-        assertEquals("Hello there now", normaliseTitle.title());
+        assertEquals("Hello there now", normaliseTitle.title().get());
     }
 
     @Test
@@ -225,7 +225,7 @@ public class DocumentTest {
         ElementImpl selectedElement = doc.select("meta[charset]").first();
         assertEquals(charsetUtf8, doc.getCharset().name());
         assertEquals(charsetUtf8, selectedElement.attr("charset"));
-        assertEquals(doc.charset(), doc.outputSettings().charset());
+        assertEquals(doc.charset(), doc.outputSettings().charset().displayName());
     }
 
     @Test
@@ -245,7 +245,7 @@ public class DocumentTest {
         ElementImpl selectedElement = doc.select("meta[charset]").first();
         assertEquals(charsetIso8859, doc.getCharset().name());
         assertEquals(charsetIso8859, selectedElement.attr("charset"));
-        assertEquals(doc.charset(), doc.outputSettings().charset());
+        assertEquals(doc.charset(), doc.outputSettings().charset().displayName());
     }
 
     @Test
@@ -340,7 +340,7 @@ public class DocumentTest {
         XmlDeclarationModel selectedNode = (XmlDeclarationModel) doc.childNode(0);
         assertEquals(charsetUtf8, doc.getCharset().name());
         assertEquals(charsetUtf8, selectedNode.attr("encoding"));
-        assertEquals(doc.charset(), doc.outputSettings().charset());
+        assertEquals(doc.charset(), doc.outputSettings().charset().displayName());
     }
 
     @Test
@@ -358,7 +358,7 @@ public class DocumentTest {
         XmlDeclarationModel selectedNode = (XmlDeclarationModel) doc.childNode(0);
         assertEquals(charsetIso8859, doc.getCharset().name());
         assertEquals(charsetIso8859, selectedNode.attr("encoding"));
-        assertEquals(doc.charset(), doc.outputSettings().charset());
+        assertEquals(doc.charset(), doc.outputSettings().charset().displayName());
     }
 
     @Test

@@ -332,12 +332,12 @@ public class ElementTest {
         ElementImpl div = doc.select("div").first();
 
         div.addClass("green");
-        assertEquals("mellow yellow green", div.className());
+        assertEquals("mellow yellow green", div.className().get());
         div.removeClass("red"); // noop
         div.removeClass("yellow");
-        assertEquals("mellow green", div.className());
+        assertEquals("mellow green", div.className().get());
         div.toggleClass("green").toggleClass("red");
-        assertEquals("mellow red", div.className());
+        assertEquals("mellow red", div.className().get());
     }
 
     @Test
@@ -736,7 +736,7 @@ public class ElementTest {
         assertEquals(0, p2.childNodeSize());
         assertEquals("", p2.text());
 
-        assertEquals("two", p2.className());
+        assertEquals("two", p2.className().get());
         assertEquals("One", t2.text());
 
         d2.append("<p id=3>Three");
@@ -970,7 +970,7 @@ public class ElementTest {
         div.setClassNames(newSet);
 
 
-        assertEquals("c1 c2 c3", div.className());
+        assertEquals("c1 c2 c3", div.className().get());
 
         final Set<String> set2 = div.getClassNames();
         final Object[] arr2 = set2.toArray();
