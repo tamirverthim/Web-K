@@ -77,7 +77,7 @@ public class FrameEventsListener implements WindowListener, MouseListener {
 
     @Override
     public void windowDeactivated(WindowEvent e) {
-        if (mouseEventsAdapter.getHoveredBox() != null) {
+        if (mouseEventsAdapter.getHoveredBox() != null && mouseEventsAdapter.getLastAwtMouseEvent() != null) {
             Element element =  mouseEventsAdapter.getHoveredBox().getElement();
             mouseEventsAdapter.mouseleave(element, mouseEventsAdapter.getLastAwtMouseEvent());
             mouseEventsAdapter.mouseout(element, mouseEventsAdapter.getLastAwtMouseEvent());

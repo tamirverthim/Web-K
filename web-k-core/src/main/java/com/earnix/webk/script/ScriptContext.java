@@ -116,6 +116,9 @@ public class ScriptContext implements DocumentListener {
       
     }
 
+    /**
+     * @return browser panel
+     */
     public BasicPanel getPanel() {
         return panel;
     }
@@ -324,6 +327,10 @@ public class ScriptContext implements DocumentListener {
         documentHash = document != null ? document.outerHtml().hashCode() : 0;
     }
 
+    /**
+     * Checks whether document model is change since last {@link #storeDocumentHash()} call and 
+     * resets browser panel (causes it's re-rendering), if so.
+     */
     public void handleDocumentHashUpdate() {
         int currentHash = document != null ? document.outerHtml().hashCode() : 0;
         if (documentHash != currentHash) {

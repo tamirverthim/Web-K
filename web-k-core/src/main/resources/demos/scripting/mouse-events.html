@@ -18,7 +18,7 @@
             let p = document.createElement("p");
             p.textContent = message;
             let report = document.querySelector("#report");
-            if (report.childElementCount > 5) {
+            if (report.childElementCount > 20) {
                 report.removeChild(report.children[report.children.length - 1])
             }
             report.prepend(p);

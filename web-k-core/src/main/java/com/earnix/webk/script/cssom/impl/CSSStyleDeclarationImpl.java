@@ -5,6 +5,7 @@ import com.earnix.webk.script.cssom.CSSRule;
 import com.earnix.webk.script.cssom.CSSStyleDeclaration;
 import com.earnix.webk.script.impl.ElementImpl;
 import com.earnix.webk.script.web_idl.Attribute;
+import com.earnix.webk.script.whatwg_dom.Element;
 import com.earnix.webk.util.XRLog;
 import com.helger.css.ECSSVersion;
 import com.helger.css.reader.CSSReaderDeclarationList;
@@ -25,11 +26,19 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration {
     LinkedHashMap<String, String> map = new LinkedHashMap<>();
     ElementImpl model;
 
+
     public CSSStyleDeclarationImpl(ElementImpl model, ScriptContext context) {
         this(model.attr("style"), context);
         this.model = model;
     }
 
+    /**
+     *
+     * @param css
+     * @param ctx
+     *
+     * @see com.earnix.webk.script.cssom.Window#getComputedStyle(Element, String)
+     */
     public CSSStyleDeclarationImpl(String css, ScriptContext ctx) {
         setCSSText(css);
         this.context = ctx;
@@ -68,7 +77,7 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration {
 
     @Override
     public String getPropertyValue(String property) {
-        val res = map.get(property);
+        val res = map.get(toKebabCase(property));
         if (res == null) {
             return "";
         } else {
@@ -105,7 +114,10 @@ public class CSSStyleDeclarationImpl implements CSSStyleDeclaration {
     }
 
     public String toCSSString() {
-        return map.entrySet().stream().map(e -> e.getKey() + ": " + e.getValue() + ";").reduce("", (a, b) -> a + " \n " + b);
+        return map.entrySet()
+                .stream()
+                .map(e -> e.getKey() + ": " + e.getValue() + ";")
+                .reduce("", (a, b) -> a + " \n " + b);
     }
     
     public void setCSSText(String css){

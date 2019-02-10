@@ -37,7 +37,11 @@
             field.onchange = function () {
                 reportEvent("Input field value changed: " + field.value)
             };
-            //
+
+            // field.oninput = function () {
+            //     reportEvent("Input field value input: " + field.value)
+            // };
+
             const area = document.querySelector("textarea");
             area.onchange = function () {
                 reportEvent("Input field value changed: " + area.value)

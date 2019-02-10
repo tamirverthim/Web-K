@@ -45,7 +45,6 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
     final EventManager eventManager;
     final ScriptContext context;
     final BasicPanel panel;
-//    private final JComponent target;
 
     Box focusHolderBox;
     @Getter
@@ -87,14 +86,18 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
     }
     
     public void reset() {
-        hoveredBox = null;
+//        hoveredBox = null;
         lastAwtMouseEvent = null;
-        focusHolderBox = null;
+//        focusHolderBox = null;
     }
 
+    /**
+     * Adds this mouse adepter to all browser panel's children, if not done before.
+     * @see ScriptContext#documentRendered()
+     */
     public void addChildrenListeners() {
         List<JComponent> children = new ArrayList<>();
-        getAllChildren(panel, children);
+        collectAllChildren(panel, children);
         children.forEach(child -> {
             if (!ArrayUtils.contains(child.getMouseListeners(), this)) {
                 child.addMouseListener(this);
@@ -105,16 +108,22 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
         });
     }
 
-    private void getAllChildren(JComponent component, List<JComponent> target) {
-        Stream.of(component.getComponents()).filter(c -> c instanceof JComponent).map(c -> (JComponent) c).forEach(child -> {
-            target.add(child);
-            getAllChildren(child, target);
+    /**
+     * Adds all children {@link JComponent}'s of parent {@link JComponent} to the given target list
+     */
+    private void collectAllChildren(JComponent parent, List<JComponent> target) {
+        Stream.of(parent.getComponents())
+                .filter(c -> c instanceof JComponent)
+                .map(c -> (JComponent) c).forEach(child -> {
+                    target.add(child);
+                    collectAllChildren(child, target);
         });
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
 
+        // workaround
         if (context.getPanel().getRootBox() == null) {
             SwingUtilities.invokeLater(() -> {
                 this.mouseClicked(e);
