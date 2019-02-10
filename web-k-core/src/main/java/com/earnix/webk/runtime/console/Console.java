@@ -7,7 +7,7 @@ import com.earnix.webk.runtime.web_idl.DefaultString;
 import com.earnix.webk.runtime.web_idl.Nullable;
 import com.earnix.webk.runtime.web_idl.Optional;
 import com.earnix.webk.runtime.web_idl.Sequence;
-import com.earnix.webk.runtime.web_idl.service.Name;
+import com.earnix.webk.runtime.web_idl.impl.Name;
 
 /**
  * It is WebIDL namespace. TODO: namespace annotation.

@@ -1,6 +1,6 @@
 package com.earnix.webk.runtime.cssom_view;
 
-import com.earnix.webk.runtime.web_idl.service.Unimplemented;
+import com.earnix.webk.runtime.web_idl.impl.Unimplemented;
 
 /**
  * @author Taras Maslov

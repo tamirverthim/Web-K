@@ -4,8 +4,8 @@ import com.earnix.webk.runtime.whatwg_dom.impl.Jsoup;
 import com.earnix.webk.runtime.whatwg_dom.impl.nodes.AttributeModel;
 import com.earnix.webk.runtime.whatwg_dom.impl.select.Elements;
 import com.earnix.webk.runtime.html.impl.DocumentImpl;
-import com.earnix.webk.runtime.impl.CommentImpl;
-import com.earnix.webk.runtime.impl.ElementImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.CommentImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
 import com.earnix.webk.runtime.whatwg_dom.impl.TextImpl;
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.earnix.webk.runtime;
+package com.earnix.webk.runtime.web_idl.impl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

@@ -10,8 +10,8 @@ import com.earnix.webk.runtime.whatwg_dom.impl.parser.Parser;
 import com.earnix.webk.runtime.whatwg_dom.impl.parser.Tag;
 import com.earnix.webk.runtime.whatwg_dom.impl.select.NodeTraversor;
 import com.earnix.webk.runtime.whatwg_dom.impl.select.NodeVisitor;
-import com.earnix.webk.runtime.impl.ElementImpl;
-import com.earnix.webk.runtime.impl.NodeImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.NodeImpl;
 import com.earnix.webk.runtime.html.impl.DocumentImpl;
 import com.earnix.webk.runtime.whatwg_dom.impl.TextImpl;
 

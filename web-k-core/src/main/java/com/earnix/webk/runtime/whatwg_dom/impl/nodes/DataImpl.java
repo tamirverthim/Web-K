@@ -1,6 +1,6 @@
 package com.earnix.webk.runtime.whatwg_dom.impl.nodes;
 
-import com.earnix.webk.runtime.impl.LeafNode;
+import com.earnix.webk.runtime.whatwg_dom.impl.LeafNode;
 import com.earnix.webk.runtime.html.impl.DocumentImpl;
 import com.earnix.webk.runtime.web_idl.Attribute;
 import com.earnix.webk.runtime.web_idl.DOMString;

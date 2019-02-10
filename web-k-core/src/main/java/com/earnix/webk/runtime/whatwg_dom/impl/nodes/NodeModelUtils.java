@@ -2,7 +2,7 @@ package com.earnix.webk.runtime.whatwg_dom.impl.nodes;
 
 import com.earnix.webk.runtime.whatwg_dom.impl.parser.HtmlTreeBuilder;
 import com.earnix.webk.runtime.whatwg_dom.impl.parser.Parser;
-import com.earnix.webk.runtime.impl.NodeImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.NodeImpl;
 import com.earnix.webk.runtime.html.impl.DocumentImpl;
 
 /**

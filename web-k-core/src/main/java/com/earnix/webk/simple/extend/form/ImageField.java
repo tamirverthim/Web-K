@@ -26,7 +26,7 @@ import com.earnix.webk.css.style.derived.LengthValue;
 import com.earnix.webk.extend.FSImage;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
-import com.earnix.webk.runtime.impl.ElementImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
 import com.earnix.webk.simple.extend.XhtmlForm;
 import com.earnix.webk.swing.AWTFSImage;
 import com.earnix.webk.util.XRLog;

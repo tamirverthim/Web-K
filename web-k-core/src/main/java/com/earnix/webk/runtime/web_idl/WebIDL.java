@@ -1,6 +1,6 @@
-//package com.earnix.webk.script.web_idl;
+//package com.earnix.webk.runtime.web_idl;
 //
-//import com.earnix.webk.script.web_idl.impl.MultiTypedef;
+//import com.earnix.webk.runtime.web_idl.impl.MultiTypedef;
 //import lombok.val;
 //
 //import java.util.concurrent.Callable;

@@ -2,7 +2,6 @@ package com.earnix.webk.runtime.whatwg_dom.impl;
 
 import com.earnix.webk.runtime.whatwg_dom.impl.nodes.AttributeModel;
 import com.earnix.webk.runtime.ScriptContext;
-import com.earnix.webk.runtime.impl.ElementImpl;
 import com.earnix.webk.runtime.web_idl.DOMString;
 import com.earnix.webk.runtime.web_idl.USVString;
 import com.earnix.webk.runtime.whatwg_dom.Attr;

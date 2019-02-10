@@ -6,7 +6,7 @@
 //import com.earnix.webk.dom.select.NodeFilter;
 //import com.earnix.webk.dom.select.NodeTraversor;
 //import com.earnix.webk.dom.select.NodeVisitor;
-//import com.earnix.webk.script.impl.NodeImpl;
+//import com.earnix.webk.runtime.whatwg_dom.impl.NodeImpl;
 //import lombok.val;
 //
 //import java.io.IOException;

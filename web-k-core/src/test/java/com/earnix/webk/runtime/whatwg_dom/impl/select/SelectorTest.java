@@ -2,7 +2,7 @@ package com.earnix.webk.runtime.whatwg_dom.impl.select;
 
 import com.earnix.webk.runtime.whatwg_dom.impl.Jsoup;
 import com.earnix.webk.runtime.whatwg_dom.impl.MultiLocaleRule;
-import com.earnix.webk.runtime.impl.ElementImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
 import com.earnix.webk.runtime.whatwg_dom.impl.DocumentImpl;
 import org.junit.Rule;
 import org.junit.Test;

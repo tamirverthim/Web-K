@@ -1,7 +1,5 @@
 package com.earnix.webk.runtime.web_idl.impl;
 
-import com.earnix.webk.runtime.FunctionAdapter;
-import com.earnix.webk.runtime.ReflectionHelper;
 import com.earnix.webk.runtime.ScriptContext;
 import com.earnix.webk.runtime.web_idl.Attribute;
 import com.earnix.webk.runtime.web_idl.DefaultBoolean;
@@ -20,8 +18,6 @@ import com.earnix.webk.runtime.web_idl.ReadonlyAttribute;
 import com.earnix.webk.runtime.web_idl.Sequence;
 import com.earnix.webk.runtime.web_idl.TreatNullAs;
 import com.earnix.webk.runtime.web_idl.Typedef;
-import com.earnix.webk.runtime.web_idl.service.PropertyGetter;
-import com.earnix.webk.runtime.web_idl.service.PropertySetter;
 import com.earnix.webk.util.AssertHelper;
 import jdk.nashorn.api.scripting.JSObject;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;

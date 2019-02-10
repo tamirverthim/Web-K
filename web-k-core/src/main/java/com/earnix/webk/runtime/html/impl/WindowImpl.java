@@ -22,7 +22,7 @@ import com.earnix.webk.runtime.html.Navigator;
 import com.earnix.webk.runtime.html.TimerHandler;
 import com.earnix.webk.runtime.html.Window;
 import com.earnix.webk.runtime.html.WindowProxy;
-import com.earnix.webk.runtime.impl.ElementImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
 import com.earnix.webk.runtime.web_idl.Attribute;
 import com.earnix.webk.runtime.web_idl.DOMString;
 import com.earnix.webk.runtime.web_idl.Function;

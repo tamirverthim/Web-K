@@ -3,8 +3,8 @@ package com.earnix.webk.runtime.whatwg_dom.impl.parser;
 import com.earnix.webk.runtime.whatwg_dom.impl.internal.StringUtil;
 import com.earnix.webk.runtime.whatwg_dom.impl.nodes.AttributeModel;
 import com.earnix.webk.runtime.whatwg_dom.impl.nodes.AttributesModel;
-import com.earnix.webk.runtime.impl.ElementImpl;
-import com.earnix.webk.runtime.impl.NodeImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.NodeImpl;
 import com.earnix.webk.runtime.html.impl.DocumentImpl;
 import com.earnix.webk.runtime.whatwg_dom.impl.DocumentTypeImpl;
 

@@ -1,7 +1,7 @@
 package com.earnix.webk.runtime.whatwg_dom.impl.nodes;
 
 import com.earnix.webk.runtime.whatwg_dom.impl.Jsoup;
-import com.earnix.webk.runtime.impl.ElementImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
 import com.earnix.webk.runtime.whatwg_dom.impl.DocumentImpl;
 import org.junit.Test;
 

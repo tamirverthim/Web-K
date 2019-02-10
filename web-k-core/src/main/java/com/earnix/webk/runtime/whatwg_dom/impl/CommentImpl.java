@@ -1,6 +1,5 @@
-package com.earnix.webk.runtime.impl;
+package com.earnix.webk.runtime.whatwg_dom.impl;
 
-import com.earnix.webk.runtime.whatwg_dom.impl.Jsoup;
 import com.earnix.webk.runtime.whatwg_dom.impl.helper.Validate;
 import com.earnix.webk.runtime.whatwg_dom.impl.nodes.NodeModelUtils;
 import com.earnix.webk.runtime.whatwg_dom.impl.nodes.XmlDeclarationModel;

@@ -1,6 +1,6 @@
 package com.earnix.webk.runtime.xhr;
 
-import com.earnix.webk.runtime.web_idl.service.Name;
+import com.earnix.webk.runtime.web_idl.impl.Name;
 
 /**
  * @author Taras Maslov

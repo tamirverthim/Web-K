@@ -1,4 +1,4 @@
-package com.earnix.webk.runtime.web_idl.service;
+package com.earnix.webk.runtime.web_idl.impl;
 
 /**
  * @author Taras Maslov

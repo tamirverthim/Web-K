@@ -12,8 +12,8 @@ import com.earnix.webk.runtime.web_idl.SameObject;
 import com.earnix.webk.runtime.web_idl.Sequence;
 import com.earnix.webk.runtime.web_idl.TreatNullAs;
 import com.earnix.webk.runtime.web_idl.Unscopable;
-import com.earnix.webk.runtime.web_idl.service.PropertyGetter;
-import com.earnix.webk.runtime.web_idl.service.PropertySetter;
+import com.earnix.webk.runtime.web_idl.impl.PropertyGetter;
+import com.earnix.webk.runtime.web_idl.impl.PropertySetter;
 
 
 /**

@@ -5,7 +5,7 @@ import com.earnix.webk.extend.ReplacedElementFactory;
 import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
-import com.earnix.webk.runtime.impl.ElementImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
 
 public class NoReplacedElementFactory implements ReplacedElementFactory {
 

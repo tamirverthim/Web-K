@@ -1,6 +1,6 @@
 package com.earnix.webk.swing;
 
-import com.earnix.webk.runtime.impl.ElementImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
 import com.kitfox.svg.SVGCache;
 import com.kitfox.svg.app.beans.SVGPanel;
 import lombok.AccessLevel;

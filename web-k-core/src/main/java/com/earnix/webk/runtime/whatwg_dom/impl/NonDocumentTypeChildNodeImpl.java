@@ -1,4 +1,4 @@
-package com.earnix.webk.runtime.impl;
+package com.earnix.webk.runtime.whatwg_dom.impl;
 
 import com.earnix.webk.runtime.whatwg_dom.Element;
 import com.earnix.webk.runtime.whatwg_dom.NonDocumentTypeChildNode;

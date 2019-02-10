@@ -10,7 +10,7 @@ import com.earnix.webk.runtime.whatwg_dom.impl.integration.servlets.InterruptedS
 import com.earnix.webk.runtime.whatwg_dom.impl.integration.servlets.RedirectServlet;
 import com.earnix.webk.runtime.whatwg_dom.impl.integration.servlets.SlowRider;
 import com.earnix.webk.runtime.html.impl.DocumentImpl;
-import com.earnix.webk.runtime.impl.ElementImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;

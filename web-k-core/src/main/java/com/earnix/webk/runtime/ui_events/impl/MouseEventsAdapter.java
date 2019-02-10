@@ -3,7 +3,7 @@ package com.earnix.webk.runtime.ui_events.impl;
 import com.earnix.webk.render.Box;
 import com.earnix.webk.runtime.ScriptContext;
 import com.earnix.webk.runtime.html.impl.DocumentImpl;
-import com.earnix.webk.runtime.impl.ElementImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
 import com.earnix.webk.runtime.ui_events.FocusEventInit;
 import com.earnix.webk.runtime.ui_events.MouseEventInit;
 import com.earnix.webk.runtime.whatwg_dom.Element;

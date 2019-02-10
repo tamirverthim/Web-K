@@ -7,7 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marks String / Attribute<String> / @OneOf  / com.earnix.webk.script.web_idl.Sequence
+ * Marks String / Attribute<String> / @OneOf  / com.earnix.webk.runtime.web_idl.Sequence
  *
  * @author Taras Maslov
  * 5/29/2018

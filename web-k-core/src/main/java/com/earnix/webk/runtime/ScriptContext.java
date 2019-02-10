@@ -10,6 +10,7 @@ import com.earnix.webk.runtime.ui_events.impl.MouseEventsAdapter;
 import com.earnix.webk.runtime.ui_events.impl.UIEventImpl;
 import com.earnix.webk.runtime.web_idl.Constructor;
 import com.earnix.webk.runtime.web_idl.Exposed;
+import com.earnix.webk.runtime.web_idl.impl.FunctionAdapter;
 import com.earnix.webk.runtime.web_idl.impl.WebIDLAdapter;
 import com.earnix.webk.runtime.whatwg_dom.impl.EventImpl;
 import com.earnix.webk.runtime.whatwg_dom.impl.EventManager;

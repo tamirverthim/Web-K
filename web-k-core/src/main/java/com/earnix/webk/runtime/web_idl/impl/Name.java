@@ -1,4 +1,4 @@
-package com.earnix.webk.runtime.web_idl.service;
+package com.earnix.webk.runtime.web_idl.impl;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

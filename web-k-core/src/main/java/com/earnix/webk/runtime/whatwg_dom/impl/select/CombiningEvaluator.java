@@ -1,7 +1,7 @@
 package com.earnix.webk.runtime.whatwg_dom.impl.select;
 
 import com.earnix.webk.runtime.whatwg_dom.impl.internal.StringUtil;
-import com.earnix.webk.runtime.impl.ElementImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,4 +1,4 @@
-package com.earnix.webk.runtime.impl;
+package com.earnix.webk.runtime.whatwg_dom.impl;
 
 import com.earnix.webk.runtime.whatwg_dom.impl.helper.ChangeNotifyingArrayList;
 import com.earnix.webk.runtime.whatwg_dom.impl.helper.Validate;
@@ -39,11 +39,7 @@ import com.earnix.webk.runtime.whatwg_dom.Node;
 import com.earnix.webk.runtime.whatwg_dom.NodeList;
 import com.earnix.webk.runtime.whatwg_dom.ShadowRoot;
 import com.earnix.webk.runtime.whatwg_dom.ShadowRootInit;
-import com.earnix.webk.runtime.whatwg_dom.impl.CDATASectionImpl;
 import com.earnix.webk.runtime.html.impl.DocumentImpl;
-import com.earnix.webk.runtime.whatwg_dom.impl.HTMLCollectionImpl;
-import com.earnix.webk.runtime.whatwg_dom.impl.NamedNodeMapImpl;
-import com.earnix.webk.runtime.whatwg_dom.impl.TextImpl;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;

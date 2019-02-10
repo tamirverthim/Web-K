@@ -1,4 +1,4 @@
-package com.earnix.webk.runtime.impl;
+package com.earnix.webk.runtime.html.canvas.impl;
 
 import com.earnix.webk.runtime.html.canvas.TextMetrics;
 import lombok.AccessLevel;

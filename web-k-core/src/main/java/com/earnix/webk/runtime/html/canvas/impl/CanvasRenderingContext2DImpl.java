@@ -19,7 +19,6 @@ import com.earnix.webk.runtime.html.canvas.HTMLCanvasElement;
 import com.earnix.webk.runtime.html.canvas.ImageData;
 import com.earnix.webk.runtime.html.canvas.ImageSmoothingQuality;
 import com.earnix.webk.runtime.html.canvas.TextMetrics;
-import com.earnix.webk.runtime.impl.TextMetricsImpl;
 import com.earnix.webk.runtime.web_idl.Attribute;
 import com.earnix.webk.runtime.web_idl.DOMString;
 import com.earnix.webk.runtime.web_idl.Sequence;

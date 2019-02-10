@@ -1,6 +1,5 @@
-package com.earnix.webk.runtime.impl;
+package com.earnix.webk.runtime.whatwg_dom.impl;
 
-import com.earnix.webk.runtime.whatwg_dom.impl.SerializationException;
 import com.earnix.webk.runtime.whatwg_dom.impl.helper.Validate;
 import com.earnix.webk.runtime.whatwg_dom.impl.internal.StringUtil;
 import com.earnix.webk.runtime.whatwg_dom.impl.nodes.AttributeModel;
@@ -19,8 +18,6 @@ import com.earnix.webk.runtime.whatwg_dom.GetRootNodeOptions;
 import com.earnix.webk.runtime.whatwg_dom.Node;
 import com.earnix.webk.runtime.whatwg_dom.NodeList;
 import com.earnix.webk.runtime.html.impl.DocumentImpl;
-import com.earnix.webk.runtime.whatwg_dom.impl.EventTargetImpl;
-import com.earnix.webk.runtime.whatwg_dom.impl.Level1EventTarget;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.Delegate;

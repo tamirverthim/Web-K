@@ -3,7 +3,7 @@ package com.earnix.webk.runtime.cssom.impl;
 import com.earnix.webk.runtime.ScriptContext;
 import com.earnix.webk.runtime.cssom.CSSRule;
 import com.earnix.webk.runtime.cssom.CSSStyleDeclaration;
-import com.earnix.webk.runtime.impl.ElementImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
 import com.earnix.webk.runtime.web_idl.Attribute;
 import com.earnix.webk.runtime.whatwg_dom.Element;
 import com.earnix.webk.util.XRLog;

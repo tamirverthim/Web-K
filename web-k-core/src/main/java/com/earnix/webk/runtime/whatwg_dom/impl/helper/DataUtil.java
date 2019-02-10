@@ -6,9 +6,9 @@ import com.earnix.webk.runtime.whatwg_dom.impl.internal.StringUtil;
 import com.earnix.webk.runtime.whatwg_dom.impl.nodes.XmlDeclarationModel;
 import com.earnix.webk.runtime.whatwg_dom.impl.parser.Parser;
 import com.earnix.webk.runtime.whatwg_dom.impl.select.Elements;
-import com.earnix.webk.runtime.impl.CommentImpl;
-import com.earnix.webk.runtime.impl.ElementImpl;
-import com.earnix.webk.runtime.impl.NodeImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.CommentImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.NodeImpl;
 import com.earnix.webk.runtime.html.impl.DocumentImpl;
 
 import java.io.BufferedReader;

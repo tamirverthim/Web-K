@@ -1,6 +1,6 @@
 package com.earnix.webk.runtime.whatwg_dom.impl.select;
 
-import com.earnix.webk.runtime.impl.NodeImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.NodeImpl;
 
 /**
  * Node visitor interface. Provide an implementing class to {@link NodeTraversor} to iterate through nodes.

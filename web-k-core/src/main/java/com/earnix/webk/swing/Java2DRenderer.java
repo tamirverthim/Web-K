@@ -29,7 +29,7 @@ import com.earnix.webk.render.BlockBox;
 import com.earnix.webk.render.Box;
 import com.earnix.webk.render.RenderingContext;
 import com.earnix.webk.render.ViewportBox;
-import com.earnix.webk.runtime.impl.ElementImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
 import com.earnix.webk.runtime.html.impl.DocumentImpl;
 import com.earnix.webk.simple.extend.XhtmlNamespaceHandler;
 import com.earnix.webk.util.Configuration;

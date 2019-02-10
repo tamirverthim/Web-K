@@ -1,8 +1,8 @@
 package com.earnix.webk.runtime.whatwg_dom.impl.select;
 
 import com.earnix.webk.runtime.whatwg_dom.impl.helper.Validate;
-import com.earnix.webk.runtime.impl.ElementImpl;
-import com.earnix.webk.runtime.impl.NodeImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.NodeImpl;
 
 /**
  * Depth-first node traversor. Use to iterate through all nodes under and including the specified root node.

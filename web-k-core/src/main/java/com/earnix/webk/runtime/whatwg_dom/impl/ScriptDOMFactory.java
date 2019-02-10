@@ -1,12 +1,12 @@
-//package com.earnix.webk.script.whatwg_dom.impl;
+//package com.earnix.webk.runtime.whatwg_dom.impl;
 //
 //
-//import com.earnix.webk.script.ScriptContext;
-//import com.earnix.webk.script.html.canvas.impl.HTMLCanvasElementImpl;
-//import com.earnix.webk.script.impl.ElementImpl;
-//import com.earnix.webk.script.impl.NodeImpl;
-//import com.earnix.webk.script.whatwg_dom.Element;
-//import com.earnix.webk.script.whatwg_dom.Node;
+//import com.earnix.webk.runtime.ScriptContext;
+//import com.earnix.webk.runtime.html.canvas.impl.HTMLCanvasElementImpl;
+//import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
+//import com.earnix.webk.runtime.whatwg_dom.impl.NodeImpl;
+//import com.earnix.webk.runtime.whatwg_dom.Element;
+//import com.earnix.webk.runtime.whatwg_dom.Node;
 //import lombok.experimental.var;
 //
 //import java.util.HashMap;

@@ -20,7 +20,7 @@
 package com.earnix.webk.simple.xhtml;
 
 
-import com.earnix.webk.runtime.impl.ElementImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
 
 /**
  * Interface describing a form control.

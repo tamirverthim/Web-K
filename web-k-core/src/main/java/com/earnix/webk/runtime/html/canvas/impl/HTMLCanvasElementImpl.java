@@ -6,7 +6,7 @@ import com.earnix.webk.runtime.html.canvas.BlobCallback;
 import com.earnix.webk.runtime.html.canvas.HTMLCanvasElement;
 import com.earnix.webk.runtime.html.canvas.OffscreenCanvas;
 import com.earnix.webk.runtime.html.canvas.RenderingContext;
-import com.earnix.webk.runtime.impl.ElementImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
 import com.earnix.webk.runtime.web_idl.Attribute;
 import com.earnix.webk.runtime.web_idl.DOMString;
 import com.earnix.webk.runtime.web_idl.USVString;

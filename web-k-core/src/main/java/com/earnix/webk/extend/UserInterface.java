@@ -20,7 +20,7 @@
 package com.earnix.webk.extend;
 
 
-import com.earnix.webk.runtime.impl.ElementImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
 
 /**
  * @author Torbjoern Gannholm

@@ -2,8 +2,8 @@ package com.earnix.webk.runtime.whatwg_dom.impl.nodes;
 
 import com.earnix.webk.runtime.whatwg_dom.impl.Jsoup;
 import com.earnix.webk.runtime.whatwg_dom.impl.TextUtil;
-import com.earnix.webk.runtime.impl.ElementImpl;
-import com.earnix.webk.runtime.impl.NodeImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.NodeImpl;
 import com.earnix.webk.runtime.whatwg_dom.impl.DocumentImpl;
 import com.earnix.webk.runtime.whatwg_dom.impl.TextImpl;
 import org.junit.Assert;

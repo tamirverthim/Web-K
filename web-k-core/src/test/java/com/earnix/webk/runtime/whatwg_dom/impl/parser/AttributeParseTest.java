@@ -6,7 +6,7 @@ import com.earnix.webk.runtime.whatwg_dom.impl.nodes.AttributesModel;
 import com.earnix.webk.runtime.whatwg_dom.impl.nodes.BooleanAttributeModel;
 import com.earnix.webk.runtime.whatwg_dom.impl.select.Elements;
 import com.earnix.webk.runtime.html.impl.DocumentImpl;
-import com.earnix.webk.runtime.impl.ElementImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
 import org.junit.Test;
 
 import java.util.List;

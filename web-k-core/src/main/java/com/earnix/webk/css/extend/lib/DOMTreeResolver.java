@@ -21,8 +21,8 @@ package com.earnix.webk.css.extend.lib;
 
 
 import com.earnix.webk.css.extend.TreeResolver;
-import com.earnix.webk.runtime.impl.ElementImpl;
-import com.earnix.webk.runtime.impl.NodeImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.NodeImpl;
 
 import java.util.List;
 

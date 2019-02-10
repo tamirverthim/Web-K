@@ -11,8 +11,8 @@ import com.earnix.webk.runtime.web_idl.Optional;
 import com.earnix.webk.runtime.web_idl.ReadonlyAttribute;
 import com.earnix.webk.runtime.web_idl.TreatNullAs;
 import com.earnix.webk.runtime.web_idl.Unsigned;
-import com.earnix.webk.runtime.web_idl.service.PropertyGetter;
-import com.earnix.webk.runtime.web_idl.service.PropertySetter;
+import com.earnix.webk.runtime.web_idl.impl.PropertyGetter;
+import com.earnix.webk.runtime.web_idl.impl.PropertySetter;
 
 /**
  * @author Taras Maslov

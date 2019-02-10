@@ -1,4 +1,4 @@
-package com.earnix.webk.runtime.impl;
+package com.earnix.webk.runtime.whatwg_dom.impl;
 
 import com.earnix.webk.runtime.ScriptContext;
 import com.earnix.webk.runtime.web_idl.DOMException;

@@ -1,5 +1,6 @@
-package com.earnix.webk.runtime;
+package com.earnix.webk.runtime.web_idl.impl;
 
+import com.earnix.webk.runtime.ScriptContext;
 import com.earnix.webk.runtime.web_idl.Function;
 import jdk.nashorn.api.scripting.JSObject;
 import lombok.AccessLevel;

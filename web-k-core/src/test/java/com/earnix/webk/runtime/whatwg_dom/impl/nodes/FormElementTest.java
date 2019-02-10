@@ -3,7 +3,7 @@ package com.earnix.webk.runtime.whatwg_dom.impl.nodes;
 import com.earnix.webk.runtime.whatwg_dom.impl.Connection;
 import com.earnix.webk.runtime.whatwg_dom.impl.Jsoup;
 import com.earnix.webk.runtime.html.impl.DocumentImpl;
-import com.earnix.webk.runtime.impl.ElementImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
 import org.junit.Test;
 
 import java.util.List;
