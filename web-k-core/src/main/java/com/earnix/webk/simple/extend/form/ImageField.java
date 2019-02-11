@@ -23,10 +23,10 @@ import com.earnix.webk.css.constants.CSSName;
 import com.earnix.webk.css.style.CalculatedStyle;
 import com.earnix.webk.css.style.FSDerivedValue;
 import com.earnix.webk.css.style.derived.LengthValue;
-import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.extend.FSImage;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
 import com.earnix.webk.simple.extend.XhtmlForm;
 import com.earnix.webk.swing.AWTFSImage;
 import com.earnix.webk.util.XRLog;
@@ -42,7 +42,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ImageField extends InputField {
-    public ImageField(ElementModel e, XhtmlForm form, LayoutContext context, BlockBox box) {
+    public ImageField(ElementImpl e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }
 

@@ -19,8 +19,8 @@
  */
 package com.earnix.webk.simple.xhtml.controls;
 
-import com.earnix.webk.dom.nodes.ElementModel;
-import com.earnix.webk.dom.nodes.NodeModel;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.NodeImpl;
 import com.earnix.webk.simple.xhtml.XhtmlForm;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class SelectControl extends AbstractControl {
 
     private Map _options;
 
-    public SelectControl(XhtmlForm form, ElementModel e) {
+    public SelectControl(XhtmlForm form, ElementImpl e) {
         super(form, e);
 
         _size = getIntAttribute(e, "size", 1);
@@ -66,11 +66,11 @@ public class SelectControl extends AbstractControl {
         }
     }
 
-    private void traverseOptions(ElementModel e, String prefix) {
-        List<NodeModel> children = e.childNodes();
+    private void traverseOptions(ElementImpl e, String prefix) {
+        List<NodeImpl> children = e.getChildNodes();
         for (int i = 0; i < children.size(); i++) {
-            if (children.get(i) instanceof ElementModel) {
-                ElementModel child = (ElementModel) children.get(i);
+            if (children.get(i) instanceof ElementImpl) {
+                ElementImpl child = (ElementImpl) children.get(i);
                 if (child.nodeName().equalsIgnoreCase("optgroup")) {
                     traverseOptions(child, prefix + child.attr("label")
                             + " ");

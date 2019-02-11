@@ -19,12 +19,12 @@
  */
 package com.earnix.webk.swing;
 
-import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.event.DocumentListener;
 import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.resource.CSSResource;
 import com.earnix.webk.resource.ImageResource;
 import com.earnix.webk.resource.XMLResource;
+import com.earnix.webk.runtime.html.impl.DocumentImpl;
 import com.earnix.webk.util.IOUtil;
 import com.earnix.webk.util.StreamResource;
 import com.kitfox.svg.SVGCache;
@@ -128,7 +128,7 @@ public class DelegatingUserAgent implements UserAgentCallback, DocumentListener 
      * @param uri Location of the XML source.
      * @return An XMLResource containing the image.
      */
-    public DocumentModel getXMLResource(String uri) {
+    public DocumentImpl getXMLResource(String uri) {
         String ruri = _uriResolver.resolve(uri);
         StreamResource sr = new StreamResource(ruri);
         try {

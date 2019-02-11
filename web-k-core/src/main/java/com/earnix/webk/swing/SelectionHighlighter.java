@@ -20,14 +20,14 @@
 package com.earnix.webk.swing;
 
 import com.earnix.webk.css.style.CalculatedStyle;
-import com.earnix.webk.dom.nodes.DocumentModel;
-import com.earnix.webk.dom.nodes.ElementModel;
-import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.Box;
 import com.earnix.webk.render.InlineLayoutBox;
 import com.earnix.webk.render.InlineText;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.NodeImpl;
+import com.earnix.webk.runtime.html.impl.DocumentImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.TextImpl;
 import com.earnix.webk.simple.XHTMLPanel;
 import com.earnix.webk.util.XRLog;
 import org.w3c.dom.ranges.Range;
@@ -112,7 +112,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
 
     private TransferHandler handler;
 
-    private DocumentModel document;
+    private DocumentImpl document;
 
     public void addChangeListener(ChangeListener l) {
         listenerList.add(ChangeListener.class, l);
@@ -490,7 +490,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
         s.push(panel.getRootBox());
         while (!s.empty()) {
             Box b = (Box) s.pop();
-            ElementModel element = b.getElement();
+            ElementImpl element = b.getElement();
             if (element != null && !elementBoxMap.containsKey(element)) {
                 elementBoxMap.put(element, b);
             }
@@ -500,7 +500,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
                     Object o = it.next();
                     if (o instanceof InlineText) {
                         InlineText t = (InlineText) o;
-                        TextNodeModel txt = t.getTextNode();
+                        TextImpl txt = t.getTextNode();
                         if (!textInlineMap.containsKey(txt)) {
                             textInlineMap.put(txt, new ArrayList());
                         }
@@ -520,11 +520,11 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
 
     }
 
-    private List getInlineTextsForText(TextNodeModel t) {
+    private List getInlineTextsForText(TextImpl t) {
         return (List) textInlineMap.get(t);
     }
 
-    private Box getBoxForElement(ElementModel elt) {
+    private Box getBoxForElement(ElementImpl elt) {
         return (Box) elementBoxMap.get(elt);
     }
 
@@ -591,7 +591,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
         if (box == null) {
             return null;
         }
-        ElementModel elt = null;
+        ElementImpl elt = null;
         int offset = 0;
         InlineLayoutBox ilb = null;
         boolean containsWholeIlb = false;
@@ -688,7 +688,7 @@ public class SelectionHighlighter implements MouseMotionListener, MouseListener 
             }
         }
 
-        NodeModel node = fndTxt.getTextNode();
+        NodeImpl node = fndTxt.getTextNode();
 //        try {
 //            r.setStart(node, offset);
 //        } catch (Exception ex) {

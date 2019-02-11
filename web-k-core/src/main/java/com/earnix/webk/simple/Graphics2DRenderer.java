@@ -19,8 +19,8 @@
  */
 package com.earnix.webk.simple;
 
-import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.layout.SharedContext;
+import com.earnix.webk.runtime.html.impl.DocumentImpl;
 import org.w3c.dom.Document;
 
 import java.awt.Dimension;
@@ -116,7 +116,7 @@ public class Graphics2DRenderer {
      * @param doc      the Document to render
      * @param base_url base URL for relative links within the Document.
      */
-    public void setDocument(DocumentModel doc, String base_url) {
+    public void setDocument(DocumentImpl doc, String base_url) {
         panel.setDocument(doc, base_url);
     }
 

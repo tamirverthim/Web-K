@@ -19,9 +19,9 @@
  */
 package com.earnix.webk.simple.extend.form;
 
-import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
 import com.earnix.webk.simple.extend.XhtmlForm;
 import com.earnix.webk.util.XRLog;
 
@@ -31,7 +31,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ResetField extends AbstractButtonField {
-    public ResetField(ElementModel e, XhtmlForm form, LayoutContext context, BlockBox box) {
+    public ResetField(ElementImpl e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }
 

@@ -19,7 +19,7 @@
  */
 package com.earnix.webk.simple.xhtml.controls;
 
-import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
 import com.earnix.webk.simple.xhtml.XhtmlForm;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class ButtonControl extends AbstractControl {
     private boolean _extended;
     private List _listeners = new ArrayList();
 
-    public ButtonControl(XhtmlForm form, ElementModel e) {
+    public ButtonControl(XhtmlForm form, ElementImpl e) {
         super(form, e);
 
         _extended = e.nodeName().equalsIgnoreCase("button");

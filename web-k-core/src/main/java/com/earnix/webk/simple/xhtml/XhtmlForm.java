@@ -19,7 +19,7 @@
  */
 package com.earnix.webk.simple.xhtml;
 
-import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
 import com.earnix.webk.simple.extend.URLUTF8Encoder;
 import com.earnix.webk.simple.xhtml.controls.ButtonControl;
 import com.earnix.webk.simple.xhtml.controls.CheckControl;
@@ -78,11 +78,11 @@ public class XhtmlForm {
         return _controls.iterator();
     }
 
-    public FormControl createControl(ElementModel e) {
+    public FormControl createControl(ElementImpl e) {
         return createControl(this, e);
     }
 
-    public static FormControl createControl(XhtmlForm form, ElementModel e) {
+    public static FormControl createControl(XhtmlForm form, ElementImpl e) {
         if (e == null)
             return null;
 

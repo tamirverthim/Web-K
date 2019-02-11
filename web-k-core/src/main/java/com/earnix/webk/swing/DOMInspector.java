@@ -22,12 +22,12 @@ package com.earnix.webk.swing;
 
 import com.earnix.webk.context.StyleReference;
 import com.earnix.webk.css.constants.ValueConstants;
-import com.earnix.webk.dom.nodes.CommentModel;
-import com.earnix.webk.dom.nodes.DocumentModel;
-import com.earnix.webk.dom.nodes.ElementModel;
-import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.layout.SharedContext;
+import com.earnix.webk.runtime.whatwg_dom.impl.CommentImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.NodeImpl;
+import com.earnix.webk.runtime.html.impl.DocumentImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.TextImpl;
 import org.w3c.dom.css.CSSPrimitiveValue;
 
 import javax.swing.JButton;
@@ -76,16 +76,16 @@ public class DOMInspector extends JPanel {
     JSplitPane splitPane;
     // PW
 
-    DocumentModel doc;
+    DocumentImpl doc;
     JButton close;
     JTree tree;
     JScrollPane scroll;
 
-    public DOMInspector(DocumentModel doc) {
+    public DOMInspector(DocumentImpl doc) {
         this(doc, null, null);
     }
 
-    public DOMInspector(DocumentModel doc, SharedContext context, StyleReference sr) {
+    public DOMInspector(DocumentImpl doc, SharedContext context, StyleReference sr) {
         super();
 
         this.setLayout(new java.awt.BorderLayout());
@@ -133,7 +133,7 @@ public class DOMInspector extends JPanel {
      *
      * @param doc The new forDocument value
      */
-    public void setForDocument(DocumentModel doc) {
+    public void setForDocument(DocumentImpl doc) {
         setForDocument(doc, null, null);
     }
 
@@ -144,7 +144,7 @@ public class DOMInspector extends JPanel {
      * @param context The new forDocument value
      * @param sr      The new forDocument value
      */
-    public void setForDocument(DocumentModel doc, SharedContext context, StyleReference sr) {
+    public void setForDocument(DocumentImpl doc, SharedContext context, StyleReference sr) {
         this.doc = doc;
         this.styleReference = sr;
         this.context = context;
@@ -213,7 +213,7 @@ class ElementPropertiesPanel extends JPanel {
      *
      * @param node The new forElement value
      */
-    public void setForElement(NodeModel node) {
+    public void setForElement(NodeImpl node) {
         try {
             _properties.setModel(tableModel(node));
             TableColumnModel model = _properties.getColumnModel();
@@ -225,12 +225,12 @@ class ElementPropertiesPanel extends JPanel {
         }
     }
 
-    private TableModel tableModel(NodeModel node) {
-        if (!(node instanceof ElementModel)) {
+    private TableModel tableModel(NodeImpl node) {
+        if (!(node instanceof ElementImpl)) {
             Toolkit.getDefaultToolkit().beep();
             return _defaultTableModel;
         }
-        Map props = _sr.getCascadedPropertiesMap((ElementModel) node);
+        Map props = _sr.getCascadedPropertiesMap((ElementImpl) node);
         return new PropertiesTableModel(props);
     }
 
@@ -382,7 +382,7 @@ class DOMSelectionListener implements TreeSelectionListener {
     }
 
     public void valueChanged(TreeSelectionEvent e) {
-        NodeModel node = (NodeModel) _tree.getLastSelectedPathComponent();
+        NodeImpl node = (NodeImpl) _tree.getLastSelectedPathComponent();
 
         if (node == null) {
             return;
@@ -396,24 +396,24 @@ class DOMSelectionListener implements TreeSelectionListener {
 
 class DOMTreeModel implements TreeModel {
 
-    DocumentModel doc;
+    DocumentImpl doc;
 
     /**
      * Our root for display
      */
-    NodeModel root;
+    NodeImpl root;
     HashMap displayableNodes;
     List listeners = new ArrayList();
 
-    public DOMTreeModel(DocumentModel doc) {
+    public DOMTreeModel(DocumentImpl doc) {
         this.displayableNodes = new HashMap();
         this.doc = doc;
         setRoot("body");
     }
 
     private void setRoot(String rootNodeName) {
-        NodeModel tempRoot = doc;
-        List<NodeModel> nl = tempRoot.childNodes();
+        NodeImpl tempRoot = doc;
+        List<NodeImpl> nl = (tempRoot).getChildNodes();
         for (int i = 0; i < nl.size(); i++) {
             if (nl.get(i).nodeName().toLowerCase().equals(rootNodeName)) {
                 this.root = nl.get(i);
@@ -474,14 +474,14 @@ class DOMTreeModel implements TreeModel {
      */
     public Object getChild(Object parent, int index) {
 
-        NodeModel node = (NodeModel) parent;
+        NodeImpl node = (NodeImpl) parent;
 
         List children = (List) this.displayableNodes.get(parent);
         if (children == null) {
             children = addDisplayable(node);
         }
 
-        return (NodeModel) children.get(index);
+        return (NodeImpl) children.get(index);
     }
 
 
@@ -495,7 +495,7 @@ class DOMTreeModel implements TreeModel {
      */
     public int getChildCount(Object parent) {
 
-        NodeModel node = (NodeModel) parent;
+        NodeImpl node = (NodeImpl) parent;
         List children = (List) this.displayableNodes.get(parent);
         if (children == null) {
             children = addDisplayable(node);
@@ -516,7 +516,7 @@ class DOMTreeModel implements TreeModel {
      */
     public int getIndexOfChild(Object parent, Object child) {
 
-        NodeModel node = (NodeModel) parent;
+        NodeImpl node = (NodeImpl) parent;
         List children = (List) this.displayableNodes.get(parent);
         if (children == null) {
             children = addDisplayable(node);
@@ -552,7 +552,7 @@ class DOMTreeModel implements TreeModel {
      */
     public boolean isLeaf(Object nd) {
 
-        NodeModel node = (NodeModel) nd;
+        NodeImpl node = (NodeImpl) nd;
 
         return node.childNodeSize() == 0;
     }
@@ -565,17 +565,17 @@ class DOMTreeModel implements TreeModel {
      * @param parent The feature to be added to the Displayable attribute
      * @return Returns
      */
-    private List addDisplayable(NodeModel parent) {
+    private List addDisplayable(NodeImpl parent) {
         List children = (List) this.displayableNodes.get(parent);
         if (children == null) {
             children = new ArrayList();
             this.displayableNodes.put(parent, children);
-            List<NodeModel> nl = parent.childNodes();
+            List<NodeImpl> nl = parent.getChildNodes();
             for (int i = 0, len = nl.size(); i < len; i++) {
-                NodeModel child = nl.get(i);
-                if (child instanceof ElementModel ||
-                        child instanceof CommentModel ||
-                        (child instanceof TextNodeModel && (((TextNodeModel) child).getWholeText().trim().length() > 0))) {
+                NodeImpl child = nl.get(i);
+                if (child instanceof ElementImpl ||
+                        child instanceof CommentImpl ||
+                        (child instanceof TextImpl && (((TextImpl) child).getWholeText().trim().length() > 0))) {
                     children.add(child);
                 }
             }
@@ -608,13 +608,13 @@ class DOMTreeCellRenderer extends DefaultTreeCellRenderer {
     public Component getTreeCellRendererComponent(JTree tree, Object value,
                                                   boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
 
-        NodeModel node = (NodeModel) value;
+        NodeImpl node = (NodeImpl) value;
 
-        if (node instanceof ElementModel) {
+        if (node instanceof ElementImpl) {
 
             String cls = "";
-            if (node.attributes().size() > 0) {
-                String cn = node.attributes().get("class");
+            if (node.getAttributes().size() > 0) {
+                String cn = node.getAttributes().get("class");
                 if (cn != null) {
                     cls = " class='" + cn + "'";
                 }
@@ -623,16 +623,16 @@ class DOMTreeCellRenderer extends DefaultTreeCellRenderer {
 
         }
 
-        if (node instanceof TextNodeModel) {
+        if (node instanceof TextImpl) {
 
-            if (((TextNodeModel) node).getWholeText().trim().length() > 0) {
-                value = "\"" + ((TextNodeModel) node).getWholeText() + "\"";
+            if (((TextImpl) node).getWholeText().trim().length() > 0) {
+                value = "\"" + ((TextImpl) node).getWholeText() + "\"";
             }
         }
 
-        if (node instanceof CommentModel) {
+        if (node instanceof CommentImpl) {
 
-            value = "<!-- " + ((CommentModel) node).getData() + " -->";
+            value = "<!-- " + ((CommentImpl) node).getData() + " -->";
 
         }
 

@@ -19,10 +19,10 @@
  */
 package com.earnix.webk.browser;
 
-import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.event.DocumentListener;
 import com.earnix.webk.layout.SharedContext;
 import com.earnix.webk.resource.XMLResource;
+import com.earnix.webk.runtime.html.impl.DocumentImpl;
 import com.earnix.webk.simple.FSScrollPane;
 import com.earnix.webk.swing.ImageResourceLoader;
 import com.earnix.webk.swing.ScalableXHTMLPanel;
@@ -300,7 +300,7 @@ public class BrowserPanel extends JPanel implements DocumentListener {
     }
 
     private void handlePageLoadFailed(String url_text, XRRuntimeException ex) {
-        final DocumentModel xr;
+        final DocumentImpl xr;
         final String rootCause = getRootCause(ex);
         final String msg = GeneralUtil.escapeHTML(addLineBreaks(rootCause, 80));
         String notFound =

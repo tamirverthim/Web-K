@@ -19,9 +19,9 @@
  */
 package com.earnix.webk.simple.extend.form;
 
-import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
 import com.earnix.webk.simple.extend.XhtmlForm;
 import com.earnix.webk.util.XHTMLUtils;
 import lombok.val;
@@ -41,7 +41,7 @@ public class TextAreaField extends AbstractTextField {
     private DocumentListener listener;
     private FormFieldState preFocusState;
 
-    public TextAreaField(ElementModel e, XhtmlForm form, LayoutContext context, BlockBox box) {
+    public TextAreaField(ElementImpl e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }
 

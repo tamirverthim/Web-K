@@ -25,13 +25,13 @@ import com.earnix.webk.css.constants.IdentValue;
 import com.earnix.webk.css.parser.FSRGBColor;
 import com.earnix.webk.css.style.CalculatedStyle;
 import com.earnix.webk.css.style.CssContext;
-import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.layout.BoxCollector;
 import com.earnix.webk.layout.InlineBoxing;
 import com.earnix.webk.layout.InlinePaintable;
 import com.earnix.webk.layout.Layer;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.layout.PaintingInfo;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
 import com.earnix.webk.util.XRRuntimeException;
 
 import java.awt.Rectangle;
@@ -534,7 +534,7 @@ public class LineBox extends Box implements InlinePaintable {
 
     public void restyle(LayoutContext c) {
         Box parent = getParent();
-        ElementModel e = parent.getElement();
+        ElementImpl e = parent.getElement();
         if (e != null) {
             CalculatedStyle style = c.getSharedContext().getStyle(e, true);
             setStyle(style.createAnonymousStyle(IdentValue.BLOCK));

@@ -21,7 +21,6 @@ package com.earnix.webk.swing;
 
 import com.earnix.webk.css.style.CalculatedStyle;
 import com.earnix.webk.css.style.derived.RectPropertySet;
-import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.extend.NamespaceHandler;
 import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.layout.Layer;
@@ -30,7 +29,8 @@ import com.earnix.webk.render.Box;
 import com.earnix.webk.render.PageBox;
 import com.earnix.webk.render.RenderingContext;
 import com.earnix.webk.resource.XMLResource;
-import com.earnix.webk.script.ScriptContext;
+import com.earnix.webk.runtime.ScriptContext;
+import com.earnix.webk.runtime.html.impl.DocumentImpl;
 import com.earnix.webk.simple.NoNamespaceHandler;
 import com.earnix.webk.simple.extend.FormSubmissionListener;
 import com.earnix.webk.util.Configuration;
@@ -342,19 +342,19 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
 =========== set document utility methods =============== */
 
     public void setDocument(InputStream stream, String url, NamespaceHandler nsh) {
-        DocumentModel dom = XMLResource.load(stream);
+        DocumentImpl dom = XMLResource.load(stream);
 
         setDocument(dom, url, nsh);
     }
 
     public void setDocumentFromString(String content, String url, NamespaceHandler nsh) {
         InputSource is = new InputSource(new BufferedReader(new StringReader(content)));
-        DocumentModel dom = XMLResource.load(is);
+        DocumentImpl dom = XMLResource.load(is);
 
         setDocument(dom, url, nsh);
     }
 
-    public void setDocument(DocumentModel doc, String url) {
+    public void setDocument(DocumentImpl doc, String url) {
         setDocument(doc, url, new NoNamespaceHandler());
     }
 
@@ -397,7 +397,7 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
                 return;
             }
         }
-        DocumentModel dom = loadDocument(url);
+        DocumentImpl dom = loadDocument(url);
         setDocument(dom, url);
     }
 
@@ -425,7 +425,7 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
      *
      * @param doc The document to reload.
      */
-    public void reloadDocument(DocumentModel doc) {
+    public void reloadDocument(DocumentImpl doc) {
         if (this.doc == null) {
             XRLog.render("Reload called on BasicPanel, but there is no document set on the panel yet.");
             return;
@@ -445,7 +445,7 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
         return base;
     }
 
-    public DocumentModel getDocument() {
+    public DocumentImpl getDocument() {
         return doc;
     }
 
@@ -460,8 +460,8 @@ public abstract class BasicPanel extends RootPanel implements FormSubmissionList
         return doc == null ? "" : getSharedContext().getNamespaceHandler().getDocumentTitle(doc);
     }
 
-    protected DocumentModel loadDocument(final String uri) {
-        DocumentModel xmlResource = sharedContext.getUac().getXMLResource(uri);
+    protected DocumentImpl loadDocument(final String uri) {
+        DocumentImpl xmlResource = sharedContext.getUac().getXMLResource(uri);
         return xmlResource;
     }
 

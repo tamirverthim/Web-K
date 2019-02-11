@@ -23,9 +23,9 @@ package com.earnix.webk.simple;
 
 import com.earnix.webk.css.extend.StylesheetFactory;
 import com.earnix.webk.css.sheet.StylesheetInfo;
-import com.earnix.webk.dom.nodes.DocumentModel;
-import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.extend.NamespaceHandler;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
+import com.earnix.webk.runtime.html.impl.DocumentImpl;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 
@@ -46,58 +46,58 @@ public class NoNamespaceHandler implements NamespaceHandler {
         return _namespace;
     }
 
-    public String getAttributeValue(ElementModel e, String attrName) {
+    public String getAttributeValue(ElementImpl e, String attrName) {
         return e.attr(attrName);
     }
 
-    public String getAttributeValue(ElementModel e, String namespaceURI, String attrName) {
+    public String getAttributeValue(ElementImpl e, String namespaceURI, String attrName) {
         return e.attr(attrName);
     }
 
-    public String getClass(ElementModel e) {
+    public String getClass(ElementImpl e) {
         return null;
     }
 
-    public String getID(ElementModel e) {
+    public String getID(ElementImpl e) {
         return null;
     }
 
-    public String getLang(ElementModel e) {
+    public String getLang(ElementImpl e) {
         if (e == null) {
             return "";
         }
         return e.attr("lang");
     }
 
-    public String getElementStyling(ElementModel e) {
+    public String getElementStyling(ElementImpl e) {
         return null;
     }
 
-    public String getNonCssStyling(ElementModel e) {
+    public String getNonCssStyling(ElementImpl e) {
         return null;
     }
 
-    public String getLinkUri(ElementModel e) {
+    public String getLinkUri(ElementImpl e) {
         return null;
     }
 
-    public String getDocumentTitle(DocumentModel doc) {
+    public String getDocumentTitle(DocumentImpl doc) {
         return null;
     }
 
-    public String getAnchorName(ElementModel e) {
+    public String getAnchorName(ElementImpl e) {
         return null;
     }
 
-    public boolean isImageElement(ElementModel e) {
+    public boolean isImageElement(ElementImpl e) {
         return false;
     }
 
-    public String getImageSourceURI(ElementModel e) {
+    public String getImageSourceURI(ElementImpl e) {
         return null;
     }
 
-    public boolean isFormElement(ElementModel e) {
+    public boolean isFormElement(ElementImpl e) {
         return false;
     }
 
@@ -108,11 +108,11 @@ public class NoNamespaceHandler implements NamespaceHandler {
     private Pattern _mediaPattern = Pattern.compile("media\\s?=\\s?");
 
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    public StylesheetInfo[] getStylesheets(DocumentModel doc) {
+    public StylesheetInfo[] getStylesheets(DocumentImpl doc) {
         List<StylesheetInfo> list = new ArrayList<>();
         //get the processing-instructions (actually for XmlDocuments)
         //type and href are required to be set
-        val styleElements = new ArrayList<ElementModel>();
+        val styleElements = new ArrayList<ElementImpl>();
         styleElements.addAll(doc.getElementsByTag("style"));
         styleElements.addAll(doc.select("link[rel=stylesheet]"));
 
@@ -195,12 +195,12 @@ public class NoNamespaceHandler implements NamespaceHandler {
     }
 
     @Override
-    public boolean isCanvasElement(ElementModel e) {
+    public boolean isCanvasElement(ElementImpl e) {
         return (e != null && e.nodeName().equalsIgnoreCase("canvas"));
     }
 
     @Override
-    public boolean isSvgElement(ElementModel element) {
+    public boolean isSvgElement(ElementImpl element) {
         return (element != null && element.nodeName().equalsIgnoreCase("svg"));
     }
 }

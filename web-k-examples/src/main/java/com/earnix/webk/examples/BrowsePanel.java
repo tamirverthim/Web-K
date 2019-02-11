@@ -17,10 +17,10 @@ package com.earnix.webk.examples;/*
  */
 
 
-import com.earnix.webk.dom.nodes.DocumentModel;
 import com.earnix.webk.event.DefaultDocumentListener;
 import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.resource.XMLResource;
+import com.earnix.webk.runtime.html.impl.DocumentImpl;
 import com.earnix.webk.simple.FSScrollPane;
 import com.earnix.webk.simple.XHTMLPanel;
 import com.earnix.webk.swing.DelegatingUserAgent;
@@ -130,8 +130,8 @@ public class BrowsePanel {
         });
     }
 
-    private DocumentModel getErrorDocument(String reason) {
-        DocumentModel xr;
+    private DocumentImpl getErrorDocument(String reason) {
+        DocumentImpl xr;
         String cleanUri = GeneralUtil.escapeHTML(uri);
         String notFound = "<html><h1>Document not found</h1><p>Could not load URI <pre>" + cleanUri + "</pre>, because: " + reason + "</p></html>";
         xr = XMLResource.load(new StringReader(notFound));
@@ -141,7 +141,7 @@ public class BrowsePanel {
 
     private void launchLoad() {
         new Thread(() -> {
-            final DocumentModel doc;
+            final DocumentImpl doc;
             try {
                 if (panel != null) panel.setCursor(new Cursor(Cursor.WAIT_CURSOR));
                 doc = getUAC().getXMLResource(uri);
@@ -161,7 +161,7 @@ public class BrowsePanel {
         return uac;
     }
 
-    private void startRender(final DocumentModel document) {
+    private void startRender(final DocumentImpl document) {
         // first, load the document, so we can trap any parse errors
         // in loading;
 

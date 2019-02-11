@@ -1,6 +1,6 @@
 package com.earnix.webk.browser;
 
-import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
 import com.earnix.webk.simple.XHTMLPanel;
 
 import javax.swing.AbstractAction;
@@ -18,7 +18,7 @@ public class ViewSourceAction extends AbstractAction {
     }
 
     public void actionPerformed(ActionEvent evt) {
-        ElementModel document = panel.getRootBox().getElement();
+        ElementImpl document = panel.getRootBox().getElement();
         System.out.println(document.outerHtml());
     }
 }

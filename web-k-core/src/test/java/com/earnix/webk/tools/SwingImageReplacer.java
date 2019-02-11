@@ -1,11 +1,11 @@
 package com.earnix.webk.tools;
 
-import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.extend.FSImage;
 import com.earnix.webk.extend.ReplacedElement;
 import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
 import com.earnix.webk.swing.AWTFSImage;
 import com.earnix.webk.swing.EmptyReplacedElement;
 import com.earnix.webk.swing.ImageReplacedElement;
@@ -40,7 +40,7 @@ public class SwingImageReplacer extends ElementReplacer {
         return "img";
     }
 
-    public boolean accept(final LayoutContext context, final ElementModel element) {
+    public boolean accept(final LayoutContext context, final ElementImpl element) {
         return context.getNamespaceHandler().isImageElement(element);
     }
 
@@ -48,7 +48,7 @@ public class SwingImageReplacer extends ElementReplacer {
         return replaceImage(uac, context, box.getElement(), cssWidth, cssHeight);
     }
 
-    public void clear(ElementModel element) {
+    public void clear(ElementImpl element) {
         System.out.println("*** cleared image components for element " + element);
         imageComponents.remove(element);
     }
@@ -69,7 +69,7 @@ public class SwingImageReplacer extends ElementReplacer {
      * @param cssWidth  Target width of the image
      * @param cssHeight Target height of the image @return A ReplacedElement for the image; will not be null.
      */
-    protected ReplacedElement replaceImage(UserAgentCallback uac, LayoutContext context, ElementModel elem, int cssWidth, int cssHeight) {
+    protected ReplacedElement replaceImage(UserAgentCallback uac, LayoutContext context, ElementImpl elem, int cssWidth, int cssHeight) {
         ReplacedElement re = null;
 
         // lookup in cache, or instantiate
@@ -107,7 +107,7 @@ public class SwingImageReplacer extends ElementReplacer {
      * @param cc The replaced element containing the image, or another ReplacedElement to be used in its place
      *           (like a placeholder if the image can't be loaded).
      */
-    protected void storeImageReplacedElement(ElementModel e, ReplacedElement cc) {
+    protected void storeImageReplacedElement(ElementImpl e, ReplacedElement cc) {
         System.out.println("\n*** Cached image for element");
         imageComponents.put(e, cc);
     }
@@ -118,7 +118,7 @@ public class SwingImageReplacer extends ElementReplacer {
      * @param e The element by which the image is keyed
      * @return The ReplacedElement for the image, or null if there is none.
      */
-    protected ReplacedElement lookupImageReplacedElement(ElementModel e) {
+    protected ReplacedElement lookupImageReplacedElement(ElementImpl e) {
         if (imageComponents.size() == 0) {
             return null;
         }

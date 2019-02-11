@@ -47,7 +47,7 @@ public class XRLog {
     public static final String CSS_PARSE = registerLoggerByName("com.earnix.webk.css-parse");
     public static final String LAYOUT = registerLoggerByName("com.earnix.webk.layout");
     public static final String RENDER = registerLoggerByName("com.earnix.webk.render");
-    public static final String SCRIPT = registerLoggerByName("com.earnix.webk.script");
+    public static final String SCRIPT = registerLoggerByName("com.earnix.webk.runtime");
 
     private static boolean initPending = true;
     private static XRLogger loggerImpl;

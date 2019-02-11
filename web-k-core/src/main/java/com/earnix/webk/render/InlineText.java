@@ -20,11 +20,11 @@
  */
 package com.earnix.webk.render;
 
-import com.earnix.webk.dom.nodes.TextNodeModel;
 import com.earnix.webk.extend.FSGlyphVector;
 import com.earnix.webk.layout.FunctionData;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.layout.WhitespaceStripper;
+import com.earnix.webk.runtime.whatwg_dom.impl.TextImpl;
 import lombok.extern.slf4j.Slf4j;
 
 import java.awt.Rectangle;
@@ -57,7 +57,7 @@ public class InlineText {
 
     private boolean _trimmedLeadingSpace;
     private boolean _trimmedTrailingSpace;
-    private TextNodeModel _textNode;
+    private TextImpl _textNode;
 
     public void trimTrailingSpace(LayoutContext c) {
         if (!isEmpty() && _masterText.charAt(_end - 1) == ' ') {
@@ -347,11 +347,11 @@ public class InlineText {
         _selectionEnd = s;
     }
 
-    public TextNodeModel getTextNode() {
+    public TextImpl getTextNode() {
         return this._textNode;
     }
 
-    public void setTextNode(TextNodeModel node) {
+    public void setTextNode(TextImpl node) {
         this._textNode = node;
     }
 }

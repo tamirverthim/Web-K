@@ -23,7 +23,7 @@ package com.earnix.webk.css.extend.lib;
 
 
 import com.earnix.webk.css.extend.AttributeResolver;
-import com.earnix.webk.dom.nodes.ElementModel;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
 import lombok.val;
 
 /**
@@ -32,13 +32,13 @@ import lombok.val;
 public class DOMStaticXhtmlAttributeResolver implements AttributeResolver {
 
     public String getAttributeValue(Object e, String attrName) {
-        val element = (ElementModel) e;
+        val element = (ElementImpl) e;
         return element.attr(attrName);
 
     }
 
     public String getAttributeValue(Object o, String namespaceURI, String attrName) {
-        ElementModel e = (ElementModel) o;
+        ElementImpl e = (ElementImpl) o;
         return e.attr(attrName);
 
     }
@@ -60,7 +60,7 @@ public class DOMStaticXhtmlAttributeResolver implements AttributeResolver {
     }
 
     public String getElementStyling(Object el) {
-        ElementModel e = ((ElementModel) el);
+        ElementImpl e = ((ElementImpl) el);
         StringBuffer style = new StringBuffer();
         if (e.nodeName().equals("td")) {
             String s;
@@ -92,7 +92,7 @@ public class DOMStaticXhtmlAttributeResolver implements AttributeResolver {
     }
 
     public boolean isLink(Object el) {
-        ElementModel e = ((ElementModel) el);
+        ElementImpl e = ((ElementImpl) el);
         return e.nodeName().equalsIgnoreCase("a") && !e.attr("href").isEmpty();
     }
 

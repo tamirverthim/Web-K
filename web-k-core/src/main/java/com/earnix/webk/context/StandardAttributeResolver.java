@@ -20,10 +20,10 @@
 package com.earnix.webk.context;
 
 import com.earnix.webk.css.extend.AttributeResolver;
-import com.earnix.webk.dom.nodes.ElementModel;
 import com.earnix.webk.extend.NamespaceHandler;
 import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.extend.UserInterface;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
 
 /**
  * An instance which works together with a w3c DOM tree
@@ -49,11 +49,11 @@ public class StandardAttributeResolver implements AttributeResolver {
      * @return The attributeValue value
      */
     public String getAttributeValue(Object e, String attrName) {
-        return nsh.getAttributeValue((ElementModel) e, attrName);
+        return nsh.getAttributeValue((ElementImpl) e, attrName);
     }
 
     public String getAttributeValue(Object e, String namespaceURI, String attrName) {
-        return nsh.getAttributeValue((ElementModel) e, namespaceURI, attrName);
+        return nsh.getAttributeValue((ElementImpl) e, namespaceURI, attrName);
     }
 
     /**
@@ -63,7 +63,7 @@ public class StandardAttributeResolver implements AttributeResolver {
      * @return The class value
      */
     public String getClass(Object e) {
-        return nsh.getClass((ElementModel) e);
+        return nsh.getClass((ElementImpl) e);
     }
 
     /**
@@ -73,11 +73,11 @@ public class StandardAttributeResolver implements AttributeResolver {
      * @return The iD value
      */
     public String getID(Object e) {
-        return nsh.getID((ElementModel) e);
+        return nsh.getID((ElementImpl) e);
     }
 
     public String getNonCssStyling(Object e) {
-        return nsh.getNonCssStyling((ElementModel) e);
+        return nsh.getNonCssStyling((ElementImpl) e);
     }
 
     /**
@@ -87,7 +87,7 @@ public class StandardAttributeResolver implements AttributeResolver {
      * @return The elementStyling value
      */
     public String getElementStyling(Object e) {
-        return nsh.getElementStyling((ElementModel) e);
+        return nsh.getElementStyling((ElementImpl) e);
     }
 
     /**
@@ -97,7 +97,7 @@ public class StandardAttributeResolver implements AttributeResolver {
      * @return The lang value
      */
     public String getLang(Object e) {
-        return nsh.getLang((ElementModel) e);
+        return nsh.getLang((ElementImpl) e);
     }
 
     /**
@@ -107,7 +107,7 @@ public class StandardAttributeResolver implements AttributeResolver {
      * @return The link value
      */
     public boolean isLink(Object e) {
-        return nsh.getLinkUri((ElementModel) e) != null;
+        return nsh.getLinkUri((ElementImpl) e) != null;
     }
 
     /**
@@ -117,7 +117,7 @@ public class StandardAttributeResolver implements AttributeResolver {
      * @return The visited value
      */
     public boolean isVisited(Object e) {
-        return isLink(e) && uac.isVisited(nsh.getLinkUri((ElementModel) e));
+        return isLink(e) && uac.isVisited(nsh.getLinkUri((ElementImpl) e));
     }
 
     /**
@@ -127,7 +127,7 @@ public class StandardAttributeResolver implements AttributeResolver {
      * @return The hover value
      */
     public boolean isHover(Object e) {
-        return ui.isHover((ElementModel) e);
+        return ui.isHover((ElementImpl) e);
     }
 
     /**
@@ -137,7 +137,7 @@ public class StandardAttributeResolver implements AttributeResolver {
      * @return The active value
      */
     public boolean isActive(Object e) {
-        return ui.isActive((ElementModel) e);
+        return ui.isActive((ElementImpl) e);
     }
 
     /**
@@ -147,7 +147,7 @@ public class StandardAttributeResolver implements AttributeResolver {
      * @return The focus value
      */
     public boolean isFocus(Object e) {
-        return ui.isFocus((ElementModel) e);
+        return ui.isFocus((ElementImpl) e);
     }
 }
 

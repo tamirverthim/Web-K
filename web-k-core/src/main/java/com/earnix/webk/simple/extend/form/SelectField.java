@@ -19,11 +19,11 @@
  */
 package com.earnix.webk.simple.extend.form;
 
-import com.earnix.webk.dom.nodes.ElementModel;
-import com.earnix.webk.dom.nodes.NodeModel;
-import com.earnix.webk.dom.select.Elements;
+import com.earnix.webk.runtime.whatwg_dom.impl.select.Elements;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
+import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
+import com.earnix.webk.runtime.whatwg_dom.impl.NodeImpl;
 import com.earnix.webk.simple.extend.XhtmlForm;
 import com.earnix.webk.util.GeneralUtil;
 import com.earnix.webk.util.XHTMLUtils;
@@ -38,7 +38,7 @@ import java.util.Optional;
 
 public class SelectField extends FormField {
 
-    public SelectField(ElementModel e, XhtmlForm form, LayoutContext context, BlockBox box) {
+    public SelectField(ElementImpl e, XhtmlForm form, LayoutContext context, BlockBox box) {
         super(e, form, context, box);
     }
 
@@ -63,7 +63,7 @@ public class SelectField extends FormField {
         List<Integer> selectedIndices = new ArrayList();
         Elements options = getElement().getElementsByTag("option");
         for (int i = 0; i < options.size(); i++) {
-            ElementModel option = options.get(i);
+            ElementImpl option = options.get(i);
             if (XHTMLUtils.isTrue(option, "selected")) {
                 selectedIndices.add(new Integer(i));
             }
@@ -128,12 +128,12 @@ public class SelectField extends FormField {
         return list;
     }
 
-    private void addChildren(List<NameValuePair> list, ElementModel e) {
-        List<NodeModel> children = e.childNodes();
+    private void addChildren(List<NameValuePair> list, ElementImpl e) {
+        List<NodeImpl> children = e.getChildNodes();
         for (int i = 0; i < children.size(); i++) {
-            if (!(children.get(i) instanceof ElementModel))
+            if (!(children.get(i) instanceof ElementImpl))
                 continue;
-            ElementModel child = (ElementModel) children.get(i);
+            ElementImpl child = (ElementImpl) children.get(i);
 
             if ("option".equals(child.nodeName())) {
                 // option tag, add it
