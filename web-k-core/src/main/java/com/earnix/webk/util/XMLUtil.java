@@ -20,7 +20,7 @@
  */
 package com.earnix.webk.util;
 
-import com.earnix.webk.runtime.whatwg_dom.impl.Jsoup;
+import com.earnix.webk.runtime.dom.impl.Jsoup;
 import com.earnix.webk.runtime.html.impl.DocumentImpl;
 
 import java.io.File;

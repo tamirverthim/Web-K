@@ -27,9 +27,9 @@ import com.earnix.webk.layout.LineBreakContext;
 import com.earnix.webk.layout.TextUtil;
 import com.earnix.webk.layout.WhitespaceStripper;
 import com.earnix.webk.render.FSFont;
-import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
-import com.earnix.webk.runtime.whatwg_dom.impl.NodeImpl;
-import com.earnix.webk.runtime.whatwg_dom.impl.TextImpl;
+import com.earnix.webk.runtime.dom.impl.ElementImpl;
+import com.earnix.webk.runtime.dom.impl.NodeImpl;
+import com.earnix.webk.runtime.dom.impl.TextImpl;
 
 import java.text.BreakIterator;
 

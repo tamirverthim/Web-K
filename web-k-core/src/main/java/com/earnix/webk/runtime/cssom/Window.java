@@ -4,7 +4,7 @@ import com.earnix.webk.runtime.web_idl.NewObject;
 import com.earnix.webk.runtime.web_idl.Nullable;
 import com.earnix.webk.runtime.web_idl.Optional;
 import com.earnix.webk.runtime.web_idl.Partial;
-import com.earnix.webk.runtime.whatwg_dom.Element;
+import com.earnix.webk.runtime.dom.Element;
 
 /**
  * @author Taras Maslov

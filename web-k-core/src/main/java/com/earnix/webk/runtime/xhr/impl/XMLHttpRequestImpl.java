@@ -1,18 +1,18 @@
 package com.earnix.webk.runtime.xhr.impl;
 
-import com.earnix.webk.runtime.whatwg_dom.impl.Jsoup;
+import com.earnix.webk.runtime.dom.impl.Jsoup;
 import com.earnix.webk.runtime.ScriptContext;
 import com.earnix.webk.runtime.web_idl.Attribute;
 import com.earnix.webk.runtime.web_idl.ByteString;
 import com.earnix.webk.runtime.web_idl.DOMException;
 import com.earnix.webk.runtime.web_idl.DOMString;
 import com.earnix.webk.runtime.web_idl.USVString;
-import com.earnix.webk.runtime.whatwg_dom.Document;
-import com.earnix.webk.runtime.whatwg_dom.EventHandler;
-import com.earnix.webk.runtime.whatwg_dom.EventTarget;
-import com.earnix.webk.runtime.whatwg_dom.impl.EventImpl;
-import com.earnix.webk.runtime.whatwg_dom.impl.EventTargetImpl;
-import com.earnix.webk.runtime.whatwg_dom.impl.Level1EventTarget;
+import com.earnix.webk.runtime.dom.Document;
+import com.earnix.webk.runtime.dom.EventHandler;
+import com.earnix.webk.runtime.dom.EventTarget;
+import com.earnix.webk.runtime.dom.impl.EventImpl;
+import com.earnix.webk.runtime.dom.impl.EventTargetImpl;
+import com.earnix.webk.runtime.dom.impl.Level1EventTarget;
 import com.earnix.webk.runtime.xhr.XMLHttpRequest;
 import com.earnix.webk.runtime.xhr.XMLHttpRequestResponseType;
 import com.earnix.webk.runtime.xhr.XMLHttpRequestUpload;

@@ -10,7 +10,7 @@ import com.earnix.webk.runtime.web_idl.Nullable;
 import com.earnix.webk.runtime.web_idl.Optional;
 import com.earnix.webk.runtime.web_idl.Sequence;
 import com.earnix.webk.runtime.web_idl.USVString;
-import com.earnix.webk.runtime.whatwg_dom.Window;
+import com.earnix.webk.runtime.dom.Window;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**

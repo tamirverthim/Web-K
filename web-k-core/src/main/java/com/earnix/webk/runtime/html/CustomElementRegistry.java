@@ -5,7 +5,7 @@ import com.earnix.webk.runtime.web_idl.CEReactions;
 import com.earnix.webk.runtime.web_idl.DOMString;
 import com.earnix.webk.runtime.web_idl.Exposed;
 import com.earnix.webk.runtime.web_idl.Optional;
-import com.earnix.webk.runtime.whatwg_dom.Node;
+import com.earnix.webk.runtime.dom.Node;
 
 /**
  * @author Taras Maslov

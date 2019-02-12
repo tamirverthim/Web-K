@@ -19,7 +19,7 @@
  */
 package com.earnix.webk.simple.xhtml;
 
-import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
+import com.earnix.webk.runtime.dom.impl.ElementImpl;
 import com.earnix.webk.simple.extend.URLUTF8Encoder;
 import com.earnix.webk.simple.xhtml.controls.ButtonControl;
 import com.earnix.webk.simple.xhtml.controls.CheckControl;

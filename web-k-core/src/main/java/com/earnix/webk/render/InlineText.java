@@ -24,7 +24,7 @@ import com.earnix.webk.extend.FSGlyphVector;
 import com.earnix.webk.layout.FunctionData;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.layout.WhitespaceStripper;
-import com.earnix.webk.runtime.whatwg_dom.impl.TextImpl;
+import com.earnix.webk.runtime.dom.impl.TextImpl;
 import lombok.extern.slf4j.Slf4j;
 
 import java.awt.Rectangle;

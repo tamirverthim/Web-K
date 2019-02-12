@@ -15,9 +15,9 @@ import com.earnix.webk.runtime.web_idl.ReadonlyAttribute;
 import com.earnix.webk.runtime.web_idl.SameObject;
 import com.earnix.webk.runtime.web_idl.USVString;
 import com.earnix.webk.runtime.web_idl.Unsigned;
-import com.earnix.webk.runtime.whatwg_dom.Document;
-import com.earnix.webk.runtime.whatwg_dom.EventHandler;
-import com.earnix.webk.runtime.whatwg_dom.Window;
+import com.earnix.webk.runtime.dom.Document;
+import com.earnix.webk.runtime.dom.EventHandler;
+import com.earnix.webk.runtime.dom.Window;
 
 /**
  * @author Taras Maslov

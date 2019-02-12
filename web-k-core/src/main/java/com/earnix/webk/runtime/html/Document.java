@@ -15,10 +15,10 @@ import com.earnix.webk.runtime.web_idl.ReadonlyAttribute;
 import com.earnix.webk.runtime.web_idl.SameObject;
 import com.earnix.webk.runtime.web_idl.USVString;
 import com.earnix.webk.runtime.web_idl.Unforgeable;
-import com.earnix.webk.runtime.whatwg_dom.Element;
-import com.earnix.webk.runtime.whatwg_dom.EventHandler;
-import com.earnix.webk.runtime.whatwg_dom.HTMLCollection;
-import com.earnix.webk.runtime.whatwg_dom.NodeList;
+import com.earnix.webk.runtime.dom.Element;
+import com.earnix.webk.runtime.dom.EventHandler;
+import com.earnix.webk.runtime.dom.HTMLCollection;
+import com.earnix.webk.runtime.dom.NodeList;
 
 /**
  * @author Taras Maslov

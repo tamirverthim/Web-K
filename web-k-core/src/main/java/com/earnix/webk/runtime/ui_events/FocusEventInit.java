@@ -2,7 +2,7 @@ package com.earnix.webk.runtime.ui_events;
 
 import com.earnix.webk.runtime.web_idl.Dictionary;
 import com.earnix.webk.runtime.web_idl.Nullable;
-import com.earnix.webk.runtime.whatwg_dom.EventTarget;
+import com.earnix.webk.runtime.dom.EventTarget;
 
 /**
  * @author Taras Maslov

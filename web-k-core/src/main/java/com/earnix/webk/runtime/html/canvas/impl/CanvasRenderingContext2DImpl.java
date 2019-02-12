@@ -23,7 +23,7 @@ import com.earnix.webk.runtime.web_idl.Attribute;
 import com.earnix.webk.runtime.web_idl.DOMString;
 import com.earnix.webk.runtime.web_idl.Sequence;
 import com.earnix.webk.runtime.web_idl.impl.SequenceImpl;
-import com.earnix.webk.runtime.whatwg_dom.Element;
+import com.earnix.webk.runtime.dom.Element;
 import com.earnix.webk.util.GeneralUtil;
 import com.helger.css.ECSSVersion;
 import com.helger.css.decl.CSSDeclaration;

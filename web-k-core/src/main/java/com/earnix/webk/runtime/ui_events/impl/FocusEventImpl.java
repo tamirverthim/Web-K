@@ -4,7 +4,7 @@ import com.earnix.webk.runtime.ui_events.FocusEvent;
 import com.earnix.webk.runtime.ui_events.FocusEventInit;
 import com.earnix.webk.runtime.ui_events.UIEventInit;
 import com.earnix.webk.runtime.web_idl.DOMString;
-import com.earnix.webk.runtime.whatwg_dom.EventTarget;
+import com.earnix.webk.runtime.dom.EventTarget;
 import lombok.Setter;
 
 /**

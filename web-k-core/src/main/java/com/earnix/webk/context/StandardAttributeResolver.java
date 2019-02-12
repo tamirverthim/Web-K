@@ -23,7 +23,7 @@ import com.earnix.webk.css.extend.AttributeResolver;
 import com.earnix.webk.extend.NamespaceHandler;
 import com.earnix.webk.extend.UserAgentCallback;
 import com.earnix.webk.extend.UserInterface;
-import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
+import com.earnix.webk.runtime.dom.impl.ElementImpl;
 
 /**
  * An instance which works together with a w3c DOM tree

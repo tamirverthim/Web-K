@@ -3,7 +3,7 @@ package com.earnix.webk.runtime.html;
 import com.earnix.webk.runtime.web_idl.Attribute;
 import com.earnix.webk.runtime.web_idl.LenientThis;
 import com.earnix.webk.runtime.web_idl.Mixin;
-import com.earnix.webk.runtime.whatwg_dom.EventHandler;
+import com.earnix.webk.runtime.dom.EventHandler;
 
 /**
  * @author Taras Maslov

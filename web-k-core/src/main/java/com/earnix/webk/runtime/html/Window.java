@@ -20,8 +20,8 @@ import com.earnix.webk.runtime.web_idl.TreatNullAs;
 import com.earnix.webk.runtime.web_idl.USVString;
 import com.earnix.webk.runtime.web_idl.Unforgeable;
 import com.earnix.webk.runtime.web_idl.Unsigned;
-import com.earnix.webk.runtime.whatwg_dom.Element;
-import com.earnix.webk.runtime.whatwg_dom.EventTarget;
+import com.earnix.webk.runtime.dom.Element;
+import com.earnix.webk.runtime.dom.EventTarget;
 
 /**
  * @author Taras Maslov
@@ -31,7 +31,7 @@ import com.earnix.webk.runtime.whatwg_dom.EventTarget;
 @Global(Window.class)
 public interface Window extends
         EventTarget,
-        com.earnix.webk.runtime.whatwg_dom.Window,
+        com.earnix.webk.runtime.dom.Window,
         LegacyUnenumerableNamedProperties,
         GlobalEventHandlers,
         WindowOrWorkerGlobalScope,

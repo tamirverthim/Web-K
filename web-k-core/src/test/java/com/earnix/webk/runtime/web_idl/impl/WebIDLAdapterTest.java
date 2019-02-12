@@ -1,6 +1,6 @@
 package com.earnix.webk.runtime.web_idl.impl;
 
-import com.earnix.webk.runtime.whatwg_dom.impl.Jsoup;
+import com.earnix.webk.runtime.dom.impl.Jsoup;
 import com.earnix.webk.runtime.ScriptContext;
 import com.earnix.webk.runtime.web_idl.Iterable;
 import com.earnix.webk.simple.XHTMLPanel;

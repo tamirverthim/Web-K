@@ -28,7 +28,7 @@ import com.earnix.webk.css.style.derived.LengthValue;
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
 import com.earnix.webk.render.FSFont;
-import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
+import com.earnix.webk.runtime.dom.impl.ElementImpl;
 import com.earnix.webk.simple.extend.URLUTF8Encoder;
 import com.earnix.webk.simple.extend.XhtmlForm;
 import com.earnix.webk.swing.AWTFSFont;

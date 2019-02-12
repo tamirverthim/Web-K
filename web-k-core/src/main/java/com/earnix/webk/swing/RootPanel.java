@@ -41,7 +41,7 @@ import com.earnix.webk.render.PageBox;
 import com.earnix.webk.render.RenderingContext;
 import com.earnix.webk.render.ViewportBox;
 import com.earnix.webk.runtime.ScriptContext;
-import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
+import com.earnix.webk.runtime.dom.impl.ElementImpl;
 import com.earnix.webk.runtime.html.impl.DocumentImpl;
 import com.earnix.webk.util.Configuration;
 import com.earnix.webk.util.XRLog;

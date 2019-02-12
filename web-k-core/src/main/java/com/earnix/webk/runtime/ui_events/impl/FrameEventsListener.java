@@ -1,8 +1,8 @@
 package com.earnix.webk.runtime.ui_events.impl;
 
-import com.earnix.webk.runtime.ScriptContext;
-import com.earnix.webk.runtime.whatwg_dom.Element;
+import com.earnix.webk.runtime.dom.Element;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -16,7 +16,6 @@ import java.awt.event.WindowListener;
 @RequiredArgsConstructor
 public class FrameEventsListener implements WindowListener, MouseListener {
 
-    private final ScriptContext scriptContext;
     private final MouseEventsAdapter mouseEventsAdapter;
 
 
@@ -38,11 +37,7 @@ public class FrameEventsListener implements WindowListener, MouseListener {
 
     @Override
     public void mouseExited(MouseEvent e) {
-        if (mouseEventsAdapter.getHoveredBox() != null) {
-            Element element = mouseEventsAdapter.getHoveredBox().getElement();
-            mouseEventsAdapter.mouseleave(element, mouseEventsAdapter.getLastAwtMouseEvent());
-            mouseEventsAdapter.mouseout(element, mouseEventsAdapter.getLastAwtMouseEvent());
-        }
+       handleMouseExit();
     }
 
     @Override
@@ -52,7 +47,7 @@ public class FrameEventsListener implements WindowListener, MouseListener {
 
     @Override
     public void windowClosing(WindowEvent e) {
-
+        handleMouseExit();
     }
 
     @Override
@@ -62,7 +57,7 @@ public class FrameEventsListener implements WindowListener, MouseListener {
 
     @Override
     public void windowIconified(WindowEvent e) {
-
+        handleMouseExit();
     }
 
     @Override
@@ -77,10 +72,16 @@ public class FrameEventsListener implements WindowListener, MouseListener {
 
     @Override
     public void windowDeactivated(WindowEvent e) {
-        if (mouseEventsAdapter.getHoveredBox() != null && mouseEventsAdapter.getLastAwtMouseEvent() != null) {
-            Element element =  mouseEventsAdapter.getHoveredBox().getElement();
-            mouseEventsAdapter.mouseleave(element, mouseEventsAdapter.getLastAwtMouseEvent());
-            mouseEventsAdapter.mouseout(element, mouseEventsAdapter.getLastAwtMouseEvent());
+       handleMouseExit();
+    }
+    
+    private void handleMouseExit () {
+        val hoveredElement = mouseEventsAdapter.getHovered();
+        val lastMouseEvent = mouseEventsAdapter.getLastAwtMouseEvent();
+
+        if (hoveredElement != null && lastMouseEvent != null) {
+            mouseEventsAdapter.mouseleave(hoveredElement, lastMouseEvent);
+            mouseEventsAdapter.mouseout(hoveredElement, lastMouseEvent);
         }
     }
 }

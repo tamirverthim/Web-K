@@ -24,7 +24,7 @@ package com.earnix.webk.simple;
 import com.earnix.webk.css.extend.StylesheetFactory;
 import com.earnix.webk.css.sheet.StylesheetInfo;
 import com.earnix.webk.extend.NamespaceHandler;
-import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
+import com.earnix.webk.runtime.dom.impl.ElementImpl;
 import com.earnix.webk.runtime.html.impl.DocumentImpl;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;

@@ -2,10 +2,10 @@ package com.earnix.webk.runtime.xhr.impl;
 
 import com.earnix.webk.runtime.ScriptContext;
 import com.earnix.webk.runtime.web_idl.Attribute;
-import com.earnix.webk.runtime.whatwg_dom.EventHandler;
-import com.earnix.webk.runtime.whatwg_dom.EventTarget;
-import com.earnix.webk.runtime.whatwg_dom.impl.EventTargetImpl;
-import com.earnix.webk.runtime.whatwg_dom.impl.Level1EventTarget;
+import com.earnix.webk.runtime.dom.EventHandler;
+import com.earnix.webk.runtime.dom.EventTarget;
+import com.earnix.webk.runtime.dom.impl.EventTargetImpl;
+import com.earnix.webk.runtime.dom.impl.Level1EventTarget;
 import com.earnix.webk.runtime.xhr.XMLHttpRequestUpload;
 import lombok.AccessLevel;
 import lombok.experimental.Delegate;

@@ -1,6 +1,6 @@
 package com.earnix.webk.browser;
 
-import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
+import com.earnix.webk.runtime.dom.impl.ElementImpl;
 import com.earnix.webk.simple.XHTMLPanel;
 
 import javax.swing.AbstractAction;

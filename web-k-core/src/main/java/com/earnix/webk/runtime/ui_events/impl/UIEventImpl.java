@@ -2,8 +2,8 @@ package com.earnix.webk.runtime.ui_events.impl;
 
 import com.earnix.webk.runtime.ui_events.UIEvent;
 import com.earnix.webk.runtime.ui_events.UIEventInit;
-import com.earnix.webk.runtime.whatwg_dom.Window;
-import com.earnix.webk.runtime.whatwg_dom.impl.EventImpl;
+import com.earnix.webk.runtime.dom.Window;
+import com.earnix.webk.runtime.dom.impl.EventImpl;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 

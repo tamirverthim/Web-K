@@ -15,6 +15,6 @@
     <!--<logger name="com.earnix.webk.runtime" level="error"/>-->
     <!--<logger name="com.earnix.webk.runtime.web_idl" level="trace"/>-->
     <!--<logger name="com.earnix.webk.runtime.ui_events" level="info"/>-->
-    <!--<logger name="com.earnix.webk.runtime.whatwg_dom.impl" level="info"/>-->
+    <!--<logger name="com.earnix.webk.runtime.domlevel="info"/>-->
 
 </configuration>

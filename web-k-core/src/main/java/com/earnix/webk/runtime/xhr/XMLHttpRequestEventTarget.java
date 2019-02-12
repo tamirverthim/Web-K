@@ -4,9 +4,9 @@ import com.earnix.webk.runtime.future.DedicatedWorker;
 import com.earnix.webk.runtime.future.SharedWorker;
 import com.earnix.webk.runtime.web_idl.Attribute;
 import com.earnix.webk.runtime.web_idl.Exposed;
-import com.earnix.webk.runtime.whatwg_dom.EventHandler;
-import com.earnix.webk.runtime.whatwg_dom.EventTarget;
-import com.earnix.webk.runtime.whatwg_dom.Window;
+import com.earnix.webk.runtime.dom.EventHandler;
+import com.earnix.webk.runtime.dom.EventTarget;
+import com.earnix.webk.runtime.dom.Window;
 
 /**
  * @author Taras Maslov

@@ -20,7 +20,7 @@
  * <p>
  * Script evaluation entry points:
  * - {@link com.earnix.webk.runtime.ScriptContext#documentLoaded() }
- * - {@link com.earnix.webk.runtime.whatwg_dom.impl.EventTargetImpl#dispatchEvent(com.earnix.webk.runtime.whatwg_dom.Event)};
+ * - {@link com.earnix.webk.runtime.dom.impl.EventTargetImpl#dispatchEvent(com.earnix.webk.runtime.dom.Event)};
  * - {@link java.util.TimerTask#run()} at {@link com.earnix.webk.runtime.html.impl.WindowImpl#setTimeout(com.earnix.webk.runtime.html.TimerHandler, int, java.lang.Object...)}
  * - {@link java.util.TimerTask#run()} at {@link com.earnix.webk.runtime.html.impl.WindowImpl#setInterval(com.earnix.webk.runtime.html.TimerHandler, int, java.lang.Object...)}
  *

@@ -19,8 +19,8 @@
 package com.earnix.webk.simple.extend;
 
 
-import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
-import com.earnix.webk.runtime.whatwg_dom.impl.NodeImpl;
+import com.earnix.webk.runtime.dom.impl.ElementImpl;
+import com.earnix.webk.runtime.dom.impl.NodeImpl;
 
 /**
  * Handles xhtml documents, including presentational html attributes (see css 2.1 spec, 6.4.4).

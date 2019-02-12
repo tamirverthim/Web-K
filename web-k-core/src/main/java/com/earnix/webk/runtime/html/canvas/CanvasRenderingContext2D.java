@@ -2,7 +2,7 @@ package com.earnix.webk.runtime.html.canvas;
 
 import com.earnix.webk.runtime.web_idl.Exposed;
 import com.earnix.webk.runtime.web_idl.ReadonlyAttribute;
-import com.earnix.webk.runtime.whatwg_dom.Window;
+import com.earnix.webk.runtime.dom.Window;
 
 /**
  * @author Taras Maslov

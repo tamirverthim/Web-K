@@ -4,7 +4,7 @@ import com.earnix.webk.runtime.future.Worker;
 import com.earnix.webk.runtime.geom.DOMMatrix2DInit;
 import com.earnix.webk.runtime.web_idl.Exposed;
 import com.earnix.webk.runtime.web_idl.Optional;
-import com.earnix.webk.runtime.whatwg_dom.Window;
+import com.earnix.webk.runtime.dom.Window;
 
 /**
  * @author Taras Maslov

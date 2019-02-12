@@ -28,8 +28,8 @@ import com.earnix.webk.layout.TextUtil;
 import com.earnix.webk.layout.WhitespaceStripper;
 import com.earnix.webk.layout.breaker.BreakPointsProvider;
 import com.earnix.webk.layout.breaker.Breaker;
-import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
-import com.earnix.webk.runtime.whatwg_dom.impl.TextImpl;
+import com.earnix.webk.runtime.dom.impl.ElementImpl;
+import com.earnix.webk.runtime.dom.impl.TextImpl;
 
 import java.text.BreakIterator;
 

@@ -6,15 +6,15 @@ import com.earnix.webk.runtime.html.HTMLHeadElement;
 import com.earnix.webk.runtime.html.HTMLOrSVGScriptElement;
 import com.earnix.webk.runtime.html.Location;
 import com.earnix.webk.runtime.html.WindowProxy;
-import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
-import com.earnix.webk.runtime.whatwg_dom.impl.NodeImpl;
+import com.earnix.webk.runtime.dom.impl.ElementImpl;
+import com.earnix.webk.runtime.dom.impl.NodeImpl;
 import com.earnix.webk.runtime.web_idl.Attribute;
 import com.earnix.webk.runtime.web_idl.DOMString;
 import com.earnix.webk.runtime.web_idl.USVString;
-import com.earnix.webk.runtime.whatwg_dom.Element;
-import com.earnix.webk.runtime.whatwg_dom.EventHandler;
-import com.earnix.webk.runtime.whatwg_dom.HTMLCollection;
-import com.earnix.webk.runtime.whatwg_dom.NodeList;
+import com.earnix.webk.runtime.dom.Element;
+import com.earnix.webk.runtime.dom.EventHandler;
+import com.earnix.webk.runtime.dom.HTMLCollection;
+import com.earnix.webk.runtime.dom.NodeList;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
@@ -25,7 +25,7 @@ import lombok.val;
  * 7/17/2018
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DocumentImpl extends com.earnix.webk.runtime.whatwg_dom.impl.DocumentImpl implements com.earnix.webk.runtime.html.Document {
+public class DocumentImpl extends com.earnix.webk.runtime.dom.impl.DocumentImpl implements com.earnix.webk.runtime.html.Document {
 
     Location location = new LocationImpl(this);
     @Setter ElementImpl activeElement;

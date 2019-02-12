@@ -4,7 +4,7 @@ import com.earnix.webk.runtime.html.ImageBitmap;
 import com.earnix.webk.runtime.web_idl.Exposed;
 import com.earnix.webk.runtime.web_idl.Nullable;
 import com.earnix.webk.runtime.web_idl.ReadonlyAttribute;
-import com.earnix.webk.runtime.whatwg_dom.Window;
+import com.earnix.webk.runtime.dom.Window;
 
 /**
  * @author Taras Maslov

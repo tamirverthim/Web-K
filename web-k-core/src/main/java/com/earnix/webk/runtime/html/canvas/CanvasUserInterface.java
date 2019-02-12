@@ -1,7 +1,7 @@
 package com.earnix.webk.runtime.html.canvas;
 
 import com.earnix.webk.runtime.web_idl.Mixin;
-import com.earnix.webk.runtime.whatwg_dom.Element;
+import com.earnix.webk.runtime.dom.Element;
 
 /**
  * @author Taras Maslov

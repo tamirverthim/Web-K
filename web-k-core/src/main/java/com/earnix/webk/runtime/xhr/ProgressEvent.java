@@ -8,8 +8,8 @@ import com.earnix.webk.runtime.web_idl.Exposed;
 import com.earnix.webk.runtime.web_idl.Optional;
 import com.earnix.webk.runtime.web_idl.ReadonlyAttribute;
 import com.earnix.webk.runtime.web_idl.Unsigned;
-import com.earnix.webk.runtime.whatwg_dom.Event;
-import com.earnix.webk.runtime.whatwg_dom.Window;
+import com.earnix.webk.runtime.dom.Event;
+import com.earnix.webk.runtime.dom.Window;
 
 /**
  * @author Taras Maslov

@@ -23,11 +23,11 @@ package com.earnix.webk.swing;
 import com.earnix.webk.context.StyleReference;
 import com.earnix.webk.css.constants.ValueConstants;
 import com.earnix.webk.layout.SharedContext;
-import com.earnix.webk.runtime.whatwg_dom.impl.CommentImpl;
-import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
-import com.earnix.webk.runtime.whatwg_dom.impl.NodeImpl;
+import com.earnix.webk.runtime.dom.impl.CommentImpl;
+import com.earnix.webk.runtime.dom.impl.ElementImpl;
+import com.earnix.webk.runtime.dom.impl.NodeImpl;
 import com.earnix.webk.runtime.html.impl.DocumentImpl;
-import com.earnix.webk.runtime.whatwg_dom.impl.TextImpl;
+import com.earnix.webk.runtime.dom.impl.TextImpl;
 import org.w3c.dom.css.CSSPrimitiveValue;
 
 import javax.swing.JButton;

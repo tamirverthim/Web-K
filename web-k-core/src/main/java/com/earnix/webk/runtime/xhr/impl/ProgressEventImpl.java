@@ -1,8 +1,8 @@
 package com.earnix.webk.runtime.xhr.impl;
 
 import com.earnix.webk.runtime.web_idl.DOMString;
-import com.earnix.webk.runtime.whatwg_dom.EventInit;
-import com.earnix.webk.runtime.whatwg_dom.impl.EventImpl;
+import com.earnix.webk.runtime.dom.EventInit;
+import com.earnix.webk.runtime.dom.impl.EventImpl;
 import com.earnix.webk.runtime.xhr.ProgressEvent;
 import com.earnix.webk.runtime.xhr.ProgressEventInit;
 import lombok.AccessLevel;

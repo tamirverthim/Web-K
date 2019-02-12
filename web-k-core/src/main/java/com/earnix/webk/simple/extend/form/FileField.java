@@ -23,7 +23,7 @@ import javax.swing.JComponent;
 
 import com.earnix.webk.layout.LayoutContext;
 import com.earnix.webk.render.BlockBox;
-import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
+import com.earnix.webk.runtime.dom.impl.ElementImpl;
 import com.earnix.webk.simple.extend.XhtmlForm;
 import org.apache.commons.lang3.StringUtils;
 

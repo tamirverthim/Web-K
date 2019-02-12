@@ -1,13 +1,12 @@
 package com.earnix.webk.runtime.ui_events.impl;
 
-import com.earnix.webk.render.Box;
 import com.earnix.webk.runtime.ScriptContext;
 import com.earnix.webk.runtime.html.impl.DocumentImpl;
-import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
+import com.earnix.webk.runtime.dom.impl.ElementImpl;
 import com.earnix.webk.runtime.ui_events.FocusEventInit;
 import com.earnix.webk.runtime.ui_events.MouseEventInit;
-import com.earnix.webk.runtime.whatwg_dom.Element;
-import com.earnix.webk.runtime.whatwg_dom.impl.EventManager;
+import com.earnix.webk.runtime.dom.Element;
+import com.earnix.webk.runtime.dom.impl.EventManager;
 import com.earnix.webk.swing.BasicPanel;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -30,7 +29,7 @@ import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -46,9 +45,10 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
     final ScriptContext context;
     final BasicPanel panel;
 
-    Box focusHolderBox;
+    Element focusHolder;
     @Getter
-    Box hoveredBox;
+    Element hovered;
+
     @Getter
     MouseEvent lastAwtMouseEvent;
     JFrame currentFrame;
@@ -68,7 +68,7 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
         panel.addKeyListener(this);
         addChildrenListeners();
 
-        frameEventsListener = new FrameEventsListener(context, this);
+        frameEventsListener = new FrameEventsListener(this);
 
         panel.addHierarchyListener(e -> {
             JFrame frame = (JFrame) SwingUtilities.getRoot(panel);
@@ -84,7 +84,7 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
         });
 
     }
-    
+
     public void reset() {
 //        hoveredBox = null;
         lastAwtMouseEvent = null;
@@ -93,6 +93,7 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
 
     /**
      * Adds this mouse adepter to all browser panel's children, if not done before.
+     *
      * @see ScriptContext#documentRendered()
      */
     public void addChildrenListeners() {
@@ -115,8 +116,8 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
         Stream.of(parent.getComponents())
                 .filter(c -> c instanceof JComponent)
                 .map(c -> (JComponent) c).forEach(child -> {
-                    target.add(child);
-                    collectAllChildren(child, target);
+            target.add(child);
+            collectAllChildren(child, target);
         });
     }
 
@@ -132,11 +133,11 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
         }
 
         Point point = convertCoordinates(e);
-        val box = context.getPanel().find(point.x, point.y);
+        val optionalElement = getElement(point.x, point.y);
 
-        if (box != null) {
-            Element element =  box.getElement();
 
+        optionalElement.ifPresent((element) -> {
+            
             if (SwingUtilities.isLeftMouseButton(e)) {
                 click(element, e);
                 if (e.getClickCount() == 2) {
@@ -148,10 +149,10 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
 
             // focus
             // https://www.w3.org/TR/uievents/#events-focusevent-event-order
-            if (box != focusHolderBox) {
+            if (element != focusHolder) {
                 Element loser = null;
-                if (focusHolderBox != null) {
-                    loser =  box.getElement();
+                if (focusHolder != null) {
+                    loser = element;
                 }
 
                 focusIn(element, loser);
@@ -160,15 +161,16 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
                     focusOut(element, loser);
                 }
 
-                focusHolderBox = box;
+                focusHolder = element;
                 DocumentImpl documentImpl = (DocumentImpl) context.getWindow().document();
                 documentImpl.setActiveElement((ElementImpl) element);
 
                 focus(element, loser);
             }
-        }
+        });
 
         lastAwtMouseEvent = e;
+
     }
 
     @Override
@@ -180,14 +182,12 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
             });
             return;
         }
-        
+
         pressedMouseButtons.add(e.getButton());
         val point = convertCoordinates(e);
-        Box box = panel.find(point.x, point.y);
-        if (box != null) {
-            Element element = box.getElement();
+        getElement(point.x, point.y).ifPresent((element) -> {
             mousedown(element, e);
-        }
+        });
     }
 
     @Override
@@ -198,14 +198,12 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
             });
             return;
         }
-        
-        
+
         pressedMouseButtons.remove(e.getButton());
         val point = convertCoordinates(e);
-        val box = context.getPanel().find(point.x, point.y);
-        if (box != null) {
-            mouseup(getElement(box), e);
-        }
+        getElement(point.x, point.y).ifPresent((element) -> {
+            mouseup(element, e);
+        });
         
         lastAwtMouseEvent = e;
     }
@@ -223,12 +221,11 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
             });
             return;
         }
-        
-        if (hoveredBox != null) {
-            val el = getElement(hoveredBox);
-            mouseleave(el, e);
-            mouseout(el, e);
+        if (hovered != null) {
+            mouseleave(hovered, e);
+            mouseout(hovered, e);
         }
+        
         lastAwtMouseEvent = e;
     }
 
@@ -240,7 +237,7 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
             });
             return;
         }
-        
+
         handleMouseMove(e);
         lastAwtMouseEvent = e;
     }
@@ -253,7 +250,7 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
             });
             return;
         }
-        
+
         handleMouseMove(e);
         lastAwtMouseEvent = e;
     }
@@ -262,44 +259,46 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
     public void mouseWheelMoved(MouseWheelEvent e) {
         lastAwtMouseEvent = e;
     }
-    
+
     private Point convertCoordinates(MouseEvent e) {
         return SwingUtilities.convertPoint((JComponent) e.getSource(), e.getX(), e.getY(), panel);
     }
 
     private void handleMouseMove(MouseEvent e) {
-        Point location = SwingUtilities.convertPoint((JComponent) (e.getSource()), e.getPoint(), panel);
-        val box = panel.find(location.x, location.y);
-        val boxElementModel = box != null ? box.getElement() : null;
-        val hoverElementModel = hoveredBox != null ? hoveredBox.getElement() : null;
-
-        if (!Objects.equals(boxElementModel, hoverElementModel)) {
-
-            log.trace("Box updated, next {}", box);
-
-            if (hoverElementModel != null) {
-                log.trace("leaving {}", hoveredBox.getElement());
-                mouseleave(getElement(hoveredBox), e);
-                mouseout(getElement(hoveredBox), e);
-            }
-
-            if (box != null) {
-                log.trace("entering {}", box.getElement());
-                Element element = getElement(box);
+        val location = SwingUtilities.convertPoint((JComponent) (e.getSource()), e.getPoint(), panel);
+        val optionalElement = getElement(location.x, location.y);
+        
+        if (optionalElement.isPresent()) {
+            val element = optionalElement.get();
+            
+            if (element != hovered) {
+                if (hovered != null) {
+                    log.trace("leaving {}", hovered);
+                    mouseleave(hovered, e);
+                    mouseout(hovered, e);
+                }
+                
+                log.trace("entering {}", element);
+                hovered = element;
                 mouseenter(element, e);
                 mouseover(element, e);
             }
+        } else {
+            if (hovered != null) {
+                log.trace("leaving {}", hovered);
+                mouseleave(hovered, e);
+                mouseout(hovered, e);
+            }
+            hovered = null;
         }
-
-        hoveredBox = box;
-
-        if (box != null) {
-            mousemove(getElement(box), e);
+        
+        if (hovered != null) {
+            mousemove(hovered, e);
         }
 
         lastAwtMouseEvent = e;
     }
-    
+
     private void focusOut(Element gainer, Element loser) {
 
         FocusEventInit eventInit = new FocusEventInit();
@@ -529,10 +528,11 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
         pressedKeys.remove(e.getKeyCode());
     }
 
-    private Element getElement(Box box) {
-        if (box == null) {
-            return null;
+    private Optional<Element> getElement(int x, int y) {
+        val box = panel.find(x, y);
+        if (box != null) {
+            return Optional.ofNullable(box.getElement());
         }
-        return  box.getElement();
+        return Optional.empty();
     }
 }

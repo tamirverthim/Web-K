@@ -8,7 +8,7 @@ import com.earnix.webk.runtime.web_idl.ReadonlyAttribute;
 import com.earnix.webk.runtime.web_idl.Serializable;
 import com.earnix.webk.runtime.web_idl.Uint8ClampedArray;
 import com.earnix.webk.runtime.web_idl.Unsigned;
-import com.earnix.webk.runtime.whatwg_dom.Window;
+import com.earnix.webk.runtime.dom.Window;
 
 /**
  * @author Taras Maslov

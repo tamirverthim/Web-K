@@ -1,7 +1,7 @@
 package com.earnix.webk.runtime.cssom.impl;
 
 import com.earnix.webk.runtime.cssom.CSSStyleDeclaration;
-import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
+import com.earnix.webk.runtime.dom.impl.ElementImpl;
 import org.junit.Assert;
 import org.junit.Test;
 

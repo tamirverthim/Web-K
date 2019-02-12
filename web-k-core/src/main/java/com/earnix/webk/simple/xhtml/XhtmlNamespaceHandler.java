@@ -19,8 +19,8 @@
 package com.earnix.webk.simple.xhtml;
 
 
-import com.earnix.webk.runtime.whatwg_dom.impl.ElementImpl;
-import com.earnix.webk.runtime.whatwg_dom.impl.NodeImpl;
+import com.earnix.webk.runtime.dom.impl.ElementImpl;
+import com.earnix.webk.runtime.dom.impl.NodeImpl;
 import com.earnix.webk.simple.extend.XhtmlCssOnlyNamespaceHandler;
 
 

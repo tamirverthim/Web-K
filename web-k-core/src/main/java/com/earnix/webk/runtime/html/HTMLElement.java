@@ -1,7 +1,7 @@
 package com.earnix.webk.runtime.html;
 
 import com.earnix.webk.runtime.cssom.ElementCSSInlineStyle;
-import com.earnix.webk.runtime.whatwg_dom.Element;
+import com.earnix.webk.runtime.dom.Element;
 
 /**
  * @author Taras Maslov

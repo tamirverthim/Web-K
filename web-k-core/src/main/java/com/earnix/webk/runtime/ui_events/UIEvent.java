@@ -3,8 +3,8 @@ package com.earnix.webk.runtime.ui_events;
 import com.earnix.webk.runtime.web_idl.Nullable;
 import com.earnix.webk.runtime.web_idl.Optional;
 import com.earnix.webk.runtime.web_idl.ReadonlyAttribute;
-import com.earnix.webk.runtime.whatwg_dom.Event;
-import com.earnix.webk.runtime.whatwg_dom.Window;
+import com.earnix.webk.runtime.dom.Event;
+import com.earnix.webk.runtime.dom.Window;
 
 /**
  * @author Taras Maslov
