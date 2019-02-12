@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * @author Jonathan Hedley
  */
-abstract class TreeBuilder {
+public abstract class TreeBuilder {
     protected Parser parser;
     CharacterReader reader;
     Tokeniser tokeniser;
@@ -94,7 +94,7 @@ abstract class TreeBuilder {
         return size > 0 ? stack.get(size - 1) : null;
     }
     
-    ElementImpl createElement(Tag tag, String baseUri, AttributesModel attributes) {
+    public static ElementImpl createElement(Tag tag, String baseUri, AttributesModel attributes) {
         switch (tag.getName().trim().toLowerCase()) {
             case "canvas":
                 return new HTMLCanvasElementImpl(tag, baseUri, attributes);
@@ -102,7 +102,7 @@ abstract class TreeBuilder {
         }
     }
     
-    ElementImpl createElement(Tag tag, String baseUri) {
+    public static ElementImpl createElement(Tag tag, String baseUri) {
         return createElement(tag, baseUri, null);
     }
 }

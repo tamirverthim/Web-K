@@ -42,7 +42,7 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
             @Override
             public void set(Integer integer) {
                 attr("width", String.valueOf(integer));
-                context.resize();
+                getContextImpl().resize();
             }
         };
     }
@@ -58,7 +58,7 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
             @Override
             public void set(Integer integer) {
                 attr("height", String.valueOf(integer));
-                context.resize();
+                getContextImpl().resize();
             }
         };
     }
@@ -67,7 +67,7 @@ public class HTMLCanvasElementImpl extends ElementImpl implements HTMLCanvasElem
     public void setAttribute(@DOMString String qualifiedName, @DOMString String value) {
         super.setAttribute(qualifiedName, value);
         if (qualifiedName.equalsIgnoreCase("width") || qualifiedName.equalsIgnoreCase("height")) {
-            context.resize();
+            getContextImpl().resize();
         }
     }
 

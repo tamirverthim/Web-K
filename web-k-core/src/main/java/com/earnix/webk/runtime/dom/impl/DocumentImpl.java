@@ -7,6 +7,7 @@ import com.earnix.webk.runtime.dom.impl.nodes.XmlDeclarationModel;
 import com.earnix.webk.runtime.dom.impl.parser.ParseSettings;
 import com.earnix.webk.runtime.dom.impl.parser.Parser;
 import com.earnix.webk.runtime.dom.impl.parser.Tag;
+import com.earnix.webk.runtime.dom.impl.parser.TreeBuilder;
 import com.earnix.webk.runtime.dom.impl.select.Elements;
 import com.earnix.webk.runtime.ScriptContext;
 import com.earnix.webk.runtime.web_idl.DOMString;
@@ -352,7 +353,7 @@ public class DocumentImpl extends ElementImpl implements Document {
      * @return new element
      */
     public ElementImpl createElement(String tagName) {
-        return new ElementImpl(Tag.valueOf(tagName, ParseSettings.preserveCase), this.baseUri());
+        return TreeBuilder.createElement(Tag.valueOf(tagName, ParseSettings.preserveCase), this.baseUri());
     }
 
     /**

@@ -1,6 +1,5 @@
 package com.earnix.webk.runtime.ui_events.impl;
 
-import com.earnix.webk.runtime.dom.Element;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 

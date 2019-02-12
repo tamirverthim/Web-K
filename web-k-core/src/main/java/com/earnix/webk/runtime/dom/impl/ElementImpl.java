@@ -9,6 +9,7 @@ import com.earnix.webk.runtime.dom.impl.nodes.DataImpl;
 import com.earnix.webk.runtime.dom.impl.nodes.NodeModelUtils;
 import com.earnix.webk.runtime.dom.impl.parser.ParseSettings;
 import com.earnix.webk.runtime.dom.impl.parser.Tag;
+import com.earnix.webk.runtime.dom.impl.parser.TreeBuilder;
 import com.earnix.webk.runtime.dom.impl.select.Collector;
 import com.earnix.webk.runtime.dom.impl.select.Elements;
 import com.earnix.webk.runtime.dom.impl.select.Evaluator;
@@ -1421,7 +1422,7 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
      * {@code parent.appendElement("h1").attr("id", "header").text("Welcome");}
      */
     public ElementImpl appendElement(String tagName) {
-        ElementImpl child = new ElementImpl(Tag.valueOf(tagName, NodeModelUtils.parser(this).settings()), baseUri());
+        ElementImpl child = TreeBuilder.createElement(Tag.valueOf(tagName, NodeModelUtils.parser(this).settings()), baseUri());
         appendChild(child);
         return child;
     }
@@ -1434,7 +1435,7 @@ public class ElementImpl extends NodeImpl implements HTMLElement {
      * {@code parent.prependElement("h1").attr("id", "header").text("Welcome");}
      */
     public ElementImpl prependElement(String tagName) {
-        ElementImpl child = new ElementImpl( Tag.valueOf(tagName, NodeModelUtils.parser(this).settings()), baseUri());
+        ElementImpl child = TreeBuilder.createElement( Tag.valueOf(tagName, NodeModelUtils.parser(this).settings()), baseUri());
         prependChild(child);
         return child;
     }
