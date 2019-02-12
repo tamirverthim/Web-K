@@ -11,6 +11,9 @@ FlyingSaucer PDF and SWT rendering was removed.
 
 Main use case - pure Java web view component. Not intended to be used as standalone web browser (at least at this moment).
 
+### Usage entry point 
+`com.earnix.webk.simple.XHTMLPanel` can be used as Swing web view component. `com.earnix.webk.browser.WebKApplication` launches demo browser application.
+
 ### JavaScript runtime
 
 JavaScript APIs implementation based on [WHATWG DOM](https://dom.spec.whatwg.org/) and [WHATWG HTML](https://html.spec.whatwg.org/multipage/) specifications. It is currently very limited.
