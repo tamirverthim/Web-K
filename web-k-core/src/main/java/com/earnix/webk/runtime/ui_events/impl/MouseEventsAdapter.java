@@ -16,9 +16,8 @@ import lombok.val;
 import org.apache.commons.lang3.ArrayUtils;
 
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -51,7 +50,7 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
 
     @Getter
     MouseEvent lastAwtMouseEvent;
-    JFrame currentFrame;
+    Window currentWindow;
 
     FrameEventsListener frameEventsListener;
 
@@ -71,15 +70,16 @@ public class MouseEventsAdapter implements MouseListener, MouseMotionListener, M
         frameEventsListener = new FrameEventsListener(this);
 
         panel.addHierarchyListener(e -> {
-            JFrame frame = (JFrame) SwingUtilities.getRoot(panel);
-            if (frame != currentFrame) {
-                if (currentFrame != null) {
-                    currentFrame.removeWindowListener(frameEventsListener);
+
+            Window window = (Window) SwingUtilities.getRoot(panel);
+            if (window != currentWindow) {
+                if (currentWindow != null) {
+                    currentWindow.removeWindowListener(frameEventsListener);
                 }
-                if (frame != null) {
-                    frame.addWindowListener(frameEventsListener);
+                if (window != null) {
+                    window.addWindowListener(frameEventsListener);
                 }
-                currentFrame = frame;
+                currentWindow = window;
             }
         });
 

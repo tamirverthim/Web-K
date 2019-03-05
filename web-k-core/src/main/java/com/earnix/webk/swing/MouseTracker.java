@@ -31,6 +31,7 @@ import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 
 /**
@@ -46,7 +47,7 @@ import java.util.List;
 public class MouseTracker implements MouseListener, MouseMotionListener, MouseWheelListener {
     
     BasicPanel panel;
-    HashSet<FSMouseListener> handlers;
+    List<FSMouseListener> handlers;
     Box lastHoveredBox;
     boolean enabled;
 
@@ -57,7 +58,13 @@ public class MouseTracker implements MouseListener, MouseMotionListener, MouseWh
      */
     public MouseTracker(BasicPanel panel) {
         this.panel = panel;
-        handlers = new HashSet<>();
+
+        /**
+         * {@link CopyOnWriteArrayList} is used to allow iterate and modify handlers at the same time. It may happen
+         * if the handler tries to add/remove itself directly or indirectly during the iteration over the handlers
+         * (e.g. on {@link #fireMouseUp(Box) event.}.
+         */
+        handlers = new CopyOnWriteArrayList<>();
     }
 
     /**
